@@ -38,3 +38,4 @@ export {
 } from './array';
 export { deasync } from './async';
 export { applyMixins } from './mixins';
+export { log } from './log';

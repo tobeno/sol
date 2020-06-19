@@ -7,6 +7,7 @@ export const globals = {
   data,
   shell,
   utils,
+  log: utils.log,
   vscode: shell.vscode,
   play: shell.play,
   clipboard: os.clipboard,
