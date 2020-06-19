@@ -3,8 +3,8 @@ import { File } from '../storage/file';
 
 export function WithFile<T extends Constructor>(base: T) {
   return class Wrapped extends base {
-    file(path: string): File {
-      const f = new File(path);
+    file(pathOrFile: string | File): File {
+      const f = pathOrFile instanceof File ? pathOrFile : new File(pathOrFile);
       f.text = String(this);
       return f;
     }
