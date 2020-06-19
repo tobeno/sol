@@ -23,6 +23,10 @@ export function vscode(pathOrValue?: any): File {
   if (!pathOrValue) {
     f = tmp('ts');
   } else if (typeof pathOrValue === 'object') {
+    if(pathOrValue.constructor !== Object && typeof pathOrValue.data !== 'undefined') {
+      pathOrValue = pathOrValue.data;
+    }
+
     f = tmp('json');
     f.data = pathOrValue;
   } else if (
