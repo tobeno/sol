@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { Response } from './response';
-import { deasync } from '../utils/fn';
+import { deasync } from '../utils/async';
 
 function wrap<FnType extends (...args: any) => Promise<AxiosResponse>>(
   fn: FnType,

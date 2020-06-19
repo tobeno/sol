@@ -1,5 +1,4 @@
-import { csv } from '../data/fn';
-import { Csv } from '../data/csv';
+import { Csv,csv} from '../data/csv';
 import { Constructor } from '../interfaces/util';
 import { ClassWithText } from '../interfaces/base';
 

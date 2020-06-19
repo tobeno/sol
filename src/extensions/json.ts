@@ -1,5 +1,4 @@
-import { json } from '../data/fn';
-import { Json } from '../data/json';
+import { Json, json } from '../data/json';
 import { Constructor } from '../interfaces/util';
 import { ClassWithData } from '../interfaces/base';
 

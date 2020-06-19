@@ -1,25 +1,52 @@
-import { shell, utils, storage, web, data, os } from './index';
+import { grep } from './storage/search';
+import { file } from './storage/file';
+import { dir } from './storage/directory';
+import { dirs, files, glob } from './storage/item-collection';
+import { web } from './web';
+import { jsonata } from './integrations/jsonata';
+import { cheerio } from './integrations/cheerio';
+import { csv } from './data/csv';
+import { html } from './data/html';
+import { json } from './data/json';
+import { xml } from './data/xml';
+import { ast, astTypes } from './data/ast';
+import { clipboard } from './os/clipboard'; 
+import * as arrayUtils from './utils/array';
+import * as objectUtils from './utils/object';
+import * as textUtils from './utils/text';
+import { cwd } from './shell/fn';
+import { log } from './utils/log';
+import { rebuild } from './utils/sol';
+import { vscode, play } from './integrations/vscode';
+import * as shell from './shell/shelljs';
 
 export const globals = {
-  storage,
-  web,
-  os,
-  data,
-  shell,
-  utils,
-  log: utils.log,
-  vscode: shell.vscode,
-  play: shell.play,
-  clipboard: os.clipboard,
-  json: data.json,
-  html: data.html,
-  file: storage.file,
-  dir: storage.dir,
-  files: storage.files,
-  dirs: storage.dirs,
-  grep: storage.grep,
-  glob: storage.glob,
-  jsonata: data.jsonata,
-  cheerio: data.cheerio,
-  fetch: web.fetch,
+    web,
+    csv,
+    html,
+    json,
+    xml,
+    ast,
+    astTypes,
+    jsonata,
+    cheerio,
+    cwd,
+    shell,
+    utils: {
+      ...arrayUtils,
+      ...objectUtils,
+      ...textUtils
+    },
+    log,
+    vscode,
+    play,
+    clipboard,
+    file,
+    dir,
+    files,
+    dirs,
+    grep,
+    glob,
+    fetch: web.fetch,
+    rebuild
 };

@@ -4,6 +4,7 @@ export interface ClassWithData {
 
 export interface ClassWithText {
   text: string;
+  data?: any;
 }
 
 export interface ClassWithUpdateText {

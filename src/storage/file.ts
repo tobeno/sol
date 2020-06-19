@@ -116,3 +116,7 @@ export class File extends WithReplaceText(
     WithCsv(WithJson(WithText(WithData(WithCopy(WithPrint(UnwrappedFile)))))),
   ),
 ) {}
+
+export function file(path: string): File {
+  return new File(path);
+}

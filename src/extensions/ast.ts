@@ -1,5 +1,4 @@
-import { ast } from '../data/fn';
-import { Ast } from '../data/ast';
+import { Ast,ast } from '../data/ast';
 import { Constructor } from '../interfaces/util';
 import { ClassWithText } from '../interfaces/base';
 

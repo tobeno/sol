@@ -1,10 +1,10 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import { exec } from 'shelljs';
 import { Item } from './item';
 import { File } from './file';
-import { files, glob, dirs, grep, replaceText } from './fn';
-import { ItemCollection } from './item-collection';
-import { exec } from '../shell/fn';
+import { grep, replaceText } from './search';
+import { ItemCollection, files, dirs, glob } from './item-collection';
 import { WithPrint } from '../extensions/print';
 import { WithCopy } from '../extensions/copy';
 
@@ -76,3 +76,7 @@ export class UnwrappedDirectory extends Item {
 }
 
 export class Directory extends WithPrint(WithCopy(UnwrappedDirectory)) {}
+
+export function dir(path?: string): Directory {
+  return new Directory(path || '.');
+}

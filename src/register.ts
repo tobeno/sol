@@ -7,17 +7,17 @@ Object.assign(globalGeneric, globals);
 Object.defineProperties(Object.prototype, {
   json: {
     get() {
-      return globals.data.json(this);
+      return globals.json(this);
     },
   },
 });
 
 Object.assign(Object.prototype, {
   file(path: string) {
-    globals.data.json(this).file(path);
+    globals.json(this).file(path);
   },
   vscode() {
-    return globals.shell.vscode(this);
+    return globals.vscode(this);
   },
   print() {
     console.log(this);
@@ -27,7 +27,7 @@ Object.assign(Object.prototype, {
 Object.defineProperties(Array.prototype, {
   csv: {
     get() {
-      return globals.data.csv(this);
+      return globals.csv(this);
     },
   },
 });
@@ -40,7 +40,7 @@ Object.defineProperties(String.prototype, {
   },
   json: {
     get() {
-      return globals.data.json(JSON.parse(String(this)));
+      return globals.json(JSON.parse(String(this)));
     },
   },
   data: {
@@ -50,12 +50,12 @@ Object.defineProperties(String.prototype, {
   },
   csv: {
     get() {
-      return globals.data.csv(String(this));
+      return globals.csv(String(this));
     },
   },
   html: {
     get() {
-      return globals.data.html(String(this));
+      return globals.html(String(this));
     },
   },
 });
@@ -86,14 +86,14 @@ Object.assign(String.prototype as any, {
     console.log(String(this));
   },
   file(path: string) {
-    const f = globals.storage.file(path);
+    const f = globals.file(path);
     f.text = String(this);
     return f;
   },
   vscode() {
-    return globals.shell.vscode(String(this));
+    return globals.vscode(String(this));
   },
   copy() {
-    globals.os.clipboard.text = this.toString();
+    globals.clipboard.text = this.toString();
   },
 });

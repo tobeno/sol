@@ -1,9 +1,12 @@
 import { AxiosResponse } from 'axios';
 import { inspect } from 'util';
-import { json, html, csv, ast } from '../data/fn';
 import { WithPrint } from '../extensions/print';
 import { WithCopy } from '../extensions/copy';
 import { WithFile } from '../extensions/file';
+import { csv } from '../data/csv';
+import { json } from '../data/json';
+import { ast } from '../data/ast';
+import { html } from 'cheerio';
 
 class UnwrappedResponse {
   constructor(readonly axiosResponse: AxiosResponse) {}

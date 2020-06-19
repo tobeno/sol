@@ -4,10 +4,21 @@ import { Constructor } from '../interfaces/util';
 export function WithData<T extends Constructor<ClassWithText>>(base: T) {
   return class Wrapped extends base {
     get data(): any {
+
+      if(super.data) {
+        return super.data;
+      }
+
       return JSON.parse(this.text);
     }
 
     set data(value: any) {
+      if(super.data) {
+        super.data = value;
+
+        return;
+      }
+
       this.text = JSON.stringify(value, null, 2);
     }
 

@@ -1,10 +1,6 @@
 import { inspect } from 'util';
-import * as cheerio from 'cheerio';
-import { WithCopy } from '../extensions/copy';
-import { WithVscode } from '../extensions/vscode';
-import { WithFile } from '../extensions/file';
-import { WithPrint } from '../extensions/print';
-import { WithText } from '../extensions/text';
+import { cheerio } from '../integrations/cheerio';
+import { WithAllText } from '../extensions/all-text';
 
 export class UnwrappedHtml {
   private cheerio: CheerioStatic;
@@ -29,6 +25,8 @@ export class UnwrappedHtml {
   }
 }
 
-export class Html extends WithText(
-  WithCopy(WithPrint(WithVscode(WithFile(UnwrappedHtml)))),
-) {}
+export class Html extends WithAllText(UnwrappedHtml) {}
+
+export function html(data: string) {
+  return new Html(data);
+}

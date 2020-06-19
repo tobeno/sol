@@ -3,12 +3,8 @@ import * as babelTypes from '@babel/types';
 import traverse, { TraverseOptions, Scope, NodePath } from '@babel/traverse';
 import { inspect } from 'util';
 import { parse as recastParse, print as recastPrint } from 'recast';
-import { WithCopy } from '../extensions/copy';
-import { WithPrint } from '../extensions/print';
-import { WithVscode } from '../extensions/vscode';
-import { WithFile } from '../extensions/file';
+import { WithAllText } from '../extensions/all-text';
 import { WithJson } from '../extensions/json';
-import { WithText } from '../extensions/text';
 
 export class UnwrappedAst {
   data: babelTypes.File;
@@ -81,8 +77,10 @@ export class UnwrappedAst {
   }
 }
 
-export class Ast extends WithJson(
-  WithText(WithCopy(WithPrint(WithVscode(WithFile(UnwrappedAst))))),
-) {}
+export class Ast extends WithJson(WithAllText(UnwrappedAst)) {}
 
 export * as astTypes from '@babel/types';
+
+export function ast(...args: ConstructorParameters<typeof Ast>) {
+  return new Ast(...args);
+}

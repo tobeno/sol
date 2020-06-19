@@ -1,10 +1,6 @@
 import { inspect } from 'util';
 import * as Papa from 'papaparse';
-import { WithCopy } from '../extensions/copy';
-import { WithPrint } from '../extensions/print';
-import { WithVscode } from '../extensions/vscode';
-import { WithFile } from '../extensions/file';
-import { WithText } from '../extensions/text';
+import { WithAllText } from '../extensions/all-text';
 
 export class UnwrappedCsv {
   data: any[];
@@ -61,6 +57,8 @@ export class UnwrappedCsv {
   }
 }
 
-export class Csv extends WithText(
-  WithCopy(WithPrint(WithVscode(WithFile(UnwrappedCsv)))),
-) {}
+export class Csv extends WithAllText(UnwrappedCsv) {}
+
+export function csv(data: string) {
+  return new Csv(data);
+}

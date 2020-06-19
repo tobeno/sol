@@ -1,7 +1,10 @@
 import { Directory } from './directory';
 import { File } from './file';
-import { grep } from './fn';
-import { clipboard } from '../os/fn';
+import { grep } from './search';
+import { clipboard } from '../os/clipboard';
+import * as fg from 'fast-glob';
+
+
 
 export class ItemCollection<ItemType extends File | Directory> extends Array<
   ItemType
@@ -108,4 +111,51 @@ export class ItemCollection<ItemType extends File | Directory> extends Array<
   copy() {
     clipboard.text = this.toString();
   }
+}
+
+
+export function files(
+  exp?: string,
+  options: fg.Options = {},
+): ItemCollection<File> {
+  return new ItemCollection<File>(
+    ...fg
+      .sync(exp || '*', {
+        dot: true,
+        ...options,
+        objectMode: true,
+        onlyFiles: true,
+      })
+      .map((file) => {
+        return new File(file.path);
+      }),
+  );
+}
+
+export function dirs(
+  exp?: string,
+  options: fg.Options = {},
+): ItemCollection<Directory> {
+  return new ItemCollection<Directory>(
+    ...fg
+      .sync(exp || '*', {
+        dot: true,
+        ...options,
+        objectMode: true,
+        onlyDirectories: true,
+      })
+      .map((file) => {
+        return new Directory(file.path);
+      }),
+  );
+}
+
+export function glob(
+  exp?: string,
+  options: fg.Options = {},
+): ItemCollection<Directory | File> {
+  return new ItemCollection<File | Directory>(
+    ...files(exp, options),
+    ...dirs(exp, options),
+  );
 }
