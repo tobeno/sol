@@ -28,6 +28,8 @@ export abstract class Item {
 
   vscode() {
     exec(`code '${this.path}'`);
+
+    return this;
   }
 
   toString() {
