@@ -38,6 +38,11 @@ export class Sol {
     const localDir = dir('.sol');
     localDir.create();
 
+    const gitignoreFile = localDir.file('.gitignore');
+    if (!gitignoreFile.exists) {
+      gitignoreFile.text = '*';
+    }
+
     return localDir;
   }
 
