@@ -1,7 +1,7 @@
 import { readSync, writeSync } from 'clipboardy';
-import { WithText } from '../extensions/text';
-import { WithFile } from '../extensions/file';
-import { WithPrint } from '../extensions/print';
+import { WithText } from '../wrappers/with-text';
+import { WithFile } from '../wrappers/with-file';
+import { WithPrint } from '../wrappers/with-print';
 
 export class UnwrappedClipboard {
   get text() {

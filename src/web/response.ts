@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios';
 import { inspect } from 'util';
-import { WithPrint } from '../extensions/print';
-import { WithCopy } from '../extensions/copy';
-import { WithFile } from '../extensions/file';
+import { WithPrint } from '../wrappers/with-print';
+import { WithCopy } from '../wrappers/with-copy';
+import { WithFile } from '../wrappers/with-file';
 import { csv } from '../data/csv';
 import { json } from '../data/json';
 import { ast } from '../data/ast';

@@ -1,6 +1,6 @@
 import { inspect } from 'util';
 import { cheerio } from '../integrations/cheerio';
-import { WithAllText } from '../extensions/all-text';
+import { WithAllText } from '../wrappers/with-all-text';
 
 export class UnwrappedHtml {
   private cheerio: CheerioStatic;

@@ -3,8 +3,8 @@ import * as babelTypes from '@babel/types';
 import traverse, { TraverseOptions, Scope, NodePath } from '@babel/traverse';
 import { inspect } from 'util';
 import { parse as recastParse, print as recastPrint } from 'recast';
-import { WithAllText } from '../extensions/all-text';
-import { WithJson } from '../extensions/json';
+import { WithAllText } from '../wrappers/with-all-text';
+import { WithJson } from '../wrappers/with-json';
 
 export class UnwrappedAst {
   data: babelTypes.File;

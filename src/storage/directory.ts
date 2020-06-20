@@ -12,8 +12,8 @@ import {
   DirectoryCollection,
   ItemCollection,
 } from './item-collection';
-import { WithPrint } from '../extensions/print';
-import { WithCopy } from '../extensions/copy';
+import { WithPrint } from '../wrappers/with-print';
+import { WithCopy } from '../wrappers/with-copy';
 
 export class UnwrappedDirectory extends Item {
   get parent(): Directory {

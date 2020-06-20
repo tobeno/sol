@@ -5,18 +5,12 @@ export function WithReplaceText<T extends Constructor<ClassWithUpdateText>>(
   base: T,
 ) {
   return class Wrapped extends base {
-     replaceText(
+    replaceText(
       search: string | RegExp,
       replacer: (substring: string, ...args: any[]) => string,
     ): boolean;
-     replaceText(
-      search: string | RegExp,
-      replacer: string,
-    ): boolean;
-     replaceText(
-      search: string | RegExp,
-      replacer: any,
-    ): boolean {
+    replaceText(search: string | RegExp, replacer: string): boolean;
+    replaceText(search: string | RegExp, replacer: any): boolean {
       let result = false;
 
       this.updateText((contents: string) => {
