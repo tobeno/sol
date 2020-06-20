@@ -39,12 +39,11 @@ const playWatchers: Record<string, () => void> = {};
 
 function runPlay(playId: string, code: string) {
   code = code
-    .replace(/[\s\S]+#endregion SETUP/, '')
+    .replace(/[\s\S]+\/\/ --- END SETUP ---/, '')
+    .replace(/type LocalGlobals[\s\S]+/, '')
     .replace(/\nexport (const|let|function|class)/, '\n$1');
 
-  let result = eval(
-    `const unwatch = () => { global.unwatchPlay('${playId}'); };\nlet result = undefined;\n${code}\nresult`,
-  );
+  let result = eval(code);
 
   if (result && typeof result === 'object') {
     if (result.constructor === Object) {
@@ -81,6 +80,7 @@ export function play(path?: string) {
 
           if (typeof result !== 'undefined') {
             console.log(result);
+            sol.server?.displayPrompt();
           }
         } else if (event === 'rename') {
           if (!playFile.exists) {
@@ -98,55 +98,28 @@ export function play(path?: string) {
   return playFile;
 }
 
+export function setupPlayContext(path: string) {
+  const playContextFile = file(path);
+  const localGlobalsFile = file(sol.localGlobalsFilePath);
+  playContextFile.text = `
+import '${sol.packageDistDir.path}/globals';
+import '${localGlobalsFile.pathWithoutExt}';
+`.trimStart();
+}
+
 export function setupPlay(path: string, noLocalGlobals = false) {
   const playFile = sol.playFile(path);
 
   playFile.create();
 
-  const localGlobalsKeys = Object.keys(sol.localGlobals);
-  const globalsKeys = Object.keys(sol.globals);
-  let localGlobalsImport;
-
-  if (!noLocalGlobals) {
-    const { localGlobalsFile } = sol;
-    localGlobalsImport = `
-// Globals from .sol/globals.ts
-import { localGlobals } from '${localGlobalsFile.path.slice(
-      0,
-      -1 * (localGlobalsFile.ext.length + 1),
-    )}';
-const { ${localGlobalsKeys.join(', ')} } = localGlobals;`.trim();
-  } else {
-    localGlobalsImport = '';
-  }
-
   playFile.text =
     `
-// #region SETUP
 /* eslint-disable */
-// Globals from Sol
-import { globals } from '${sol.packageSrcDir.path}/globals';
-const { ${globalsKeys.join(', ')} } = globals;
-${localGlobalsImport}
-
-// Needed to avoid errors
-// @ts-ignore
-const used = [ ${[
-      ...globalsKeys,
-      ...(!noLocalGlobals ? localGlobalsKeys : []),
-    ].join(', ')} ];
-
-/** Stops watching this file (in play mode) */
-const unwatch = () => {};
-
-/** Set result to return something from the play file */
-let result: any = undefined;
-
-// --------------------------------------------------------
-// #endregion SETUP
+import '${sol.playContextFile.pathWithoutExt}';
+// --- END SETUP ---
 
 `.trimStart() +
-    playFile.text.replace(/[\s\S]+#endregion SETUP/, '').trimStart();
+    playFile.text.replace(/[\s\S]+\/\/ --- END SETUP ---/, '').trimStart();
 }
 
 export function unwatchPlay(path: string) {

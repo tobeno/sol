@@ -12,11 +12,15 @@ import { WithCsv } from '../wrappers/with-csv';
 import { WithText } from '../wrappers/with-text';
 import { WithReplaceText } from '../wrappers/with-replace-text';
 import { ItemCollection } from './item-collection';
-import { play, replay, setupPlay } from '../integrations/vscode';
+import { play, replay, setupPlay, unwatchPlay } from '../integrations/vscode';
 
 class UnwrappedFile extends Item {
   constructor(path: string) {
     super(path);
+  }
+
+  get pathWithoutExt(): string {
+    return this.path.slice(0, -1 * (this.ext.length + 1));
   }
 
   get ext(): string {
@@ -142,6 +146,10 @@ class UnwrappedFile extends Item {
 
   replay() {
     replay(this.path);
+  }
+
+  unwatchPlay() {
+    unwatchPlay(this.path);
   }
 
   serve() {

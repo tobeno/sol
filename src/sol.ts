@@ -2,6 +2,7 @@ import { homedir } from 'os';
 import { REPLServer } from 'repl';
 import { Directory, dir } from './storage/directory';
 import { File, file } from './storage/file';
+import { setupPlayContext } from './integrations/vscode';
 
 export class Sol {
   server: REPLServer | null = null;
@@ -10,6 +11,10 @@ export class Sol {
 
   get packageDir(): Directory {
     return this.runtimeDir.parent;
+  }
+
+  get packageDistDir(): Directory {
+    return this.packageDir.dir('dist');
   }
 
   get packageSrcDir(): Directory {
@@ -53,13 +58,44 @@ export class Sol {
     return playDir;
   }
 
+  get localGlobalsFilePath(): string {
+    return `${this.localDir.path}/globals.ts`;
+  }
+
+  get playContextFile(): File {
+    const playContextFile = this.localDir.file('play-context.ts');
+
+    setupPlayContext(playContextFile.path);
+
+    return playContextFile;
+  }
+
   get localGlobalsFile(): File {
-    const setupFile = this.localDir.file('globals.ts');
+    const setupFile = file(this.localGlobalsFilePath);
 
     if (!setupFile.exists) {
       setupFile.create();
-      setupFile.text =
-        'export const localGlobals = {};\n\nsol.registerLocalGlobals(localGlobals);\n';
+      setupFile.text = `
+const localGlobals = {
+  local: {
+    example() {
+        console.log('Hello!');
+    }
+  }
+};
+
+sol.registerLocalGlobals(localGlobals);
+
+type LocalGlobals = typeof localGlobals;
+
+declare global {
+  const local: typeof localGlobals.local;
+
+  namespace NodeJS {
+    interface Global extends LocalGlobals {}
+  }
+}     
+`.trimStart();
     }
 
     setupFile.setupPlay(true);

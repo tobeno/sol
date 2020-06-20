@@ -65,7 +65,12 @@ function setupSolServer(server: repl.REPLServer) {
 }
 
 export function startSolServer() {
-  server = repl.start({ prompt: '> ', writer: myWriter, useGlobal: true });
+  server = repl.start({
+    prompt: '> ',
+    writer: myWriter,
+    ignoreUndefined: true,
+    useGlobal: true,
+  });
 
   let historyReady = false;
   server.setupHistory(getSol().historyFile.path, () => {
