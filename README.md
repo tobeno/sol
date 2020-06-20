@@ -31,3 +31,5 @@ To get started simply run `npm install`.
 ### Building
 
 The project can be updated using `npm run build` (or `npm run build:watch`).
+
+You can also update it from within the Sol CLI using `.rebuild`.

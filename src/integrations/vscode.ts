@@ -1,7 +1,7 @@
 import { File, file } from '../storage/file';
 import { tmp } from '../storage/tmp';
-import { globals } from '../globals';
 import { sol } from '../sol';
+import { json } from '../data/json';
 
 export function vscode(pathOrValue?: any): File {
   let f: File;
@@ -30,47 +30,144 @@ export function vscode(pathOrValue?: any): File {
 
   f.create();
 
-  if (!f.text) {
-    f.text = `// --- SETUP ---\n/* eslint-disable */\nimport { globals } from '${__dirname}/globals';\nconst { ${Object.keys(
-      globals,
-    ).join(', ')} } = globals;\n// @ts-ignore\nconst used = [ ${Object.keys(
-      globals,
-    ).join(
-      ', ',
-    )} ];\n// @ts-ignore\nconst shared = global as any;\n// --- END SETUP ---\n\n`;
-  }
-
   f.vscode();
 
   return f;
 }
 
-export function play(path?: string) {
-  if (!path) {
-    const playDir = sol.localDir.dir('play');
-    playDir.create();
+const playWatchers: Record<string, () => void> = {};
 
-    const gitignore = playDir.file('.gitignore');
-    if (!gitignore.exists) {
-      gitignore.text = '*';
+function runPlay(playId: string, code: string) {
+  code = code
+    .replace(/[\s\S]+#endregion SETUP/, '')
+    .replace(/\nexport (const|let|function|class)/, '\n$1');
+
+  let result = eval(
+    `const unwatch = () => { global.unwatchPlay('${playId}'); };\nlet result = undefined;\n${code}\nresult`,
+  );
+
+  if (result && typeof result === 'object') {
+    if (result.constructor === Object) {
+      result = json(result);
+    } else if (result.constructor === Array) {
+      result = json(result);
     }
-
-    path = `${playDir.path}/play-${new Date()
-      .toISOString()
-      .replace(/[^0-9]/g, '')}.ts`;
   }
 
-  const f = vscode(path);
+  return result;
+}
 
-  f.watch((event) => {
-    if (event === 'change') {
-      let source = f.text;
+export function play(path?: string) {
+  const playFile = sol.playFile(path);
+  const playId = playFile.path;
 
-      source = source.replace(/[\s\S]+--- END SETUP ---/, '');
+  setupPlay(playFile.path);
 
-      eval(`const shared = {};\n${source}\nObject.assign(global, shared);`);
-    }
-  });
+  vscode(playFile.path);
 
-  return f;
+  if (!playWatchers[playId]) {
+    let timeout: NodeJS.Timeout | null = null;
+    const unwatch = playFile.watch((event) => {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+
+      // Delay to avoid double execution
+      timeout = setTimeout(() => {
+        timeout = null;
+        if (event === 'change') {
+          const result = runPlay(playId, playFile.text);
+
+          if (typeof result !== 'undefined') {
+            console.log(result);
+          }
+        } else if (event === 'rename') {
+          if (!playFile.exists) {
+            unwatchPlay(playId);
+          }
+        }
+      }, 10);
+    });
+
+    playWatchers[playId] = unwatch;
+
+    console.log(`Watching ${playId}...`);
+  }
+
+  return playFile;
+}
+
+export function setupPlay(path: string, noLocalGlobals = false) {
+  const playFile = sol.playFile(path);
+
+  playFile.create();
+
+  const localGlobalsKeys = Object.keys(sol.localGlobals);
+  const globalsKeys = Object.keys(sol.globals);
+  let localGlobalsImport;
+
+  if (!noLocalGlobals) {
+    const { localGlobalsFile } = sol;
+    localGlobalsImport = `
+// Globals from .sol/globals.ts
+import { localGlobals } from '${localGlobalsFile.path.slice(
+      0,
+      -1 * (localGlobalsFile.ext.length + 1),
+    )}';
+const { ${localGlobalsKeys.join(', ')} } = localGlobals;`.trim();
+  } else {
+    localGlobalsImport = '';
+  }
+
+  playFile.text =
+    `
+// #region SETUP
+/* eslint-disable */
+// Globals from Sol
+import { globals } from '${sol.packageSrcDir.path}/globals';
+const { ${globalsKeys.join(', ')} } = globals;
+${localGlobalsImport}
+
+// Needed to avoid errors
+// @ts-ignore
+const used = [ ${[
+      ...globalsKeys,
+      ...(!noLocalGlobals ? localGlobalsKeys : []),
+    ].join(', ')} ];
+
+/** Stops watching this file (in play mode) */
+const unwatch = () => {};
+
+/** Set result to return something from the play file */
+let result: any = undefined;
+
+// --------------------------------------------------------
+// #endregion SETUP
+
+`.trimStart() +
+    playFile.text.replace(/[\s\S]+#endregion SETUP/, '').trimStart();
+}
+
+export function unwatchPlay(path: string) {
+  const playFile = sol.playFile(path);
+  const playId = playFile.path;
+
+  if (playWatchers[playId]) {
+    playWatchers[playId]();
+    delete playWatchers[playId];
+
+    console.log(`Stopped watching ${playId}`);
+  }
+}
+
+export function replay(path: string) {
+  const playFile = sol.playFile(path);
+  const playId = playFile.path;
+
+  if (!playFile.exists) {
+    throw new Error(`No play found for '${path}'`);
+  }
+
+  return runPlay(playId, playFile.text);
 }

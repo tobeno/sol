@@ -1,10 +1,9 @@
 import { inspect } from 'util';
 import { globals } from './globals';
 import { awaitSync } from './utils/async';
+import { sol } from './sol';
 
-const globalGeneric = global as any;
-
-Object.assign(globalGeneric, globals);
+sol.registerGlobals(globals);
 
 function defineProperties(
   obj: object,

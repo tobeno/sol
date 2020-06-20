@@ -1,10 +1,12 @@
 import { homedir } from 'os';
 import { REPLServer } from 'repl';
 import { Directory, dir } from './storage/directory';
-import { File } from './storage/file';
+import { File, file } from './storage/file';
 
 export class Sol {
   server: REPLServer | null = null;
+  globals = {};
+  localGlobals = {};
 
   get packageDir(): Directory {
     return this.runtimeDir.parent;
@@ -46,6 +48,37 @@ export class Sol {
     return playDir;
   }
 
+  get localGlobalsFile(): File {
+    const setupFile = this.localDir.file('globals.ts');
+
+    if (!setupFile.exists) {
+      setupFile.create();
+      setupFile.text =
+        'export const localGlobals = {};\n\nsol.registerLocalGlobals(localGlobals);\n';
+    }
+
+    setupFile.setupPlay(true);
+
+    return setupFile;
+  }
+
+  playFile(path?: string): File {
+    path = path || `play-${new Date().toISOString().replace(/[^0-9]/g, '')}`;
+
+    if (!path.endsWith('.ts')) {
+      path += '.ts';
+    }
+
+    let playFile;
+    if (!path.includes('/')) {
+      playFile = this.playDir.file(path);
+    } else {
+      playFile = file(path);
+    }
+
+    return playFile;
+  }
+
   clearHistory() {
     if (!this.server) {
       return;
@@ -53,6 +86,20 @@ export class Sol {
 
     (this.server as any).history = [];
     this.historyFile.clear();
+  }
+
+  registerGlobals(globals: any) {
+    const globalGeneric = global as any;
+
+    Object.assign(globalGeneric, globals);
+    Object.assign(this.globals, globals);
+  }
+
+  registerLocalGlobals(globals: any) {
+    const globalGeneric = global as any;
+
+    Object.assign(globalGeneric, globals);
+    Object.assign(this.localGlobals, globals);
   }
 }
 

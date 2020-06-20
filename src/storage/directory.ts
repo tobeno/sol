@@ -153,12 +153,6 @@ export class UnwrappedDirectory extends Item {
   pretty() {
     this.files('**').forEach((f) => f.pretty());
   }
-
-  toString() {
-    return this.files()
-      .map((file) => file.toString())
-      .join('\n');
-  }
 }
 
 export class Directory extends WithPrint(WithCopy(UnwrappedDirectory)) {}

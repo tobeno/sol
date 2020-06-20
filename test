@@ -1,0 +1,10 @@
+// --- SETUP ---
+/* eslint-disable */
+import { globals } from '/Users/tobi/Projects/sol/dist/integrations/globals';
+const { web, csv, html, json, xml, ast, yaml, sol, astTypes, jsonata, cheerio, cwd, shell, utils, log, vscode, play, clipboard, file, dir, files, dirs, grep, glob, fetch } = globals;
+// @ts-ignore
+const used = [ web, csv, html, json, xml, ast, yaml, sol, astTypes, jsonata, cheerio, cwd, shell, utils, log, vscode, play, clipboard, file, dir, files, dirs, grep, glob, fetch ];
+// @ts-ignore
+const shared = global as any;
+// --- END SETUP ---
+

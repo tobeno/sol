@@ -18,7 +18,7 @@ import * as textUtils from './utils/text';
 import { cwd } from './shell/fn';
 import { log } from './utils/log';
 import { sol } from './sol';
-import { vscode, play } from './integrations/vscode';
+import { vscode, play, replay, unwatchPlay } from './integrations/vscode';
 import * as shell from './shell/shelljs';
 
 export const globals = {
@@ -43,6 +43,8 @@ export const globals = {
   log,
   vscode,
   play,
+  replay,
+  unwatchPlay,
   clipboard,
   file,
   dir,

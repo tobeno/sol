@@ -12,6 +12,7 @@ import { WithCsv } from '../extensions/csv';
 import { WithText } from '../extensions/text';
 import { WithReplaceText } from '../extensions/replace';
 import { ItemCollection } from './item-collection';
+import { play, replay, setupPlay } from '../integrations/vscode';
 
 class UnwrappedFile extends Item {
   constructor(path: string) {
@@ -129,6 +130,18 @@ class UnwrappedFile extends Item {
     fs.copyFileSync(this.path, newPath);
 
     return new File(newPath);
+  }
+
+  play() {
+    play(this.path);
+  }
+
+  setupPlay(noLocalGlobals = false) {
+    setupPlay(this.path, noLocalGlobals);
+  }
+
+  replay() {
+    replay(this.path);
   }
 
   serve() {

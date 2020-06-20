@@ -1,2 +1,4 @@
 #!/usr/bin/env node
-require('../dist/repl');
+const { startSolServer } = require('../dist/repl');
+
+startSolServer();

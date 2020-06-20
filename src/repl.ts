@@ -6,21 +6,21 @@ import { loopWhile } from 'deasync';
 import { Sol } from './sol';
 import { spawnSync } from 'child_process';
 
-const server = repl.start({ prompt: '> ', writer: myWriter, useGlobal: true });
+let server: repl.REPLServer | null = null;
 
 /**
  * Returns Sol instance dynamically (to ensure to correct version is used)
  */
-function sol(): Sol {
+function getSol(): Sol {
   return require('./sol').sol;
 }
 
 /**
  * Runs the build command for Sol
  */
-function rebuild() {
+function rebuildSol() {
   spawnSync('npm run build', {
-    cwd: sol().packageDir.path,
+    cwd: getSol().packageDir.path,
     shell: true,
   });
 }
@@ -28,8 +28,12 @@ function rebuild() {
 /**
  * Reloads the Sol globals without restart
  */
-function reload() {
-  const { runtimeDir } = sol();
+function reloadSolServer() {
+  if (!server) {
+    return;
+  }
+
+  const { runtimeDir } = getSol();
   const modules = runtimeDir.files('**/*.js').map((f) => f.path);
 
   modules.forEach((module) => {
@@ -37,7 +41,7 @@ function reload() {
   });
 
   require('./register');
-  sol().server = server;
+  setupSolServer(server);
 }
 
 function myWriter(output: any) {
@@ -48,25 +52,41 @@ function myWriter(output: any) {
   return inspect(output);
 }
 
-let historyReady = false;
-server.setupHistory(sol().historyFile.path, () => {
-  historyReady = true;
-});
-loopWhile(() => !historyReady);
+function setupSolServer(server: repl.REPLServer) {
+  const sol = getSol();
+  sol.server = server;
 
-sol().server = server;
+  try {
+    const setupFile = sol.localGlobalsFile;
+    setupFile.replay();
+  } catch (e) {
+    console.log('Failed to load local globals.ts file.\n\nError: ' + e.message);
+  }
+}
 
-server.defineCommand('rebuild', {
-  action() {
-    rebuild();
-    reload();
-    this.displayPrompt();
-  },
-});
+export function startSolServer() {
+  server = repl.start({ prompt: '> ', writer: myWriter, useGlobal: true });
 
-server.defineCommand('reload', {
-  action() {
-    reload();
-    this.displayPrompt();
-  },
-});
+  let historyReady = false;
+  server.setupHistory(getSol().historyFile.path, () => {
+    historyReady = true;
+  });
+  loopWhile(() => !historyReady);
+
+  server.defineCommand('rebuild', {
+    action() {
+      rebuildSol();
+      reloadSolServer();
+      this.displayPrompt();
+    },
+  });
+
+  server.defineCommand('reload', {
+    action() {
+      reloadSolServer();
+      this.displayPrompt();
+    },
+  });
+
+  setupSolServer(server);
+}
