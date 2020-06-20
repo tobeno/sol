@@ -1,6 +1,7 @@
 import { Json, json } from '../data/json';
 import { Constructor } from '../interfaces/util';
 import { ClassWithData } from '../interfaces/base';
+import { awaitPromiseSync } from '../utils/async';
 
 export function WithJson<T extends Constructor<ClassWithData>>(base: T) {
   return class Wrapped extends base {
@@ -11,10 +12,10 @@ export function WithJson<T extends Constructor<ClassWithData>>(base: T) {
       this.data = value.data;
     }
 
-    async updateJson(
+     updateJson(
       updater: (value: Json) => Json | Promise<Json>,
-    ): Promise<void> {
-      const updated = await updater(this.data);
+    ) {
+      const updated = awaitPromiseSync(updater(this.data));
       if (typeof updated === 'undefined') {
         throw new Error('Return value missing from updater');
       }
@@ -22,12 +23,12 @@ export function WithJson<T extends Constructor<ClassWithData>>(base: T) {
       this.data = updated;
     }
 
-    async showJson(
+     showJson(
       formatter?: (data: any) => any | Promise<any>,
-    ): Promise<void> {
+    ){
       let data = this.data;
       if (formatter) {
-        data = await formatter(data);
+        data = awaitPromiseSync(formatter(data));
       }
 
       console.log(data);

@@ -9,6 +9,7 @@ import { csv } from './data/csv';
 import { html } from './data/html';
 import { json } from './data/json';
 import { xml } from './data/xml';
+import { yaml } from './data/yaml';
 import { ast, astTypes } from './data/ast';
 import { clipboard } from './os/clipboard'; 
 import * as arrayUtils from './utils/array';
@@ -27,6 +28,7 @@ export const globals = {
     json,
     xml,
     ast,
+    yaml,
     astTypes,
     jsonata,
     cheerio,

@@ -1,0 +1,56 @@
+name: "@tobeno/sol"
+version: 1.0.0
+description: ""
+author: Tobias Laber <tobeno@gmx.de>
+license: MIT
+repository: https://www.github.com/tobeno/sol
+main: dist/index.js
+module: src/index.ts
+bin:
+  sol: ./bin/sol.js
+scripts:
+  build: rimraf dist/* && tsc
+  build:watch: rimraf dist/* && tsc --watch
+  sol: node -r ./bin/sol --experimental-repl-await --enable-source-maps
+  format: prettier --write "src/**/*.ts" "*.{js,ts,json,yml,yaml}"
+  test: 'echo "Error: no test specified" && exit 1'
+dependencies:
+  "@babel/parser": ^7.9.6
+  "@babel/traverse": ^7.10.1
+  "@babel/types": ^7.9.6
+  "@types/node-fetch": ^2.5.7
+  axios: ^0.19.2
+  cheerio: ^1.0.0-rc.3
+  clipboardy: ^2.3.0
+  deasync: ^0.1.20
+  fast-glob: ^3.2.2
+  jsonata: ^1.8.3
+  node-fetch: ^2.6.0
+  papaparse: ^5.2.0
+  recast: ^0.19.1
+  serve: ^11.3.2
+  shelljs: ^0.8.4
+  tmp: ^0.2.1
+  typescript: ^3.9.3
+  yaml: ^1.10.0
+devDependencies:
+  "@types/babel__traverse": ^7.0.12
+  "@types/cheerio": ^0.22.18
+  "@types/clipboardy": ^2.0.1
+  "@types/deasync": ^0.1.1
+  "@types/jsonata": ^1.5.1
+  "@types/node": ^14.0.5
+  "@types/papaparse": ^5.0.4
+  "@types/prettier": ^2.0.1
+  "@types/shelljs": ^0.8.8
+  "@types/tmp": ^0.2.0
+  husky: ^4.2.5
+  lint-staged: ^10.2.11
+  prettier: ^2.0.5
+  rimraf: ^3.0.2
+  ts-node: ^8.10.1
+husky:
+  hooks:
+    pre-commit: lint-staged
+lint-staged:
+  "*.{js,jsx,json,ts,tsx,md,html,css}": prettier --write

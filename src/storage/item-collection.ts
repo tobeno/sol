@@ -4,158 +4,132 @@ import { grep } from './search';
 import { clipboard } from '../os/clipboard';
 import * as fg from 'fast-glob';
 
+export class ItemCollection<ItemType extends File | Directory> extends Array<ItemType> {
+    get size(): number {
+        let result = 0;
 
+        this.forEach((item) => {
+            if (item instanceof Directory || item instanceof File) {
+                result += item.size;
+            }
+        });
 
-export class ItemCollection<ItemType extends File | Directory> extends Array<
-  ItemType
-> {
-  get size(): number {
-    let result = 0;
+        return result;
+    }
 
-    this.forEach((item) => {
-      if (item instanceof Directory || item instanceof File) {
-        result += item.size;
-      }
-    });
+    files(exp?: string): ItemCollection<File> {
+        let result: File[] = [];
 
-    return result;
-  }
+        this.forEach((item) => {
+            if (item instanceof Directory) {
+                result.splice(result.length, 0, ...item.files(exp));
+            } else if (!exp && item instanceof File) {
+                result.push(item);
+            }
+        });
 
-  files(exp?: string): ItemCollection<File> {
-    let result: File[] = [];
+        return new ItemCollection<File>(...result);
+    }
 
-    this.forEach((item) => {
-      if (item instanceof Directory) {
-        result.splice(result.length, 0, ...item.files(exp));
-      } else if (!exp && item instanceof File) {
-        result.push(item);
-      }
-    });
+    dirs(): ItemCollection<Directory> {
+        let result: Directory[] = [];
 
-    return new ItemCollection<File>(...result);
-  }
+        this.forEach((item) => {
+            if (item instanceof Directory) {
+                result.push(item);
+            }
+        });
 
-  dirs(): ItemCollection<Directory> {
-    let result: Directory[] = [];
+        return new ItemCollection<Directory>(...result);
+    }
 
-    this.forEach((item) => {
-      if (item instanceof Directory) {
-        result.push(item);
-      }
-    });
+    glob(exp: string): ItemCollection<File | Directory> {
+        let result: (File | Directory)[] = [];
 
-    return new ItemCollection<Directory>(...result);
-  }
+        this.map((item) => {
+            if (item instanceof Directory) {
+                result.splice(result.length, 0, ...item.files(exp));
+            }
+        });
 
-  glob(exp: string): ItemCollection<File | Directory> {
-    let result: (File | Directory)[] = [];
+        return new ItemCollection<File | Directory>(...result);
+    }
 
-    this.map((item) => {
-      if (item instanceof Directory) {
-        result.splice(result.length, 0, ...item.files(exp));
-      }
-    });
+    grep(pattern: string | RegExp): ItemCollection<File> {
+        const result: File[] = [];
 
-    return new ItemCollection<File | Directory>(...result);
-  }
+        this.map((item) => {
+            if (item instanceof Directory) {
+                result.splice(result.length, 0, ...item.grep(pattern));
+            } else if (item instanceof File) {
+                if (grep(pattern, item.path).length) {
+                    result.push(item);
+                }
+            }
+        });
 
-  grep(pattern: string | RegExp): ItemCollection<File> {
-    const result: File[] = [];
+        return new ItemCollection<File>(...result);
+    }
 
-    this.map((item) => {
-      if (item instanceof Directory) {
-        result.splice(result.length, 0, ...item.grep(pattern));
-      } else if (item instanceof File) {
-        if (grep(pattern, item.path).length) {
-          result.push(item);
-        }
-      }
-    });
+    replaceText(pattern: string | RegExp, replacer: any): ItemCollection<File> {
+        const result: File[] = [];
 
-    return new ItemCollection<File>(...result);
-  }
+        this.forEach(async (item) => {
+            if (item instanceof Directory) {
+                result.splice(result.length, 0, ...item.replaceText(pattern, replacer));
+            } else if (item instanceof File) {
+                if (item.replaceText(pattern, replacer)) {
+                    result.push(item);
+                }
+            }
+        });
 
-  async replaceText(
-    pattern: string | RegExp,
-    replacer: any,
-  ): Promise<ItemCollection<File>> {
-    const result: File[] = [];
+        return new ItemCollection<File>(...result);
+    }
 
-    await Promise.all(
-      this.map(async (item) => {
-        if (item instanceof Directory) {
-          result.splice(
-            result.length,
-            0,
-            ...(await item.replaceText(pattern, replacer)),
-          );
-        } else if (item instanceof File) {
-          if (await item.replaceText(pattern, replacer)) {
-            result.push(item);
-          }
-        }
-      }),
+    toString() {
+        return this.map((file) => file.toString()).join('\n');
+    }
+
+    print() {
+        console.log(this.toString());
+    }
+
+    copy() {
+        clipboard.text = this.toString();
+    }
+}
+
+export function files(exp?: string, options: fg.Options = {}): ItemCollection<File> {
+    return new ItemCollection<File>(
+        ...fg
+            .sync(exp || '*', {
+                dot: true,
+                ...options,
+                objectMode: true,
+                onlyFiles: true
+            })
+            .map((file) => {
+                return new File(file.path);
+            })
     );
-
-    return new ItemCollection<File>(...result);
-  }
-
-  toString() {
-    return this.map((file) => file.toString()).join('\n');
-  }
-
-  print() {
-    console.log(this.toString());
-  }
-
-  copy() {
-    clipboard.text = this.toString();
-  }
 }
 
-
-export function files(
-  exp?: string,
-  options: fg.Options = {},
-): ItemCollection<File> {
-  return new ItemCollection<File>(
-    ...fg
-      .sync(exp || '*', {
-        dot: true,
-        ...options,
-        objectMode: true,
-        onlyFiles: true,
-      })
-      .map((file) => {
-        return new File(file.path);
-      }),
-  );
+export function dirs(exp?: string, options: fg.Options = {}): ItemCollection<Directory> {
+    return new ItemCollection<Directory>(
+        ...fg
+            .sync(exp || '*', {
+                dot: true,
+                ...options,
+                objectMode: true,
+                onlyDirectories: true
+            })
+            .map((file) => {
+                return new Directory(file.path);
+            })
+    );
 }
 
-export function dirs(
-  exp?: string,
-  options: fg.Options = {},
-): ItemCollection<Directory> {
-  return new ItemCollection<Directory>(
-    ...fg
-      .sync(exp || '*', {
-        dot: true,
-        ...options,
-        objectMode: true,
-        onlyDirectories: true,
-      })
-      .map((file) => {
-        return new Directory(file.path);
-      }),
-  );
-}
-
-export function glob(
-  exp?: string,
-  options: fg.Options = {},
-): ItemCollection<Directory | File> {
-  return new ItemCollection<File | Directory>(
-    ...files(exp, options),
-    ...dirs(exp, options),
-  );
+export function glob(exp?: string, options: fg.Options = {}): ItemCollection<Directory | File> {
+    return new ItemCollection<File | Directory>(...files(exp, options), ...dirs(exp, options));
 }

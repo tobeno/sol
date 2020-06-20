@@ -7,6 +7,8 @@ import { csv } from '../data/csv';
 import { json } from '../data/json';
 import { ast } from '../data/ast';
 import { html } from 'cheerio';
+import { xml } from '../data/xml';
+import { yaml } from '../data/yaml';
 
 class UnwrappedResponse {
   constructor(readonly axiosResponse: AxiosResponse) {}
@@ -28,12 +30,20 @@ class UnwrappedResponse {
     return csv(this.text);
   }
 
+  get yaml() {
+    return yaml(this.text);
+  }
+
   get json() {
     return json(this.data);
   }
 
   get ast() {
     return ast(this.text);
+  }
+
+  get xml() {
+    return xml(this.text);
   }
 
   get html() {

@@ -1,6 +1,7 @@
 import { File } from './file';
 import { ItemCollection } from './item-collection';
 import { exec } from 'shelljs';
+import { awaitPromiseSync } from '../utils/async';
 
 
 
@@ -20,18 +21,18 @@ export function grep(
   );
 }
 
-export async function replaceText(
+export function replaceText(
   pattern: string | RegExp,
   replacer: any,
   path?: string,
-): Promise<ItemCollection<File>> {
+): ItemCollection<File> {
   const files = grep(pattern, path);
 
-  Promise.all(
+  awaitPromiseSync(Promise.all(
     files.map((file) => {
       file.replaceText(pattern, replacer);
     }),
-  );
+  ));
 
   return files;
 }

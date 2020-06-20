@@ -23,10 +23,14 @@ export class UnwrappedHtml {
   [inspect.custom]() {
     return this.text;
   }
+
+  toString() {
+    return this.text;
+  }
 }
 
 export class Html extends WithAllText(UnwrappedHtml) {}
 
-export function html(data: string) {
-  return new Html(data);
+export function html(text: string) {
+  return new Html(text);
 }

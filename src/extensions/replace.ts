@@ -5,21 +5,21 @@ export function WithReplaceText<T extends Constructor<ClassWithUpdateText>>(
   base: T,
 ) {
   return class Wrapped extends base {
-    async replaceText(
+     replaceText(
       search: string | RegExp,
       replacer: (substring: string, ...args: any[]) => string,
-    ): Promise<boolean>;
-    async replaceText(
+    ): boolean;
+     replaceText(
       search: string | RegExp,
       replacer: string,
-    ): Promise<boolean>;
-    async replaceText(
+    ): boolean;
+     replaceText(
       search: string | RegExp,
       replacer: any,
-    ): Promise<boolean> {
+    ): boolean {
       let result = false;
 
-      await this.updateText((contents: string) => {
+      this.updateText((contents: string) => {
         const oldContents = contents;
 
         contents = contents.replace(search, replacer);

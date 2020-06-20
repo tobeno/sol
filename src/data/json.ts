@@ -1,6 +1,8 @@
 import { jsonata, Expression } from '../integrations/jsonata';
 import { inspect } from 'util';
 import { WithAllText } from '../extensions/all-text';
+import { csv } from './csv';
+import { yaml } from './yaml';
 
 export class UnwrappedJson {
     constructor(public data: any) {}
@@ -11,6 +13,14 @@ export class UnwrappedJson {
 
     set text(value: string) {
         this.data = JSON.parse(value);
+    }
+
+    get csv() {
+      return csv(this.data);
+    }
+
+    get yaml() {
+      return yaml(this.data);
     }
 
     get keys() {
@@ -42,6 +52,10 @@ export class UnwrappedJson {
    */
     [inspect.custom]() {
         return this.data;
+    }
+
+    toString() {
+      return this.text;
     }
 }
 

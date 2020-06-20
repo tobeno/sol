@@ -61,10 +61,10 @@ export class UnwrappedDirectory extends Item {
     );
   }
 
-  async replaceText(
+  replaceText(
     pattern: string | RegExp,
     replacer: any,
-  ): Promise<ItemCollection<File>> {
+  ): ItemCollection<File> {
     return replaceText(pattern, replacer, this.path);
   }
 

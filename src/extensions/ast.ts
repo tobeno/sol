@@ -1,6 +1,7 @@
 import { Ast,ast } from '../data/ast';
 import { Constructor } from '../interfaces/util';
 import { ClassWithText } from '../interfaces/base';
+import { awaitPromiseSync } from '../utils/async';
 
 export function WithAst<T extends Constructor<ClassWithText>>(base: T) {
   return class Wrapped extends base {
@@ -12,10 +13,10 @@ export function WithAst<T extends Constructor<ClassWithText>>(base: T) {
       this.text = value.code;
     }
 
-    async updateAst(
+    updateAst(
       updater: (value: Ast) => Ast | Promise<Ast>,
-    ): Promise<void> {
-      const updated = await updater(this.ast);
+    ) {
+      const updated = awaitPromiseSync(updater(this.ast));
       if (typeof updated === 'undefined') {
         throw new Error('Return value missing from updater');
       }
@@ -23,10 +24,10 @@ export function WithAst<T extends Constructor<ClassWithText>>(base: T) {
       this.ast = updated;
     }
 
-    async showAst(formatter?: (ast: Ast) => any | Promise<any>): Promise<void> {
+    showAst(formatter?: (ast: Ast) => any | Promise<any>) {
       let ast = this.ast;
       if (formatter) {
-        ast = await formatter(ast);
+        ast = awaitPromiseSync(formatter(ast));
       }
 
       console.log(ast);

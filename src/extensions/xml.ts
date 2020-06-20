@@ -1,6 +1,7 @@
 import { Xml , xml} from '../data/xml';
 import { Constructor } from '../interfaces/util';
 import { ClassWithText } from '../interfaces/base';
+import { awaitPromiseSync } from '../utils/async';
 
 export function WithXml<T extends Constructor<ClassWithText>>(base: T) {
   return class Wrapped extends base {
@@ -8,13 +9,13 @@ export function WithXml<T extends Constructor<ClassWithText>>(base: T) {
       return xml(this.text);
     }
     set xml(value: Xml) {
-      this.text = value.text;
+      this.text = value.data;
     }
 
-    async updateXml(
+     updateXml(
       updater: (value: Xml) => Xml | Promise<Xml>,
-    ): Promise<void> {
-      const updated = await updater(this.xml);
+    ) {
+      const updated = awaitPromiseSync(updater(this.xml));
       if (typeof updated === 'undefined') {
         throw new Error('Return value missing from updater');
       }
@@ -22,12 +23,12 @@ export function WithXml<T extends Constructor<ClassWithText>>(base: T) {
       this.xml = updated;
     }
 
-    async showXml(
+     showXml(
       formatter?: (data: Xml) => any | Promise<any>,
-    ): Promise<void> {
+    ) {
       let data = this.xml;
       if (formatter) {
-        data = await formatter(data);
+        data = awaitPromiseSync(formatter(data));
       }
 
       console.log(data);

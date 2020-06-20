@@ -6,28 +6,28 @@ export function deasync<FnType extends (...args: any[]) => Promise<any>>(
   fn: FnType,
 ): (...args: Parameters<FnType>) => ThenArg<ReturnType<FnType>> {
   return (...args: Parameters<FnType>) => {
-    let result = undefined;
-    let error = null;
-
-    let pending = true;
-
-    fn(...args)
-      .then((r) => {
-        result = r;
-
-        pending = false;
-      })
-      .catch((e) => {
-        pending = false;
-        error = e;
-      });
-
-    loopWhile(() => pending);
-
-    if (error) {
-      throw error;
-    }
-
-    return result as any;
+    return awaitPromiseSync(fn(...args));
   };
+}
+
+export function awaitPromiseSync<T>(promise: T | PromiseLike<T>): T {
+  let done = false;
+  let data: T | undefined = undefined;
+  let error = undefined;
+
+  Promise.resolve(promise).then((d: any) => {
+      data = d;
+      done = true;
+  }).catch((e: any) => {
+      error = e;
+      done = true;
+  });
+
+  loopWhile(() => !done);
+
+  if (error) {
+      throw error;
+  }
+
+  return data as any;
 }

@@ -11,112 +11,111 @@ import { WithData } from '../extensions/data';
 import { WithCsv } from '../extensions/csv';
 import { WithText } from '../extensions/text';
 import { WithReplaceText } from '../extensions/replace';
+import { WithYaml } from '../extensions/yaml';
 
 class UnwrappedFile extends Item {
-  constructor(path: string) {
-    super(path);
-  }
-
-  get ext(): string {
-    const { basename: name } = this;
-    const pos = name.lastIndexOf('.');
-    if (pos <= 0) {
-      return '';
+    constructor(path: string) {
+        super(path);
     }
 
-    return name.slice(pos + 1);
-  }
+    get ext(): string {
+        const { basename: name } = this;
+        const pos = name.lastIndexOf('.');
+        if (pos <= 0) {
+            return '';
+        }
 
-  get name(): string {
-    const { basename: name } = this;
-    const pos = name.lastIndexOf('.');
-    if (pos <= 0) {
-      return name;
+        return name.slice(pos + 1);
     }
 
-    return name.slice(0, pos);
-  }
+    get name(): string {
+        const { basename: name } = this;
+        const pos = name.lastIndexOf('.');
+        if (pos <= 0) {
+            return name;
+        }
 
-  get dir(): Directory {
-    return new Directory(path.dirname(this.path));
-  }
-
-  get text(): string {
-    return fs.readFileSync(this.path, 'utf8');
-  }
-
-  set text(value: string) {
-    fs.writeFileSync(this.path, value, 'utf8');
-  }
-
-  get length() {
-    return this.text.length;
-  }
-
-  get size() {
-    return this.stats.size;
-  }
-
-  create() {
-    if (this.exists) {
-      return;
+        return name.slice(0, pos);
     }
 
-    const dir = this.dir;
-    if (!dir.exists) {
-      dir.create();
+    get dir(): Directory {
+        return new Directory(path.dirname(this.path));
     }
 
-    this.text = '';
-  }
+    get text(): string {
+        return fs.readFileSync(this.path, 'utf8');
+    }
 
-  delete() {
-    fs.unlinkSync(this.path);
-  }
+    set text(value: string) {
+        fs.writeFileSync(this.path, value, 'utf8');
+    }
 
-  moveTo(newPath: string) {
-    fs.renameSync(this.path, newPath);
+    get length() {
+        return this.text.length;
+    }
 
-    this.path = newPath;
-  }
+    get size() {
+        return this.stats.size;
+    }
 
-  copyTo(newPath: string) {
-    fs.copyFileSync(this.path, newPath);
+    create() {
+        if (this.exists) {
+            return;
+        }
 
-    this.path = newPath;
-  }
+        const dir = this.dir;
+        if (!dir.exists) {
+            dir.create();
+        }
 
-  serve() {
-    this.dir.serve();
-  }
+        this.text = '';
+    }
 
-  watch(fn: (eventType: string, filename: string) => any): () => void {
-    const watcher = fs.watch(
-      this.path,
-      {
-        encoding: 'utf8',
-      },
-      fn,
-    );
+    delete() {
+        fs.unlinkSync(this.path);
+    }
 
-    return () => {
-      watcher.close();
-    };
-  }
+    moveTo(newPath: string) {
+        fs.renameSync(this.path, newPath);
 
-  pretty() {
-    this.text = prettier.format(this.text, {
-      filepath: this.path,
-    });
-  }
+        this.path = newPath;
+    }
+
+    copyTo(newPath: string) {
+        fs.copyFileSync(this.path, newPath);
+
+        this.path = newPath;
+    }
+
+    serve() {
+        this.dir.serve();
+    }
+
+    watch(fn: (eventType: string, filename: string) => any): () => void {
+        const watcher = fs.watch(
+            this.path,
+            {
+                encoding: 'utf8'
+            },
+            fn
+        );
+
+        return () => {
+            watcher.close();
+        };
+    }
+
+    pretty() {
+        this.text = prettier.format(this.text, {
+            filepath: this.path
+        });
+    }
 }
 
 export class File extends WithReplaceText(
-  WithAst(
-    WithCsv(WithJson(WithText(WithData(WithCopy(WithPrint(UnwrappedFile)))))),
-  ),
+    WithAst(WithYaml(WithCsv(WithJson(WithText(WithData(WithCopy(WithPrint(UnwrappedFile))))))))
 ) {}
 
 export function file(path: string): File {
-  return new File(path);
+    return new File(path);
 }

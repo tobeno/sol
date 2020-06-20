@@ -5,7 +5,7 @@ import { WithAllText } from '../extensions/all-text';
 export class UnwrappedXml {
     private cheerio: CheerioStatic;
 
-    constructor(public text: string) {
+    constructor(public text: string | any) {
         this.cheerio = cheerio.load(this.text, {
             xmlMode: true
         });
@@ -25,10 +25,14 @@ export class UnwrappedXml {
     [inspect.custom]() {
         return this.text;
     }
+
+    toString() {
+      return this.text;
+    }
 }
 
 export class Xml extends WithAllText(UnwrappedXml) {}
 
-export function xml(data: string) {
-  return new Xml(data);
+export function xml(text: string) {
+  return new Xml(text);
 }
