@@ -4,6 +4,7 @@ import { grep } from './search';
 import { clipboard } from '../os/clipboard';
 import { Item } from './item';
 import * as fg from 'fast-glob';
+import { awaitSync } from '../utils/async';
 
 export class GenericItemCollection<ItemType extends Item> extends Array<
   ItemType
@@ -18,6 +19,18 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
     });
 
     return result;
+  }
+
+  get exts(): string[] {
+    return [...new Set(Array.from(this.files()).map((f) => f.ext))].sort();
+  }
+
+  get names(): string[] {
+    return [...new Set(Array.from(this).map((i) => i.name))].sort();
+  }
+
+  get basenames(): string[] {
+    return [...new Set(Array.from(this).map((i) => i.basename))].sort();
   }
 
   files(exp?: string): FileCollection {
@@ -78,7 +91,23 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
     return new FileCollection(...result);
   }
 
-  replaceText(pattern: string | RegExp, replacer: any): FileCollection {
+  updateName(
+    cb: (name: string) => string | Promise<string>,
+  ): AnyItemCollection {
+    this.forEach((f) => (f.name = awaitSync(cb(f.name))));
+
+    return this as any;
+  }
+
+  updateBasename(
+    cb: (basename: string) => string | Promise<string>,
+  ): AnyItemCollection {
+    this.forEach((f) => (f.basename = awaitSync(cb(f.basename))));
+
+    return this as any;
+  }
+
+  replaceText(pattern: string | RegExp, replacer: any): AnyItemCollection {
     const result: File[] = [];
 
     this.items()
@@ -97,7 +126,7 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
         }
       });
 
-    return new FileCollection(...result);
+    return this as any;
   }
 
   toString() {
@@ -113,13 +142,29 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
   }
 }
 
-class UnwrappedFileCollection extends GenericItemCollection<File> {}
+class UnwrappedFileCollection extends GenericItemCollection<File> {
+  delete(): ItemCollection {
+    this.forEach((f) => f.delete());
+
+    return this;
+  }
+
+  updateExt(cb: (ext: string) => string | Promise<string>): ItemCollection {
+    this.forEach((f) => (f.ext = awaitSync(cb(f.ext))));
+
+    return this;
+  }
+}
 class UnwrappedDirectoryCollection extends GenericItemCollection<Directory> {}
 class UnwrappedItemCollection extends GenericItemCollection<File | Directory> {}
 
 export class FileCollection extends UnwrappedFileCollection {}
 export class DirectoryCollection extends UnwrappedDirectoryCollection {}
 export class ItemCollection extends UnwrappedItemCollection {}
+export type AnyItemCollection =
+  | FileCollection
+  | DirectoryCollection
+  | ItemCollection;
 
 export function files(exp?: string, options: fg.Options = {}): FileCollection {
   return new FileCollection(

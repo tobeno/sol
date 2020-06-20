@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { inspect } from 'util';
 import { exec } from 'shelljs';
-import { relative } from 'path';
 
 export abstract class Item {
   absolutePath: string;
