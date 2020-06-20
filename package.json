@@ -13,7 +13,7 @@
   "scripts": {
     "build": "rimraf dist/* && tsc",
     "build:watch": "rimraf dist/* && tsc --watch",
-    "sol": "node -r ./bin/sol --experimental-repl-await --enable-source-maps",
+    "sol": "node ./bin/sol --enable-source-maps",
     "format": "prettier --write \"src/**/*.ts\" \"*.{js,ts,json,yml,yaml}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -43,7 +43,7 @@
     "@types/clipboardy": "^2.0.1",
     "@types/deasync": "^0.1.1",
     "@types/jsonata": "^1.5.1",
-    "@types/node": "^14.0.5",
+    "@types/node": "^14.0.13",
     "@types/papaparse": "^5.0.4",
     "@types/prettier": "^2.0.1",
     "@types/shelljs": "^0.8.8",

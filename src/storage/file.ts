@@ -11,8 +11,7 @@ import { WithData } from '../extensions/data';
 import { WithCsv } from '../extensions/csv';
 import { WithText } from '../extensions/text';
 import { WithReplaceText } from '../extensions/replace';
-import { WithFiles } from '../extensions/files';
-import { FileCollection } from './item-collection';
+import { ItemCollection } from './item-collection';
 
 class UnwrappedFile extends Item {
   constructor(path: string) {
@@ -55,6 +54,18 @@ class UnwrappedFile extends Item {
     this.moveTo(`${value.path}/${this.basename}`);
   }
 
+  get exists(): boolean {
+    return fs.existsSync(this.path);
+  }
+
+  set exists(value: boolean) {
+    if (value) {
+      this.create();
+    } else {
+      this.delete();
+    }
+  }
+
   get text(): string {
     return fs.readFileSync(this.path, 'utf8');
   }
@@ -71,23 +82,27 @@ class UnwrappedFile extends Item {
     return this.stats.size;
   }
 
-  create() {
-    if (this.exists) {
-      return;
+  create(): File {
+    if (!this.exists) {
+      const dir = this.dir;
+      if (!dir.exists) {
+        dir.create();
+      }
+
+      this.text = '';
     }
 
-    const dir = this.dir;
-    if (!dir.exists) {
-      dir.create();
-    }
-
-    this.text = '';
-
-    return this;
+    return this as any;
   }
 
-  files(): FileCollection {
-    return new FileCollection(this as any);
+  clear(): File {
+    this.text = '';
+
+    return this as any;
+  }
+
+  items(): ItemCollection {
+    return new ItemCollection(this as any);
   }
 
   delete() {
@@ -145,13 +160,11 @@ class UnwrappedFile extends Item {
   }
 }
 
-export class File extends WithReplaceText(
-  WithFiles(
-    WithAst(
-      WithCsv(WithJson(WithText(WithData(WithCopy(WithPrint(UnwrappedFile)))))),
-    ),
-  ),
-) {}
+class CoreFile extends WithText(WithData(UnwrappedFile)) {}
+class DataFile extends WithAst(WithCsv(WithJson(CoreFile))) {}
+class ToolsFile extends WithReplaceText(WithCopy(WithPrint(DataFile))) {}
+
+export class File extends ToolsFile {}
 
 export function file(path: string): File {
   return new File(path);

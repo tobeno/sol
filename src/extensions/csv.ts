@@ -1,7 +1,7 @@
-import { Csv,csv} from '../data/csv';
+import { Csv, csv } from '../data/csv';
 import { Constructor } from '../interfaces/util';
 import { ClassWithText } from '../interfaces/base';
-import { awaitPromiseSync } from '../utils/async';
+import { awaitSync } from '../utils/async';
 
 export function WithCsv<T extends Constructor<ClassWithText>>(base: T) {
   return class Wrapped extends base {
@@ -13,10 +13,8 @@ export function WithCsv<T extends Constructor<ClassWithText>>(base: T) {
       this.text = value.text;
     }
 
-    updateCsv(
-      updater: (value: Csv) => Csv | Promise<Csv>,
-    ) {
-      const updated = awaitPromiseSync(updater(this.csv));
+    updateCsv(updater: (value: Csv) => Csv | Promise<Csv>) {
+      const updated = awaitSync(updater(this.csv));
       if (typeof updated === 'undefined') {
         throw new Error('Return value missing from updater');
       }
@@ -24,12 +22,10 @@ export function WithCsv<T extends Constructor<ClassWithText>>(base: T) {
       this.csv = updated;
     }
 
-    showCsv(
-      formatter?: (value: Csv) => any | Promise<any>,
-    ) {
+    showCsv(formatter?: (value: Csv) => any | Promise<any>) {
       let value = this.csv;
       if (formatter) {
-        value = awaitPromiseSync(formatter(value));
+        value = awaitSync(formatter(value));
       }
 
       console.log(value);

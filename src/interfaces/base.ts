@@ -1,4 +1,4 @@
-import { FileCollection } from '../storage/item-collection';
+import { ItemCollection } from '../storage/item-collection';
 
 export interface ClassWithData {
   data: any;
@@ -10,8 +10,8 @@ export interface ClassWithText {
   toString?(): string;
 }
 
-export interface ClassWithFiles {
-  files(): FileCollection;
+export interface ClassWithStorageItems {
+  items(): ItemCollection;
 }
 
 export interface ClassWithUpdateText {

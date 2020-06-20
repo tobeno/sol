@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { exec } from 'shelljs';
 import { Item } from './item';
-import { File } from './file';
+import { file } from './file';
 import { grep, replaceText } from './search';
 import {
   files,
@@ -14,7 +14,6 @@ import {
 } from './item-collection';
 import { WithPrint } from '../extensions/print';
 import { WithCopy } from '../extensions/copy';
-import { WithFiles } from '../extensions/files';
 
 export class UnwrappedDirectory extends Item {
   get parent(): Directory {
@@ -39,48 +38,46 @@ export class UnwrappedDirectory extends Item {
     this.basename = value;
   }
 
-  create() {
-    fs.mkdirSync(this.path, {
-      recursive: true,
-    });
-
-    return this;
+  get exists(): boolean {
+    return fs.existsSync(this.path);
   }
 
-  moveTo(newPath: string | Directory) {
-    if (newPath instanceof Directory) {
-      newPath = `${newPath.path}/${this.basename}`;
+  set exists(value: boolean) {
+    if (value) {
+      this.create();
+    } else {
+      throw new Error('Cannot delete directory');
+    }
+  }
+
+  create(): Directory {
+    if (!this.exists) {
+      fs.mkdirSync(this.path, {
+        recursive: true,
+      });
     }
 
-    fs.renameSync(this.path, newPath);
-
-    this.path = newPath;
-
-    return this;
+    return this as any;
   }
 
-  renameTo(newBasename: string) {
-    return this.moveTo(`${this.parent.path}/${newBasename}`);
+  items(): ItemCollection {
+    return this.glob();
   }
 
   files(exp?: string): FileCollection {
     return files(path.join(this.path, exp || '*'));
   }
 
-  file(exp?: string): File | null {
-    const files = this.files(exp);
-
-    return files.length ? files[0] : null;
+  file(path: string) {
+    return file(`${this.path}/${path}`);
   }
 
   dirs(exp?: string): DirectoryCollection {
     return dirs(path.join(this.path, exp || '*'));
   }
 
-  dir(exp?: string): Directory | null {
-    const dirs = this.dirs(exp);
-
-    return dirs.length ? dirs[0] : null;
+  dir(path: string) {
+    return dir(`${this.path}/${path}`);
   }
 
   grep(pattern: string | RegExp): FileCollection {
@@ -89,6 +86,40 @@ export class UnwrappedDirectory extends Item {
 
   glob(exp?: string): ItemCollection {
     return glob(path.join(this.path, exp || '*'));
+  }
+
+  moveTo(newPath: string | Directory) {
+    if (newPath instanceof Directory) {
+      newPath = `${newPath.path}/`;
+    }
+
+    if (newPath.endsWith('/')) {
+      // Copy into
+      exec(`mv '${this.path}' '${newPath}'`);
+    } else {
+      // Copy to
+      exec(`mv '${this.path}/' '${newPath}/'`);
+    }
+
+    this.path = newPath;
+
+    return this;
+  }
+
+  copyTo(newPath: string) {
+    if (newPath.endsWith('/')) {
+      // Copy into
+      exec(`cp -r '${this.path}' '${newPath}'`);
+    } else {
+      // Copy to
+      exec(`cp -r '${this.path}/' '${newPath}/'`);
+    }
+
+    return new Directory(newPath);
+  }
+
+  renameTo(newBasename: string) {
+    return this.moveTo(`${this.parent.path}/${newBasename}`);
   }
 
   serve() {
@@ -105,6 +136,24 @@ export class UnwrappedDirectory extends Item {
     return replaceText(pattern, replacer, this.path);
   }
 
+  watch(fn: (eventType: string, filename: string) => any): () => void {
+    const watcher = fs.watch(
+      this.path,
+      {
+        encoding: 'utf8',
+      },
+      fn,
+    );
+
+    return () => {
+      watcher.close();
+    };
+  }
+
+  pretty() {
+    this.files('**').forEach((f) => f.pretty());
+  }
+
   toString() {
     return this.files()
       .map((file) => file.toString())
@@ -112,9 +161,7 @@ export class UnwrappedDirectory extends Item {
   }
 }
 
-export class Directory extends WithFiles(
-  WithPrint(WithCopy(UnwrappedDirectory)),
-) {}
+export class Directory extends WithPrint(WithCopy(UnwrappedDirectory)) {}
 
 export function dir(path?: string): Directory {
   return new Directory(path || '.');

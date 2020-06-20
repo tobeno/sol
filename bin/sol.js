@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../dist/register');
+require('../dist/repl');

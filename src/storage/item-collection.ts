@@ -2,7 +2,6 @@ import { Directory } from './directory';
 import { File } from './file';
 import { grep } from './search';
 import { clipboard } from '../os/clipboard';
-import { WithFiles } from '../extensions/files';
 import { Item } from './item';
 import * as fg from 'fast-glob';
 
@@ -47,6 +46,10 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
     return new DirectoryCollection(...result);
   }
 
+  items(): ItemCollection {
+    return this as any;
+  }
+
   glob(exp: string): ItemCollection {
     let result: (File | Directory)[] = [];
 
@@ -75,14 +78,12 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
     return new FileCollection(...result);
   }
 
-  async replaceText(
-    pattern: string | RegExp,
-    replacer: any,
-  ): Promise<FileCollection> {
+  replaceText(pattern: string | RegExp, replacer: any): FileCollection {
     const result: File[] = [];
 
-    await Promise.all(
-      this.map(async (item) => {
+    this.items()
+      .files()
+      .forEach(async (item) => {
         if (item instanceof Directory) {
           result.splice(
             result.length,
@@ -94,8 +95,7 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
             result.push(item);
           }
         }
-      }),
-    );
+      });
 
     return new FileCollection(...result);
   }
@@ -117,11 +117,9 @@ class UnwrappedFileCollection extends GenericItemCollection<File> {}
 class UnwrappedDirectoryCollection extends GenericItemCollection<Directory> {}
 class UnwrappedItemCollection extends GenericItemCollection<File | Directory> {}
 
-export class FileCollection extends WithFiles(UnwrappedFileCollection) {}
-export class DirectoryCollection extends WithFiles(
-  UnwrappedDirectoryCollection,
-) {}
-export class ItemCollection extends WithFiles(UnwrappedItemCollection) {}
+export class FileCollection extends UnwrappedFileCollection {}
+export class DirectoryCollection extends UnwrappedDirectoryCollection {}
+export class ItemCollection extends UnwrappedItemCollection {}
 
 export function files(exp?: string, options: fg.Options = {}): FileCollection {
   return new FileCollection(

@@ -1,43 +1,43 @@
 import { ClassWithText } from '../interfaces/base';
 import { Constructor } from '../interfaces/util';
-import { awaitPromiseSync } from '../utils/async';
+import { awaitSync } from '../utils/async';
 
 export function WithData<T extends Constructor<ClassWithText>>(base: T) {
-    return class Wrapped extends base {
-        get data(): any {
-            if (super.data) {
-                return super.data;
-            }
+  return class Wrapped extends base {
+    get data(): any {
+      if (super.data) {
+        return super.data;
+      }
 
-            return JSON.parse(this.text);
-        }
+      return JSON.parse(this.text);
+    }
 
-        set data(value: any) {
-            if (super.data) {
-                super.data = value;
+    set data(value: any) {
+      if (super.data) {
+        super.data = value;
 
-                return;
-            }
+        return;
+      }
 
-            this.text = JSON.stringify(value, null, 2);
-        }
+      this.text = JSON.stringify(value, null, 2);
+    }
 
-        updateData(updater: (value: any) => any | Promise<any>) {
-            const updated = awaitPromiseSync(updater(this.data));
-            if (typeof updated === 'undefined') {
-                throw new Error('Return value missing from updater');
-            }
+    updateData(updater: (value: any) => any | Promise<any>) {
+      const updated = awaitSync(updater(this.data));
+      if (typeof updated === 'undefined') {
+        throw new Error('Return value missing from updater');
+      }
 
-            this.data = updated;
-        }
+      this.data = updated;
+    }
 
-        showData(formatter?: (value: any) => any | Promise<any>) {
-            let value = this.data;
-            if (formatter) {
-                value = awaitPromiseSync(formatter(value));
-            }
+    showData(formatter?: (value: any) => any | Promise<any>) {
+      let value = this.data;
+      if (formatter) {
+        value = awaitSync(formatter(value));
+      }
 
-            console.log(value);
-        }
-    };
+      console.log(value);
+    }
+  };
 }

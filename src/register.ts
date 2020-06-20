@@ -1,12 +1,30 @@
 import { inspect } from 'util';
 import { globals } from './globals';
-import { awaitPromiseSync } from './utils/async';
+import { awaitSync } from './utils/async';
 
 const globalGeneric = global as any;
 
 Object.assign(globalGeneric, globals);
 
-Object.defineProperties(Object.prototype, {
+function defineProperties(
+  obj: object,
+  descriptors: PropertyDescriptorMap & ThisType<any>,
+) {
+  Object.keys(descriptors).forEach(function (propertyName) {
+    const descriptor = descriptors[propertyName];
+
+    // const oldDescriptor = Object.getOwnPropertyDescriptor(obj, propertyName);
+
+    Object.defineProperty(obj, propertyName, {
+      ...descriptor,
+      enumerable: true,
+      configurable: true,
+    });
+  });
+}
+
+/*
+defineProperties(Object.prototype, {
   json: {
     get() {
       return globals.json(this);
@@ -17,25 +35,26 @@ Object.defineProperties(Object.prototype, {
       globals.json(this).file(path);
     },
     writable: true,
-    enumerable: false,
+    ,
   },
   vscode: {
     value() {
       return globals.vscode(this);
     },
     writable: true,
-    enumerable: false,
+    ,
   },
   print: {
     value() {
       console.log(this);
     },
     writable: true,
-    enumerable: false,
+    ,
   },
 });
+*/
 
-Object.defineProperties(Array.prototype, {
+defineProperties(Array.prototype, {
   csv: {
     get() {
       return globals.csv(this);
@@ -43,7 +62,7 @@ Object.defineProperties(Array.prototype, {
   },
 });
 
-Object.defineProperties(String.prototype, {
+defineProperties(String.prototype, {
   lines: {
     get() {
       return globals.utils.lines(String(this));
@@ -74,63 +93,54 @@ Object.defineProperties(String.prototype, {
       return globals.utils.grepLines(String(this), search);
     },
     writable: true,
-    enumerable: false,
   },
   rgrepLines: {
     value(search: string | RegExp) {
       return globals.utils.rgrepLines(String(this), search);
     },
     writable: true,
-    enumerable: false,
   },
   sortLines: {
     value() {
       return globals.utils.sortLines(String(this));
     },
     writable: true,
-    enumerable: false,
   },
   rsortLines: {
     value() {
       return globals.utils.rsortLines(String(this));
     },
     writable: true,
-    enumerable: false,
   },
   filterLines: {
     value(cb: (line: string) => boolean) {
       return globals.utils.filterLines(String(this), cb);
     },
     writable: true,
-    enumerable: false,
   },
   rfilterLines: {
     value(cb: (line: string) => boolean) {
       return globals.utils.rfilterLines(String(this), cb);
     },
     writable: true,
-    enumerable: false,
   },
   replaceLines: {
     value(pattern: string | RegExp, replacer: any) {
       return globals.utils.replaceLines(String(this), pattern, replacer);
     },
     writable: true,
-    enumerable: false,
   },
   mapLines: {
     value(cb: (line: string) => any) {
       return globals.utils.mapLines(String(this), cb);
     },
     writable: true,
-    enumerable: false,
   },
   print: {
     value() {
       console.log(String(this));
     },
     writable: true,
-    enumerable: false,
   },
   file: {
     value(path: string) {
@@ -139,28 +149,25 @@ Object.defineProperties(String.prototype, {
       return f;
     },
     writable: true,
-    enumerable: false,
   },
   vscode: {
     value() {
       return globals.vscode(String(this));
     },
     writable: true,
-    enumerable: false,
   },
   copy: {
     value() {
       globals.clipboard.text = this.toString();
     },
     writable: true,
-    enumerable: false,
   },
 });
 
-Object.defineProperties(Promise.prototype, {
+defineProperties(Promise.prototype, {
   await: {
     get() {
-      return awaitPromiseSync(this);
+      return awaitSync(this);
     },
   },
   toString: {

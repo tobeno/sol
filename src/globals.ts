@@ -11,44 +11,44 @@ import { json } from './data/json';
 import { xml } from './data/xml';
 import { yaml } from './data/yaml';
 import { ast, astTypes } from './data/ast';
-import { clipboard } from './os/clipboard'; 
+import { clipboard } from './os/clipboard';
 import * as arrayUtils from './utils/array';
 import * as objectUtils from './utils/object';
 import * as textUtils from './utils/text';
 import { cwd } from './shell/fn';
 import { log } from './utils/log';
-import { rebuild } from './utils/sol';
+import { sol } from './sol';
 import { vscode, play } from './integrations/vscode';
 import * as shell from './shell/shelljs';
 
 export const globals = {
-    web,
-    csv,
-    html,
-    json,
-    xml,
-    ast,
-    yaml,
-    astTypes,
-    jsonata,
-    cheerio,
-    cwd,
-    shell,
-    utils: {
-      ...arrayUtils,
-      ...objectUtils,
-      ...textUtils
-    },
-    log,
-    vscode,
-    play,
-    clipboard,
-    file,
-    dir,
-    files,
-    dirs,
-    grep,
-    glob,
-    fetch: web.fetch,
-    rebuild
+  web,
+  csv,
+  html,
+  json,
+  xml,
+  ast,
+  yaml,
+  sol,
+  astTypes,
+  jsonata,
+  cheerio,
+  cwd,
+  shell,
+  utils: {
+    ...arrayUtils,
+    ...objectUtils,
+    ...textUtils,
+  },
+  log,
+  vscode,
+  play,
+  clipboard,
+  file,
+  dir,
+  files,
+  dirs,
+  grep,
+  glob,
+  fetch: web.fetch,
 };

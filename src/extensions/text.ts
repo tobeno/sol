@@ -1,109 +1,109 @@
 import { Constructor } from '../interfaces/util';
 import { ClassWithText } from '../interfaces/base';
 import {
-    lines,
-    grepLines,
-    rgrepLines,
-    sortLines,
-    rsortLines,
-    filterLines,
-    rfilterLines,
-    replaceLines,
-    mapLines
+  lines,
+  grepLines,
+  rgrepLines,
+  sortLines,
+  rsortLines,
+  filterLines,
+  rfilterLines,
+  replaceLines,
+  mapLines,
 } from '../utils/text';
-import { awaitPromiseSync } from '../utils/async';
+import { awaitSync } from '../utils/async';
 
 export function WithText<T extends Constructor<ClassWithText>>(base: T) {
-    return class Wrapped extends base {
-        grepLines(search: string | RegExp) {
-            return this.updateText((data) => {
-                data = grepLines(data, search);
+  return class Wrapped extends base {
+    grepLines(search: string | RegExp) {
+      return this.updateText((data) => {
+        data = grepLines(data, search);
 
-                return data;
-            });
-        }
+        return data;
+      });
+    }
 
-        rgrepLines(search: string | RegExp) {
-            return this.updateText((data) => {
-                data = rgrepLines(data, search);
+    rgrepLines(search: string | RegExp) {
+      return this.updateText((data) => {
+        data = rgrepLines(data, search);
 
-                return data;
-            });
-        }
+        return data;
+      });
+    }
 
-        sortLines() {
-            return this.updateText((data) => {
-                data = sortLines(data);
+    sortLines() {
+      return this.updateText((data) => {
+        data = sortLines(data);
 
-                return data;
-            });
-        }
+        return data;
+      });
+    }
 
-        rsortLines() {
-            return this.updateText((data) => {
-                data = rsortLines(data);
+    rsortLines() {
+      return this.updateText((data) => {
+        data = rsortLines(data);
 
-                return data;
-            });
-        }
+        return data;
+      });
+    }
 
-        filterLines(cb: (line: string) => boolean) {
-            return this.updateText((data) => {
-                data = filterLines(data, cb);
+    filterLines(cb: (line: string) => boolean) {
+      return this.updateText((data) => {
+        data = filterLines(data, cb);
 
-                return data;
-            });
-        }
+        return data;
+      });
+    }
 
-        rfilterLines(cb: (line: string) => boolean) {
-            return this.updateText((data) => {
-                data = rfilterLines(data, cb);
+    rfilterLines(cb: (line: string) => boolean) {
+      return this.updateText((data) => {
+        data = rfilterLines(data, cb);
 
-                return data;
-            });
-        }
+        return data;
+      });
+    }
 
-        replaceLines(pattern: string | RegExp, replacer: any) {
-            return this.updateText((data) => {
-                data = replaceLines(data, pattern, replacer);
+    replaceLines(pattern: string | RegExp, replacer: any) {
+      return this.updateText((data) => {
+        data = replaceLines(data, pattern, replacer);
 
-                return data;
-            });
-        }
+        return data;
+      });
+    }
 
-        mapLines(cb: (line: string) => any) {
-            return mapLines(this.text, cb);
-        }
+    mapLines(cb: (line: string) => any) {
+      return mapLines(this.text, cb);
+    }
 
-        updateLines(updater: (value: string) => string | Promise<string>) {
-            const updated = awaitPromiseSync(Promise.all(lines(this.text).map(updater)));
-            if (typeof updated === 'undefined') {
-                throw new Error('Return value missing from updater');
-            }
+    updateLines(updater: (value: string) => string | Promise<string>) {
+      const updated = awaitSync(Promise.all(lines(this.text).map(updater)));
+      if (typeof updated === 'undefined') {
+        throw new Error('Return value missing from updater');
+      }
 
-            this.text = updated.join('\n') + '\n';
+      this.text = updated.join('\n') + '\n';
 
-            return this.text;
-        }
+      return this.text;
+    }
 
-        updateText(updater: (value: string) => string | Promise<string>) {
-            const updated = awaitPromiseSync(updater(this.text));
-            if (typeof updated === 'undefined') {
-                throw new Error('Return value missing from updater');
-            }
+    updateText(updater: (value: string) => string | Promise<string>) {
+      const updated = awaitSync(updater(this.text));
+      if (typeof updated === 'undefined') {
+        throw new Error('Return value missing from updater');
+      }
 
-            this.text = updated;
+      this.text = updated;
 
-            return this.text;
-        }
+      return this.text;
+    }
 
-        showText(formatter?: (text: string) => any | Promise<any>) {
-            let text = this.text;
-            if (formatter) {
-                text = awaitPromiseSync(formatter(text));
-            }
+    showText(formatter?: (text: string) => any | Promise<any>) {
+      let text = this.text;
+      if (formatter) {
+        text = awaitSync(formatter(text));
+      }
 
-            console.log(text);
-        }
-    };
+      console.log(text);
+    }
+  };
 }

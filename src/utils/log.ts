@@ -1,3 +1,4 @@
 export function log(...args: any[]) {
-    console.log(...args);
+  console.log('xxxx');
+  console.log(...args);
 }
