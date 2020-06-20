@@ -10,8 +10,18 @@ export abstract class Item {
     this.path = basePath ? path.join(basePath, relativePath) : relativePath;
   }
 
+  abstract get name(): string;
+  abstract set name(value: string);
+
+  abstract moveTo(newPath: string): Item;
+  abstract renameTo(newBasename: string): Item;
+
   get basename(): string {
     return path.basename(this.path);
+  }
+
+  set basename(value: string) {
+    this.renameTo(value);
   }
 
   get exists(): boolean {

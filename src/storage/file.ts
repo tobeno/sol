@@ -11,111 +11,148 @@ import { WithData } from '../extensions/data';
 import { WithCsv } from '../extensions/csv';
 import { WithText } from '../extensions/text';
 import { WithReplaceText } from '../extensions/replace';
-import { WithYaml } from '../extensions/yaml';
+import { WithFiles } from '../extensions/files';
+import { FileCollection } from './item-collection';
 
 class UnwrappedFile extends Item {
-    constructor(path: string) {
-        super(path);
+  constructor(path: string) {
+    super(path);
+  }
+
+  get ext(): string {
+    const { basename: name } = this;
+    const pos = name.lastIndexOf('.');
+    if (pos <= 0) {
+      return '';
     }
 
-    get ext(): string {
-        const { basename: name } = this;
-        const pos = name.lastIndexOf('.');
-        if (pos <= 0) {
-            return '';
-        }
+    return name.slice(pos + 1);
+  }
 
-        return name.slice(pos + 1);
+  set ext(ext: string) {
+    this.renameTo(`${this.name}.${ext}`);
+  }
+
+  get name(): string {
+    const { basename: name } = this;
+    const pos = name.lastIndexOf('.');
+    if (pos <= 0) {
+      return name;
     }
 
-    get name(): string {
-        const { basename: name } = this;
-        const pos = name.lastIndexOf('.');
-        if (pos <= 0) {
-            return name;
-        }
+    return name.slice(0, pos);
+  }
 
-        return name.slice(0, pos);
+  set name(name: string) {
+    this.renameTo(`${name}${this.ext ? `.${this.ext}` : ''}`);
+  }
+
+  get dir(): Directory {
+    return new Directory(path.dirname(this.path));
+  }
+
+  set dir(value: Directory) {
+    this.moveTo(`${value.path}/${this.basename}`);
+  }
+
+  get text(): string {
+    return fs.readFileSync(this.path, 'utf8');
+  }
+
+  set text(value: string) {
+    fs.writeFileSync(this.path, value, 'utf8');
+  }
+
+  get length() {
+    return this.text.length;
+  }
+
+  get size() {
+    return this.stats.size;
+  }
+
+  create() {
+    if (this.exists) {
+      return;
     }
 
-    get dir(): Directory {
-        return new Directory(path.dirname(this.path));
+    const dir = this.dir;
+    if (!dir.exists) {
+      dir.create();
     }
 
-    get text(): string {
-        return fs.readFileSync(this.path, 'utf8');
+    this.text = '';
+
+    return this;
+  }
+
+  files(): FileCollection {
+    return new FileCollection(this as any);
+  }
+
+  delete() {
+    fs.unlinkSync(this.path);
+  }
+
+  moveTo(newPath: string | Directory) {
+    if (newPath instanceof Directory) {
+      newPath = `${newPath.path}/${this.basename}`;
     }
 
-    set text(value: string) {
-        fs.writeFileSync(this.path, value, 'utf8');
-    }
+    fs.renameSync(this.path, newPath);
 
-    get length() {
-        return this.text.length;
-    }
+    this.path = newPath;
 
-    get size() {
-        return this.stats.size;
-    }
+    return this;
+  }
 
-    create() {
-        if (this.exists) {
-            return;
-        }
+  renameTo(newBasename: string) {
+    return this.moveTo(`${this.dir.path}/${newBasename}`);
+  }
 
-        const dir = this.dir;
-        if (!dir.exists) {
-            dir.create();
-        }
+  copyTo(newPath: string) {
+    fs.copyFileSync(this.path, newPath);
 
-        this.text = '';
-    }
+    return new File(newPath);
+  }
 
-    delete() {
-        fs.unlinkSync(this.path);
-    }
+  serve() {
+    this.dir.serve();
 
-    moveTo(newPath: string) {
-        fs.renameSync(this.path, newPath);
+    return this;
+  }
 
-        this.path = newPath;
-    }
+  watch(fn: (eventType: string, filename: string) => any): () => void {
+    const watcher = fs.watch(
+      this.path,
+      {
+        encoding: 'utf8',
+      },
+      fn,
+    );
 
-    copyTo(newPath: string) {
-        fs.copyFileSync(this.path, newPath);
+    return () => {
+      watcher.close();
+    };
+  }
 
-        this.path = newPath;
-    }
+  pretty() {
+    this.text = prettier.format(this.text, {
+      filepath: this.path,
+    });
 
-    serve() {
-        this.dir.serve();
-    }
-
-    watch(fn: (eventType: string, filename: string) => any): () => void {
-        const watcher = fs.watch(
-            this.path,
-            {
-                encoding: 'utf8'
-            },
-            fn
-        );
-
-        return () => {
-            watcher.close();
-        };
-    }
-
-    pretty() {
-        this.text = prettier.format(this.text, {
-            filepath: this.path
-        });
-    }
+    return this;
+  }
 }
 
 export class File extends WithReplaceText(
-    WithAst(WithYaml(WithCsv(WithJson(WithText(WithData(WithCopy(WithPrint(UnwrappedFile))))))))
+  WithFiles(
+    WithAst(
+      WithCsv(WithJson(WithText(WithData(WithCopy(WithPrint(UnwrappedFile)))))),
+    ),
+  ),
 ) {}
 
 export function file(path: string): File {
-    return new File(path);
+  return new File(path);
 }

@@ -4,13 +4,25 @@ import { exec } from 'shelljs';
 import { Item } from './item';
 import { File } from './file';
 import { grep, replaceText } from './search';
-import { ItemCollection, files, dirs, glob } from './item-collection';
+import {
+  files,
+  glob,
+  dirs,
+  FileCollection,
+  DirectoryCollection,
+  ItemCollection,
+} from './item-collection';
 import { WithPrint } from '../extensions/print';
 import { WithCopy } from '../extensions/copy';
+import { WithFiles } from '../extensions/files';
 
 export class UnwrappedDirectory extends Item {
   get parent(): Directory {
     return new Directory(path.dirname(this.path));
+  }
+
+  set parent(value: Directory) {
+    this.moveTo(`${value.path}/${this.basename}`);
   }
 
   get size(): number {
@@ -19,13 +31,39 @@ export class UnwrappedDirectory extends Item {
     return parseInt(output.split(' ')[0], 10);
   }
 
+  get name(): string {
+    return this.basename;
+  }
+
+  set name(value: string) {
+    this.basename = value;
+  }
+
   create() {
     fs.mkdirSync(this.path, {
       recursive: true,
     });
+
+    return this;
   }
 
-  files(exp?: string): ItemCollection<File> {
+  moveTo(newPath: string | Directory) {
+    if (newPath instanceof Directory) {
+      newPath = `${newPath.path}/${this.basename}`;
+    }
+
+    fs.renameSync(this.path, newPath);
+
+    this.path = newPath;
+
+    return this;
+  }
+
+  renameTo(newBasename: string) {
+    return this.moveTo(`${this.parent.path}/${newBasename}`);
+  }
+
+  files(exp?: string): FileCollection {
     return files(path.join(this.path, exp || '*'));
   }
 
@@ -35,7 +73,7 @@ export class UnwrappedDirectory extends Item {
     return files.length ? files[0] : null;
   }
 
-  dirs(exp?: string): ItemCollection<Directory> {
+  dirs(exp?: string): DirectoryCollection {
     return dirs(path.join(this.path, exp || '*'));
   }
 
@@ -45,11 +83,11 @@ export class UnwrappedDirectory extends Item {
     return dirs.length ? dirs[0] : null;
   }
 
-  grep(pattern: string | RegExp): ItemCollection<File> {
+  grep(pattern: string | RegExp): FileCollection {
     return grep(pattern, this.path);
   }
 
-  glob(exp?: string): ItemCollection<File | Directory> {
+  glob(exp?: string): ItemCollection {
     return glob(path.join(this.path, exp || '*'));
   }
 
@@ -59,12 +97,11 @@ export class UnwrappedDirectory extends Item {
         this.path
       }`,
     );
+
+    return this;
   }
 
-  replaceText(
-    pattern: string | RegExp,
-    replacer: any,
-  ): ItemCollection<File> {
+  replaceText(pattern: string | RegExp, replacer: any): FileCollection {
     return replaceText(pattern, replacer, this.path);
   }
 
@@ -75,7 +112,9 @@ export class UnwrappedDirectory extends Item {
   }
 }
 
-export class Directory extends WithPrint(WithCopy(UnwrappedDirectory)) {}
+export class Directory extends WithFiles(
+  WithPrint(WithCopy(UnwrappedDirectory)),
+) {}
 
 export function dir(path?: string): Directory {
   return new Directory(path || '.');
