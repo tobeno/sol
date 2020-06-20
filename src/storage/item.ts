@@ -1,7 +1,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import { inspect } from 'util';
-import { exec } from 'shelljs';
+import { editor } from '../integrations/editor';
+import { spawnSync } from 'child_process';
 
 export abstract class Item {
   absolutePath: string;
@@ -30,6 +31,10 @@ export abstract class Item {
     this.absolutePath = path.resolve(value);
   }
 
+  get uri(): string {
+    return 'file://' + this.path;
+  }
+
   get relativePath(): string {
     return path.relative(process.cwd(), this.path) || '.';
   }
@@ -54,8 +59,11 @@ export abstract class Item {
     return this.stats.mtime;
   }
 
-  vscode() {
-    exec(`code '${this.path}'`);
+  edit() {
+    spawnSync(`${editor} '${this.path}'`, {
+      cwd: process.cwd(),
+      shell: true,
+    });
 
     return this;
   }

@@ -135,6 +135,18 @@ defineProperties(String.prototype, {
     },
     writable: true,
   },
+  extract: {
+    value(pattern: string | RegExp): string[] {
+      if (typeof pattern === 'string') {
+        pattern = new RegExp(pattern, 'g');
+      } else if (!pattern.global) {
+        pattern = new RegExp(pattern.source, pattern.flags + 'g');
+      }
+
+      return [...new Set(String(this).match(pattern) || [])].sort();
+    },
+    writable: true,
+  },
   print: {
     value() {
       console.log(String(this));
@@ -149,9 +161,9 @@ defineProperties(String.prototype, {
     },
     writable: true,
   },
-  vscode: {
+  edit: {
     value() {
-      return globals.vscode(String(this));
+      return globals.edit(String(this));
     },
     writable: true,
   },

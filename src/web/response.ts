@@ -9,12 +9,34 @@ import { ast } from '../data/ast';
 import { html } from 'cheerio';
 import { xml } from '../data/xml';
 import { yaml } from '../data/yaml';
+import { WithEdit } from '../wrappers/with-edit';
 
 class UnwrappedResponse {
   constructor(readonly axiosResponse: AxiosResponse) {}
 
   get data() {
     return this.axiosResponse.data;
+  }
+
+  get ext() {
+    if (this.contentType === 'text/html') {
+      return 'html';
+    } else if (['text/xml', 'application/xml'].includes(this.contentType)) {
+      return 'xml';
+    } else if (
+      [
+        'text/vnd.yaml',
+        'text/yaml',
+        'text/x-yaml',
+        'application/x-yaml',
+      ].includes(this.contentType)
+    ) {
+      return 'yaml';
+    } else if (this.contentType === 'application/json') {
+      return 'json';
+    } else {
+      return 'txt';
+    }
   }
 
   get text() {
@@ -77,5 +99,5 @@ class UnwrappedResponse {
 }
 
 export class Response extends WithPrint(
-  WithCopy(WithFile(UnwrappedResponse)),
+  WithEdit(WithCopy(WithFile(UnwrappedResponse))),
 ) {}

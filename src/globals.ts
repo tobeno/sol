@@ -18,10 +18,11 @@ import * as textUtils from './utils/text';
 import { cwd } from './shell/fn';
 import { log } from './utils/log';
 import { sol } from './sol';
-import { vscode, play, replay, unwatchPlay } from './integrations/vscode';
+import { edit } from './integrations/editor';
+import { play, replay, unwatchPlay } from './play';
 import * as shell from './shell/shelljs';
 
-export const globals = {
+const solGlobals = {
   ast,
   astTypes,
   cheerio,
@@ -44,7 +45,7 @@ export const globals = {
   shell,
   sol,
   unwatchPlay,
-  vscode,
+  edit,
   web,
   xml,
   yaml,
@@ -53,6 +54,11 @@ export const globals = {
     ...objectUtils,
     ...textUtils,
   },
+};
+
+export const globals = {
+  ...solGlobals,
+  $: solGlobals,
 };
 
 export type Globals = typeof globals;
@@ -66,6 +72,7 @@ declare global {
     cwd,
     dir,
     dirs,
+    edit,
     file,
     files,
     glob,
@@ -79,12 +86,13 @@ declare global {
     shell,
     sol,
     unwatchPlay,
-    vscode,
     web,
     xml,
     yaml,
     utils,
   }: typeof globals;
+
+  const $: typeof solGlobals;
 
   namespace NodeJS {
     interface Global extends Globals {}

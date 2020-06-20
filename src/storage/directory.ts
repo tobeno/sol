@@ -60,6 +60,14 @@ export class UnwrappedDirectory extends Item {
     return this as any;
   }
 
+  relativePathFrom(target: string | Directory) {
+    if (target instanceof Directory) {
+      target = target.path;
+    }
+
+    return path.relative(target, this.path) || '.';
+  }
+
   items(): ItemCollection {
     return this.glob();
   }

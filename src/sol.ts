@@ -2,7 +2,7 @@ import { homedir } from 'os';
 import { REPLServer } from 'repl';
 import { Directory, dir } from './storage/directory';
 import { File, file } from './storage/file';
-import { setupPlayContext } from './integrations/vscode';
+import { setupPlayContext } from './play';
 
 export class Sol {
   server: REPLServer | null = null;

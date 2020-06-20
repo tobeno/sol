@@ -1,7 +1,6 @@
 require('./register');
 
 import * as repl from 'repl';
-import { inspect } from 'util';
 import { loopWhile } from 'deasync';
 import { Sol } from './sol';
 import { spawnSync } from 'child_process';
@@ -45,11 +44,7 @@ function reloadSolServer() {
 }
 
 function myWriter(output: any) {
-  if (typeof output === 'string') {
-    return output;
-  }
-
-  return inspect(output);
+  return require('./utils/inspect').inspect(output);
 }
 
 function setupSolServer(server: repl.REPLServer) {

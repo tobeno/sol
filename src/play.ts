@@ -1,39 +1,5 @@
-import { File, file } from '../storage/file';
-import { tmp } from '../storage/tmp';
-import { sol } from '../sol';
-import { json } from '../data/json';
-
-export function vscode(pathOrValue?: any): File {
-  let f: File;
-
-  if (!pathOrValue) {
-    f = tmp('ts');
-  } else if (typeof pathOrValue === 'object') {
-    if (
-      pathOrValue.constructor !== Object &&
-      typeof pathOrValue.data !== 'undefined'
-    ) {
-      pathOrValue = pathOrValue.data;
-    }
-
-    f = tmp('json');
-    f.data = pathOrValue;
-  } else if (
-    typeof pathOrValue === 'string' &&
-    /(^\s|\n|\s$)/.test(pathOrValue)
-  ) {
-    f = tmp('txt');
-    f.text = pathOrValue;
-  } else {
-    f = file(pathOrValue);
-  }
-
-  f.create();
-
-  f.vscode();
-
-  return f;
-}
+import { sol } from './sol';
+import { json } from './data/json';
 
 const playWatchers: Record<string, () => void> = {};
 
@@ -62,32 +28,32 @@ export function play(path?: string) {
 
   setupPlay(playFile.path);
 
-  vscode(playFile.path);
+  edit(playFile.path);
 
   if (!playWatchers[playId]) {
     let timeout: NodeJS.Timeout | null = null;
     const unwatch = playFile.watch((event) => {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
+      if (event === 'change') {
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
 
-      // Delay to avoid double execution
-      timeout = setTimeout(() => {
-        timeout = null;
-        if (event === 'change') {
+        // Delay to avoid double execution
+        timeout = setTimeout(() => {
+          timeout = null;
           const result = runPlay(playId, playFile.text);
 
           if (typeof result !== 'undefined') {
             console.log(result);
             sol.server?.displayPrompt();
           }
-        } else if (event === 'rename') {
-          if (!playFile.exists) {
-            unwatchPlay(playId);
-          }
+        }, 50);
+      } else if (event === 'rename') {
+        if (!playFile.exists) {
+          unwatchPlay(playId);
         }
-      }, 10);
+      }
     });
 
     playWatchers[playId] = unwatch;
@@ -102,8 +68,10 @@ export function setupPlayContext(path: string) {
   const playContextFile = file(path);
   const localGlobalsFile = file(sol.localGlobalsFilePath);
   playContextFile.text = `
-import '${sol.packageDistDir.path}/globals';
-import '${localGlobalsFile.pathWithoutExt}';
+import '${sol.packageDistDir.relativePathFrom(playContextFile.dir)}/globals';
+import '${localGlobalsFile.dir.relativePathFrom(playContextFile.dir)}/${
+    localGlobalsFile.name
+  }';
 `.trimStart();
 }
 
@@ -115,7 +83,7 @@ export function setupPlay(path: string, noLocalGlobals = false) {
   playFile.text =
     `
 /* eslint-disable */
-import '${sol.playContextFile.pathWithoutExt}';
+import '../${sol.playContextFile.name}';
 // --- END SETUP ---
 
 `.trimStart() +

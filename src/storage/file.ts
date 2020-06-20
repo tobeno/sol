@@ -12,7 +12,10 @@ import { WithCsv } from '../wrappers/with-csv';
 import { WithText } from '../wrappers/with-text';
 import { WithReplaceText } from '../wrappers/with-replace-text';
 import { ItemCollection } from './item-collection';
-import { play, replay, setupPlay, unwatchPlay } from '../integrations/vscode';
+import { play, replay, setupPlay, unwatchPlay } from '../play';
+import { WithHtml } from '../wrappers/with-html';
+import { WithYaml } from '../wrappers/yaml';
+import { WithXml } from '../wrappers/xml';
 
 class UnwrappedFile extends Item {
   constructor(path: string) {
@@ -182,7 +185,9 @@ class UnwrappedFile extends Item {
 }
 
 class CoreFile extends WithText(WithData(UnwrappedFile)) {}
-class DataFile extends WithAst(WithCsv(WithJson(CoreFile))) {}
+class DataFile extends WithXml(
+  WithHtml(WithYaml(WithAst(WithCsv(WithJson(CoreFile))))),
+) {}
 class ToolsFile extends WithReplaceText(WithCopy(WithPrint(DataFile))) {}
 
 export class File extends ToolsFile {}
