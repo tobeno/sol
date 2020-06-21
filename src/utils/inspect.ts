@@ -1,4 +1,5 @@
 import * as util from 'util';
+import { cheerio } from '../integrations/cheerio';
 
 export function inspect(output: any) {
   if (typeof output === 'string') {
@@ -8,7 +9,7 @@ export function inspect(output: any) {
   if (typeof output === 'object') {
     // HTML (cheerio)
     if (['tag'].includes(output.type) && output.children) {
-      return global.cheerio.html(output);
+      return cheerio.html(output);
     } else if (
       output[0] &&
       ['tag'].includes(output[0].type) &&
@@ -16,17 +17,17 @@ export function inspect(output: any) {
     ) {
       return Array.from<any>(output)
         .filter((item) => item.type === 'tag')
-        .map((item) => global.cheerio.html(item))
+        .map((item) => cheerio.html(item))
         .join('\n');
     } else if (output.type === 'root' && output.children) {
       return Array.from<any>(output.children)
         .filter((item) => item.type === 'tag')
-        .map((item) => global.cheerio.html(item))
+        .map((item) => cheerio.html(item))
         .join('\n');
     } else if (output[0] && output[0].type === 'root' && output[0].children) {
       return Array.from<any>(output[0].children)
         .filter((item) => item.type === 'tag')
-        .map((item) => global.cheerio.html(item))
+        .map((item) => cheerio.html(item))
         .join('\n');
     }
   }
