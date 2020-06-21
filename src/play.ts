@@ -5,8 +5,7 @@ const playWatchers: Record<string, () => void> = {};
 
 function runPlay(playId: string, code: string) {
   code = code
-    .replace(/[\s\S]+\/\/ --- END SETUP ---/, '')
-    .replace(/type LocalGlobals[\s\S]+/, '')
+    .replace(/type WorkspaceGlobals[\s\S]+/, '')
     .replace(/\nexport (const|let|function|class)/, '\n$1');
 
   let result = eval(code);
@@ -66,30 +65,28 @@ export function play(path?: string) {
 
 export function setupPlayContext(path: string) {
   const playContextFile = file(path);
-  const localGlobalsFile = file(sol.localGlobalsFilePath);
+  const workspaceGlobalsFile = file(sol.workspaceGlobalsFilePath);
   playContextFile.text = `
 import '${sol.packageDistDir.relativePathFrom(playContextFile.dir)}/globals';
-import '${localGlobalsFile.dir.relativePathFrom(playContextFile.dir)}/${
-    localGlobalsFile.name
+import '${workspaceGlobalsFile.dir.relativePathFrom(playContextFile.dir)}/${
+    workspaceGlobalsFile.name
   }';
 `.trimStart();
 }
 
-export function setupPlay(path: string, noLocalGlobals = false) {
+export function setupPlay(path: string, noWorkspaceGlobals = false) {
   const playFile = sol.playFile(path);
 
   playFile.create();
 
-  playFile.text =
-    `
-/* eslint-disable */
-import '${sol.playContextFile.dir.relativePathFrom(playFile.dir)}/${
-      sol.playContextFile.name
-    }';
-// --- END SETUP ---
+  if (!playFile.text) {
+    playFile.text = `
+/// <reference path="${sol.playContextFile.dir.relativePathFrom(
+      playFile.dir,
+    )}/${sol.playContextFile.basename}" />
 
-`.trimStart() +
-    playFile.text.replace(/[\s\S]+\/\/ --- END SETUP ---/, '').trimStart();
+`.trimStart();
+  }
 }
 
 export function unwatchPlay(path: string) {

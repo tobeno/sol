@@ -1,4 +1,4 @@
-require('./register');
+require('./setup');
 
 import * as repl from 'repl';
 import { loopWhile } from 'deasync';
@@ -41,7 +41,7 @@ function reloadSolServer() {
     delete require.cache[module];
   });
 
-  require('./register');
+  require('./setup');
   setupSolServer(server);
 
   // Refresh Sol instance
@@ -59,17 +59,7 @@ function setupSolServer(server: repl.REPLServer) {
   const sol = getSol();
   sol.server = server;
 
-  sol.registerDefaultExtensions();
-  if (sol.localSetupFile.exists) {
-    sol.loadLocalSetupFile();
-  }
-
-  try {
-    const setupFile = sol.localGlobalsFile;
-    setupFile.replay();
-  } catch (e) {
-    console.log('Failed to load local globals.ts file.\n\nError: ' + e.message);
-  }
+  sol.setupWorkspace();
 }
 
 export function startSolServer() {
@@ -81,7 +71,7 @@ export function startSolServer() {
   });
 
   let historyReady = false;
-  server.setupHistory(getSol().historyFile.path, () => {
+  server.setupHistory(getSol().historyFile.create().path, () => {
     historyReady = true;
   });
   loopWhile(() => !historyReady);
