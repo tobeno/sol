@@ -83,7 +83,9 @@ export function setupPlay(path: string, noLocalGlobals = false) {
   playFile.text =
     `
 /* eslint-disable */
-import '../${sol.playContextFile.name}';
+import '${sol.playContextFile.dir.relativePathFrom(playFile.dir)}/${
+      sol.playContextFile.name
+    }';
 // --- END SETUP ---
 
 `.trimStart() +

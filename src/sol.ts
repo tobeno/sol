@@ -8,6 +8,12 @@ export class Sol {
   server: REPLServer | null = null;
   globals = {};
   localGlobals = {};
+  extensions: Record<string, Directory> = {};
+  loadedExtensionNames: string[] = [];
+
+  get extensionNames() {
+    return Object.keys(this.extensions).sort();
+  }
 
   get packageDir(): Directory {
     return this.runtimeDir.parent;
@@ -21,6 +27,10 @@ export class Sol {
     return this.packageDir.dir('src');
   }
 
+  get packageExtensionsDir(): Directory {
+    return this.runtimeDir.dir('extensions');
+  }
+
   get runtimeDir(): Directory {
     return dir(__dirname);
   }
@@ -30,6 +40,10 @@ export class Sol {
     globalDir.create();
 
     return globalDir;
+  }
+
+  get globalExtensionsDir(): Directory {
+    return this.globalDir.dir('extensions');
   }
 
   get historyFile(): File {
@@ -49,6 +63,10 @@ export class Sol {
     }
 
     return localDir;
+  }
+
+  get localExtensionsDir(): Directory {
+    return this.localDir.dir('extensions');
   }
 
   get playDir(): Directory {
@@ -76,6 +94,9 @@ export class Sol {
     if (!setupFile.exists) {
       setupFile.create();
       setupFile.text = `
+/**
+ * Additional globals for the current workspace
+ */ 
 const localGlobals = {
   local: {
     example() {
@@ -101,6 +122,28 @@ declare global {
     setupFile.setupPlay(true);
 
     return setupFile;
+  }
+
+  get localSetupFile(): File {
+    const localSetupFile = this.localDir.file('setup.js');
+    if (!localSetupFile.exists) {
+      localSetupFile.text = `
+/**
+ * Setup file for the current workspace
+ * 
+ * Typically you would load extensions here
+ */ 
+
+${this.extensionNames
+  .map((name) => {
+    return `sol.loadExtension('${name}');`;
+  })
+  .join('\n')}
+
+`.trimStart();
+    }
+
+    return localSetupFile;
   }
 
   playFile(path?: string): File {
@@ -141,6 +184,105 @@ declare global {
 
     Object.assign(globalGeneric, globals);
     Object.assign(this.localGlobals, globals);
+  }
+
+  registerDefaultExtensions() {
+    this.registerExtensions(this.packageExtensionsDir.dirs());
+    this.registerExtensions(this.globalExtensionsDir.dirs());
+    this.registerExtensions(this.localExtensionsDir.dirs());
+  }
+
+  registerExtension(nameOrPath: string | Directory): Directory {
+    let extensionDir;
+    if (typeof nameOrPath === 'string') {
+      if (!nameOrPath.includes('/')) {
+        extensionDir = this.packageExtensionsDir.dir(name);
+      } else {
+        extensionDir = dir(nameOrPath);
+      }
+    } else {
+      extensionDir = nameOrPath;
+    }
+
+    this.extensions[extensionDir.name] = extensionDir;
+
+    return extensionDir;
+  }
+
+  registerExtensions(extensions: Directory[]): Directory[] {
+    return extensions.map((extensionDir) =>
+      this.registerExtension(extensionDir),
+    );
+  }
+
+  reloadExtension(name: string): Directory {
+    const extensionDir = sol.getExtensionDir(name);
+
+    const modules = extensionDir.files('**/*.js').map((f) => f.path);
+    modules.forEach((module) => {
+      delete require.cache[module];
+    });
+
+    return this.loadExtension(name, true);
+  }
+
+  reloadExtensions(names: string[]): Directory[] {
+    return names.map((name) => this.reloadExtension(name));
+  }
+
+  loadExtension(name: string, force = false): Directory {
+    const extensionDir = this.getExtensionDir(name);
+    if (!force && this.loadedExtensionNames.includes(name)) {
+      return extensionDir;
+    }
+
+    const registerFile = extensionDir.file('register.js');
+    if (!registerFile.exists) {
+      throw new Error(
+        `Extension ${name} (${extensionDir.path}) is missing register.js file`,
+      );
+    }
+
+    require(registerFile.pathWithoutExt);
+
+    if (!this.loadedExtensionNames.includes(name)) {
+      this.loadedExtensionNames.push(name);
+    }
+
+    return extensionDir;
+  }
+
+  loadExtensions(names: string[]): Directory[] {
+    return names.map((name) => this.loadExtension(name));
+  }
+
+  getExtensionDir(name: string) {
+    if (!this.extensions[name]) {
+      throw new Error(`Unknown extension ${name}`);
+    }
+
+    return this.extensions[name];
+  }
+
+  loadLocalSetupFile() {
+    require(this.localSetupFile.pathWithoutExt);
+  }
+
+  registerProperties(
+    obj: object,
+    descriptors: PropertyDescriptorMap & ThisType<any>,
+  ) {
+    Object.keys(descriptors).forEach(function (propertyName) {
+      const descriptor = descriptors[propertyName];
+
+      // const oldDescriptor = Object.getOwnPropertyDescriptor(obj, propertyName);
+
+      Object.defineProperty(obj, propertyName, {
+        ...descriptor,
+        enumerable: true,
+        configurable: true,
+      });
+    });
   }
 }
 

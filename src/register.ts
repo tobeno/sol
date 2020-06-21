@@ -5,55 +5,7 @@ import { sol } from './sol';
 
 sol.registerGlobals(globals);
 
-function defineProperties(
-  obj: object,
-  descriptors: PropertyDescriptorMap & ThisType<any>,
-) {
-  Object.keys(descriptors).forEach(function (propertyName) {
-    const descriptor = descriptors[propertyName];
-
-    // const oldDescriptor = Object.getOwnPropertyDescriptor(obj, propertyName);
-
-    Object.defineProperty(obj, propertyName, {
-      ...descriptor,
-      enumerable: true,
-      configurable: true,
-    });
-  });
-}
-
-/*
-defineProperties(Object.prototype, {
-  json: {
-    get() {
-      return globals.json(this);
-    },
-  },
-  file: {
-    value(path: string) {
-      globals.json(this).file(path);
-    },
-    writable: true,
-    ,
-  },
-  vscode: {
-    value() {
-      return globals.vscode(this);
-    },
-    writable: true,
-    ,
-  },
-  print: {
-    value() {
-      console.log(this);
-    },
-    writable: true,
-    ,
-  },
-});
-*/
-
-defineProperties(Array.prototype, {
+sol.registerProperties(Array.prototype, {
   csv: {
     get() {
       return globals.csv(this);
@@ -61,7 +13,7 @@ defineProperties(Array.prototype, {
   },
 });
 
-defineProperties(String.prototype, {
+sol.registerProperties(String.prototype, {
   lines: {
     get() {
       return globals.utils.lines(String(this));
@@ -169,7 +121,7 @@ defineProperties(String.prototype, {
   },
 });
 
-defineProperties(Promise.prototype, {
+sol.registerProperties(Promise.prototype, {
   await: {
     get() {
       return awaitSync(this);

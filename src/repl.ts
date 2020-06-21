@@ -32,7 +32,9 @@ function reloadSolServer() {
     return;
   }
 
-  const { runtimeDir } = getSol();
+  let sol = getSol();
+
+  const { runtimeDir, extensions, loadedExtensionNames } = sol;
   const modules = runtimeDir.files('**/*.js').map((f) => f.path);
 
   modules.forEach((module) => {
@@ -41,6 +43,12 @@ function reloadSolServer() {
 
   require('./register');
   setupSolServer(server);
+
+  // Refresh Sol instance
+  sol = getSol();
+
+  sol.registerExtensions(Object.values(extensions));
+  sol.reloadExtensions(loadedExtensionNames);
 }
 
 function myWriter(output: any) {
@@ -50,6 +58,11 @@ function myWriter(output: any) {
 function setupSolServer(server: repl.REPLServer) {
   const sol = getSol();
   sol.server = server;
+
+  sol.registerDefaultExtensions();
+  if (sol.localSetupFile.exists) {
+    sol.loadLocalSetupFile();
+  }
 
   try {
     const setupFile = sol.localGlobalsFile;
