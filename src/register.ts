@@ -137,13 +137,7 @@ defineProperties(String.prototype, {
   },
   extract: {
     value(pattern: string | RegExp): string[] {
-      if (typeof pattern === 'string') {
-        pattern = new RegExp(pattern, 'g');
-      } else if (!pattern.global) {
-        pattern = new RegExp(pattern.source, pattern.flags + 'g');
-      }
-
-      return [...new Set(String(this).match(pattern) || [])].sort();
+      return globals.utils.extractText(String(this), pattern);
     },
     writable: true,
   },
