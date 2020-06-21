@@ -26,23 +26,46 @@ class UnwrappedFile extends Item {
     return this.path.slice(0, -1 * (this.ext.length + 1));
   }
 
-  get ext(): string {
+  get pathWithoutExts(): string {
+    return this.path.slice(0, -1 * (this.exts.join('.').length + 1));
+  }
+
+  get exts(): string[] {
     const { basename: name } = this;
-    const pos = name.lastIndexOf('.');
+    const pos = name.indexOf('.');
     if (pos <= 0) {
+      return [];
+    }
+
+    return name.slice(pos + 1).split('.');
+  }
+
+  set exts(ext: string[]) {
+    this.renameTo(ext.join('.'));
+  }
+
+  get ext(): string {
+    const { exts } = this;
+    if (!exts.length) {
       return '';
     }
 
-    return name.slice(pos + 1);
+    return exts[exts.length - 1];
   }
 
-  set ext(ext: string) {
-    this.renameTo(`${this.name}.${ext}`);
+  set ext(value: string) {
+    let { exts } = this;
+
+    const newExts = value.split('.');
+
+    exts = [...newExts, ...exts.slice(newExts.length)];
+
+    this.exts = exts;
   }
 
   get name(): string {
     const { basename: name } = this;
-    const pos = name.lastIndexOf('.');
+    const pos = name.indexOf('.');
     if (pos <= 0) {
       return name;
     }
@@ -51,7 +74,9 @@ class UnwrappedFile extends Item {
   }
 
   set name(name: string) {
-    this.renameTo(`${name}${this.ext ? `.${this.ext}` : ''}`);
+    const exts = this.exts;
+
+    this.renameTo(`${name}${exts.length ? `.${this.exts.join('.')}` : ''}`);
   }
 
   get dir(): Directory {
@@ -143,8 +168,8 @@ class UnwrappedFile extends Item {
     play(this.path);
   }
 
-  setupPlay(noLocalGlobals = false) {
-    setupPlay(this.path, noLocalGlobals);
+  setupPlay() {
+    setupPlay(this.path);
   }
 
   replay() {

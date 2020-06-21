@@ -2,14 +2,30 @@ import { homedir } from 'os';
 import { REPLServer } from 'repl';
 import { Directory, dir } from './storage/directory';
 import { File, file } from './storage/file';
-import { setupPlayContext } from './play';
+import { Extension } from './extension';
 
 export class Sol {
   server: REPLServer | null = null;
   globals = {};
-  workspaceGlobals = {};
-  extensions: Record<string, Directory> = {};
-  loadedExtensionNames: string[] = [];
+  extensions: Extension[] = [];
+
+  get loadedExtensionNames() {
+    return this.extensions
+      .filter((extension) => extension.loaded)
+      .map((extension) => extension.name);
+  }
+
+  get packageExtensionNames() {
+    return this.packageExtensionsDir.dirs().map((dir) => dir.name);
+  }
+
+  get globalExtensionNames() {
+    return this.globalExtensionsDir.dirs().map((dir) => dir.name);
+  }
+
+  get workspaceExtensionNames() {
+    return this.workspaceExtensionsDir.dirs().map((dir) => dir.name);
+  }
 
   get extensionNames() {
     return Object.keys(this.extensions).sort();
@@ -55,24 +71,20 @@ export class Sol {
     return this.workspaceDir.dir('extensions');
   }
 
+  get workspaceGeneratedDir(): Directory {
+    return this.workspaceDir.dir('generated');
+  }
+
   get playDir(): Directory {
     return this.workspaceDir.dir('play');
   }
 
-  get workspaceGlobalsFilePath(): string {
-    return `${this.workspaceDir.path}/globals.ts`;
-  }
-
   get playContextFile(): File {
-    const playContextFile = this.workspaceDir.file('play-context.ts');
-
-    setupPlayContext(playContextFile.path);
-
-    return playContextFile;
+    return this.workspaceGeneratedDir.file('play-context.d.ts');
   }
 
-  get workspaceGlobalsFile(): File {
-    return file(this.workspaceGlobalsFilePath);
+  get workspaceContextFile(): File {
+    return this.workspaceGeneratedDir.file('workspace-context.d.ts');
   }
 
   get workspaceSetupFile(): File {
@@ -90,93 +102,110 @@ export class Sol {
 
     const extensionsDir = this.workspaceExtensionsDir;
     if (!extensionsDir.exists) {
-      const exampleSetupFile = extensionsDir.file('workspace/setup.js');
-      exampleSetupFile.create();
-
-      exampleSetupFile.text = `
-/**
- * Setup file for example extension
- */
-
- // Register global variables
-sol.registerGlobals({
-  example() {
-    console.log('Hello from your extension!');
-  },
-});  
-
-// Extend all strings
-sol.registerProperties(String.prototype, {
-  example: {
-    value() {
-      console.log('Hello from your extension!');
-    }
-  }
-});
-`.trimStart();
+      const extensionDir = extensionsDir.dir('workspace');
+      const extension = new Extension('workspace', extensionDir);
+      extension.generateSetupFile();
     }
 
-    sol.registerDefaultExtensions();
-
-    const globalsFile = this.workspaceGlobalsFile;
-    if (!globalsFile.exists) {
-      globalsFile.create();
-      globalsFile.text = `
-/**
- * Additional globals for the current workspace
- */ 
-const workspaceGlobals = {
-  workspace: {
-    example() {
-        console.log('Hello!');
-    }
-  }
-};
-
-sol.registerWorkspaceGlobals(workspaceGlobals);
-
-type WorkspaceGlobals = typeof workspaceGlobals;
-
-declare global {
-  const workspace: typeof workspaceGlobals.workspace;
-
-  namespace NodeJS {
-    interface Global extends WorkspaceGlobals {}
-  }
-}     
-`.trimStart();
-    }
+    this.registerDefaultExtensions();
 
     const setupFile = this.workspaceSetupFile;
     if (!setupFile.exists) {
-      setupFile.text = `
-/**
- * Setup file for the current workspace
- * 
- * Typically you would load extensions here
- */ 
+      this.generateWorkspaceSetupFile();
+    }
 
-${this.extensionNames
+    this.loadWorkspaceSetupFile();
+
+    this.updateWorkspace();
+  }
+
+  generateWorkspaceSetupFile() {
+    const {
+      workspaceDir,
+      workspaceSetupFile,
+      workspaceContextFile,
+      workspaceExtensionNames,
+      globalExtensionNames,
+      packageExtensionNames,
+    } = this;
+    if (workspaceSetupFile.exists) {
+      throw new Error(
+        `Workspace in ${workspaceDir.path} already contains a setup.js file`,
+      );
+    }
+
+    workspaceSetupFile.create();
+
+    workspaceSetupFile.text = `
+/* eslint-disable */
+/**
+* Setup file for workspace
+*/
+
+/// <reference path="${workspaceContextFile.dir.relativePathFrom(
+      workspaceSetupFile.dir,
+    )}/${workspaceContextFile.basename}" />
+
+// --- Integrated Extensions (${this.packageExtensionsDir.path}) ---
+${packageExtensionNames
   .map((name) => {
     return `// sol.loadExtension('${name}');`;
   })
   .join('\n')}
 
+// --- Global Extensions (${this.globalExtensionsDir.path}) ---
+${
+  globalExtensionNames
+    .map((name) => {
+      return `// sol.loadExtension('${name}');`;
+    })
+    .join('\n') || '// No global extensions yet'
+}
+
+// --- Workspace extensions (${this.workspaceExtensionsDir.relativePath}) ---
+${
+  workspaceExtensionNames
+    .map((name) => {
+      return `sol.loadExtension('${name}');`;
+    })
+    .join('\n') || '// No workspace extensions yet'
+}
 `.trimStart();
-    }
+  }
 
-    globalsFile.setupPlay(true);
+  updateWorkspace() {
+    const {
+      workspaceGeneratedDir,
+      playContextFile,
+      packageDistDir,
+      workspaceContextFile,
+    } = this;
 
-    try {
-      const setupFile = sol.workspaceGlobalsFile;
-      setupFile.replay();
-    } catch (e) {
-      console.log(
-        'Failed to load workspace globals.ts file.\n\nError: ' + e.message,
-      );
-    }
+    workspaceGeneratedDir.create();
 
-    this.loadWorkspaceSetupFile();
+    playContextFile.text = `
+import '${workspaceContextFile.dir.relativePathFrom(playContextFile.dir)}/${
+      workspaceContextFile.name
+    }';
+`.trimStart();
+
+    workspaceContextFile.text = `
+import { globals } from '${packageDistDir.relativePathFrom(
+      workspaceContextFile.dir,
+    )}/globals';
+
+export type Globals = typeof globals;
+
+declare global {
+  const {
+    ${Object.keys(this.globals).join(',\n    ')}
+  }: Globals;
+
+  namespace NodeJS {
+    interface Global extends Globals {}
+  }
+}
+`.trimStart();
   }
 
   playFile(path?: string): File {
@@ -212,101 +241,100 @@ ${this.extensionNames
     Object.assign(this.globals, globals);
   }
 
-  registerWorkspaceGlobals(globals: any) {
-    const globalGeneric = global as any;
-
-    Object.assign(globalGeneric, globals);
-    Object.assign(this.workspaceGlobals, globals);
-  }
-
   registerDefaultExtensions() {
     this.registerExtensions(this.packageExtensionsDir.dirs());
     this.registerExtensions(this.globalExtensionsDir.dirs());
     this.registerExtensions(this.workspaceExtensionsDir.dirs());
   }
 
-  registerExtension(nameOrPath: string | Directory): Directory {
-    let extensionDir;
-    if (typeof nameOrPath === 'string') {
-      if (!nameOrPath.includes('/')) {
-        extensionDir = this.packageExtensionsDir.dir(name);
+  registerExtension(extension: string | Directory | Extension): Extension {
+    let extensionDir: Directory;
+    let name: string;
+    if (!(extension instanceof Extension)) {
+      if (typeof extension === 'string') {
+        if (!extension.includes('/')) {
+          extensionDir = this.packageExtensionsDir.dir(extension);
+        } else {
+          extensionDir = dir(extension);
+        }
       } else {
-        extensionDir = dir(nameOrPath);
+        extensionDir = extension;
       }
+
+      name = extensionDir.name;
+      extension = new Extension(name, extensionDir);
     } else {
-      extensionDir = nameOrPath;
+      name = extension.name;
+      extensionDir = extension.dir;
     }
 
-    this.extensions[extensionDir.name] = extensionDir;
-
-    return extensionDir;
-  }
-
-  registerExtensions(extensions: Directory[]): Directory[] {
-    return extensions.map((extensionDir) =>
-      this.registerExtension(extensionDir),
+    const oldExtension = this.extensions.find(
+      (extension) => extension.name === name,
     );
-  }
+    if (oldExtension) {
+      if (oldExtension.dir.path === extensionDir.path) {
+        return oldExtension;
+      }
 
-  reloadExtension(name: string): Directory {
-    const extensionDir = sol.getExtensionDir(name);
-
-    const modules = extensionDir.files('**/*.js').map((f) => f.path);
-    modules.forEach((module) => {
-      delete require.cache[module];
-    });
-
-    return this.loadExtension(name, true);
-  }
-
-  reloadExtensions(names: string[]): Directory[] {
-    return names.map((name) => this.reloadExtension(name));
-  }
-
-  loadExtension(name: string, force = false): Directory {
-    const extensionDir = this.getExtensionDir(name);
-    if (!force && this.loadedExtensionNames.includes(name)) {
-      return extensionDir;
-    }
-
-    const setupFile = extensionDir.file('setup.js');
-    if (!setupFile.exists) {
       throw new Error(
-        `Extension ${name} (${extensionDir.path}) is missing setup.js file`,
+        `Conflict between extensions for name ${name}: ${oldExtension.dir.path} vs. ${extensionDir.path}`,
       );
     }
 
-    require(setupFile.pathWithoutExt);
+    this.extensions.push(extension);
 
-    console.log(`Loaded extension ${name} (${extensionDir.path})`);
-
-    this.server?.displayPrompt();
-
-    if (!this.loadedExtensionNames.includes(name)) {
-      this.loadedExtensionNames.push(name);
-    }
-
-    return extensionDir;
+    return extension;
   }
 
-  loadExtensions(names: string[]): Directory[] {
+  registerExtensions(
+    extensions: (string | Directory | Extension)[],
+  ): Extension[] {
+    return extensions.map((extension) => this.registerExtension(extension));
+  }
+
+  reloadExtension(name: string): Extension {
+    const extension = this.getExtension(name);
+    extension.reload();
+
+    return extension;
+  }
+
+  reloadExtensions(names: string[]): Extension[] {
+    return names.map((name) => this.reloadExtension(name));
+  }
+
+  loadExtension(name: string, force = false): Extension {
+    const extension = this.getExtension(name);
+    if (!force && extension.loaded) {
+      return extension;
+    }
+
+    extension.load(force);
+
+    return extension;
+  }
+
+  loadExtensions(names: string[]): Extension[] {
     return names.map((name) => this.loadExtension(name));
   }
 
-  getExtensionDir(name: string) {
-    if (!this.extensions[name]) {
+  getExtension(name: string): Extension {
+    const extension = this.extensions.find(
+      (extension) => extension.name === name,
+    );
+    if (!extension) {
       throw new Error(`Unknown extension ${name}`);
     }
 
-    return this.extensions[name];
+    return extension;
   }
 
   loadWorkspaceSetupFile() {
-    require(this.workspaceSetupFile.pathWithoutExt);
+    require(this.workspaceSetupFile.pathWithoutExts);
   }
 
   registerProperties(
-    obj: object,
+    target: object,
     descriptors: PropertyDescriptorMap & ThisType<any>,
   ) {
     Object.keys(descriptors).forEach(function (propertyName) {
@@ -314,7 +342,7 @@ ${this.extensionNames
 
       // const oldDescriptor = Object.getOwnPropertyDescriptor(obj, propertyName);
 
-      Object.defineProperty(obj, propertyName, {
+      Object.defineProperty(target, propertyName, {
         ...descriptor,
         enumerable: true,
         configurable: true,

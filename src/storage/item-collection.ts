@@ -22,7 +22,9 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
   }
 
   get exts(): string[] {
-    return [...new Set(Array.from(this.files()).map((f) => f.ext))].sort();
+    return [
+      ...new Set(Array.from(this.files()).map((f) => f.exts.join('.'))),
+    ].sort();
   }
 
   get names(): string[] {
@@ -151,6 +153,14 @@ class UnwrappedFileCollection extends GenericItemCollection<File> {
 
   updateExt(cb: (ext: string) => string | Promise<string>): ItemCollection {
     this.forEach((f) => (f.ext = awaitSync(cb(f.ext))));
+
+    return this;
+  }
+
+  updateExts(
+    cb: (exts: string[]) => string[] | Promise<string[]>,
+  ): ItemCollection {
+    this.forEach((f) => (f.exts = awaitSync(cb(f.exts))));
 
     return this;
   }

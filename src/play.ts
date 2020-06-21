@@ -1,13 +1,10 @@
 import { sol } from './sol';
 import { json } from './data/json';
+import { edit } from './integrations/editor';
 
 const playWatchers: Record<string, () => void> = {};
 
 function runPlay(playId: string, code: string) {
-  code = code
-    .replace(/type WorkspaceGlobals[\s\S]+/, '')
-    .replace(/\nexport (const|let|function|class)/, '\n$1');
-
   let result = eval(code);
 
   if (result && typeof result === 'object') {
@@ -63,18 +60,7 @@ export function play(path?: string) {
   return playFile;
 }
 
-export function setupPlayContext(path: string) {
-  const playContextFile = file(path);
-  const workspaceGlobalsFile = file(sol.workspaceGlobalsFilePath);
-  playContextFile.text = `
-import '${sol.packageDistDir.relativePathFrom(playContextFile.dir)}/globals';
-import '${workspaceGlobalsFile.dir.relativePathFrom(playContextFile.dir)}/${
-    workspaceGlobalsFile.name
-  }';
-`.trimStart();
-}
-
-export function setupPlay(path: string, noWorkspaceGlobals = false) {
+export function setupPlay(path: string) {
   const playFile = sol.playFile(path);
 
   playFile.create();

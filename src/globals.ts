@@ -62,39 +62,3 @@ export const globals = {
 };
 
 export type Globals = typeof globals;
-
-declare global {
-  const {
-    ast,
-    astTypes,
-    clipboard,
-    csv,
-    cwd,
-    dir,
-    dirs,
-    edit,
-    file,
-    files,
-    glob,
-    grep,
-    html,
-    json,
-    jsonata,
-    log,
-    play,
-    replay,
-    shell,
-    sol,
-    unwatchPlay,
-    web,
-    xml,
-    yaml,
-    utils,
-  }: typeof globals;
-
-  const $: typeof solGlobals;
-
-  namespace NodeJS {
-    interface Global extends Globals {}
-  }
-}

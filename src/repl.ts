@@ -4,6 +4,7 @@ import * as repl from 'repl';
 import { loopWhile } from 'deasync';
 import { Sol } from './sol';
 import { spawnSync } from 'child_process';
+import * as chalk from 'chalk';
 
 let server: repl.REPLServer | null = null;
 
@@ -47,7 +48,8 @@ function reloadSolServer() {
   // Refresh Sol instance
   sol = getSol();
 
-  sol.registerExtensions(Object.values(extensions));
+  // Re-register extension using strings (to avoid issues with instanceof checks)
+  sol.registerExtensions(extensions.map((extension) => extension.dir.path));
   sol.reloadExtensions(loadedExtensionNames);
 }
 
@@ -92,4 +94,14 @@ export function startSolServer() {
   });
 
   setupSolServer(server);
+
+  const sol = getSol();
+
+  console.log(
+    `${chalk.green('Welcome to Sol')} (workspace: ${
+      sol.workspaceDir.path
+    }, extensions: ${sol.loadedExtensionNames.join(', ')})`,
+  );
+
+  server.displayPrompt();
 }
