@@ -3,11 +3,17 @@ import { REPLServer } from 'repl';
 import { Directory, dir } from './storage/directory';
 import { File, file } from './storage/file';
 import { Extension } from './extension';
+import { SolPropertyDescriptorMap } from './interfaces/properties';
 
 export class Sol {
   server: REPLServer | null = null;
   globals = {};
   extensions: Extension[] = [];
+  workspaceDirPath: string;
+
+  constructor() {
+    this.workspaceDirPath = `${process.cwd()}/.sol`;
+  }
 
   get loadedExtensionNames() {
     return this.extensions
@@ -64,11 +70,19 @@ export class Sol {
   }
 
   get workspaceDir(): Directory {
-    return dir('.sol');
+    return dir(this.workspaceDirPath);
   }
 
   get workspaceExtensionsDir(): Directory {
     return this.workspaceDir.dir('extensions');
+  }
+
+  get workspaceExtensionDir(): Directory {
+    return this.workspaceExtensionsDir.dir('workspace');
+  }
+
+  get workspaceExtension(): Extension {
+    return this.getExtension(this.workspaceExtensionDir.name);
   }
 
   get workspaceGeneratedDir(): Directory {
@@ -91,7 +105,18 @@ export class Sol {
     return this.workspaceDir.file('setup.js');
   }
 
-  setupWorkspace() {
+  reloadWorkspace() {
+    const workspaceDir = this.workspaceDir;
+
+    const modules = workspaceDir.files('**/*.js').map((f) => f.path);
+    modules.forEach((module) => {
+      delete require.cache[module];
+    });
+
+    this.loadWorkspace();
+  }
+
+  loadWorkspace() {
     const workspaceDir = this.workspaceDir;
     workspaceDir.create();
 
@@ -100,11 +125,17 @@ export class Sol {
       gitignoreFile.text = '*';
     }
 
-    const extensionsDir = this.workspaceExtensionsDir;
-    if (!extensionsDir.exists) {
-      const extensionDir = extensionsDir.dir('workspace');
-      const extension = new Extension('workspace', extensionDir);
-      extension.generateSetupFile();
+    const workspaceExtensionDir = this.workspaceExtensionDir;
+    if (
+      !workspaceExtensionDir.exists &&
+      workspaceDir.path !== this.globalDir.path
+    ) {
+      workspaceExtensionDir.create();
+      const workspaceExtension = new Extension(
+        'workspace',
+        workspaceExtensionDir,
+      );
+      workspaceExtension.generateSetupFile();
     }
 
     this.registerDefaultExtensions();
@@ -234,10 +265,10 @@ declare global {
     this.historyFile.clear();
   }
 
-  registerGlobals(globals: any) {
+  registerGlobals(globals: SolPropertyDescriptorMap) {
     const globalGeneric = global as any;
 
-    Object.assign(globalGeneric, globals);
+    this.registerProperties(globalGeneric, globals);
     Object.assign(this.globals, globals);
   }
 
@@ -335,12 +366,10 @@ declare global {
 
   registerProperties(
     target: object,
-    descriptors: PropertyDescriptorMap & ThisType<any>,
+    descriptors: SolPropertyDescriptorMap & ThisType<any>,
   ) {
     Object.keys(descriptors).forEach(function (propertyName) {
       const descriptor = descriptors[propertyName];
-
-      // const oldDescriptor = Object.getOwnPropertyDescriptor(obj, propertyName);
 
       Object.defineProperty(target, propertyName, {
         ...descriptor,

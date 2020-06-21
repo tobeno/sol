@@ -1,14 +1,32 @@
-import { inspect } from 'util';
 import { globals } from './globals';
 import { awaitSync } from './utils/async';
 import { sol } from './sol';
+import { csv } from './data/csv';
+import {
+  lines,
+  grepLines,
+  rgrepLines,
+  sortLines,
+  rsortLines,
+  filterLines,
+  rfilterLines,
+  replaceLines,
+  mapLines,
+  extractText,
+} from './utils/text';
+import { json } from './data/json';
+import { html } from './data/html';
+import { file } from './storage/file';
+import { edit } from './integrations/editor';
+import { inspect } from 'util';
+import { clipboard } from './os/clipboard';
 
 sol.registerGlobals(globals);
 
 sol.registerProperties(Array.prototype, {
   csv: {
     get() {
-      return globals.csv(this);
+      return csv(this);
     },
   },
 });
@@ -16,12 +34,12 @@ sol.registerProperties(Array.prototype, {
 sol.registerProperties(String.prototype, {
   lines: {
     get() {
-      return globals.utils.lines(String(this));
+      return lines(String(this));
     },
   },
   json: {
     get() {
-      return globals.json(JSON.parse(String(this)));
+      return json(JSON.parse(String(this)));
     },
   },
   data: {
@@ -31,65 +49,65 @@ sol.registerProperties(String.prototype, {
   },
   csv: {
     get() {
-      return globals.csv(String(this));
+      return csv(String(this));
     },
   },
   html: {
     get() {
-      return globals.html(String(this));
+      return html(String(this));
     },
   },
   grepLines: {
     value(search: string | RegExp) {
-      return globals.utils.grepLines(String(this), search);
+      return grepLines(String(this), search);
     },
     writable: true,
   },
   rgrepLines: {
     value(search: string | RegExp) {
-      return globals.utils.rgrepLines(String(this), search);
+      return rgrepLines(String(this), search);
     },
     writable: true,
   },
   sortLines: {
     value() {
-      return globals.utils.sortLines(String(this));
+      return sortLines(String(this));
     },
     writable: true,
   },
   rsortLines: {
     value() {
-      return globals.utils.rsortLines(String(this));
+      return rsortLines(String(this));
     },
     writable: true,
   },
   filterLines: {
     value(cb: (line: string) => boolean) {
-      return globals.utils.filterLines(String(this), cb);
+      return filterLines(String(this), cb);
     },
     writable: true,
   },
   rfilterLines: {
     value(cb: (line: string) => boolean) {
-      return globals.utils.rfilterLines(String(this), cb);
+      return rfilterLines(String(this), cb);
     },
     writable: true,
   },
   replaceLines: {
     value(pattern: string | RegExp, replacer: any) {
-      return globals.utils.replaceLines(String(this), pattern, replacer);
+      return replaceLines(String(this), pattern, replacer);
     },
     writable: true,
   },
   mapLines: {
     value(cb: (line: string) => any) {
-      return globals.utils.mapLines(String(this), cb);
+      return mapLines(String(this), cb);
     },
     writable: true,
   },
   extract: {
     value(pattern: string | RegExp): string[] {
-      return globals.utils.extractText(String(this), pattern);
+      return extractText(String(this), pattern);
     },
     writable: true,
   },
@@ -101,7 +119,7 @@ sol.registerProperties(String.prototype, {
   },
   file: {
     value(path: string) {
-      const f = globals.file(path);
+      const f = file(path);
       f.text = String(this);
       return f;
     },
@@ -109,13 +127,13 @@ sol.registerProperties(String.prototype, {
   },
   edit: {
     value() {
-      return globals.edit(String(this));
+      return edit(String(this));
     },
     writable: true,
   },
   copy: {
     value() {
-      globals.clipboard.text = this.toString();
+      clipboard.text = this.toString();
     },
     writable: true,
   },

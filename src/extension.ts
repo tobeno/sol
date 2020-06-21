@@ -1,8 +1,9 @@
 import { Directory } from './storage/directory';
 import { sol } from './sol';
+import { SolPropertyDescriptorMap } from './interfaces/properties';
 
 export class Extension {
-  globals: any = {};
+  globals: SolPropertyDescriptorMap = {};
   loaded = false;
 
   constructor(public name: string, public dir: Directory) {}
@@ -41,8 +42,11 @@ const extension = sol.getExtension('${extensionName}');
 */
 extension.registerGlobals({
 workspace: {
-  example() {
-      console.log('Hello!');
+  help: 'Workspace utilities',
+  value: {
+    example() {
+        console.log('Hello!');
+    }
   }
 }
 });
@@ -81,7 +85,7 @@ workspace: {
     this.loaded = true;
   }
 
-  registerGlobals(globals: any) {
+  registerGlobals(globals: SolPropertyDescriptorMap) {
     sol.registerGlobals(globals);
 
     Object.assign(this.globals, globals);
@@ -89,8 +93,8 @@ workspace: {
 
   registerProperties(
     target: object,
-    descriptors: PropertyDescriptorMap & ThisType<any>,
+    properties: SolPropertyDescriptorMap & ThisType<any>,
   ) {
-    sol.registerProperties(target, descriptors);
+    sol.registerProperties(target, properties);
   }
 }

@@ -1,24 +1,29 @@
-export function filterLines(
-  str: string,
-  cb: (line: string) => boolean = (line: string) => !!line,
-): string {
-  return str.replace(/(.*)(\r?\n|$)/g, (...matches: string[]) => {
-    if (!cb(matches[1])) {
-      return '';
-    }
+import { withHelp } from './metadata';
 
-    return matches[0];
-  });
-}
+export const filterLines = withHelp(
+  (
+    str: string,
+    cb: (line: string) => boolean = (line: string) => !!line,
+  ): string => {
+    return str.replace(/(.*)(\r?\n|$)/g, (...matches: string[]) => {
+      if (!cb(matches[1])) {
+        return '';
+      }
 
-export function rfilterLines(
+      return matches[0];
+    });
+  },
+  'Removes lines using a filter function',
+);
+
+export const rfilterLines = (
   str: string,
   cb: (line: string) => boolean,
-): string {
+): string => {
   return filterLines(str, (line: string) => !cb(line));
-}
+};
 
-export function grepLines(str: string, search: string | RegExp): string {
+export const grepLines = (str: string, search: string | RegExp): string => {
   return filterLines(str, (line: string) => {
     if (search instanceof RegExp) {
       return search.test(line);
@@ -26,9 +31,9 @@ export function grepLines(str: string, search: string | RegExp): string {
 
     return line.includes(search);
   });
-}
+};
 
-export function rgrepLines(str: string, search: string | RegExp): string {
+export const rgrepLines = (str: string, search: string | RegExp): string => {
   return filterLines(str, (line: string) => {
     if (search instanceof RegExp) {
       return !search.test(line);
@@ -36,37 +41,37 @@ export function rgrepLines(str: string, search: string | RegExp): string {
 
     return !line.includes(search);
   });
-}
+};
 
-export function lines(str: string): string[] {
+export const lines = (str: string): string[] => {
   return str.replace(/\r/g, '').trimEnd().split('\n');
-}
+};
 
-export function sortLines(str: string): string {
+export const sortLines = (str: string): string => {
   return lines(str).sort().join('\n') + '\n';
-}
+};
 
-export function rsortLines(str: string): string {
+export const rsortLines = (str: string): string => {
   return lines(str).sort().reverse().join('\n') + '\n';
-}
+};
 
-export function replaceLines(
+export const replaceLines = (
   str: string,
   pattern: string | RegExp,
   replacer: any,
-) {
+) => {
   return (
     lines(str)
       .map((line) => line.replace(pattern, replacer))
       .join('\n') + '\n'
   );
-}
+};
 
-export function mapLines(str: string, cb: (line: string) => any) {
+export const mapLines = (str: string, cb: (line: string) => any) => {
   return lines(str).map(cb);
-}
+};
 
-export function extractText(str: string, pattern: RegExp | string) {
+export const extractText = (str: string, pattern: RegExp | string) => {
   if (typeof pattern === 'string') {
     pattern = new RegExp(pattern, 'g');
   } else if (!pattern.global) {
@@ -74,4 +79,4 @@ export function extractText(str: string, pattern: RegExp | string) {
   }
 
   return [...new Set(str.match(pattern) || [])].sort();
-}
+};

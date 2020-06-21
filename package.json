@@ -10,10 +10,13 @@
   "bin": {
     "sol": "./bin/sol.js"
   },
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
     "build": "rimraf dist/* && tsc",
     "build:watch": "rimraf dist/* && tsc --watch",
-    "sol": "node ./bin/sol --enable-source-maps",
+    "sol": "node --experimental-repl-await ./bin/sol.js",
     "format": "prettier --write \"src/**/*.ts\" \"*.{js,ts,json,yml,yaml}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

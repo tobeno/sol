@@ -31,7 +31,7 @@ class UnwrappedResponse {
         'application/x-yaml',
       ].includes(this.contentType)
     ) {
-      return 'yaml';
+      return 'xml';
     } else if (this.contentType === 'application/json') {
       return 'json';
     } else {
