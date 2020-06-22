@@ -2,6 +2,8 @@
 
 ![Teaser Image](docs/assets/hero.png)
 
+**⚠️ Highly experimental, do not use on important files**
+
 A set of tools rotating around a common goal:
 To make those boring daily routines a breeze.
 
