@@ -3,7 +3,7 @@
 {
    DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-   pushd $DIR/../sol
+   pushd $DIR/..
    if [ ! -d "node_modules" ]; then
       npm i
    fi
