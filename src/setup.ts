@@ -29,6 +29,11 @@ sol.registerProperties(Array.prototype, {
       return csv(this);
     },
   },
+  unique: {
+    value() {
+      return [...new Set(this)];
+    },
+  },
 });
 
 sol.registerProperties(String.prototype, {
