@@ -23,7 +23,11 @@ export function edit(pathOrValue?: any): File {
     }
 
     f = tmp(ext);
-    f.data = pathOrValue;
+    if (typeof pathOrValue === 'string') {
+      f.text = pathOrValue;
+    } else {
+      f.data = pathOrValue;
+    }
   } else if (
     typeof pathOrValue === 'string' &&
     /(^\s|\n|\s$)/.test(pathOrValue)
