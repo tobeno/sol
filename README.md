@@ -10,7 +10,46 @@ So you don't need to learn a real shell™ or any fancy syntax.
 
 It is quick and dirty, just like JS. But it also gets stuff done, just like JS.
 
-So: It is a small **JavaScript shell**.
+In short:
+It is a small, interactive **JavaScript shell**.
+
+You can do this:
+
+```js
+// Get all TypeScript files in current directory (recursively)
+> files('**/*.ts')
+
+// Gather all import statements
+> let imports = _.map(f => f.text.match(/(?<=^|\n)import[^;]+;/g) || []).flat()
+
+// Open import list in editor
+> imports.map(i => i.replace(/\r?\n/g, ' ')).join('\n').edit()
+
+// Get updated imports (_ is the file opened in editor)
+> _.text.trim().split('\n')
+
+// Get import source using abstract syntax tree
+> _.map(i => ast(i).program.body[0].source.value)
+```
+
+Or this:
+
+```js
+// Get todos
+> const j = fetch('https://jsonplaceholder.typicode.com/todos').json
+
+// Get all open ToDos
+> const open = j.filter(todo => !todo.completed)
+
+// Show all IDs of users with open ToDos using jsonata expression
+> open.transform('userId').data.sort().unique()
+
+// Save open ToDos in CSV
+> open.csv.file('todos.csv')
+
+// Open CSV file in editor
+> _.edit()
+```
 
 ## Install
 
