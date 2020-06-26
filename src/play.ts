@@ -5,6 +5,11 @@ import { wrapObject } from './data/mapper';
 const playWatchers: Record<string, () => void> = {};
 
 function runPlay(playId: string, code: string) {
+  code = code.replace(
+    /\brequire\((['"])(\.{1,2}\/)/g,
+    `require($1${sol.playDir.relativePathFrom(__dirname)}/$2`,
+  );
+
   let result = eval(`const shared = global.shared; ${code}`);
 
   if (result && typeof result === 'object') {
