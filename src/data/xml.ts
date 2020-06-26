@@ -1,38 +1,36 @@
 import { inspect } from 'util';
-import { cheerio } from '../integrations/cheerio';
-import { WithAllText } from '../wrappers/with-all-text';
+import { Data } from './data';
+import { JSDOM } from 'jsdom';
 
-export class UnwrappedXml {
-  private cheerio: CheerioStatic;
+/**
+ * Wrapper for XML strings
+ */
+export class Xml extends Data {
+  root: DocumentFragment;
 
-  constructor(public text: string | any) {
-    this.cheerio = cheerio.load(this.text, {
-      xmlMode: true,
-    });
+  constructor(public value: string) {
+    super(value);
+    this.root = JSDOM.fragment(value);
   }
 
-  query(selector: string): Cheerio {
-    return this.cheerio(selector);
+  get innerText(): string {
+    return this.root.textContent || '';
   }
 
-  root(): Cheerio {
-    return this.cheerio.root();
+  query(selector: string): Xml | null {
+    const node = this.root.querySelector(selector);
+
+    return node ? new Xml(node.outerHTML) : null;
   }
 
   /**
    * Prints just the data when inspecting (e.g. for console.log)
    */
   [inspect.custom]() {
-    return this.text;
+    return this.value;
   }
 
   toString() {
-    return this.text;
+    return this.value;
   }
-}
-
-export class Xml extends WithAllText(UnwrappedXml) {}
-
-export function xml(text: string) {
-  return new Xml(text);
 }

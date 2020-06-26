@@ -68,7 +68,7 @@ export const replaceLines = (
 };
 
 export const mapLines = (str: string, cb: (line: string) => any) => {
-  return lines(str).map(cb);
+  return lines(str).map(cb).join('\n') + '\n';
 };
 
 export const extractText = (str: string, pattern: RegExp | string) => {

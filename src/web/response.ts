@@ -1,103 +1,90 @@
-import { AxiosResponse } from 'axios';
 import { inspect } from 'util';
 import { WithPrint } from '../wrappers/with-print';
 import { WithCopy } from '../wrappers/with-copy';
-import { WithFile } from '../wrappers/with-file';
-import { csv } from '../data/csv';
-import { json } from '../data/json';
-import { ast } from '../data/ast';
-import { html } from 'cheerio';
-import { xml } from '../data/xml';
-import { yaml } from '../data/yaml';
+import { WithSave } from '../wrappers/with-save';
 import { WithEdit } from '../wrappers/with-edit';
+import { Data } from '../data/data';
+import { AxiosResponse } from 'axios';
+import { DataFormat } from '../data/data-format';
+import { DataType } from '../data/data-type';
+import { wrapObject, wrapString } from '../data/mapper';
+import { web } from '.';
+import { Text } from '../data/text';
 
-class UnwrappedResponse {
-  constructor(readonly axiosResponse: AxiosResponse) {}
-
-  get data() {
-    return this.axiosResponse.data;
+class UnwrappedResponse extends Data {
+  constructor(private axiosResponse: AxiosResponse) {
+    super({
+      status: axiosResponse.status,
+      statusText: axiosResponse.statusText,
+      headers: axiosResponse.headers,
+      data: axiosResponse.data,
+      request: {
+        url: axiosResponse.config.url,
+        method: (axiosResponse.config.method || 'get').toLowerCase(),
+        auth: axiosResponse.config.auth,
+        headers: axiosResponse.config.headers,
+      },
+    });
   }
 
-  get ext() {
-    if (this.contentType === 'text/html') {
-      return 'html';
-    } else if (['text/xml', 'application/xml'].includes(this.contentType)) {
-      return 'xml';
-    } else if (
-      [
-        'text/vnd.yaml',
-        'text/yaml',
-        'text/x-yaml',
-        'application/x-yaml',
-      ].includes(this.contentType)
-    ) {
-      return 'xml';
-    } else if (this.contentType === 'application/json') {
-      return 'json';
-    } else {
-      return 'txt';
-    }
+  get request() {
+    return this.value.request;
   }
 
-  get text() {
-    const { data } = this.axiosResponse;
-    if (typeof data === 'string' && this.contentType !== 'application/json') {
-      return data;
-    }
-
-    return JSON.stringify(data);
+  get content(): Data {
+    return wrapObject(this.value.data, this as any);
   }
 
-  get csv() {
-    return csv(this.text);
-  }
-
-  get yaml() {
-    return yaml(this.text);
-  }
-
-  get json() {
-    return json(this.data);
-  }
-
-  get ast() {
-    return ast(this.text);
-  }
-
-  get xml() {
-    return xml(this.text);
-  }
-
-  get html() {
-    return html(this.text);
-  }
-
-  get headers() {
-    return this.axiosResponse.headers;
-  }
-
-  get status() {
-    return this.axiosResponse.status;
-  }
-
-  get statusText() {
-    return this.axiosResponse.statusText;
+  get contentExt() {
+    return DataFormat.toExt(this.contentFormat);
   }
 
   get contentType() {
-    const contentType = this.axiosResponse.headers['content-type'];
+    return DataType.String.withFormat(this.contentFormat);
+  }
+
+  get contentFormat() {
+    const contentType = this.value.headers['content-type'];
 
     return contentType ? contentType.split(';')[0] : null;
+  }
+
+  get headers() {
+    return this.value.headers;
+  }
+
+  get status() {
+    return this.value.status;
+  }
+
+  get statusText() {
+    return this.value.statusText;
+  }
+
+  get cmd(): Text {
+    return wrapString(
+      `web.request(${JSON.stringify(this.request)})`,
+      null,
+      this,
+    );
+  }
+
+  refresh(): Response {
+    return web.request(this.axiosResponse.config);
   }
 
   /**
    * Prints just the data when inspecting (e.g. for console.log)
    */
   [inspect.custom]() {
-    return this.axiosResponse.data;
+    return this.value;
+  }
+
+  toString() {
+    return this.json.toString();
   }
 }
 
 export class Response extends WithPrint(
-  WithEdit(WithCopy(WithFile(UnwrappedResponse))),
+  WithEdit(WithCopy(WithSave(UnwrappedResponse))),
 ) {}

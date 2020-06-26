@@ -119,10 +119,10 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
           result.splice(
             result.length,
             0,
-            ...(await item.replaceText(pattern, replacer)),
+            ...(item as Directory).replaceText(pattern, replacer),
           );
         } else if (item instanceof File) {
-          if (await item.replaceText(pattern, replacer)) {
+          if (item.replaceText(pattern, replacer)) {
             result.push(item);
           }
         }

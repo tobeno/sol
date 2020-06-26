@@ -14,8 +14,13 @@ import {
 } from './item-collection';
 import { WithPrint } from '../wrappers/with-print';
 import { WithCopy } from '../wrappers/with-copy';
+import { wrapString } from '../data/mapper';
 
 export class UnwrappedDirectory extends Item {
+  get cmd() {
+    return wrapString(`dir(${JSON.stringify(this.path)})`);
+  }
+
   get parent(): Directory {
     return new Directory(path.dirname(this.path));
   }

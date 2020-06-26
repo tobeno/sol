@@ -225,7 +225,18 @@ import { globals } from '${packageDistDir.relativePathFrom(
       workspaceContextFile.dir,
     )}/globals';
 
-export type Globals = typeof globals;
+export type Globals = {
+  ${Object.keys(this.globals)
+    .map(
+      (key) =>
+        `${key}: ${
+          (this.globals as any)[key].get
+            ? `ReturnType<typeof globals.${key}.get>`
+            : `typeof globals.${key}.value`
+        }`,
+    )
+    .join(',\n  ')}
+};
 
 declare global {
   const {
@@ -373,7 +384,7 @@ declare global {
 
       Object.defineProperty(target, propertyName, {
         ...descriptor,
-        enumerable: true,
+        enumerable: false,
         configurable: true,
       });
     });

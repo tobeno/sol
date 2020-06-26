@@ -1,5 +1,6 @@
 import { File, file } from '../storage/file';
 import { tmp } from '../storage/tmp';
+import { Text } from '../data/text';
 
 export const editor = process.env.SOL_EDITOR || 'code';
 
@@ -8,6 +9,15 @@ export function edit(pathOrValue?: any): File {
 
   if (!pathOrValue) {
     f = tmp('ts');
+  } else if (
+    typeof pathOrValue === 'string' &&
+    /(^\s|\n|\s$)/.test(pathOrValue)
+  ) {
+    f = tmp('txt');
+    f.text = pathOrValue;
+  } else if (pathOrValue instanceof Text) {
+    f = tmp(pathOrValue.ext);
+    f.text = pathOrValue;
   } else if (typeof pathOrValue === 'object') {
     let ext = 'json';
     if (pathOrValue.constructor !== Object) {
@@ -26,14 +36,8 @@ export function edit(pathOrValue?: any): File {
     if (typeof pathOrValue === 'string') {
       f.text = pathOrValue;
     } else {
-      f.data = pathOrValue;
+      f.json = pathOrValue;
     }
-  } else if (
-    typeof pathOrValue === 'string' &&
-    /(^\s|\n|\s$)/.test(pathOrValue)
-  ) {
-    f = tmp('txt');
-    f.text = pathOrValue;
   } else {
     f = file(pathOrValue);
   }

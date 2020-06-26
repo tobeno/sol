@@ -3,23 +3,32 @@ import * as path from 'path';
 import * as prettier from 'prettier';
 import { Item } from './item';
 import { Directory } from './directory';
-import { WithJson } from '../wrappers/with-json';
 import { WithPrint } from '../wrappers/with-print';
 import { WithCopy } from '../wrappers/with-copy';
-import { WithAst } from '../wrappers/with-ast';
-import { WithData } from '../wrappers/with-data';
-import { WithCsv } from '../wrappers/with-csv';
-import { WithText } from '../wrappers/with-text';
-import { WithReplaceText } from '../wrappers/with-replace-text';
 import { ItemCollection } from './item-collection';
 import { play, replay, setupPlay, unwatchPlay } from '../play';
-import { WithHtml } from '../wrappers/with-html';
-import { WithYaml } from '../wrappers/yaml';
-import { WithXml } from '../wrappers/xml';
+import {
+  jsonToData,
+  yamlToData,
+  csvToData,
+  wrapString,
+  dataToJson,
+  dataToYaml,
+  dataToCsv,
+  codeToAst,
+  astToCode,
+} from '../data/mapper';
+import { Text } from '../data/text';
+import { Data } from '../data/data';
+import { Ast } from '../data/ast';
 
 class UnwrappedFile extends Item {
   constructor(path: string) {
     super(path);
+  }
+
+  get cmd() {
+    return wrapString(`file(${JSON.stringify(this.path)})`);
   }
 
   get pathWithoutExt(): string {
@@ -99,12 +108,44 @@ class UnwrappedFile extends Item {
     }
   }
 
-  get text(): string {
-    return fs.readFileSync(this.path, 'utf8');
+  get text(): Text | any {
+    return wrapString(fs.readFileSync(this.path, 'utf8'), null, this);
   }
 
-  set text(value: string) {
-    fs.writeFileSync(this.path, value, 'utf8');
+  set text(value: Text | any) {
+    fs.writeFileSync(this.path, value.toString(), 'utf8');
+  }
+
+  get json(): Data {
+    return jsonToData(this.text);
+  }
+
+  set json(value: Data) {
+    this.text = dataToJson(value);
+  }
+
+  get yaml(): Data {
+    return yamlToData(this.text);
+  }
+
+  set yaml(value: Data) {
+    this.text = dataToYaml(value);
+  }
+
+  get csv(): Data {
+    return csvToData(this.text);
+  }
+
+  set csv(value: Data) {
+    this.text = dataToCsv(value);
+  }
+
+  get ast(): Ast {
+    return codeToAst(this.text);
+  }
+
+  set ast(value: Ast) {
+    this.text = astToCode(value);
   }
 
   get length() {
@@ -158,10 +199,20 @@ class UnwrappedFile extends Item {
     return this.moveTo(`${this.dir.path}/${newBasename}`);
   }
 
+  replaceText(pattern: string | RegExp, replacer: any) {
+    this.text = this.text.replace(pattern, replacer);
+
+    return this;
+  }
+
   copyTo(newPath: string) {
     fs.copyFileSync(this.path, newPath);
 
     return new File(newPath);
+  }
+
+  eval() {
+    return eval(this.text.toString());
   }
 
   play() {
@@ -209,13 +260,7 @@ class UnwrappedFile extends Item {
   }
 }
 
-class CoreFile extends WithText(WithData(UnwrappedFile)) {}
-class DataFile extends WithXml(
-  WithHtml(WithYaml(WithAst(WithCsv(WithJson(CoreFile))))),
-) {}
-class ToolsFile extends WithReplaceText(WithCopy(WithPrint(DataFile))) {}
-
-export class File extends ToolsFile {}
+export class File extends WithCopy(WithPrint(UnwrappedFile)) {}
 
 export function file(path: string): File {
   return new File(path);

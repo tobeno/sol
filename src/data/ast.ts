@@ -1,40 +1,23 @@
-import { parse as babelParse } from '@babel/parser';
 import * as babelTypes from '@babel/types';
-import traverse, { TraverseOptions, Scope, NodePath } from '@babel/traverse';
 import { inspect } from 'util';
-import { parse as recastParse, print as recastPrint } from 'recast';
-import { WithAllText } from '../wrappers/with-all-text';
-import { WithJson } from '../wrappers/with-json';
+import { Data } from './data';
+import { astToCode } from './mapper';
+import traverse, { TraverseOptions, Scope, NodePath } from '@babel/traverse';
 
-export class UnwrappedAst {
-  data: babelTypes.File;
-
-  constructor(data: string | babelTypes.File) {
-    if (typeof data === 'string') {
-      data = UnwrappedAst.parse(data);
-    }
-
-    this.data = data;
+/**
+ * Wrapper for HTML strings
+ */
+export class Ast extends Data {
+  constructor(public value: babelTypes.Node) {
+    super(value);
   }
 
-  get program() {
-    return this.data.program;
-  }
-
-  get text(): string {
-    return JSON.stringify(this.data, null, 2);
-  }
-
-  set text(value: string) {
-    this.data = JSON.parse(value);
+  get node() {
+    return this.value;
   }
 
   get code() {
-    return UnwrappedAst.stringify(this.data);
-  }
-
-  set code(value: string) {
-    this.data = UnwrappedAst.parse(value);
+    return astToCode(this).toString();
   }
 
   traverse(
@@ -43,44 +26,37 @@ export class UnwrappedAst {
     state?: any,
     parentPath?: NodePath,
   ) {
-    traverse(this.data, opts, scope, state, parentPath);
+    traverse(this.value, opts, scope, state, parentPath);
 
     return this;
+  }
+
+  extract(type: string | Function): Ast[] {
+    // Allow also builder functions as type (e.g. ast.Identifier)
+    if (typeof type === 'function') {
+      type = type.name.slice(0, 1).toUpperCase() + type.name.slice(1);
+    }
+
+    const matches: Ast[] = [];
+    this.traverse({
+      [type]: (path: NodePath) => {
+        matches.push(new Ast(path.node));
+      },
+    });
+
+    return matches;
   }
 
   /**
    * Prints just the data when inspecting (e.g. for console.log)
    */
   [inspect.custom]() {
-    return this.data;
+    return `Ast { ${this.code} }`;
   }
 
   toString() {
-    return this.text;
-  }
-
-  static parse(code: string): babelTypes.File {
-    return recastParse(code, {
-      parser: {
-        parse(code: string) {
-          return babelParse(code, {
-            sourceType: 'module',
-            plugins: ['typescript'],
-          });
-        },
-      },
-    });
-  }
-
-  static stringify(ast: babelTypes.File): string {
-    return recastPrint(ast).code;
+    return this.code;
   }
 }
-
-export class Ast extends WithJson(WithAllText(UnwrappedAst)) {}
 
 export * as astTypes from '@babel/types';
-
-export function ast(...args: ConstructorParameters<typeof Ast>) {
-  return new Ast(...args);
-}

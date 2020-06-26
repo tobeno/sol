@@ -1,17 +1,17 @@
 import { sol } from './sol';
-import { json } from './data/json';
 import { edit } from './integrations/editor';
+import { wrapObject } from './data/mapper';
 
 const playWatchers: Record<string, () => void> = {};
 
 function runPlay(playId: string, code: string) {
-  let result = eval(code);
+  let result = eval(`const shared = global.shared; ${code}`);
 
   if (result && typeof result === 'object') {
     if (result.constructor === Object) {
-      result = json(result);
+      result = wrapObject(result);
     } else if (result.constructor === Array) {
-      result = json(result);
+      result = wrapObject(result);
     }
   }
 
@@ -65,7 +65,7 @@ export function setupPlay(path: string) {
 
   playFile.create();
 
-  if (!playFile.text) {
+  if (!playFile.size) {
     playFile.text = `
 /// <reference path="${sol.playContextFile.dir.relativePathFrom(
       playFile.dir,
