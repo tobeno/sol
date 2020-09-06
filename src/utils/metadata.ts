@@ -26,7 +26,7 @@ export function withHelp<T>(target: T, help: string): T & SolMetadata {
 }
 
 export function getSolMetadata(target: any): SolMetadata {
-  if (typeof target.__solMeta__ !== 'undefined') {
+  if (target && typeof target.__solMeta__ !== 'undefined') {
     return target.__solMeta__;
   }
 
