@@ -1,9 +1,9 @@
-import { StringMapper } from './string-mapper';
+import { StringTransformer } from './string-transformer';
 import { DataType } from '../data-type';
 import { DataFormat } from '../data-format';
 import { Xml } from '../xml';
 
-export class XmlMapper extends StringMapper<Xml> {
+export class XmlTransformer extends StringTransformer<Xml> {
   constructor() {
     super(DataType.Xml, DataFormat.Xml);
   }

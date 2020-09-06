@@ -34,7 +34,8 @@ import {
   wrapHtml,
   wrapXml,
   wrapString,
-} from './data/mapper';
+  transform,
+} from './data/transformer';
 import { astTypes } from './data/ast';
 
 export const globals = {
@@ -145,6 +146,10 @@ export const globals = {
   text: {
     help: 'Wraps a string as Text',
     value: wrapString,
+  },
+  transform: {
+    help: 'Transforms data between data types using transformations',
+    value: transform,
   },
   unwatchPlay: {
     value: unwatchPlay,

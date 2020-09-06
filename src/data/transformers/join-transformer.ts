@@ -1,7 +1,7 @@
-import { StringMapper } from './string-mapper';
+import { StringTransformer } from './string-transformer';
 import { DataType } from '../data-type';
 
-export class JoinMapper extends StringMapper<any[]> {
+export class JoinTransformer extends StringTransformer<any[]> {
   constructor(readonly separator: string, baseFormat: string) {
     super(DataType.Object, baseFormat);
   }

@@ -1,13 +1,13 @@
-import { DataMapper } from './data-mapper';
+import { DataTransformer } from './data-transformer';
 import { DataTransformation } from '../data-transformation';
 
-export class ToStringMapper implements DataMapper<any, any> {
+export class ToStringTransformer implements DataTransformer<any, any> {
   supports(input: any, transformation: DataTransformation): boolean {
     const { targetType } = transformation;
     return targetType.type === 'string' && !targetType.format;
   }
 
-  map(input: any) {
+  transform(input: any) {
     return String(input);
   }
 }

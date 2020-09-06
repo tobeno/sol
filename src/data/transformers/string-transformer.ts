@@ -1,8 +1,9 @@
 import { DataType } from '../data-type';
-import { DataMapper } from './data-mapper';
+import { DataTransformer } from './data-transformer';
 import { DataTransformation } from '../data-transformation';
 
-export abstract class StringMapper<TargetType> implements DataMapper<any, any> {
+export abstract class StringTransformer<TargetType>
+  implements DataTransformer<any, any> {
   baseType: DataType;
   stringifyTransformation: DataTransformation;
   parseTransformation: DataTransformation;
@@ -37,7 +38,7 @@ export abstract class StringMapper<TargetType> implements DataMapper<any, any> {
     );
   }
 
-  map(input: any, transformation: DataTransformation): any {
+  transform(input: any, transformation: DataTransformation): any {
     if (this.matchesStringifyTransformation(transformation)) {
       return this.stringify(input);
     }

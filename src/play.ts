@@ -1,6 +1,6 @@
 import { sol } from './sol';
 import { edit } from './integrations/editor';
-import { wrapObject } from './data/mapper';
+import { wrapObject } from './data/transformer';
 
 const playWatchers: Record<string, () => void> = {};
 

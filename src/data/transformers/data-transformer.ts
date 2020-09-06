@@ -1,7 +1,7 @@
 import { DataTransformation } from '../data-transformation';
 
-export interface DataMapper<InputType, OutputType> {
+export interface DataTransformer<InputType, OutputType> {
   supports(input: InputType, transformation: DataTransformation): boolean;
 
-  map(input: InputType, transformation: DataTransformation): OutputType;
+  transform(input: InputType, transformation: DataTransformation): OutputType;
 }

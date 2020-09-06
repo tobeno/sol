@@ -2,34 +2,24 @@ import { globals } from './globals';
 import { awaitSync } from './utils/async';
 import { sol } from './sol';
 import { inspect } from 'util';
-import { map } from './data/mapper';
-import { DataTransformation } from './data/data-transformation';
-import { DataType } from './data/data-type';
-import { DataFormat } from './data/data-format';
+import { dataToCsv, dataToJson, dataToYaml } from './data/transformer';
 
 sol.registerGlobals(globals);
 
 sol.registerProperties(Array.prototype, {
   csv: {
     get() {
-      return map(
-        this,
-        new DataTransformation(
-          DataType.Object,
-          DataType.String.withFormat(DataFormat.Csv),
-        ),
-      );
+      return dataToCsv(this);
     },
   },
   json: {
     get() {
-      return map(
-        this,
-        new DataTransformation(
-          DataType.Object,
-          DataType.String.withFormat(DataFormat.Json),
-        ),
-      );
+      return dataToJson(this);
+    },
+  },
+  yaml: {
+    get() {
+      return dataToYaml(this);
     },
   },
   copy: {

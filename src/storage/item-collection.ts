@@ -7,7 +7,7 @@ import * as fg from 'fast-glob';
 import { awaitSync } from '../utils/async';
 import { Data } from '../data/data';
 import { Text } from '../data/text';
-import { wrapString } from '../data/mapper';
+import { wrapString } from '../data/transformer';
 
 export class GenericItemCollection<ItemType extends Item> extends Data<
   ItemType[]

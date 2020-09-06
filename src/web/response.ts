@@ -3,7 +3,7 @@ import { Data } from '../data/data';
 import { AxiosResponse } from 'axios';
 import { DataFormat } from '../data/data-format';
 import { DataType } from '../data/data-type';
-import { wrapObject, wrapString } from '../data/mapper';
+import { wrapObject, wrapString } from '../data/transformer';
 import { web } from '.';
 import { Text } from '../data/text';
 import { clipboard } from '../os/clipboard';

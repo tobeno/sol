@@ -1,8 +1,8 @@
-import { StringMapper } from './string-mapper';
+import { StringTransformer } from './string-transformer';
 import { DataType } from '../data-type';
 import { DataFormat } from '../data-format';
 
-export class JsonMapper extends StringMapper<any> {
+export class JsonTransformer extends StringTransformer<any> {
   constructor() {
     super(DataType.Object, DataFormat.Json);
   }

@@ -1,10 +1,10 @@
 import { parse as recastParse, print as recastPrint } from 'recast';
 import { DataType } from '../data-type';
-import { StringMapper } from './string-mapper';
+import { StringTransformer } from './string-transformer';
 import { parse as babelParse } from '@babel/parser';
 import { Ast } from '../ast';
 
-export class AstMapper extends StringMapper<any> {
+export class AstTransformer extends StringTransformer<any> {
   constructor() {
     super(DataType.Ast);
   }

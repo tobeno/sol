@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
 import { Data } from './data';
-import { wrapHtml } from './mapper';
+import { wrapHtml } from './transformer';
 
 /**
  * Wrapper for HTML strings

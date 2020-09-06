@@ -1,9 +1,9 @@
-import { StringMapper } from './string-mapper';
+import { StringTransformer } from './string-transformer';
 import { DataType } from '../data-type';
 import { DataFormat } from '../data-format';
 import { Html } from '../html';
 
-export class HtmlMapper extends StringMapper<Html> {
+export class HtmlTransformer extends StringTransformer<Html> {
   constructor() {
     super(DataType.Html, DataFormat.Html);
   }

@@ -15,7 +15,7 @@ import {
   dataToCsv,
   codeToAst,
   astToCode,
-} from '../data/mapper';
+} from '../data/transformer';
 import { Text } from '../data/text';
 import { Data } from '../data/data';
 import { Ast } from '../data/ast';

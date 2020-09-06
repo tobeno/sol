@@ -7,6 +7,7 @@ export class DataType {
   static Array = DataType.fromString('Array');
   static Ast = DataType.fromString('Ast');
   static Data = DataType.fromString('Data');
+  static Date = DataType.fromString('Date');
   static Html = DataType.fromString('Html');
   static Object = DataType.fromString('object');
   static String = DataType.fromString('string');

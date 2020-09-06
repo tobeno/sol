@@ -12,7 +12,7 @@ import {
   DirectoryCollection,
   ItemCollection,
 } from './item-collection';
-import { wrapString } from '../data/mapper';
+import { wrapString } from '../data/transformer';
 import { clipboard } from '../os/clipboard';
 
 export class Directory extends Item {

@@ -1,46 +1,61 @@
-import { AnyMapper } from './mappers/any-mapper';
+import { AnyTransformer } from './transformers/any-transformer';
 import { DataTransformation } from './data-transformation';
-import { WrappingMapper } from './mappers/wrapping-mapper';
+import { WrappingTransformer } from './transformers/wrapping-transformer';
 import { Data } from './data';
 import { DataType } from './data-type';
 import { DataFormat } from './data-format';
-import { CsvMapper } from './mappers/csv-mappers';
-import { JsonMapper } from './mappers/json-mappers';
-import { YamlMapper } from './mappers/yaml-mappers';
-import { HtmlMapper } from './mappers/html-mappers';
-import { XmlMapper } from './mappers/xml-mappers';
-import { TextCommaSeparatedMapper } from './mappers/text-comma-separated-mapper';
-import { TextNewlineSeparatedMapper } from './mappers/text-newline-separated-mapper';
-import { TextSemicolonSeparatedMapper } from './mappers/text-semicolon-separated-mapper';
-import { ToStringMapper } from './mappers/tostring-mapper';
+import { CsvTransformer } from './transformers/csv-transformer';
+import { JsonTransformer } from './transformers/json-transformer';
+import { YamlTransformer } from './transformers/yaml-transformer';
+import { HtmlTransformer } from './transformers/html-transformer';
+import { XmlTransformer } from './transformers/xml-transformer';
+import { TextCommaSeparatedTransformer } from './transformers/text-comma-separated-transformer';
+import { TextNewlineSeparatedTransformer } from './transformers/text-newline-separated-transformer';
+import { TextSemicolonSeparatedTransformer } from './transformers/text-semicolon-separated-transformer';
+import { ToStringTransformer } from './transformers/tostring-transformer';
 import { Html } from './html';
 import { Xml } from './xml';
 import { Text } from './text';
-import { TextMapper } from './mappers/text-mapper';
-import { DataSourceMapper } from './mappers/data-source-mapper';
+import { DataSourceTransformer } from './transformers/data-source-transformer';
 import { DataSource } from './data-source';
-import { DataTransformationMapper } from './mappers/data-transformation-mapper';
+import { DataTransformationTransformer } from './transformers/data-transformation-transformer';
 import { Ast } from './ast';
-import { AstMapper } from './mappers/ast-mapper';
+import { AstTransformer } from './transformers/ast-transformer';
+import { DataTransformer } from './transformers/data-transformer';
+import { TextDateTransformer } from './transformers/text-date-transformer';
 
-const anyMapper = new AnyMapper([
-  new AstMapper(),
-  new CsvMapper(),
-  new JsonMapper(),
-  new YamlMapper(),
-  new HtmlMapper(),
-  new XmlMapper(),
-  new TextMapper(),
-  new TextCommaSeparatedMapper(),
-  new TextNewlineSeparatedMapper(),
-  new TextSemicolonSeparatedMapper(),
-  new ToStringMapper(),
-]);
-export const mapper = new DataTransformationMapper(
-  new DataSourceMapper(new WrappingMapper(Data, anyMapper)),
-);
+let transformer: DataTransformer<any, any> | null = null;
 
-export function map<InputType = any, OutputType = any>(
+function getTransformer(): DataTransformer<any, any> {
+  if (!transformer) {
+    const anyTransformer = new AnyTransformer([
+      new AstTransformer(),
+      new CsvTransformer(),
+      new JsonTransformer(),
+      new YamlTransformer(),
+      new HtmlTransformer(),
+      new XmlTransformer(),
+      new TextDateTransformer(),
+      new TextCommaSeparatedTransformer(),
+      new TextNewlineSeparatedTransformer(),
+      new TextSemicolonSeparatedTransformer(),
+      new ToStringTransformer(),
+    ]);
+    transformer = new DataTransformationTransformer(
+      new DataSourceTransformer(
+        new WrappingTransformer(
+          Data,
+          DataType.Object,
+          new WrappingTransformer(Text, DataType.String, anyTransformer),
+        ),
+      ),
+    );
+  }
+
+  return transformer;
+}
+
+export function transform<InputType = any, OutputType = any>(
   input: InputType,
   transformation: DataTransformation | string,
 ): OutputType {
@@ -48,7 +63,7 @@ export function map<InputType = any, OutputType = any>(
     transformation = DataTransformation.fromString(transformation);
   }
 
-  return mapper.map(input, transformation);
+  return getTransformer().transform(input, transformation);
 }
 
 export function jsonToData<ValueType = any>(
@@ -57,7 +72,7 @@ export function jsonToData<ValueType = any>(
 ): Data<ValueType> {
   source = source || (value as any).source || null;
 
-  return map(
+  return transform(
     unwrapString(value),
     new DataTransformation(
       DataType.String.withFormat(DataFormat.Json),
@@ -77,7 +92,7 @@ export function dataToJson<ValueType = any>(
   source = source || value.source;
 
   return wrapString<ValueType>(
-    map(
+    transform(
       value,
       new DataTransformation(
         DataType.Data,
@@ -94,7 +109,7 @@ export function yamlToData<ValueType = any>(
 ): Data<ValueType> {
   source = source || (value as any).source || null;
 
-  return map(
+  return transform(
     unwrapString(value),
     new DataTransformation(
       DataType.String.withFormat(DataFormat.Yaml),
@@ -114,7 +129,7 @@ export function dataToYaml<ValueType = any>(
   source = source || value.source;
 
   return wrapString<ValueType>(
-    map(
+    transform(
       value,
       new DataTransformation(
         DataType.Data,
@@ -131,7 +146,7 @@ export function csvToData<ValueType = any>(
 ): Data<ValueType> {
   source = source || (value as any).source || null;
 
-  return map(
+  return transform(
     unwrapString(value),
     new DataTransformation(
       DataType.String.withFormat(DataFormat.Csv),
@@ -151,7 +166,7 @@ export function dataToCsv<ValueType = any>(
   source = source || value.source;
 
   return wrapString<ValueType>(
-    map(
+    transform(
       value,
       new DataTransformation(
         DataType.Data,
@@ -168,7 +183,7 @@ export function codeToAst(
 ): Ast {
   source = source || (value as any).source || null;
 
-  return map(
+  return transform(
     unwrapString(value),
     new DataTransformation(DataType.String, DataType.Ast),
   );
@@ -185,7 +200,7 @@ export function astToCode(
   source = source || value.source;
 
   return wrapString(
-    map(value, new DataTransformation(DataType.Ast, DataType.String)),
+    transform(value, new DataTransformation(DataType.Ast, DataType.String)),
   ).withSource(source);
 }
 
@@ -240,7 +255,7 @@ export function wrapHtml(
   value: string | String | Text,
   source: DataSource | null = null,
 ): Html {
-  return map(
+  return transform(
     unwrapString(value),
     new DataTransformation(
       DataType.String.withFormat(DataFormat.Html),
@@ -257,7 +272,7 @@ export function wrapXml(
   value: string | String | Text,
   source: DataSource | null = null,
 ): Xml {
-  return map(
+  return transform(
     unwrapString(value),
     new DataTransformation(
       DataType.String.withFormat(DataFormat.Xml),

@@ -5,7 +5,7 @@ import {
   jsonToData,
   yamlToData,
   csvToData,
-} from '../data/mapper';
+} from '../data/transformer';
 import { File } from '../storage/file';
 import { saveAs } from '../storage/save';
 

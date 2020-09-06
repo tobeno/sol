@@ -6,7 +6,7 @@ import {
   dataToYaml,
   dataToCsv,
   wrapObject,
-} from './mapper';
+} from './transformer';
 import { Wrapper } from './wrapper';
 import { Text } from './text';
 import { DataSource } from './data-source';

@@ -4,6 +4,7 @@ export class DataFormat {
   static Json = 'application/json';
   static Yaml = 'text/x-yaml';
   static Xml = 'text/xml';
+  static TextDate = 'text/x-date';
   static TextNewlineSeparated = 'text/x-newline-separated';
   static TextCommaSeparated = 'text/x-comma-separated';
   static TextSemicolonSeparated = 'text/x-semicolon-separated';
@@ -22,6 +23,8 @@ export class DataFormat {
         return 'xml';
       case DataFormat.TextNewlineSeparated:
         return 'json';
+      case DataFormat.TextDate:
+        return 'date';
       default:
         return 'txt';
     }

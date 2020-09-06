@@ -4,7 +4,7 @@ import {
   jsonToData,
   wrapObject,
   wrapString,
-} from './mapper';
+} from './transformer';
 import {
   lines,
   grepLines,
