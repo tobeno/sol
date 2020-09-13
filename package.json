@@ -32,7 +32,7 @@
     "fast-glob": "^3.2.2",
     "jsdom": "^16.2.2",
     "jsonata": "^1.8.3",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "papaparse": "^5.2.0",
     "recast": "^0.19.1",
     "serve": "^11.3.2",
