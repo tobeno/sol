@@ -51,15 +51,15 @@ export abstract class Item {
     this.renameTo(value);
   }
 
-  get stats() {
+  get stats(): fs.Stats {
     return fs.statSync(this.path);
   }
 
-  get mtime() {
+  get mtime(): Date {
     return this.stats.mtime;
   }
 
-  edit() {
+  edit(): this {
     spawnSync(`${editor} '${this.path}'`, {
       cwd: process.cwd(),
       shell: true,
@@ -68,7 +68,7 @@ export abstract class Item {
     return this;
   }
 
-  toString() {
+  toString(): string {
     return this.path;
   }
 

@@ -1,11 +1,10 @@
 import { File } from './file';
 import { FileCollection } from './item-collection';
 import { exec } from 'shelljs';
-import { awaitSync } from '../utils/async';
 
 export function grep(pattern: string | RegExp, path?: string): FileCollection {
   return new FileCollection(
-    ...exec(
+    exec(
       `egrep -rl '${(pattern instanceof RegExp ? pattern.source : pattern)
         .replace(/'/g, "\\'")
         .replace('\n', '\\n')}' ${path || '.'} || true`,
@@ -23,13 +22,9 @@ export function replaceText(
 ): FileCollection {
   const files = grep(pattern, path);
 
-  awaitSync(
-    Promise.all(
-      files.map((file) => {
-        file.replaceText(pattern, replacer);
-      }),
-    ),
-  );
+  files.map((file) => {
+    file.replaceText(pattern, replacer);
+  });
 
   return files;
 }

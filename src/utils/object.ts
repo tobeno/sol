@@ -1,3 +1,5 @@
+import { RecordItemType } from '../interfaces/util';
+
 export function sortObjectKeys<T extends Record<string, any>>(obj: T): T {
   return Object.assign(
     Object.create(Object.getPrototypeOf(obj)),
@@ -80,7 +82,7 @@ export function rsortObject<T extends Record<string, any>>(obj: T): T {
 export function intersectObjectKeys<
   T extends Record<string, any>,
   T2 extends Record<string, any>
->(obj: T, obj2: T2): Partial<T> {
+>(obj: T, obj2: T2): Omit<T, keyof Omit<T, keyof T2>> {
   const result: any = {};
 
   const keys2 = Object.keys(obj2);
@@ -97,7 +99,7 @@ export function intersectObjectKeys<
 export function diffObjectKeys<
   T extends Record<string, any>,
   T2 extends Record<string, any>
->(obj: T, obj2: T2): Partial<T> {
+>(obj: T, obj2: T2): Omit<T, keyof T2> {
   const result: any = {};
 
   const keys2 = Object.keys(obj2);
@@ -114,7 +116,7 @@ export function diffObjectKeys<
 export function unionObjectKeys<
   T extends Record<string, any>,
   T2 extends Record<string, any>
->(obj: T, obj2: T2): Partial<T> {
+>(obj: T, obj2: T2): T & T2 {
   const result: any = {};
 
   Object.keys(obj2).forEach((key) => {
@@ -129,7 +131,9 @@ export function unionObjectKeys<
 
 export function filterObject<T extends Record<string, any>>(
   obj: T,
-  cb: (value: any, key: string) => boolean = (value: any) => !!value,
+  cb: (value: RecordItemType<T>, key: string) => boolean = (
+    value: RecordItemType<T>,
+  ) => !!value,
 ): Partial<T> {
   const result: any = {};
 
@@ -144,7 +148,7 @@ export function filterObject<T extends Record<string, any>>(
 
 export function rfilterObject<T extends Record<string, any>>(
   obj: T,
-  cb: (value: any, key: string) => boolean,
+  cb: (value: RecordItemType<T>, key: string) => boolean,
 ): Partial<T> {
   return filterObject(obj, (value: any, key: string) => !cb(value, key));
 }

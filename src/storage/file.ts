@@ -3,8 +3,6 @@ import * as path from 'path';
 import * as prettier from 'prettier';
 import { Item } from './item';
 import { Directory } from './directory';
-import { WithPrint } from '../wrappers/with-print';
-import { WithCopy } from '../wrappers/with-copy';
 import { ItemCollection } from './item-collection';
 import { play, replay, setupPlay, unwatchPlay } from '../play';
 import {
@@ -21,8 +19,9 @@ import {
 import { Text } from '../data/text';
 import { Data } from '../data/data';
 import { Ast } from '../data/ast';
+import { clipboard } from '../os/clipboard';
 
-class UnwrappedFile extends Item {
+export class File<ContentType = any> extends Item {
   constructor(path: string) {
     super(path);
   }
@@ -116,27 +115,27 @@ class UnwrappedFile extends Item {
     fs.writeFileSync(this.path, value.toString(), 'utf8');
   }
 
-  get json(): Data {
+  get json(): Data<ContentType> {
     return jsonToData(this.text);
   }
 
-  set json(value: Data) {
+  set json(value: Data<ContentType>) {
     this.text = dataToJson(value);
   }
 
-  get yaml(): Data {
+  get yaml(): Data<ContentType> {
     return yamlToData(this.text);
   }
 
-  set yaml(value: Data) {
+  set yaml(value: Data<ContentType>) {
     this.text = dataToYaml(value);
   }
 
-  get csv(): Data {
+  get csv(): Data<ContentType> {
     return csvToData(this.text);
   }
 
-  set csv(value: Data) {
+  set csv(value: Data<ContentType>) {
     this.text = dataToCsv(value);
   }
 
@@ -179,11 +178,11 @@ class UnwrappedFile extends Item {
     return new ItemCollection(this as any);
   }
 
-  delete() {
+  delete(): void {
     fs.unlinkSync(this.path);
   }
 
-  moveTo(newPath: string | Directory) {
+  moveTo(newPath: string | Directory): this {
     if (newPath instanceof Directory) {
       newPath = `${newPath.path}/${this.basename}`;
     }
@@ -195,43 +194,43 @@ class UnwrappedFile extends Item {
     return this;
   }
 
-  renameTo(newBasename: string) {
+  renameTo(newBasename: string): this {
     return this.moveTo(`${this.dir.path}/${newBasename}`);
   }
 
-  replaceText(pattern: string | RegExp, replacer: any) {
+  replaceText(pattern: string | RegExp, replacer: any): this {
     this.text = this.text.replace(pattern, replacer);
 
     return this;
   }
 
-  copyTo(newPath: string) {
+  copyTo(newPath: string): File {
     fs.copyFileSync(this.path, newPath);
 
     return new File(newPath);
   }
 
-  eval() {
+  eval(): any {
     return eval(this.text.toString());
   }
 
-  play() {
-    play(this.path);
+  play(): File {
+    return play(this.path);
   }
 
-  setupPlay() {
+  setupPlay(): void {
     setupPlay(this.path);
   }
 
-  replay() {
-    replay(this.path);
+  replay(): any {
+    return replay(this.path);
   }
 
-  unwatchPlay() {
+  unwatchPlay(): void {
     unwatchPlay(this.path);
   }
 
-  serve() {
+  serve(): this {
     this.dir.serve();
 
     return this;
@@ -251,17 +250,25 @@ class UnwrappedFile extends Item {
     };
   }
 
-  pretty() {
+  pretty(): this {
     this.text = prettier.format(this.text, {
       filepath: this.path,
     });
 
     return this;
   }
+
+  copy() {
+    clipboard.text = String(this);
+  }
+
+  print() {
+    console.log(String(this));
+  }
 }
 
-export class File extends WithCopy(WithPrint(UnwrappedFile)) {}
+// export class File extends WithCopy(WithPrint(File)) {}
 
-export function file(path: string): File {
-  return new File(path);
+export function file<ContentType = any>(path: string): File<ContentType> {
+  return new File<ContentType>(path);
 }

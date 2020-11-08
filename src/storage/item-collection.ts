@@ -5,9 +5,12 @@ import { clipboard } from '../os/clipboard';
 import { Item } from './item';
 import * as fg from 'fast-glob';
 import { awaitSync } from '../utils/async';
+import { Data } from '../data/data';
+import { Text } from '../data/text';
+import { wrapString } from '../data/mapper';
 
-export class GenericItemCollection<ItemType extends Item> extends Array<
-  ItemType
+export class GenericItemCollection<ItemType extends Item> extends Data<
+  ItemType[]
 > {
   get size(): number {
     let result = 0;
@@ -21,18 +24,20 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
     return result;
   }
 
-  get exts(): string[] {
-    return [
-      ...new Set(Array.from(this.files()).map((f) => f.exts.join('.'))),
-    ].sort();
+  get exts(): Data<string[]> {
+    return this.files().map((f) => f.exts.join('.')).unique.sorted;
   }
 
-  get names(): string[] {
-    return [...new Set(Array.from(this).map((i) => i.name))].sort();
+  get names(): Data<string[]> {
+    return this.map((i) => i.name).sorted;
   }
 
-  get basenames(): string[] {
-    return [...new Set(Array.from(this).map((i) => i.basename))].sort();
+  get basenames(): Data<string[]> {
+    return this.map((i) => i.basename).sorted;
+  }
+
+  get text(): Text {
+    return wrapString(this.toString());
   }
 
   files(exp?: string): FileCollection {
@@ -40,13 +45,13 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
 
     this.forEach((item) => {
       if (item instanceof Directory) {
-        result.splice(result.length, 0, ...item.files(exp));
+        result.splice(result.length, 0, ...item.files(exp).value);
       } else if (!exp && item instanceof File) {
         result.push(item);
       }
     });
 
-    return new FileCollection(...result);
+    return new FileCollection(result);
   }
 
   dirs(): DirectoryCollection {
@@ -58,7 +63,7 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
       }
     });
 
-    return new DirectoryCollection(...result);
+    return new DirectoryCollection(result);
   }
 
   items(): ItemCollection {
@@ -74,7 +79,7 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
       }
     });
 
-    return new ItemCollection(...result);
+    return new ItemCollection(result);
   }
 
   grep(pattern: string | RegExp): FileCollection {
@@ -90,61 +95,55 @@ export class GenericItemCollection<ItemType extends Item> extends Array<
       }
     });
 
-    return new FileCollection(...result);
+    return new FileCollection(result);
   }
 
-  updateName(
-    cb: (name: string) => string | Promise<string>,
-  ): AnyItemCollection {
+  updateName(cb: (name: string) => string | Promise<string>): this {
     this.forEach((f) => (f.name = awaitSync(cb(f.name))));
 
-    return this as any;
+    return this;
   }
 
-  updateBasename(
-    cb: (basename: string) => string | Promise<string>,
-  ): AnyItemCollection {
+  updateBasename(cb: (basename: string) => string | Promise<string>): this {
     this.forEach((f) => (f.basename = awaitSync(cb(f.basename))));
 
-    return this as any;
+    return this;
   }
 
-  replaceText(pattern: string | RegExp, replacer: any): AnyItemCollection {
-    const result: File[] = [];
+  replaceText(pattern: string | RegExp, replacer: any): this {
+    this.forEach(async (item) => {
+      if (item instanceof Directory) {
+        item.items().replaceText(pattern, replacer);
+      } else if (item instanceof File) {
+        item.replaceText(pattern, replacer);
+      }
+    });
 
-    this.items()
-      .files()
-      .forEach(async (item) => {
-        if (item instanceof Directory) {
-          result.splice(
-            result.length,
-            0,
-            ...(item as Directory).replaceText(pattern, replacer),
-          );
-        } else if (item instanceof File) {
-          if (item.replaceText(pattern, replacer)) {
-            result.push(item);
-          }
-        }
-      });
-
-    return this as any;
+    return this;
   }
 
-  toString() {
-    return this.map((file) => file.toString()).join('\n');
+  toString(): string {
+    return this.map((file) => file.toString()).join('\n').value;
   }
 
-  print() {
+  print(): void {
     console.log(this.toString());
   }
 
-  copy() {
+  copy(): void {
     clipboard.text = this.toString();
+  }
+
+  get length(): number {
+    return this.value.length;
+  }
+
+  [Symbol.iterator]() {
+    return this.value[Symbol.iterator]();
   }
 }
 
-class UnwrappedFileCollection extends GenericItemCollection<File> {
+export class FileCollection extends GenericItemCollection<File> {
   delete(): ItemCollection {
     this.forEach((f) => f.delete());
 
@@ -165,12 +164,8 @@ class UnwrappedFileCollection extends GenericItemCollection<File> {
     return this;
   }
 }
-class UnwrappedDirectoryCollection extends GenericItemCollection<Directory> {}
-class UnwrappedItemCollection extends GenericItemCollection<File | Directory> {}
-
-export class FileCollection extends UnwrappedFileCollection {}
-export class DirectoryCollection extends UnwrappedDirectoryCollection {}
-export class ItemCollection extends UnwrappedItemCollection {}
+export class DirectoryCollection extends GenericItemCollection<Directory> {}
+export class ItemCollection extends GenericItemCollection<File | Directory> {}
 export type AnyItemCollection =
   | FileCollection
   | DirectoryCollection
@@ -178,7 +173,7 @@ export type AnyItemCollection =
 
 export function files(exp?: string, options: fg.Options = {}): FileCollection {
   return new FileCollection(
-    ...fg
+    fg
       .sync(exp || '*', {
         dot: true,
         ...options,
@@ -196,7 +191,7 @@ export function dirs(
   options: fg.Options = {},
 ): DirectoryCollection {
   return new DirectoryCollection(
-    ...fg
+    fg
       .sync(exp || '*', {
         dot: true,
         ...options,
@@ -210,5 +205,8 @@ export function dirs(
 }
 
 export function glob(exp?: string, options: fg.Options = {}): ItemCollection {
-  return new ItemCollection(...files(exp, options), ...dirs(exp, options));
+  return new ItemCollection([
+    ...files(exp, options).value,
+    ...dirs(exp, options).value,
+  ]);
 }

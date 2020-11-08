@@ -1,15 +1,14 @@
-import { inspect } from 'util';
-import { Data } from './data';
 import { JSDOM } from 'jsdom';
+import { Data } from './data';
 import { wrapHtml } from './mapper';
 
 /**
  * Wrapper for HTML strings
  */
-export class Html extends Data {
+export class Html extends Data<string> {
   root: DocumentFragment;
 
-  constructor(public value: string) {
+  constructor(value: string) {
     super(value);
     this.root = JSDOM.fragment(value);
   }
@@ -24,14 +23,7 @@ export class Html extends Data {
     return node ? wrapHtml(node.outerHTML) : null;
   }
 
-  /**
-   * Prints just the data when inspecting (e.g. for console.log)
-   */
-  [inspect.custom]() {
-    return this.value;
-  }
-
   toString() {
-    return this.value;
+    return String(this);
   }
 }

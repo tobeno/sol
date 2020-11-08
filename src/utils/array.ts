@@ -1,29 +1,44 @@
-export function intersectArray(arr1: any[], arr2: any[]): any[] {
+export function intersectArray<ItemType = any>(
+  arr1: ItemType[],
+  arr2: ItemType[],
+): ItemType[] {
   return arr1.filter(arr2.includes);
 }
 
-export function diffArray(arr1: any[], arr2: any[]): any[] {
+export function diffArray<ItemType = any>(
+  arr1: ItemType[],
+  arr2: any[],
+): ItemType[] {
   return arr1.filter((item) => !arr2.includes(item));
 }
 
-export function unionArray(arr1: any[], arr2: any[]): any[] {
+export function unionArray<ItemType = any>(
+  arr1: ItemType[],
+  arr2: ItemType[],
+): ItemType[] {
   return [...new Set([...arr1, ...arr2])];
 }
 
-export function filterArray(
-  arr: any[],
-  cb: (item: any) => boolean = (item: any) => !!item,
-): any[] {
+export function filterArray<ItemType = any>(
+  arr: ItemType[],
+  cb: (item: ItemType) => boolean = (item: ItemType) => !!item,
+): ItemType[] {
   return arr.filter(cb);
 }
 
-export function rfilterArray(arr: any[], cb: (item: any) => boolean): any[] {
+export function rfilterArray<ItemType = any>(
+  arr: ItemType[],
+  cb: (item: ItemType) => boolean,
+): ItemType[] {
   return arr.filter((item: any) => !cb(item));
 }
 
-export function grepArray(arr: any[], search: string | RegExp): any[] {
-  return arr.filter((item: any) => {
-    const value = '' + item;
+export function grepArray<ItemType = any>(
+  arr: ItemType[],
+  search: string | RegExp,
+): ItemType[] {
+  return arr.filter((item: ItemType) => {
+    const value = String(item);
 
     if (search instanceof RegExp) {
       return search.test(value);
@@ -33,9 +48,12 @@ export function grepArray(arr: any[], search: string | RegExp): any[] {
   });
 }
 
-export function rgrepArray(arr: any[], search: string | RegExp): any[] {
-  return arr.filter((item: any) => {
-    const value = '' + item;
+export function rgrepArray<ItemType = any>(
+  arr: ItemType[],
+  search: string | RegExp,
+): ItemType[] {
+  return arr.filter((item: ItemType) => {
+    const value = String(item);
 
     if (search instanceof RegExp) {
       return !search.test(value);
@@ -45,10 +63,10 @@ export function rgrepArray(arr: any[], search: string | RegExp): any[] {
   });
 }
 
-export function sortArray(arr: any[]): any[] {
+export function sortArray<ItemType = any>(arr: ItemType[]): ItemType[] {
   return arr.sort();
 }
 
-export function rsortArray(arr: any[]): any[] {
+export function rsortArray<ItemType = any>(arr: ItemType[]): ItemType[] {
   return arr.sort().reverse();
 }

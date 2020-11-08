@@ -3,21 +3,22 @@ import { inspect } from 'util';
 import { Data } from './data';
 import { astToCode } from './mapper';
 import traverse, { TraverseOptions, Scope, NodePath } from '@babel/traverse';
+import { Text } from './text';
 
 /**
  * Wrapper for HTML strings
  */
-export class Ast extends Data {
+export class Ast extends Data<babelTypes.Node> {
   constructor(public value: babelTypes.Node) {
     super(value);
   }
 
-  get node() {
+  get node(): babel.Node {
     return this.value;
   }
 
-  get code() {
-    return astToCode(this).toString();
+  get code(): Text {
+    return astToCode(this);
   }
 
   traverse(
@@ -25,7 +26,7 @@ export class Ast extends Data {
     scope?: Scope,
     state?: any,
     parentPath?: NodePath,
-  ) {
+  ): this {
     traverse(this.value, opts, scope, state, parentPath);
 
     return this;

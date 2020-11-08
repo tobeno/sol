@@ -1,6 +1,4 @@
 import { readSync, writeSync } from 'clipboardy';
-import { WithSave } from '../wrappers/with-save';
-import { WithPrint } from '../wrappers/with-print';
 import {
   wrapString,
   unwrapString,
@@ -8,8 +6,10 @@ import {
   yamlToData,
   csvToData,
 } from '../data/mapper';
+import { File } from '../storage/file';
+import { saveAs } from '../storage/save';
 
-export class UnwrappedClipboard {
+export class Clipboard {
   get text(): any {
     return wrapString(readSync(), null, this);
   }
@@ -29,8 +29,14 @@ export class UnwrappedClipboard {
   get csv(): any {
     return csvToData(this.text);
   }
-}
 
-export class Clipboard extends WithSave(WithPrint(UnwrappedClipboard)) {}
+  print() {
+    console.log(String(this));
+  }
+
+  saveAs(path: string): File {
+    return saveAs(this, path);
+  }
+}
 
 export const clipboard = new Clipboard();

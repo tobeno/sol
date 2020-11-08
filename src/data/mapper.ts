@@ -40,10 +40,10 @@ export const mapper = new DataTransformationMapper(
   new DataSourceMapper(new WrappingMapper(Data, anyMapper)),
 );
 
-export function map(
-  input: any,
+export function map<InputType = any, OutputType = any>(
+  input: InputType,
   transformation: DataTransformation | string,
-): any {
+): OutputType {
   if (typeof transformation === 'string') {
     transformation = DataTransformation.fromString(transformation);
   }
@@ -51,10 +51,10 @@ export function map(
   return mapper.map(input, transformation);
 }
 
-export function jsonToData(
+export function jsonToData<ValueType = any>(
   value: string | String,
   source: DataSource | null = null,
-): Data {
+): Data<ValueType> {
   source = source || (value as any).source || null;
 
   return map(
@@ -66,17 +66,17 @@ export function jsonToData(
   ).withSource(source);
 }
 
-export function dataToJson(
-  value: Data | any,
+export function dataToJson<ValueType = any>(
+  value: Data<ValueType> | any,
   source: DataSource | null = null,
-): Text {
+): Text<ValueType> {
   if (!(value instanceof Data)) {
-    value = new Data(value);
+    value = new Data<ValueType>(value);
   }
 
   source = source || value.source;
 
-  return wrapString(
+  return wrapString<ValueType>(
     map(
       value,
       new DataTransformation(
@@ -88,10 +88,10 @@ export function dataToJson(
   ).withSource(source);
 }
 
-export function yamlToData(
+export function yamlToData<ValueType = any>(
   value: string | String | Text,
   source: DataSource | null = null,
-): Data {
+): Data<ValueType> {
   source = source || (value as any).source || null;
 
   return map(
@@ -103,17 +103,17 @@ export function yamlToData(
   ).withSource(source);
 }
 
-export function dataToYaml(
-  value: Data | any,
+export function dataToYaml<ValueType = any>(
+  value: Data<ValueType> | any,
   source: DataSource | null = null,
-): Text {
+): Text<ValueType> {
   if (!(value instanceof Data)) {
     value = new Data(value);
   }
 
   source = source || value.source;
 
-  return wrapString(
+  return wrapString<ValueType>(
     map(
       value,
       new DataTransformation(
@@ -125,10 +125,10 @@ export function dataToYaml(
   ).withSource(source);
 }
 
-export function csvToData(
+export function csvToData<ValueType = any>(
   value: string | String,
   source: DataSource | null = null,
-): Data {
+): Data<ValueType> {
   source = source || (value as any).source || null;
 
   return map(
@@ -140,17 +140,17 @@ export function csvToData(
   );
 }
 
-export function dataToCsv(
-  value: Data | any,
+export function dataToCsv<ValueType = any>(
+  value: Data<ValueType> | any,
   source: DataSource | null = null,
-): Text {
+): Text<ValueType> {
   if (!(value instanceof Data)) {
     value = new Data(value);
   }
 
   source = source || value.source;
 
-  return wrapString(
+  return wrapString<ValueType>(
     map(
       value,
       new DataTransformation(
@@ -186,15 +186,14 @@ export function astToCode(
 
   return wrapString(
     map(value, new DataTransformation(DataType.Ast, DataType.String)),
-    DataFormat.Csv,
   ).withSource(source);
 }
 
-export function wrapString(
+export function wrapString<ContentType = any>(
   value: string | String,
   format: string | null = null,
   source: DataSource | null = null,
-): Text {
+): Text<ContentType> {
   if (value instanceof Text) {
     let text = value;
 
@@ -209,7 +208,7 @@ export function wrapString(
     return text;
   }
 
-  return new Text(value, format, source);
+  return new Text<ContentType>(value, format, source);
 }
 
 export function unwrapString(value: string | String | Text): string {
@@ -220,11 +219,16 @@ export function unwrapString(value: string | String | Text): string {
   return value.toString();
 }
 
-export function wrapObject(value: any, source: DataSource | null = null): Data {
-  return new Data(value, source);
+export function wrapObject<ValueType = any>(
+  value: ValueType,
+  source: DataSource | null = null,
+): Data<ValueType> {
+  return new Data<ValueType>(value, source);
 }
 
-export function unwrapObject(value: any | Data): any {
+export function unwrapObject<ValueType = any>(
+  value: ValueType | Data<ValueType>,
+): ValueType {
   if (value instanceof Data) {
     value = value.value;
   }
@@ -233,7 +237,7 @@ export function unwrapObject(value: any | Data): any {
 }
 
 export function wrapHtml(
-  value: string | String,
+  value: string | String | Text,
   source: DataSource | null = null,
 ): Html {
   return map(
@@ -245,12 +249,12 @@ export function wrapHtml(
   ).withSource(source);
 }
 
-export function unwrapHtml(value: Html): Text {
+export function unwrapHtml<ContentType = any>(value: Html): Text<ContentType> {
   return wrapString(value.value, DataFormat.Html, value.source);
 }
 
 export function wrapXml(
-  value: string | String,
+  value: string | String | Text,
   source: DataSource | null = null,
 ): Xml {
   return map(

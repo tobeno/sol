@@ -1,14 +1,13 @@
-import { inspect } from 'util';
-import { Data } from './data';
 import { JSDOM } from 'jsdom';
+import { Data } from './data';
 
 /**
  * Wrapper for XML strings
  */
-export class Xml extends Data {
+export class Xml extends Data<string> {
   root: DocumentFragment;
 
-  constructor(public value: string) {
+  constructor(value: string) {
     super(value);
     this.root = JSDOM.fragment(value);
   }
@@ -23,14 +22,7 @@ export class Xml extends Data {
     return node ? new Xml(node.outerHTML) : null;
   }
 
-  /**
-   * Prints just the data when inspecting (e.g. for console.log)
-   */
-  [inspect.custom]() {
-    return this.value;
-  }
-
   toString() {
-    return this.value;
+    return String(this);
   }
 }

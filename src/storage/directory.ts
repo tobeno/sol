@@ -12,11 +12,10 @@ import {
   DirectoryCollection,
   ItemCollection,
 } from './item-collection';
-import { WithPrint } from '../wrappers/with-print';
-import { WithCopy } from '../wrappers/with-copy';
 import { wrapString } from '../data/mapper';
+import { clipboard } from '../os/clipboard';
 
-export class UnwrappedDirectory extends Item {
+export class Directory extends Item {
   get cmd() {
     return wrapString(`dir(${JSON.stringify(this.path)})`);
   }
@@ -65,7 +64,7 @@ export class UnwrappedDirectory extends Item {
     return this as any;
   }
 
-  relativePathFrom(target: string | Directory) {
+  relativePathFrom(target: string | Directory): string {
     if (target instanceof Directory) {
       target = target.path;
     }
@@ -101,7 +100,7 @@ export class UnwrappedDirectory extends Item {
     return glob(path.join(this.path, exp || '*'));
   }
 
-  moveTo(newPath: string | Directory) {
+  moveTo(newPath: string | Directory): this {
     if (newPath instanceof Directory) {
       newPath = `${newPath.path}/`;
     }
@@ -119,7 +118,7 @@ export class UnwrappedDirectory extends Item {
     return this;
   }
 
-  copyTo(newPath: string) {
+  copyTo(newPath: string): Directory {
     if (newPath.endsWith('/')) {
       // Copy into
       exec(`cp -r '${this.path}' '${newPath}'`);
@@ -131,11 +130,11 @@ export class UnwrappedDirectory extends Item {
     return new Directory(newPath);
   }
 
-  renameTo(newBasename: string) {
+  renameTo(newBasename: string): Directory {
     return this.moveTo(`${this.parent.path}/${newBasename}`);
   }
 
-  serve() {
+  serve(): this {
     exec(
       `${path.resolve(__dirname, '../../node_modules/.bin/serve')} ${
         this.path
@@ -163,12 +162,16 @@ export class UnwrappedDirectory extends Item {
     };
   }
 
-  pretty() {
+  pretty(): void {
     this.files('**').forEach((f) => f.pretty());
+  }
+
+  copy() {
+    clipboard.text = String(this);
   }
 }
 
-export class Directory extends WithPrint(WithCopy(UnwrappedDirectory)) {}
+// export class Directory extends WithPrint(WithCopy(UnwrappedDirectory)) {}
 
 export function dir(path?: string): Directory {
   return new Directory(path || '.');

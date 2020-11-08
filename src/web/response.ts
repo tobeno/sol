@@ -1,8 +1,4 @@
 import { inspect } from 'util';
-import { WithPrint } from '../wrappers/with-print';
-import { WithCopy } from '../wrappers/with-copy';
-import { WithSave } from '../wrappers/with-save';
-import { WithEdit } from '../wrappers/with-edit';
 import { Data } from '../data/data';
 import { AxiosResponse } from 'axios';
 import { DataFormat } from '../data/data-format';
@@ -10,8 +6,11 @@ import { DataType } from '../data/data-type';
 import { wrapObject, wrapString } from '../data/mapper';
 import { web } from '.';
 import { Text } from '../data/text';
+import { clipboard } from '../os/clipboard';
+import { File } from '../storage/file';
+import { saveAs } from '../storage/save';
 
-class UnwrappedResponse extends Data {
+export class Response extends Data {
   constructor(private axiosResponse: AxiosResponse) {
     super({
       status: axiosResponse.status,
@@ -73,6 +72,18 @@ class UnwrappedResponse extends Data {
     return web.request(this.axiosResponse.config);
   }
 
+  copy() {
+    clipboard.text = String(this);
+  }
+
+  print() {
+    console.log(String(this));
+  }
+
+  saveAs(path: string): File {
+    return saveAs(this, path);
+  }
+
   /**
    * Prints just the data when inspecting (e.g. for console.log)
    */
@@ -85,6 +96,6 @@ class UnwrappedResponse extends Data {
   }
 }
 
-export class Response extends WithPrint(
-  WithEdit(WithCopy(WithSave(UnwrappedResponse))),
-) {}
+/* export class Response extends WithPrint(
+  WithEdit(WithCopy(WithSave(Response))),
+) {} */
