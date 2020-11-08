@@ -8,7 +8,7 @@
       npm i
    fi
 
-   if [ ! -f "dist/setup.js" ]; then
+   if [ ! -f "dist/src/setup.js" ]; then
       npm run build
    fi
    popd

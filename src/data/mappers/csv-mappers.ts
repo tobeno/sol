@@ -1,7 +1,7 @@
 import { StringMapper } from './string-mapper';
 import { DataType } from '../data-type';
 import { DataFormat } from '../data-format';
-import Papa = require('papaparse');
+import * as Papa from 'papaparse';
 
 export class CsvMapper extends StringMapper<any[]> {
   constructor() {

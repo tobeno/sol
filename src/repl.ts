@@ -6,6 +6,7 @@ import { Sol } from './sol';
 import { spawnSync } from 'child_process';
 import * as chalk from 'chalk';
 import { getSolMetadata } from './utils/metadata';
+import { ReplOptions } from 'repl';
 
 let server: repl.REPLServer | null = null;
 
@@ -73,12 +74,13 @@ function myWriter(output: any) {
   return chalk.bold(require('./utils/inspect').inspect(output));
 }
 
-export function startSolServer() {
+export function startSolServer(options: ReplOptions = {}) {
   server = repl.start({
     prompt: color.dim('> '),
     writer: myWriter,
     ignoreUndefined: true,
     useGlobal: true,
+    ...options,
   });
 
   let historyReady = false;
@@ -254,4 +256,6 @@ For usage details see: ${color.warn(`${sol.packageDir.path}/README.md`)}
   );
 
   server.displayPrompt();
+
+  return server;
 }
