@@ -1,0 +1,25 @@
+{
+  "products": [
+    {
+      "id": "20",
+      "name": "Shirt",
+      "variants": [
+        {
+          "id": "20-1",
+          "size": "XS",
+          "quantity": 3
+        },
+        {
+          "id": "20-2",
+          "size": "S",
+          "quantity": 20
+        },
+        {
+          "id": "20-3",
+          "size": "M",
+          "quantity": 1
+        }
+      ]
+    }
+  ]
+}

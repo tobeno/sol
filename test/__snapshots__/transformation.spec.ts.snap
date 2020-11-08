@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`transformation should transform a CSV file 1`] = `
+exports[`transformation file should transform a CSV file 1`] = `
 "id,size,quantity
 1-3,44,1
 2-3,38,1
@@ -10,7 +10,7 @@ exports[`transformation should transform a CSV file 1`] = `
 1-2,43,20"
 `;
 
-exports[`transformation should transform a JSON file 1`] = `
+exports[`transformation file should transform a JSON file 1`] = `
 "{
   \\"products\\": [
     {
@@ -91,7 +91,7 @@ exports[`transformation should transform a JSON file 1`] = `
 }"
 `;
 
-exports[`transformation should transform a JSON file 2`] = `
+exports[`transformation file should transform a JSON file 2`] = `
 "id,size,quantity
 1-1,42,3
 1-2,43,20
@@ -101,7 +101,7 @@ exports[`transformation should transform a JSON file 2`] = `
 2-3,38,1"
 `;
 
-exports[`transformation should transform a YAML file 1`] = `
+exports[`transformation file should transform a YAML file 1`] = `
 "products:
   - id: \\"1\\"
     name: Leather shoe
@@ -128,4 +128,28 @@ exports[`transformation should transform a YAML file 1`] = `
         size: \\"38\\"
         quantity: 1
 "
+`;
+
+exports[`transformation object should transform a string 1`] = `"{\\"id\\":\\"Product 1: Shoe\\",\\"name\\":\\"1\\"}.{\\"id\\":\\"Product 2: Shirt\\",\\"name\\":\\"2\\"}.{\\"id\\":\\"Product 3: Jeans\\",\\"name\\":\\"3\\"}"`;
+
+exports[`transformation object should transform an array 1`] = `
+"[
+  {
+    \\"id\\": \\"1\\"
+  },
+  {
+    \\"id\\": \\"2\\"
+  }
+]"
+`;
+
+exports[`transformation object should transform an object 1`] = `
+"{
+  \\"product-1\\": {
+    \\"name\\": \\"Shoe\\"
+  },
+  \\"product-2\\": {
+    \\"name\\": \\"Shirt\\"
+  }
+}"
 `;
