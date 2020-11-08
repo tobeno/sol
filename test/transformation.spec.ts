@@ -89,9 +89,7 @@ describe('transformation', () => {
       let data = wrapObject({
         'product-1': { name: 'Shoe' },
         'product-2': { name: 'Shirt' },
-      } as {
-        [key: string]: { name: string };
-      });
+      } as Record<string, { name: string }>);
 
       const originalData = data;
 
