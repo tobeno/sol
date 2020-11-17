@@ -38,11 +38,11 @@ export class Sol {
   }
 
   get packageDir(): Directory {
-    return this.runtimeDir.parent;
+    return this.runtimeDir.parent.parent;
   }
 
   get packageDistDir(): Directory {
-    return this.packageDir.dir('dist');
+    return this.packageDir.dir('dist/src');
   }
 
   get packageSrcDir(): Directory {
@@ -284,9 +284,9 @@ declare global {
   }
 
   registerDefaultExtensions() {
-    this.registerExtensions(this.packageExtensionsDir.dirs());
-    this.registerExtensions(this.globalExtensionsDir.dirs());
-    this.registerExtensions(this.workspaceExtensionsDir.dirs());
+    this.registerExtensions(this.packageExtensionsDir.dirs().value);
+    this.registerExtensions(this.globalExtensionsDir.dirs().value);
+    this.registerExtensions(this.workspaceExtensionsDir.dirs().value);
   }
 
   registerExtension(extension: string | Directory | Extension): Extension {

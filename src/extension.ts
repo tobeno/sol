@@ -78,7 +78,7 @@ workspace: {
       );
     }
 
-    const setupFile = setupFiles[0];
+    const setupFile = setupFiles.value[0];
 
     require(setupFile.pathWithoutExts);
 
