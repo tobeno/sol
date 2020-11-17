@@ -210,7 +210,13 @@ export function cloneObject<T extends Record<string, any>>(obj: T): T {
     return Object.assign(Object.create(Object.getPrototypeOf(obj)), obj);
 }
 
-export function camelcaseObject(obj: any, { capitalize = false }: { capitalize?: boolean | null } = {}): any {
+export function camelcaseObject(
+    obj: any,
+    {
+        capitalize = false,
+        includeConstantCase = false
+    }: { capitalize?: boolean | null; includeConstantCase?: boolean | null } = {}
+): any {
     if (!obj || typeof obj !== 'object' || obj instanceof Date) {
         return obj;
     }
@@ -223,15 +229,20 @@ export function camelcaseObject(obj: any, { capitalize = false }: { capitalize?:
         (result, key) => {
             const value = obj[key];
 
-            if (capitalize === true) {
-                key = key.slice(0, 1).toUpperCase() + key.slice(1);
-            } else if (capitalize === false) {
-                key = key
-                    .replace(/^([A-Z])([a-z])/g, (...matches) => `${matches[1].toLowerCase()}${matches[2]}`)
-                    .replace(/^([A-Z]+)([A-Z])/g, (...matches) => `${matches[1].toLowerCase()}${matches[2]}`);
+            // Replace everything but CONSTANT_CASE
+            if (includeConstantCase || !/^[A-Z0-9_]+$/.test(key)) {
+                key = key.replace(/_([a-z])/g, (...matches) => matches[1].toUpperCase());
+
+                if (capitalize === true) {
+                    key = key.slice(0, 1).toUpperCase() + key.slice(1);
+                } else if (capitalize === false) {
+                    key = key
+                        .replace(/^([A-Z])([a-z])/g, (...matches) => `${matches[1].toLowerCase()}${matches[2]}`)
+                        .replace(/^([A-Z]+)([A-Z])/g, (...matches) => `${matches[1].toLowerCase()}${matches[2]}`);
+                }
             }
 
-            result[key.replace(/_([a-z])/g, (...matches) => matches[1].toUpperCase())] = camelcaseObject(value);
+            result[key] = camelcaseObject(value);
 
             return result;
         },
