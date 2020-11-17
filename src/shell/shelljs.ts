@@ -1,20 +1,19 @@
-
 import * as shelljs from 'shelljs';
 import { Item } from '../storage/item';
 
 function wrap<FnType extends (...args: any[]) => any>(fn: FnType): FnType {
-    return ((...args: any[]): any => {
-      return fn(
-        args.map((arg) => {
-          if (arg instanceof Item) {
-            arg = arg.path;
-          }
-  
-          return arg;
-        }),
-      );
-    }) as FnType;
-  }
+  return ((...args: any[]): any => {
+    return fn(
+      args.map((arg) => {
+        if (arg instanceof Item) {
+          arg = arg.path;
+        }
+
+        return arg;
+      }),
+    );
+  }) as FnType;
+}
 
 export const cd = wrap(shelljs.cd);
 export const exec = shelljs.exec;
