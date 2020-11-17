@@ -231,13 +231,13 @@ export function camelcaseObject(
 
             // Replace everything but CONSTANT_CASE
             if (includeConstantCase || !/^[A-Z0-9_]+$/.test(key)) {
-                key = key.replace(/_([a-z])/g, (...matches) => matches[1].toUpperCase());
+                key = key.replace(/_([a-z0-9])/g, (...matches) => matches[1].toUpperCase());
 
                 if (capitalize === true) {
                     key = key.slice(0, 1).toUpperCase() + key.slice(1);
                 } else if (capitalize === false) {
                     key = key
-                        .replace(/^([A-Z])([a-z])/g, (...matches) => `${matches[1].toLowerCase()}${matches[2]}`)
+                        .replace(/^([A-Z])([a-z0-9])/g, (...matches) => `${matches[1].toLowerCase()}${matches[2]}`)
                         .replace(/^([A-Z]+)([A-Z])/g, (...matches) => `${matches[1].toLowerCase()}${matches[2]}`);
                 }
             }
@@ -264,7 +264,7 @@ export function snakecaseObject(obj: any): any {
             const value = obj[key];
 
             result[
-                key.replace(/([a-z])([A-Z])/g, (...matches) => `${matches[1]}_${matches[2].toLowerCase()}`)
+                key.replace(/([a-z0-9])([A-Z])/g, (...matches) => `${matches[1]}_${matches[2].toLowerCase()}`)
             ] = camelcaseObject(value);
 
             return result;
