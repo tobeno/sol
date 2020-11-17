@@ -101,7 +101,7 @@ export class Data<
   }
 
   get camelcased(): Data<any> {
-    return wrapObject(camelcaseObject(this.value), this) as any;
+    return wrapObject(camelcaseObject(this.value, { capitalize: false }), this) as any;
   }
 
   get snakecased(): Data<any> {
