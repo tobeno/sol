@@ -225,3 +225,46 @@ export function rgrepObject<T extends Record<string, any>>(
 export function cloneObject<T extends Record<string, any>>(obj: T): T {
   return Object.assign(Object.create(Object.getPrototypeOf(obj)), obj);
 }
+
+export function camelcaseObject(obj: any): any {
+  if (!obj || typeof obj !== 'object' || obj instanceof Date) {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => camelcaseObject(item));
+  }
+
+  return Object.keys(obj).reduce((result, key) => {
+    const value = obj[key];
+
+    result[
+      key.replace(/_([a-z])/g, (...matches) => matches[1].toUpperCase())
+    ] = camelcaseObject(value);
+
+    return result;
+  }, {} as any);
+}
+
+export function snakecaseObject(obj: any): any {
+  if (!obj || typeof obj !== 'object' || obj instanceof Date) {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => snakecaseObject(item));
+  }
+
+  return Object.keys(obj).reduce((result, key) => {
+    const value = obj[key];
+
+    result[
+      key.replace(
+        /([a-z])([A-Z])/g,
+        (...matches) => `${matches[1]}_${matches[2].toLowerCase()}`,
+      )
+    ] = camelcaseObject(value);
+
+    return result;
+  }, {} as any);
+}

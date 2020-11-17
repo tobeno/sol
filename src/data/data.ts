@@ -17,6 +17,7 @@ import { AnyItemType, AnyKeyType, AnyPartial } from '../interfaces/util';
 import { edit } from '../integrations/editor';
 import { File } from '../storage/file';
 import { save, saveAs } from '../storage/save';
+import { camelcaseObject, snakecaseObject } from '../utils/object';
 
 /**
  * Generic wrapper for runtime objects
@@ -97,6 +98,14 @@ export class Data<
 
   get filtered(): Data<AnyPartial<ValueType>> {
     return this.filter((value: any) => !!value);
+  }
+
+  get camelcased(): Data<any> {
+    return wrapObject(camelcaseObject(this.value), this) as any;
+  }
+
+  get snakecased(): Data<any> {
+    return wrapObject(snakecaseObject(this.value), this) as any;
   }
 
   get keys(): KeyType[] {
