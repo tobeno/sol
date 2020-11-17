@@ -183,6 +183,86 @@ export class Data<
     return wrapObject(newValue, this) as any;
   }
 
+  find(
+    cb: (value: ItemType, index: KeyType) => boolean,
+  ): Data<ItemType> {
+    if (Array.isArray(this.value)) {
+      return wrapObject(this.value.find(cb as any) as any, this) as any;
+    }
+
+    let result: any = null;
+    for(const index of this.keys) {
+      const value = (this.value as any)[index];
+      if (cb(value, index)) {
+        result = value;
+
+        break;
+      }
+    }
+
+    return result ? wrapObject(result, this) as any : null;
+  }
+
+  findIndex(
+    cb: (value: ItemType, index: KeyType) => boolean,
+  ): Data<KeyType> {
+    if (Array.isArray(this.value)) {
+      return wrapObject(this.value.findIndex(cb as any) as any, this) as any;
+    }
+
+    let result: any = null;
+    for(const index of this.keys) {
+      const value = (this.value as any)[index];
+      if (cb(value, index)) {
+        result = index;
+
+        break;
+      }
+    }
+
+    return result ? wrapObject(result, this) as any : null;
+  }
+
+  some(
+    cb: (value: ItemType, index: KeyType) => boolean,
+  ): boolean {
+    if (Array.isArray(this.value)) {
+      return this.value.some(cb as any);
+    }
+
+    let result = false;
+    for(const index of this.keys) {
+      const value = (this.value as any)[index];
+      if (cb(value, index)) {
+        result = true;
+
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  every(
+    cb: (value: ItemType, index: KeyType) => boolean,
+  ): boolean {
+    if (Array.isArray(this.value)) {
+      return this.value.every(cb as any);
+    }
+
+    let result = true;
+    for(const index of this.keys) {
+      const value = (this.value as any)[index];
+      if (!cb(value, index)) {
+        result = false;
+
+        break;
+      }
+    }
+
+    return result;
+  }
+
   map<MappedItemType = any>(
     cb: (value: ItemType, index: KeyType) => MappedItemType,
   ): Data<
