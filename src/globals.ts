@@ -14,6 +14,7 @@ import {
 } from './storage/item-collection';
 import { web } from './web';
 import { clipboard } from './os/clipboard';
+import * as asyncUtils from './utils/async';
 import * as arrayUtils from './utils/array';
 import * as objectUtils from './utils/object';
 import * as textUtils from './utils/text';
@@ -163,6 +164,7 @@ export const globals = {
   utils: {
     help: 'Basic utility functions',
     value: {
+      ...asyncUtils,
       ...metadataUtils,
       ...arrayUtils,
       ...objectUtils,

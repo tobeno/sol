@@ -10,6 +10,15 @@ export function deasync<FnType extends (...args: any[]) => Promise<any>>(
   };
 }
 
+export function sleep(seconds: number): void {
+  let done = false;
+  setTimeout(() => {
+    done = true;
+  }, seconds * 1000);
+
+  loopWhile(() => !done);
+}
+
 export function awaitSync<T>(promise: T | PromiseLike<T>): T {
   let done = false;
   let data: T | undefined = undefined;
