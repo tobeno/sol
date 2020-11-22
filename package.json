@@ -34,7 +34,7 @@
     "jsonata": "^1.8.3",
     "node-fetch": "^2.6.0",
     "papaparse": "^5.2.0",
-    "recast": "^0.19.1",
+    "recast": "^0.20.4",
     "serve": "^11.3.2",
     "shelljs": "^0.8.4",
     "tmp": "^0.2.1",
