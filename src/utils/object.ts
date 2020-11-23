@@ -288,7 +288,7 @@ export function snakecaseObject(obj: any): any {
         /([a-z0-9])([A-Z])/g,
         (...matches) => `${matches[1]}_${matches[2].toLowerCase()}`,
       )
-    ] = camelcaseObject(value);
+    ] = snakecaseObject(value);
 
     return result;
   }, {} as any);
