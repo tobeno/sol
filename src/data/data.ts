@@ -110,7 +110,7 @@ export class Data<
 
   get keys(): KeyType[] {
     if (Array.isArray(this.value)) {
-      return this.value.map((_, index) => index) as any;
+      return (this.value as any).map((_: any, index: any) => index) as any;
     }
 
     return Object.keys(this.value) as any;
@@ -118,7 +118,7 @@ export class Data<
 
   get values(): ItemType[] {
     if (Array.isArray(this.value)) {
-      return this.value;
+      return this.value as any;
     }
 
     return Object.values(this.value);
@@ -265,7 +265,7 @@ export class Data<
       : any
   > {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.map(cb as any) as any, this) as any;
+      return wrapObject((this.value as any).map(cb as any) as any, this) as any;
     }
 
     const newValue: any = {};
