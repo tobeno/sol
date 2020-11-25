@@ -6,6 +6,7 @@ import {
   dataToYaml,
   dataToCsv,
   wrapObject,
+  transform,
 } from './transformer';
 import { Wrapper } from './wrapper';
 import { Text } from './text';
@@ -18,6 +19,7 @@ import { edit } from '../integrations/editor';
 import { File } from '../storage/file';
 import { save, saveAs } from '../storage/save';
 import { camelcaseObject, snakecaseObject } from '../utils/object';
+import { DataType } from './data-type';
 
 /**
  * Generic wrapper for runtime objects
@@ -132,7 +134,7 @@ export class Data<
     return Object.entries(this.value) as any;
   }
 
-  withSource(source: DataSource | null): Data<ValueType> {
+  setSource(source: DataSource | null): Data<ValueType> {
     this.source = source;
 
     return this as any;
@@ -296,14 +298,22 @@ export class Data<
     });
   }
 
-  transform<TransformedValueType = any>(
+  extract<ExtractedValueType = any>(
     exp: string | Expression,
-  ): Data<TransformedValueType> {
+  ): Data<ExtractedValueType> {
     if (typeof exp === 'string') {
       exp = jsonata(exp);
     }
 
     return wrapObject(exp.evaluate(this.value), this) as any;
+  }
+
+  transformTo<TargetType = any>(targetType: DataType | string): TargetType {
+    if (typeof targetType === 'string') {
+      targetType = DataType.fromString(targetType);
+    }
+
+    return transform(this, new DataTransformation(DataType.Data, targetType));
   }
 
   copy() {

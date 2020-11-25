@@ -76,13 +76,13 @@ export class Text<ContentType = any> extends String {
     return csvToData(this);
   }
 
-  withFormat(format: string | null): this {
+  setFormat(format: string | null): this {
     this.format = format;
 
     return this;
   }
 
-  withSource(source: DataSource | null): this {
+  setSource(source: DataSource | null): this {
     this.source = source;
 
     return this;

@@ -132,7 +132,7 @@ export class File<ContentType = any> extends Item {
   }
 
   get csv(): Data<ContentType> {
-    return csvToData(this.text);
+    return csvToData(this.text, this);
   }
 
   set csv(value: Data<ContentType>) {

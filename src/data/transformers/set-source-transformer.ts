@@ -4,22 +4,22 @@ import { Data } from '../data';
 import { Text } from '../text';
 
 /**
- * A mapper, which preserves the source of data during mapping
+ * A transformer, which preserves the source of data during mapping
  */
-export class DataSourceTransformer implements DataTransformer<any, any> {
-  constructor(readonly mapper: DataTransformer<any, any>) {}
+export class SetSourceTransformer implements DataTransformer<any, any> {
+  constructor(readonly transformer: DataTransformer<any, any>) {}
 
   supports(input: any, transformation: DataTransformation): boolean {
-    return this.mapper.supports(input, transformation);
+    return this.transformer.supports(input, transformation);
   }
 
   transform(input: any, transformation: DataTransformation) {
     let source = null;
     if (input instanceof Data || input instanceof Text) {
-      source = input.source;
+      source = input;
     }
 
-    const output = this.mapper.transform(input, transformation);
+    const output = this.transformer.transform(input, transformation);
 
     if (output instanceof Data || output instanceof Text) {
       output.source = source;

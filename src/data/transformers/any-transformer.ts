@@ -2,22 +2,24 @@ import { DataTransformer } from './data-transformer';
 import { DataTransformation } from '../data-transformation';
 
 export class AnyTransformer implements DataTransformer<any, any> {
-  constructor(readonly transformer: DataTransformer<any, any>[]) {}
+  constructor(readonly transformers: DataTransformer<any, any>[]) {}
 
   supports(input: any, transformation: DataTransformation): boolean {
-    return this.transformer.some((mapper) =>
-      mapper.supports(input, transformation),
+    return this.transformers.some((transformer) =>
+      transformer.supports(input, transformation),
     );
   }
 
   transform(input: any, transformation: DataTransformation) {
-    const mapper = this.transformer.find((mapper) =>
-      mapper.supports(input, transformation),
+    const transformer = this.transformers.find((currentTransformer) =>
+      currentTransformer.supports(input, transformation),
     );
-    if (mapper) {
-      return mapper.transform(input, transformation);
+    if (transformer) {
+      return transformer.transform(input, transformation);
     }
 
-    throw new Error(`No mapper supported for transformation ${transformation}`);
+    throw new Error(
+      `No transformer supported for transformation ${transformation}`,
+    );
   }
 }

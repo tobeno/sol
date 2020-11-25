@@ -4,18 +4,18 @@ import { Data } from '../data';
 import { Text } from '../text';
 
 /**
- * A mapper, which sets the applied transformation in the output
+ * A transformer, which sets the applied transformation in the output
  */
-export class DataTransformationTransformer
+export class SetSourceTransformationTransformer
   implements DataTransformer<any, any> {
-  constructor(readonly mapper: DataTransformer<any, any>) {}
+  constructor(readonly transformer: DataTransformer<any, any>) {}
 
   supports(input: any, transformation: DataTransformation): boolean {
-    return this.mapper.supports(input, transformation);
+    return this.transformer.supports(input, transformation);
   }
 
   transform(input: any, transformation: DataTransformation) {
-    const output = this.mapper.transform(input, transformation);
+    const output = this.transformer.transform(input, transformation);
 
     if (output instanceof Data || output instanceof Text) {
       output.sourceTransformation = transformation;

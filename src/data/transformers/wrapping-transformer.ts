@@ -1,17 +1,17 @@
 import { DataTransformer } from './data-transformer';
 import { DataTransformation } from '../data-transformation';
-import { DataType } from '../data-type';
+import { DataType, DataTypeMatchType } from '../data-type';
 import { Wrapper } from '../wrapper';
 import { Constructor } from '../../interfaces/util';
 
 /**
- * A mapper, which adds / removes a wrapper class, before passing the transformation on to another mapper
+ * A transformer, which adds / removes a wrapper class, before passing the transformation on to another mapper
  */
 export class WrappingTransformer implements DataTransformer<any, any> {
   constructor(
     readonly wrapper: Constructor<Wrapper>,
     readonly wrapperValueType: DataType,
-    readonly mapper: DataTransformer<any, any>,
+    readonly transformer: DataTransformer<any, any>,
   ) {}
 
   get wrapperType() {
@@ -35,29 +35,39 @@ export class WrappingTransformer implements DataTransformer<any, any> {
       transformation = transformation.withTargetType(wrapperType);
     }
 
-    return this.mapper.supports(input, transformation);
+    return this.transformer.supports(input, transformation);
   }
 
   transform(input: any, transformation: DataTransformation) {
     const { wrapperType } = this;
 
-    const baseWrapped = transformation.baseType.matches(wrapperType);
-    const targetWrapped = transformation.targetType.matches(wrapperType);
+    const baseWrapped = transformation.baseType.matches(
+      wrapperType,
+      DataTypeMatchType.Partial,
+    );
+    const targetWrapped = transformation.targetType.matches(
+      wrapperType,
+      DataTypeMatchType.Partial,
+    );
 
     if (baseWrapped) {
-      transformation = transformation.withBaseType(this.wrapperValueType);
+      transformation = transformation.withBaseType(
+        this.wrapperValueType.withFormat(transformation.baseType.format),
+      );
       if (input instanceof this.wrapper) {
         input = input.value;
       }
     }
 
     if (targetWrapped) {
-      transformation = transformation.withTargetType(this.wrapperValueType);
+      transformation = transformation.withTargetType(
+        this.wrapperValueType.withFormat(transformation.targetType.format),
+      );
     }
 
     let output;
     if (!transformation.baseType.matches(transformation.targetType)) {
-      output = this.mapper.transform(input, transformation);
+      output = this.transformer.transform(input, transformation);
     } else {
       output = input;
     }

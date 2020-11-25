@@ -29,7 +29,7 @@ describe('transformation', () => {
       expect(obj).toHaveProperty('products');
 
       (obj as any).variants = Array.from(
-        wrapObject(obj.products).transform('variants').value,
+        wrapObject(obj.products).extract('variants').value,
       );
 
       const tmpFile = tmp.fileSync();
@@ -38,7 +38,7 @@ describe('transformation', () => {
       tmpFile.removeCallback();
 
       const tmpFile2 = tmp.fileSync();
-      data.transform('variants').csv.saveAs(tmpFile2.name);
+      data.extract('variants').csv.saveAs(tmpFile2.name);
       expect(readFileSync(tmpFile2.name, 'utf-8')).toMatchSnapshot();
       tmpFile2.removeCallback();
     });

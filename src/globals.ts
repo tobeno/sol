@@ -37,6 +37,9 @@ import {
   transform,
 } from './data/transformer';
 import { astTypes } from './data/ast';
+import { DataType } from './data/data-type';
+import { DataFormat } from './data/data-format';
+import { DataTransformation } from './data/data-transformation';
 
 export const globals = {
   ast: {
@@ -175,6 +178,15 @@ export const globals = {
       ...objectUtils,
       ...textUtils,
     },
+  },
+  DataType: { help: 'Class describing a data type', value: DataType },
+  DataFormat: {
+    help: 'Class describing the format of a data type',
+    value: DataFormat,
+  },
+  DataTransformation: {
+    help: 'Class describing a transformation between data types',
+    value: DataTransformation,
   },
   Directory: { help: 'Class used for wrapping directories', value: Directory },
   DirectoryCollection: {

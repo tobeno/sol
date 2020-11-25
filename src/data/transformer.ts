@@ -16,9 +16,9 @@ import { ToStringTransformer } from './transformers/tostring-transformer';
 import { Html } from './html';
 import { Xml } from './xml';
 import { Text } from './text';
-import { DataSourceTransformer } from './transformers/data-source-transformer';
+import { SetSourceTransformer } from './transformers/set-source-transformer';
 import { DataSource } from './data-source';
-import { DataTransformationTransformer } from './transformers/data-transformation-transformer';
+import { SetSourceTransformationTransformer } from './transformers/set-source-transformation-transformer';
 import { Ast } from './ast';
 import { AstTransformer } from './transformers/ast-transformer';
 import { DataTransformer } from './transformers/data-transformer';
@@ -41,8 +41,8 @@ function getTransformer(): DataTransformer<any, any> {
       new TextSemicolonSeparatedTransformer(),
       new ToStringTransformer(),
     ]);
-    transformer = new DataTransformationTransformer(
-      new DataSourceTransformer(
+    transformer = new SetSourceTransformationTransformer(
+      new SetSourceTransformer(
         new WrappingTransformer(
           Data,
           DataType.Object,
@@ -67,18 +67,18 @@ export function transform<InputType = any, OutputType = any>(
 }
 
 export function jsonToData<ValueType = any>(
-  value: string | String,
+  value: string | Text,
   source: DataSource | null = null,
 ): Data<ValueType> {
   source = source || (value as any).source || null;
 
   return transform(
-    unwrapString(value),
+    wrapString(value, DataFormat.Json, source),
     new DataTransformation(
-      DataType.String.withFormat(DataFormat.Json),
+      DataType.Text.withFormat(DataFormat.Json),
       DataType.Data,
     ),
-  ).withSource(source);
+  );
 }
 
 export function dataToJson<ValueType = any>(
@@ -91,31 +91,26 @@ export function dataToJson<ValueType = any>(
 
   source = source || value.source;
 
-  return wrapString<ValueType>(
-    transform(
-      value,
-      new DataTransformation(
-        DataType.Data,
-        DataType.String.withFormat(DataFormat.Json),
-      ),
+  return transform(
+    wrapString(value, DataFormat.Json, source),
+    new DataTransformation(
+      DataType.Data,
+      DataType.Text.withFormat(DataFormat.Json),
     ),
-    DataFormat.Json,
-  ).withSource(source);
+  );
 }
 
 export function yamlToData<ValueType = any>(
   value: string | String | Text,
   source: DataSource | null = null,
 ): Data<ValueType> {
-  source = source || (value as any).source || null;
-
   return transform(
-    unwrapString(value),
+    wrapString(value, DataFormat.Yaml, source),
     new DataTransformation(
-      DataType.String.withFormat(DataFormat.Yaml),
+      DataType.Text.withFormat(DataFormat.Yaml),
       DataType.Data,
     ),
-  ).withSource(source);
+  );
 }
 
 export function dataToYaml<ValueType = any>(
@@ -126,30 +121,27 @@ export function dataToYaml<ValueType = any>(
     value = new Data(value);
   }
 
-  source = source || value.source;
+  if (source) {
+    value.setSource(source);
+  }
 
-  return wrapString<ValueType>(
-    transform(
-      value,
-      new DataTransformation(
-        DataType.Data,
-        DataType.String.withFormat(DataFormat.Yaml),
-      ),
+  return transform(
+    value,
+    new DataTransformation(
+      DataType.Data,
+      DataType.Text.withFormat(DataFormat.Yaml),
     ),
-    DataFormat.Yaml,
-  ).withSource(source);
+  );
 }
 
 export function csvToData<ValueType = any>(
-  value: string | String,
+  value: string | String | Text,
   source: DataSource | null = null,
 ): Data<ValueType> {
-  source = source || (value as any).source || null;
-
   return transform(
-    unwrapString(value),
+    wrapString(value, DataFormat.Csv, source),
     new DataTransformation(
-      DataType.String.withFormat(DataFormat.Csv),
+      DataType.Text.withFormat(DataFormat.Csv),
       DataType.Data,
     ),
   );
@@ -163,29 +155,26 @@ export function dataToCsv<ValueType = any>(
     value = new Data(value);
   }
 
-  source = source || value.source;
+  if (source) {
+    value.setSource(source);
+  }
 
-  return wrapString<ValueType>(
-    transform(
-      value,
-      new DataTransformation(
-        DataType.Data,
-        DataType.String.withFormat(DataFormat.Csv),
-      ),
+  return transform(
+    value,
+    new DataTransformation(
+      DataType.Data,
+      DataType.Text.withFormat(DataFormat.Csv),
     ),
-    DataFormat.Csv,
-  ).withSource(source);
+  );
 }
 
 export function codeToAst(
-  value: string | String,
+  value: string | String | Text,
   source: DataSource | null = null,
 ): Ast {
-  source = source || (value as any).source || null;
-
   return transform(
-    unwrapString(value),
-    new DataTransformation(DataType.String, DataType.Ast),
+    wrapString(value, null, source),
+    new DataTransformation(DataType.Text, DataType.Ast),
   );
 }
 
@@ -197,15 +186,15 @@ export function astToCode(
     value = new Ast(value);
   }
 
-  source = source || value.source;
+  if (source) {
+    value = value.withSource(source);
+  }
 
-  return wrapString(
-    transform(value, new DataTransformation(DataType.Ast, DataType.String)),
-  ).withSource(source);
+  return transform(value, new DataTransformation(DataType.Ast, DataType.Text));
 }
 
 export function wrapString<ContentType = any>(
-  value: string | String,
+  value: string | String | Text,
   format: string | null = null,
   source: DataSource | null = null,
 ): Text<ContentType> {
@@ -213,11 +202,11 @@ export function wrapString<ContentType = any>(
     let text = value;
 
     if (format) {
-      text = text.withFormat(format);
+      text = text.setFormat(format);
     }
 
     if (source) {
-      text = text.withSource(source);
+      text = text.setSource(source);
     }
 
     return text;
@@ -256,12 +245,12 @@ export function wrapHtml(
   source: DataSource | null = null,
 ): Html {
   return transform(
-    unwrapString(value),
+    wrapString(value, DataFormat.Html, source),
     new DataTransformation(
-      DataType.String.withFormat(DataFormat.Html),
+      DataType.Text.withFormat(DataFormat.Html),
       DataType.Html,
     ),
-  ).withSource(source);
+  );
 }
 
 export function unwrapHtml<ContentType = any>(value: Html): Text<ContentType> {
@@ -273,12 +262,12 @@ export function wrapXml(
   source: DataSource | null = null,
 ): Xml {
   return transform(
-    unwrapString(value),
+    wrapString(value, DataFormat.Xml, source),
     new DataTransformation(
       DataType.String.withFormat(DataFormat.Xml),
       DataType.Xml,
     ),
-  ).withSource(source);
+  );
 }
 
 export function unwrapXml(value: Xml): Text {

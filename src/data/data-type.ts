@@ -43,13 +43,16 @@ export class DataType {
     return this.format ? `${this.type}<${this.format}>` : this.type;
   }
 
+  /**
+   * @param fullType Data type with format "[Type](<[format]>)" (e.g. "Text<application/json>")
+   */
   static fromString(fullType: string) {
-    const match = fullType.match(/(.+)(\<(.+)\>)?/);
+    const match = fullType.match(/^(.+?)(\<(.+)\>)?$/);
     if (!match) {
       throw new Error(`Invalid type ${fullType}`);
     }
 
-    const [, type, format = null] = match;
+    const [, type, , format = null] = match;
 
     return new DataType(type, format);
   }

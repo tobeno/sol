@@ -53,6 +53,10 @@ export class DataTransformation {
     return `${this.baseType}:${this.targetType}`;
   }
 
+  /**
+   *
+   * @param transformation Transformation with format "[SourceType]:[TargetType]" (e.g. "object:string" or "object:string<application/json>")
+   */
   static fromString(transformation: string) {
     const [baseType, targetType] = transformation.split(':');
 
