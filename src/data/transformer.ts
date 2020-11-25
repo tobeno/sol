@@ -89,10 +89,12 @@ export function dataToJson<ValueType = any>(
     value = new Data<ValueType>(value);
   }
 
-  source = source || value.source;
+  if (source) {
+    value.setSource(source);
+  }
 
   return transform(
-    wrapString(value, DataFormat.Json, source),
+    value,
     new DataTransformation(
       DataType.Data,
       DataType.Text.withFormat(DataFormat.Json),
