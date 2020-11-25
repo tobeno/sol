@@ -38,16 +38,16 @@ Or this:
 
 ```js
 // Get todos
-> const j = fetch('https://jsonplaceholder.typicode.com/todos').json
+> const j = fetch('https://jsonplaceholder.typicode.com/todos').content
 
 // Get all open ToDos
 > const open = j.filter(todo => !todo.completed)
 
 // Show all IDs of users with open ToDos using jsonata expression
-> open.transform('userId').data.sort().unique()
+> open.extract('userId').sort().unique
 
 // Save open ToDos in CSV
-> open.csv.file('todos.csv')
+> open.csv.saveAs('todos.csv')
 
 // Open CSV file in editor
 > _.edit()
