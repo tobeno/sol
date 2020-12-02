@@ -29,6 +29,7 @@ export const web = {
   post: wrap(axios.post),
   delete: wrap(axios.delete),
   patch: wrap(axios.patch),
+  put: wrap(axios.put),
   head: wrap(axios.head),
   request: wrap(axios.request),
 };
