@@ -38,6 +38,14 @@ export class File<ContentType = any> extends Item {
     return this.path.slice(0, -1 * (this.exts.join('.').length + 1));
   }
 
+  get basenameWithoutExt(): string {
+    return this.basename.slice(0, -1 * (this.ext.length + 1));
+  }
+
+  get basenameWithoutExts(): string {
+    return this.basename.slice(0, -1 * (this.exts.join('.').length + 1));
+  }
+
   get exts(): string[] {
     const { basename: name } = this;
     const pos = name.indexOf('.');
