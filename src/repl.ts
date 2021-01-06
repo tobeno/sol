@@ -7,6 +7,7 @@ import { spawnSync } from 'child_process';
 import * as chalk from 'chalk';
 import { getSolMetadata } from './utils/metadata';
 import { ReplOptions } from 'repl';
+import { AsyncCompleter, CompleterResult } from 'readline';
 
 let server: repl.REPLServer | null = null;
 
@@ -74,6 +75,10 @@ function myWriter(output: any) {
   return chalk.bold(require('./utils/inspect').inspect(output));
 }
 
+async function myCompleter(line: string): Promise<CompleterResult | void> {
+  // ToDo: Add custom completion logic
+}
+
 export function startSolServer(options: ReplOptions = {}) {
   server = repl.start({
     prompt: color.dim('> '),
@@ -88,6 +93,16 @@ export function startSolServer(options: ReplOptions = {}) {
     historyReady = true;
   });
   loopWhile(() => !historyReady);
+
+  const originalCompleter = server.completer.bind(repl);
+  (server as any).completer = (async (line, cb) => {
+    const result = await myCompleter(line);
+    if (typeof result !== 'undefined') {
+      cb(null, result);
+    }
+
+    originalCompleter(line, cb);
+  }) as AsyncCompleter;
 
   server.defineCommand('rebuild', {
     help: 'Rebuilds and reloads Sol using the current source files',
