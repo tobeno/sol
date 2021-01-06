@@ -80,3 +80,38 @@ export const extractText = (str: string, pattern: RegExp | string) => {
 
   return [...new Set(str.match(pattern) || [])].sort();
 };
+
+export function camelcaseText(
+  key: string,
+  {
+    capitalize = false,
+    includeConstantCase = false,
+  }: { capitalize?: boolean | null; includeConstantCase?: boolean | null } = {},
+): string {
+  if (includeConstantCase || !/^[A-Z0-9_]+$/.test(key)) {
+    key = key.replace(/_([a-z0-9])/g, (...matches) => matches[1].toUpperCase());
+
+    if (capitalize === true) {
+      key = key.slice(0, 1).toUpperCase() + key.slice(1);
+    } else if (capitalize === false) {
+      key = key
+        .replace(
+          /^([A-Z])([a-z0-9])/g,
+          (...matches) => `${matches[1].toLowerCase()}${matches[2]}`,
+        )
+        .replace(
+          /^([A-Z]+)([A-Z])/g,
+          (...matches) => `${matches[1].toLowerCase()}${matches[2]}`,
+        );
+    }
+  }
+
+  return key;
+}
+
+export function snakecaseText(str: string): string {
+  return str.replace(
+    /([a-z0-9])([A-Z])/g,
+    (...matches) => `${matches[1]}_${matches[2].toLowerCase()}`,
+  );
+}

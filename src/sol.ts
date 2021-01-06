@@ -4,6 +4,7 @@ import { Directory, dir } from './storage/directory';
 import { File, file } from './storage/file';
 import { Extension } from './extension';
 import { SolPropertyDescriptorMap } from './interfaces/properties';
+import { camelcaseText } from './utils/text';
 
 export class Sol {
   server: REPLServer | null = null;
@@ -94,23 +95,25 @@ export class Sol {
   }
 
   get playContextFile(): File {
-    return this.workspaceGeneratedDir.file('play-context.d.ts');
+    return this.workspaceGeneratedDir.file('play-context.ts');
   }
 
   get workspaceContextFile(): File {
-    return this.workspaceGeneratedDir.file('workspace-context.d.ts');
+    return this.workspaceGeneratedDir.file('workspace-context.ts');
   }
 
   get workspaceSetupFile(): File {
-    return this.workspaceDir.file('setup.js');
+    return this.workspaceDir.file('setup.ts');
   }
 
   reloadWorkspace() {
     const workspaceDir = this.workspaceDir;
 
-    const modules = workspaceDir.files('**/*.js').map((f) => f.path);
+    const modules = workspaceDir
+      .files('**/*.{js,ts}')
+      .map((f) => f.pathWithoutExt);
     modules.forEach((module) => {
-      delete require.cache[module];
+      delete require.cache[require.resolve(module)];
     });
 
     this.loadWorkspace();
@@ -135,6 +138,7 @@ export class Sol {
         'workspace',
         workspaceExtensionDir,
       );
+      workspaceExtension.generateGlobalsFile();
       workspaceExtension.generateSetupFile();
     }
 
@@ -143,6 +147,8 @@ export class Sol {
     const setupFile = this.workspaceSetupFile;
     if (!setupFile.exists) {
       this.generateWorkspaceSetupFile();
+
+      this.updateWorkspace(); // Ensure generated files exist
     }
 
     this.loadWorkspaceSetupFile();
@@ -161,7 +167,7 @@ export class Sol {
     } = this;
     if (workspaceSetupFile.exists) {
       throw new Error(
-        `Workspace in ${workspaceDir.path} already contains a setup.js file`,
+        `Workspace in ${workspaceDir.path} already contains a setup.ts file`,
       );
     }
 
@@ -173,9 +179,9 @@ export class Sol {
 * Setup file for workspace
 */
 
-/// <reference path="${workspaceContextFile.dir.relativePathFrom(
+import './${workspaceContextFile.dir.relativePathFrom(
       workspaceSetupFile.dir,
-    )}/${workspaceContextFile.basename}" />
+    )}/${workspaceContextFile.basenameWithoutExt}';
 
 // --- Integrated Extensions (${this.packageExtensionsDir.path}) ---
 ${packageExtensionNames
@@ -208,39 +214,85 @@ ${
     const {
       workspaceGeneratedDir,
       playContextFile,
+      extensions,
       packageDistDir,
       workspaceContextFile,
     } = this;
 
     workspaceGeneratedDir.create();
 
+    const extensionsWithGlobals = extensions.filter(
+      (extension) =>
+        extension.globalsFile.exists &&
+        extension.loaded &&
+        Object.keys(extension.globals).length,
+    );
+
     playContextFile.text = `
-import '${workspaceContextFile.dir.relativePathFrom(playContextFile.dir)}/${
+/* eslint-disable */
+import './${workspaceContextFile.dir.relativePathFrom(playContextFile.dir)}/${
       workspaceContextFile.name
     }';
 `.trimStart();
 
     workspaceContextFile.text = `
-import { globals } from '${packageDistDir.relativePathFrom(
+/* eslint-disable */
+import { globals } from './${packageDistDir.relativePathFrom(
       workspaceContextFile.dir,
     )}/globals';
+    
+${extensionsWithGlobals
+  .map((extension) =>
+    `
+import { globals as ${camelcaseText(
+      extension.name,
+    )}Globals } from './${extension.globalsFile.dir.relativePathFrom(
+      workspaceContextFile.dir,
+    )}/${extension.globalsFile.basenameWithoutExt}';
+`.trimStart(),
+  )
+  .join('\n')}
 
 export type Globals = {
-  ${Object.keys(this.globals)
-    .map(
-      (key) =>
-        `${key}: ${
-          (this.globals as any)[key].get
-            ? `ReturnType<typeof globals.${key}.get>`
-            : `typeof globals.${key}.value`
-        }`,
-    )
-    .join(',\n  ')}
+${Object.keys(this.globals)
+  .map(
+    (key) =>
+      `  ${key}: ${
+        (this.globals as any)[key].get
+          ? `ReturnType<typeof globals.${key}.get>`
+          : `typeof globals.${key}.value`
+      },`,
+  )
+  .join('\n  ')}
+${extensionsWithGlobals
+  .map((extension) =>
+    Object.keys(extension.globals)
+      .map((key) => {
+        const globalsVar = `${camelcaseText(extension.name)}Globals`;
+
+        return `  ${key}: ${
+          (extension.globals as any)[key].get
+            ? `ReturnType<typeof ${globalsVar}.${key}.get>`
+            : `typeof ${globalsVar}.${key}.value`
+        },`;
+      })
+      .join('\n'),
+  )
+  .join('\n')}
 };
 
 declare global {
   const {
-    ${Object.keys(this.globals).join(',\n    ')}
+${Object.keys(this.globals)
+  .map((key) => `    ${key},`)
+  .join('\n')}
+${extensionsWithGlobals
+  .map((extension) =>
+    Object.keys(extension.globals)
+      .map((key) => `    ${key},`)
+      .join('\n'),
+  )
+  .join('\n')}
   }: Globals;
 
   namespace NodeJS {
@@ -253,8 +305,8 @@ declare global {
   playFile(path?: string): File {
     path = path || `play-${new Date().toISOString().replace(/[^0-9]/g, '')}`;
 
-    if (!path.endsWith('.js')) {
-      path += '.js';
+    if (!path.endsWith('.ts')) {
+      path += '.ts';
     }
 
     let playFile;

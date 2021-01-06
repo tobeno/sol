@@ -9,7 +9,11 @@ export class Extension {
   constructor(public name: string, public dir: Directory) {}
 
   get setupFile() {
-    return this.dir.file('setup.js');
+    return this.dir.file('setup.ts');
+  }
+
+  get globalsFile() {
+    return this.dir.file('globals.ts');
   }
 
   generateSetupFile() {
@@ -19,7 +23,7 @@ export class Extension {
     const workspaceContextFile = sol.workspaceContextFile;
     if (extensionSetupFile.exists) {
       throw new Error(
-        `Extension in ${extensionDir.path} already contains a setup.js file`,
+        `Extension in ${extensionDir.path} already contains a setup.ts file`,
       );
     }
 
@@ -31,34 +35,63 @@ export class Extension {
 * Setup file for workspace extension
 */
 
-/// <reference path="${workspaceContextFile.dir.relativePathFrom(
+import './${workspaceContextFile.dir.relativePathFrom(
       extensionSetupFile.dir,
-    )}/${workspaceContextFile.basename}" />
+    )}/${workspaceContextFile.basenameWithoutExt}';
+${
+  this.globalsFile.exists
+    ? `
+import { globals } from './globals';
 
 const extension = sol.getExtension('${extensionName}');
 
-/**
-* Additional globals for the current workspace
-*/
-extension.registerGlobals({
-workspace: {
-  help: 'Workspace utilities',
-  value: {
-    example() {
-        console.log('Hello!');
-    }
-  }
+extension.registerGlobals(globals);
+`.trimStart()
+    : ''
 }
-});
+`.trimStart();
+  }
+
+  generateGlobalsFile() {
+    const extensionDir = this.dir;
+    const extensionGlobalsFile = this.globalsFile;
+    if (extensionGlobalsFile.exists) {
+      throw new Error(
+        `Extension in ${extensionDir.path} already contains a setup.ts file`,
+      );
+    }
+
+    extensionGlobalsFile.create();
+
+    extensionGlobalsFile.text = `
+/* eslint-disable */
+/**
+* Global variables declarations for workspace
+*/
+
+export const globals = {
+   workspace: {
+    help: 'Workspace utilities',
+    value: {
+      example() {
+        console.log('Hello!');
+      },
+    },
+  },
+};
+
+export type Globals = typeof globals;
 `.trimStart();
   }
 
   reload() {
     const extensionDir = this.dir;
 
-    const modules = extensionDir.files('**/*.js').map((f) => f.path);
+    const modules = extensionDir
+      .files('**/*.{js,ts}')
+      .map((f) => f.pathWithoutExt);
     modules.forEach((module) => {
-      delete require.cache[module];
+      delete require.cache[require.resolve(module)];
     });
 
     return this.load(true);
@@ -69,25 +102,15 @@ workspace: {
       return;
     }
 
-    const extensionDir = this.dir;
-
-    const setupFiles = extensionDir.files('setup.{ts,js}');
-    if (!setupFiles.length) {
-      throw new Error(
-        `Extension ${name} (${extensionDir.path}) is missing setup.js / setup.ts file`,
-      );
-    }
-
-    const setupFile = setupFiles.value[0];
-
-    require(setupFile.pathWithoutExts);
+    require(this.setupFile.pathWithoutExt);
 
     this.loaded = true;
   }
 
   registerGlobals(globals: SolPropertyDescriptorMap) {
-    sol.registerGlobals(globals);
+    const globalGeneric = global as any;
 
+    this.registerProperties(globalGeneric, globals);
     Object.assign(this.globals, globals);
   }
 

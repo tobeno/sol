@@ -1,16 +1,13 @@
 import { sol } from './sol';
 import { edit } from './integrations/editor';
 import { wrapObject } from './data/transformer';
+import { File } from './storage/file';
+import { rerequire } from './utils/module';
 
 const playWatchers: Record<string, () => void> = {};
 
-function runPlay(playId: string, code: string) {
-  code = code.replace(
-    /\brequire\((['"])(\.{1,2}\/)/g,
-    `require($1${sol.playDir.relativePathFrom(__dirname)}/$2`,
-  );
-
-  let result = eval(`const shared = global.shared; ${code}`);
+function runPlay(playId: string, playFile: File) {
+  let result = rerequire(playFile.path);
 
   if (result && typeof result === 'object') {
     if (result.constructor === Object) {
@@ -43,7 +40,7 @@ export function play(path?: string) {
         // Delay to avoid double execution
         timeout = setTimeout(() => {
           timeout = null;
-          const result = runPlay(playId, playFile.text);
+          const result = runPlay(playId, playFile);
 
           if (typeof result !== 'undefined') {
             console.log(result);
@@ -72,9 +69,9 @@ export function setupPlay(path: string) {
 
   if (!playFile.size) {
     playFile.text = `
-/// <reference path="${sol.playContextFile.dir.relativePathFrom(
-      playFile.dir,
-    )}/${sol.playContextFile.basename}" />
+import './${sol.playContextFile.dir.relativePathFrom(playFile.dir)}/${
+      sol.playContextFile.basenameWithoutExt
+    }';
 
 `.trimStart();
   }
@@ -100,5 +97,5 @@ export function replay(path: string) {
     throw new Error(`No play found for '${path}'`);
   }
 
-  return runPlay(playId, playFile.text);
+  return runPlay(playId, playFile);
 }

@@ -52,10 +52,10 @@ function reloadSolServer() {
     loadedExtensionNames,
     workspaceDirPath,
   } = sol;
-  const modules = runtimeDir.files('**/*.js').map((f) => f.path);
+  const modules = runtimeDir.files('**/*.js').map((f) => f.pathWithoutExt);
 
   modules.forEach((module) => {
-    delete require.cache[module];
+    delete require.cache[require.resolve(module)];
   });
 
   require('./setup');

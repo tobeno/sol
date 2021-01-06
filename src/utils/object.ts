@@ -1,4 +1,5 @@
 import { RecordItemType } from '../interfaces/util';
+import { camelcaseText, snakecaseText } from './text';
 
 export function sortObjectKeys<T extends Record<string, any>>(obj: T): T {
   return Object.assign(
@@ -244,28 +245,12 @@ export function camelcaseObject(
   return Object.keys(obj).reduce((result, key) => {
     const value = obj[key];
 
-    // Replace everything but CONSTANT_CASE
-    if (includeConstantCase || !/^[A-Z0-9_]+$/.test(key)) {
-      key = key.replace(/_([a-z0-9])/g, (...matches) =>
-        matches[1].toUpperCase(),
-      );
-
-      if (capitalize === true) {
-        key = key.slice(0, 1).toUpperCase() + key.slice(1);
-      } else if (capitalize === false) {
-        key = key
-          .replace(
-            /^([A-Z])([a-z0-9])/g,
-            (...matches) => `${matches[1].toLowerCase()}${matches[2]}`,
-          )
-          .replace(
-            /^([A-Z]+)([A-Z])/g,
-            (...matches) => `${matches[1].toLowerCase()}${matches[2]}`,
-          );
-      }
-    }
-
-    result[key] = camelcaseObject(value);
+    result[
+      camelcaseText(key, {
+        capitalize,
+        includeConstantCase,
+      })
+    ] = camelcaseObject(value);
 
     return result;
   }, {} as any);
@@ -283,12 +268,7 @@ export function snakecaseObject(obj: any): any {
   return Object.keys(obj).reduce((result, key) => {
     const value = obj[key];
 
-    result[
-      key.replace(
-        /([a-z0-9])([A-Z])/g,
-        (...matches) => `${matches[1]}_${matches[2].toLowerCase()}`,
-      )
-    ] = snakecaseObject(value);
+    result[snakecaseText(key)] = snakecaseObject(value);
 
     return result;
   }, {} as any);
