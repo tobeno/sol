@@ -1,6 +1,7 @@
 import { Directory } from './storage/directory';
 import { sol } from './sol';
 import { SolPropertyDescriptorMap } from './interfaces/properties';
+import { log } from './log';
 
 export class Extension {
   globals: SolPropertyDescriptorMap = {};
@@ -102,7 +103,11 @@ export type Globals = typeof globals;
       return;
     }
 
-    require(this.setupFile.pathWithoutExt);
+    try {
+      require(this.setupFile.pathWithoutExt);
+    } catch (e) {
+      log(`Failed to load extension '${this.name}'.`);
+    }
 
     this.loaded = true;
   }

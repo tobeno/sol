@@ -1,6 +1,7 @@
 import * as jsonata from 'jsonata';
 import { JSDOM } from 'jsdom';
 import * as chalk from 'chalk';
+import * as R from 'remeda';
 import { grep } from './storage/search';
 import { file, File } from './storage/file';
 import { dir, Directory } from './storage/directory';
@@ -86,11 +87,6 @@ export const globals = {
     help: 'Opens a file for editing (defaults to code as editor)',
     value: edit,
   },
-  fetch: {
-    help:
-      'Fetch content from the internet (compatible to NodeJS fetch arguments)',
-    value: web.fetch,
-  },
   file: {
     help: 'Wrapper for files',
     value: file,
@@ -126,6 +122,10 @@ export const globals = {
   log: {
     help: 'Logs to the console',
     value: log,
+  },
+  pipe: {
+    help: 'Pipe helper from Remeda',
+    value: R.pipe,
   },
   play: {
     help: 'Opens a given play file for interactive editing',
@@ -177,30 +177,19 @@ export const globals = {
       ...arrayUtils,
       ...objectUtils,
       ...textUtils,
+      DataType,
+      DataFormat,
+      DataTransformation,
+      Directory,
+      DirectoryCollection,
+      File,
+      FileCollection,
+      ItemCollection,
     },
   },
-  DataType: { help: 'Class describing a data type', value: DataType },
-  DataFormat: {
-    help: 'Class describing the format of a data type',
-    value: DataFormat,
-  },
-  DataTransformation: {
-    help: 'Class describing a transformation between data types',
-    value: DataTransformation,
-  },
-  Directory: { help: 'Class used for wrapping directories', value: Directory },
-  DirectoryCollection: {
-    help: 'Class used for wrapping multiple directories',
-    value: DirectoryCollection,
-  },
-  File: { help: 'Class used for wrapping files', value: File },
-  FileCollection: {
-    help: 'Class used for wrapping multiple files',
-    value: FileCollection,
-  },
-  ItemCollection: {
-    help: 'Class used for wrapping mutliple storage items',
-    value: ItemCollection,
+  R: {
+    help: 'Remeda',
+    value: R,
   },
 };
 

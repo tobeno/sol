@@ -32,7 +32,7 @@ export class Ast extends Data<babelTypes.Node> {
     return this;
   }
 
-  extract(type: string | Function): Ast[] {
+  extractNodes(type: string | Function): Ast[] {
     // Allow also builder functions as type (e.g. ast.Identifier)
     if (typeof type === 'function') {
       type = type.name.slice(0, 1).toUpperCase() + type.name.slice(1);
@@ -56,7 +56,7 @@ export class Ast extends Data<babelTypes.Node> {
   }
 
   toString() {
-    return this.code;
+    return this.code.value;
   }
 }
 

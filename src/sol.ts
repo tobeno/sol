@@ -5,6 +5,7 @@ import { File, file } from './storage/file';
 import { Extension } from './extension';
 import { SolPropertyDescriptorMap } from './interfaces/properties';
 import { camelcaseText } from './utils/text';
+import { log } from './log';
 
 export class Sol {
   server: REPLServer | null = null;
@@ -424,7 +425,11 @@ ${extensionsWithGlobals
   }
 
   loadWorkspaceSetupFile() {
-    require(this.workspaceSetupFile.pathWithoutExts);
+    try {
+      require(this.workspaceSetupFile.pathWithoutExts);
+    } catch (e) {
+      log(e);
+    }
   }
 
   registerProperties(
