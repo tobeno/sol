@@ -428,7 +428,7 @@ ${extensionsWithGlobals
     try {
       require(this.workspaceSetupFile.pathWithoutExts);
     } catch (e) {
-      log(e);
+      log('Failed to load workspace setup file.', e);
     }
   }
 
