@@ -33,7 +33,7 @@ sol.registerProperties(Array.prototype, {
     },
   },
   unique: {
-    value() {
+    get() {
       return [...new Set(this)];
     },
   },
@@ -45,20 +45,16 @@ sol.registerProperties(Promise.prototype, {
       return awaitSync(this);
     },
   },
-  toString: {
-    value() {
-      return String(this.await);
-    },
+  toString() {
+    return String(this.await);
   },
-  [inspect.custom]: {
-    value() {
-      const value = this.await;
+  [inspect.custom]() {
+    const value = this.await;
 
-      if (value[inspect.custom]) {
-        return value[inspect.custom]();
-      }
+    if (value[inspect.custom]) {
+      return value[inspect.custom]();
+    }
 
-      return String(value);
-    },
+    return String(value);
   },
 });

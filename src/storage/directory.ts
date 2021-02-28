@@ -5,11 +5,11 @@ import { Item } from './item';
 import { file } from './file';
 import { grep, replaceText } from './search';
 import {
-  files,
-  glob,
+  DirectoryCollection,
   dirs,
   FileCollection,
-  DirectoryCollection,
+  files,
+  glob,
   ItemCollection,
 } from './item-collection';
 import { wrapString } from '../data/transformer';

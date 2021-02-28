@@ -273,3 +273,30 @@ export function snakecaseObject(obj: any): any {
     return result;
   }, {} as any);
 }
+
+export function isObjectPropertyDescriptor(
+  obj: any | (PropertyDescriptor & ThisType<any>),
+): any {
+  return (
+    typeof obj !== 'function' &&
+    Object.keys(obj).every((key) => ['get', 'set'].includes(key))
+  );
+}
+
+export function registerObjectProperties(
+  obj: any,
+  properties: Record<string, any> | (PropertyDescriptorMap & ThisType<any>),
+): any {
+  Object.keys(properties).forEach(function (propertyName) {
+    const propertyValue = properties[propertyName];
+    const isDescriptor = isObjectPropertyDescriptor(propertyValue);
+
+    Object.defineProperty(obj, propertyName, {
+      ...(isDescriptor ? propertyValue : { value: propertyValue }),
+      enumerable: false,
+      configurable: true,
+    });
+  });
+
+  return obj;
+}

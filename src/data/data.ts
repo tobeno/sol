@@ -1,12 +1,12 @@
-import { Expression } from 'jsonata';
 import * as jsonata from 'jsonata';
+import { Expression } from 'jsonata';
 import {
-  wrapString,
+  dataToCsv,
   dataToJson,
   dataToYaml,
-  dataToCsv,
-  wrapObject,
   transform,
+  wrapObject,
+  wrapString,
 } from './transformer';
 import { Wrapper } from './wrapper';
 import { Text } from './text';

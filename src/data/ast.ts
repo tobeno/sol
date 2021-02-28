@@ -2,7 +2,7 @@ import * as babelTypes from '@babel/types';
 import { inspect } from 'util';
 import { Data } from './data';
 import { astToCode } from './transformer';
-import traverse, { TraverseOptions, Scope, NodePath } from '@babel/traverse';
+import traverse, { NodePath, Scope, TraverseOptions } from '@babel/traverse';
 import { Text } from './text';
 
 /**

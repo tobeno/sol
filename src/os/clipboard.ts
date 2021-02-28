@@ -1,10 +1,10 @@
 import { readSync, writeSync } from 'clipboardy';
 import {
-  wrapString,
-  unwrapString,
-  jsonToData,
-  yamlToData,
   csvToData,
+  jsonToData,
+  unwrapString,
+  wrapString,
+  yamlToData,
 } from '../data/transformer';
 import { File } from '../storage/file';
 import { saveAs } from '../storage/save';

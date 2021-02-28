@@ -1,12 +1,12 @@
 require('./setup');
 
 import * as repl from 'repl';
+import { ReplOptions } from 'repl';
 import { loopWhile } from 'deasync';
 import { Sol } from './sol';
 import { spawnSync } from 'child_process';
 import * as chalk from 'chalk';
 import { getSolMetadata } from './utils/metadata';
-import { ReplOptions } from 'repl';
 import { AsyncCompleter, CompleterResult } from 'readline';
 
 let server: repl.REPLServer | null = null;
@@ -154,11 +154,9 @@ export function startSolServer(options: ReplOptions = {}) {
       const sol = getSol(); // Ensure we use current instance of Sol
       const globals = sol.globals as any;
 
-      const formatValue = (value: any, name: string, help?: string) => {
+      const formatValue = (value: any, name: string) => {
         const meta = getSolMetadata(value);
-        if (!help && meta.help) {
-          help = meta.help;
-        }
+        let help = meta.help || null;
 
         return `${
           typeof value !== 'function'
@@ -221,8 +219,7 @@ export function startSolServer(options: ReplOptions = {}) {
             .map((name) => {
               const descriptor = globals[name];
               const value = descriptor.value;
-              const help = descriptor.help;
-              let output = `- ${formatValue(value, name, help)}`;
+              let output = `- ${formatValue(value, name)}`;
               if (
                 (typeof value === 'object' || /^[A-Z]/.test(name)) &&
                 !['astTypes'].includes(name)

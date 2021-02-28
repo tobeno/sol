@@ -1,21 +1,21 @@
 import {
   csvToData,
-  yamlToData,
   jsonToData,
   wrapObject,
   wrapString,
+  yamlToData,
 } from './transformer';
 import {
-  lines,
-  grepLines,
-  rgrepLines,
-  sortLines,
-  rsortLines,
-  filterLines,
-  rfilterLines,
-  replaceLines,
-  mapLines,
   extractText,
+  filterLines,
+  grepLines,
+  lines,
+  mapLines,
+  replaceLines,
+  rfilterLines,
+  rgrepLines,
+  rsortLines,
+  sortLines,
 } from '../utils/text';
 import { clipboard } from '../os/clipboard';
 import { edit } from '../integrations/editor';

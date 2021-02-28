@@ -1,11 +1,14 @@
 import { homedir } from 'os';
 import { REPLServer } from 'repl';
-import { Directory, dir } from './storage/directory';
+import { dir, Directory } from './storage/directory';
 import { File, file } from './storage/file';
 import { Extension } from './extension';
-import { SolPropertyDescriptorMap } from './interfaces/properties';
 import { camelcaseText } from './utils/text';
 import { log } from './log';
+import {
+  isObjectPropertyDescriptor,
+  registerObjectProperties,
+} from './utils/object';
 
 export class Sol {
   server: REPLServer | null = null;
@@ -256,25 +259,27 @@ import { globals as ${camelcaseText(
 
 export type Globals = {
 ${Object.keys(this.globals)
-  .map(
-    (key) =>
-      `  ${key}: ${
-        (this.globals as any)[key].get
-          ? `ReturnType<typeof globals.${key}.get>`
-          : `typeof globals.${key}.value`
-      },`,
-  )
+  .map((key) => {
+    const value = (this.globals as any)[key];
+
+    return `  ${key}: ${
+      isObjectPropertyDescriptor(value) && 'get' in value
+        ? `ReturnType<typeof globals.${key}.get>`
+        : `typeof globals.${key}`
+    },`;
+  })
   .join('\n  ')}
 ${extensionsWithGlobals
   .map((extension) =>
     Object.keys(extension.globals)
       .map((key) => {
         const globalsVar = `${camelcaseText(extension.name)}Globals`;
+        const value = (extension.globals as any)[key];
 
         return `  ${key}: ${
-          (extension.globals as any)[key].get
+          isObjectPropertyDescriptor(value) && 'get' in value
             ? `ReturnType<typeof ${globalsVar}.${key}.get>`
-            : `typeof ${globalsVar}.${key}.value`
+            : `typeof ${globalsVar}.${key}`
         },`;
       })
       .join('\n'),
@@ -329,11 +334,18 @@ ${extensionsWithGlobals
     this.historyFile.clear();
   }
 
-  registerGlobals(globals: SolPropertyDescriptorMap) {
+  registerGlobals(globals: Record<string, any>) {
     const globalGeneric = global as any;
 
-    this.registerProperties(globalGeneric, globals);
+    registerObjectProperties(globalGeneric, globals);
     Object.assign(this.globals, globals);
+  }
+
+  registerProperties(
+    target: object,
+    properties: Record<string, any> | (PropertyDescriptorMap & ThisType<any>),
+  ) {
+    registerObjectProperties(target, properties);
   }
 
   registerDefaultExtensions() {
@@ -430,21 +442,6 @@ ${extensionsWithGlobals
     } catch (e) {
       log('Failed to load workspace setup file.', e);
     }
-  }
-
-  registerProperties(
-    target: object,
-    descriptors: SolPropertyDescriptorMap & ThisType<any>,
-  ) {
-    Object.keys(descriptors).forEach(function (propertyName) {
-      const descriptor = descriptors[propertyName];
-
-      Object.defineProperty(target, propertyName, {
-        ...descriptor,
-        enumerable: false,
-        configurable: true,
-      });
-    });
   }
 }
 

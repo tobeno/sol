@@ -1,10 +1,10 @@
 import { Directory } from './storage/directory';
 import { sol } from './sol';
-import { SolPropertyDescriptorMap } from './interfaces/properties';
 import { log } from './log';
+import { registerObjectProperties } from './utils/object';
 
 export class Extension {
-  globals: SolPropertyDescriptorMap = {};
+  globals: Record<string, any> = {};
   loaded = false;
 
   constructor(public name: string, public dir: Directory) {}
@@ -53,12 +53,12 @@ extension.registerGlobals(globals);
 `.trimStart();
   }
 
-  generateGlobalsFile() {
+  generateGlobalsFile(recreate = false) {
     const extensionDir = this.dir;
     const extensionGlobalsFile = this.globalsFile;
-    if (extensionGlobalsFile.exists) {
+    if (extensionGlobalsFile.exists && !recreate) {
       throw new Error(
-        `Extension in ${extensionDir.path} already contains a setup.ts file`,
+        `Extension in ${extensionDir.path} already contains a globals.ts file`,
       );
     }
 
@@ -70,15 +70,16 @@ extension.registerGlobals(globals);
 * Global variables declarations for workspace
 */
 
+import { withHelp } from './${sol.runtimeDir.relativePathFrom(
+      extensionGlobalsFile.dir,
+    )}/utils/metadata';
+
 export const globals = {
-   workspace: {
-    help: 'Workspace utilities',
-    value: {
+   workspace: withHelp({
       example() {
         console.log('Hello!');
       },
-    },
-  },
+    }, 'Workspace utilities'),
 };
 
 export type Globals = typeof globals;
@@ -112,17 +113,17 @@ export type Globals = typeof globals;
     this.loaded = true;
   }
 
-  registerGlobals(globals: SolPropertyDescriptorMap) {
+  registerGlobals(globals: Record<string, any>) {
     const globalGeneric = global as any;
 
-    this.registerProperties(globalGeneric, globals);
+    registerObjectProperties(globalGeneric, globals);
     Object.assign(this.globals, globals);
   }
 
   registerProperties(
     target: object,
-    properties: SolPropertyDescriptorMap & ThisType<any>,
+    properties: Record<string, any> | (PropertyDescriptorMap & ThisType<any>),
   ) {
-    sol.registerProperties(target, properties);
+    registerObjectProperties(target, properties);
   }
 }

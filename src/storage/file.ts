@@ -6,15 +6,15 @@ import { Directory } from './directory';
 import { ItemCollection } from './item-collection';
 import { play, replay, setupPlay, unwatchPlay } from '../play';
 import {
-  jsonToData,
-  yamlToData,
+  astToCode,
+  codeToAst,
   csvToData,
-  wrapString,
+  dataToCsv,
   dataToJson,
   dataToYaml,
-  dataToCsv,
-  codeToAst,
-  astToCode,
+  jsonToData,
+  wrapString,
+  yamlToData,
 } from '../data/transformer';
 import { Text } from '../data/text';
 import { Data } from '../data/data';
