@@ -79,6 +79,7 @@ export const globals = {
     'Transforms data between data types using transformations',
   ),
   unwatchPlay,
+  withHelp,
   web: withHelp(web, 'Utilities for internet access'),
   xml: withHelp(wrapXml, 'Converts XML to Data'),
   yaml: withHelp(yamlToData, 'Converts YAML to Data'),
