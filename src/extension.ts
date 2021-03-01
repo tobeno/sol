@@ -107,7 +107,7 @@ export type Globals = typeof globals;
     try {
       require(this.setupFile.pathWithoutExt);
     } catch (e) {
-      log(`Failed to load extension '${this.name}'.`);
+      log(`Failed to load extension '${this.name}'.`, e);
     }
 
     this.loaded = true;
