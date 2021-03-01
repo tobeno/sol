@@ -31,6 +31,7 @@ export class Extension {
     extensionSetupFile.create();
 
     extensionSetupFile.text = `
+// @ts-nocheck
 /* eslint-disable */
 /**
 * Setup file for workspace extension
@@ -65,6 +66,7 @@ extension.registerGlobals(globals);
     extensionGlobalsFile.create();
 
     extensionGlobalsFile.text = `
+// @ts-nocheck
 /* eslint-disable */
 /**
 * Global variables declarations for workspace
