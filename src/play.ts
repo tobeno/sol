@@ -32,10 +32,19 @@ export function play(path?: string) {
     let running = false;
 
     setTimeout(() => {
+      let prevText: string | null = null;
+
       const unwatch = playFile.watch((event) => {
         if (event === 'change') {
           let result = undefined;
           try {
+            const text = playFile.text.value;
+            if (text === prevText) {
+              return;
+            }
+
+            prevText = text;
+
             if (running) {
               return;
             }
