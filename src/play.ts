@@ -29,34 +29,40 @@ export function play(path?: string) {
   edit(playFile.path);
 
   if (!playWatchers[playId]) {
-    let timeout: NodeJS.Timeout | null = null;
-    const unwatch = playFile.watch((event) => {
-      if (event === 'change') {
-        if (timeout) {
-          clearTimeout(timeout);
-          timeout = null;
-        }
+    let running = false;
 
-        // Delay to avoid double execution
-        timeout = setTimeout(() => {
-          timeout = null;
-          const result = runPlay(playId, playFile);
+    setTimeout(() => {
+      const unwatch = playFile.watch((event) => {
+        if (event === 'change') {
+          let result = undefined;
+          try {
+            if (running) {
+              return;
+            }
+
+            console.log(`Running play ${playId}...`);
+
+            running = true;
+            result = runPlay(playId, playFile);
+          } finally {
+            running = false;
+          }
 
           if (typeof result !== 'undefined') {
             console.log(result);
             sol.server?.displayPrompt();
           }
-        }, 50);
-      } else if (event === 'rename') {
-        if (!playFile.exists) {
-          unwatchPlay(playId);
+        } else if (event === 'rename') {
+          if (!playFile.exists) {
+            unwatchPlay(playId);
+          }
         }
-      }
-    });
+      });
 
-    playWatchers[playId] = unwatch;
+      playWatchers[playId] = unwatch;
 
-    console.log(`Watching ${playId}...`);
+      console.log(`Watching ${playId}...`);
+    }, 1000);
   }
 
   return playFile;
