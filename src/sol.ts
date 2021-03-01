@@ -178,6 +178,7 @@ export class Sol {
     workspaceSetupFile.create();
 
     workspaceSetupFile.text = `
+// @ts-nocheck
 /* eslint-disable */
 /**
 * Setup file for workspace
@@ -233,6 +234,7 @@ ${
     );
 
     playContextFile.text = `
+// @ts-nocheck
 /* eslint-disable */
 import './${workspaceContextFile.dir.relativePathFrom(playContextFile.dir)}/${
       workspaceContextFile.name
@@ -240,6 +242,7 @@ import './${workspaceContextFile.dir.relativePathFrom(playContextFile.dir)}/${
 `.trimStart();
 
     workspaceContextFile.text = `
+// @ts-nocheck
 /* eslint-disable */
 import { globals } from './${packageDistDir.relativePathFrom(
       workspaceContextFile.dir,

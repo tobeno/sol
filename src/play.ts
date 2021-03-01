@@ -69,6 +69,9 @@ export function setupPlay(path: string) {
 
   if (!playFile.size) {
     playFile.text = `
+// @ts-nocheck
+/* eslint-disable */
+
 import './${sol.playContextFile.dir.relativePathFrom(playFile.dir)}/${
       sol.playContextFile.basenameWithoutExt
     }';
