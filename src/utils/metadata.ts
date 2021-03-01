@@ -2,10 +2,7 @@ export interface SolMetadata {
   help?: string;
 }
 
-export function withSolMetadata<T>(
-  target: T,
-  meta: SolMetadata,
-): T & SolMetadata {
+export function withSolMetadata<T>(target: T, meta: SolMetadata): T {
   if (typeof (target as any).__solMeta__ === 'undefined') {
     Object.defineProperty(target, '__solMeta__', {
       enumerable: false,
@@ -19,7 +16,7 @@ export function withSolMetadata<T>(
   return target;
 }
 
-export function withHelp<T>(target: T, help: string): T & SolMetadata {
+export function withHelp<T>(target: T, help: string): T {
   return withSolMetadata(target, {
     help,
   });
