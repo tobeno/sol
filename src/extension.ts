@@ -57,6 +57,7 @@ extension.registerGlobals(globals);
   generateGlobalsFile(recreate = false) {
     const extensionDir = this.dir;
     const extensionGlobalsFile = this.globalsFile;
+    const workspaceContextFile = sol.workspaceContextFile;
     if (extensionGlobalsFile.exists && !recreate) {
       throw new Error(
         `Extension in ${extensionDir.path} already contains a globals.ts file`,
@@ -72,9 +73,9 @@ extension.registerGlobals(globals);
 * Global variables declarations for workspace
 */
 
-import { withHelp } from './${sol.runtimeDir.relativePathFrom(
+import './${workspaceContextFile.dir.relativePathFrom(
       extensionGlobalsFile.dir,
-    )}/utils/metadata';
+    )}/${workspaceContextFile.basenameWithoutExt}';
 
 export const globals = {
    workspace: withHelp({
