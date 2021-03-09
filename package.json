@@ -44,7 +44,7 @@
     "yaml": "^1.10.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
+    "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.1",
     "@types/babel__traverse": "^7.11.0",
