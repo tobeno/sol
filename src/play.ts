@@ -6,8 +6,17 @@ import { rerequire } from './utils/module';
 
 const playWatchers: Record<string, () => void> = {};
 
-function runPlay(playId: string, playFile: File) {
+export interface PlayFile {
+  play(): void;
+  replay(): void;
+}
+
+function runPlay(playFile: File) {
   let result = rerequire(playFile.path);
+
+  if (typeof result.default !== 'undefined') {
+    result = result.default;
+  }
 
   if (result && typeof result === 'object') {
     if (result.constructor === Object) {
@@ -52,7 +61,7 @@ export function play(path?: string) {
             console.log(`Running play ${playId}...`);
 
             running = true;
-            result = runPlay(playId, playFile);
+            result = runPlay(playFile);
           } finally {
             running = false;
           }
@@ -77,6 +86,20 @@ export function play(path?: string) {
   return playFile;
 }
 
+export function listPlays() {
+  return [...sol.playDir.files()].reduce(
+    (result: Record<string, PlayFile>, file) => {
+      result[file.basenameWithoutExt] = {
+        play: () => play(file.path),
+        replay: () => replay(file.path),
+      };
+
+      return result;
+    },
+    {},
+  );
+}
+
 export function setupPlay(path: string) {
   const playFile = sol.playFile(path);
 
@@ -91,6 +114,7 @@ import './${sol.playContextFile.dir.relativePathFrom(playFile.dir)}/${
       sol.playContextFile.basenameWithoutExt
     }';
 
+export default null;
 `.trimStart();
   }
 }
@@ -109,11 +133,10 @@ export function unwatchPlay(path: string) {
 
 export function replay(path: string) {
   const playFile = sol.playFile(path);
-  const playId = playFile.path;
 
   if (!playFile.exists) {
     throw new Error(`No play found for '${path}'`);
   }
 
-  return runPlay(playId, playFile);
+  return runPlay(playFile);
 }

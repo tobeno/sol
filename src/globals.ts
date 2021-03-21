@@ -26,7 +26,7 @@ import { cwd } from './shell/fn';
 import { log } from './utils/log';
 import { sol } from './sol';
 import { edit } from './integrations/editor';
-import { play, replay, unwatchPlay } from './play';
+import { listPlays, play, replay, unwatchPlay } from './play';
 import * as shell from './shell/shelljs';
 import {
   csvToData,
@@ -70,6 +70,14 @@ export const globals = {
   pipe: withHelp(R.pipe, 'Pipe helper from Remeda'),
   play: withHelp(play, 'Opens a given play file for interactive editing'),
   replay,
+  plays: withHelp(
+    {
+      get() {
+        return listPlays();
+      },
+    },
+    'List available play files',
+  ),
   shared: withHelp({}, 'Variables shared between play scripts and the shell'),
   shell: withHelp(shell, 'Shell utilities'),
   sol: withHelp(sol, 'Current Sol instance'),
