@@ -2,6 +2,7 @@ import * as jsonata from 'jsonata';
 import { JSDOM } from 'jsdom';
 import * as chalk from 'chalk';
 import * as R from 'remeda';
+import * as changeCase from 'change-case';
 import { grep } from './storage/search';
 import { file, File } from './storage/file';
 import { dir, Directory } from './storage/directory';
@@ -51,6 +52,10 @@ export const globals = {
     'Waits for the given promise before continuing',
   ),
   chalk: withHelp(chalk, 'See https://github.com/chalk/chalk#readme'),
+  changeCase: withHelp(
+    changeCase,
+    'See https://github.com/blakeembrey/change-case',
+  ),
   clipboard: withHelp(clipboard, 'Exposes the system clipboard'),
   csv: withHelp(csvToData, 'Converts CSV to Data'),
   cwd: withHelp(cwd, 'Returns the current working directory'),
