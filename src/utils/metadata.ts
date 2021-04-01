@@ -3,6 +3,10 @@ export interface SolMetadata {
 }
 
 export function withSolMetadata<T>(target: T, meta: SolMetadata): T {
+  if (!target) {
+    return target;
+  }
+
   if (typeof (target as any).__solMeta__ === 'undefined') {
     Object.defineProperty(target, '__solMeta__', {
       enumerable: false,
