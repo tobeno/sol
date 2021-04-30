@@ -23,7 +23,7 @@
   "dependencies": {
     "@babel/parser": "^7.12.11",
     "@babel/traverse": "^7.12.12",
-    "@babel/types": "^7.12.12",
+    "@babel/types": "^7.14.0",
     "@types/node-fetch": "^2.5.8",
     "axios": "^0.21.1",
     "chalk": "^4.1.0",
