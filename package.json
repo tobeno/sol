@@ -21,7 +21,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/parser": "^7.12.11",
+    "@babel/parser": "^7.14.9",
     "@babel/traverse": "^7.12.12",
     "@babel/types": "^7.12.12",
     "@types/node-fetch": "^2.5.8",
