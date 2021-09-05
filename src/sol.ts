@@ -346,7 +346,9 @@ ${extensionsWithGlobals
 
   registerProperties(
     target: object,
-    properties: Record<string, any> | (PropertyDescriptorMap & ThisType<any>),
+    properties:
+      | Record<string | symbol, any>
+      | (PropertyDescriptorMap & ThisType<any>),
   ) {
     registerObjectProperties(target, properties);
   }
