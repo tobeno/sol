@@ -1,60 +1,9 @@
-import { globals } from './globals';
-import { awaitSync } from './utils/async';
-import { sol } from './sol';
-import { inspect } from 'util';
-import { dataToCsv, dataToJson, dataToYaml } from './data/transformer';
-
-sol.registerGlobals(globals);
-
-sol.registerProperties(Array.prototype, {
-  csv: {
-    get() {
-      return dataToCsv(this);
-    },
-  },
-  json: {
-    get() {
-      return dataToJson(this);
-    },
-  },
-  yaml: {
-    get() {
-      return dataToYaml(this);
-    },
-  },
-  copy: {
-    get() {
-      return this.json.copy();
-    },
-  },
-  print: {
-    get() {
-      return this.json.print();
-    },
-  },
-  unique: {
-    get() {
-      return [...new Set(this)];
-    },
-  },
-});
-
-sol.registerProperties(Promise.prototype, {
-  await: {
-    get() {
-      return awaitSync(this);
-    },
-  },
-  toString() {
-    return String(this.await);
-  },
-  [inspect.custom]() {
-    const value = this.await;
-
-    if (value[inspect.custom]) {
-      return value[inspect.custom]();
-    }
-
-    return String(value);
-  },
-});
+import './modules/os/setup';
+import './modules/integrations/setup';
+import './modules/storage/setup';
+import './modules/web/setup';
+import './modules/data/setup';
+import './modules/play/setup';
+import './modules/utils/setup';
+import './modules/globals/setup';
+import './modules/sol/setup';

@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": "https://www.github.com/tobeno/sol",
   "main": "dist/index.js",
-  "module": "src/index.ts",
+  "module": "src/modules/utils/mutation.ts",
   "bin": {
     "sol": "./bin/sol.js"
   },
@@ -20,7 +20,8 @@
     "lint-staged": "lint-staged",
     "sol": "node --experimental-repl-await ./bin/sol.js",
     "format": "prettier --write \"src/**/*.ts\" \"*.{js,ts,json,yml,yaml}\"",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@babel/parser": "^7.15.5",

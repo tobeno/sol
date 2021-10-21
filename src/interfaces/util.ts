@@ -1,6 +1,8 @@
-export interface Constructor<T extends object = {}> {
-  new (...args: any[]): T;
-}
+export type AbstractConstructor<T extends object = {}> = abstract new (
+  ...args: any[]
+) => T;
+
+export type Constructor<T extends object = {}> = new (...args: any[]) => T;
 
 export type ArrayItemType<T extends Array<any>> = T extends (infer U)[]
   ? U

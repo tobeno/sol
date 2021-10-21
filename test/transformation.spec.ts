@@ -1,8 +1,8 @@
 import * as tmp from 'tmp';
-import { file } from '../src/storage/file';
+import { file } from '../src/modules/storage/file';
 
 import { readFileSync } from 'fs';
-import { wrapObject, wrapString } from '../src/data/transformer';
+import { wrapObject, wrapString } from '../src/modules/data/transformer';
 
 interface ProductVariant {
   id: string;
