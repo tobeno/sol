@@ -1,12 +1,12 @@
-import { readSync, writeSync } from 'clipboardy';
+import clipboardy from 'clipboardy';
 
 export class Clipboard {
   get value(): string {
-    return readSync();
+    return clipboardy.readSync();
   }
 
   set value(value: any) {
-    writeSync(value);
+    clipboardy.writeSync(value);
   }
 
   log() {
