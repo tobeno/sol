@@ -7,6 +7,7 @@ import { awaitSync } from '../utils/async';
 import { Data } from '../data/data';
 import { Text } from '../data/text';
 import { wrapString } from '../data/transformer';
+import { log } from '../utils/log';
 
 export class GenericItemCollection<ItemType extends Item> extends Data<
   ItemType[]
@@ -126,7 +127,7 @@ export class GenericItemCollection<ItemType extends Item> extends Data<
   }
 
   print(): void {
-    console.log(this.toString());
+    log(this.toString());
   }
 
   get length(): number {

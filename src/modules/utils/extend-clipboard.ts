@@ -1,19 +1,19 @@
 import { definePropertiesMutation, mutateClass } from './mutation';
-import { Data } from '../data/data';
+import { Clipboard } from '../os/clipboard';
 import { log } from './log';
 
-declare module '../data/data' {
-  interface Data {
+declare module '../os/clipboard' {
+  interface Clipboard {
     log(): void;
   }
 }
 
 mutateClass(
-  Data,
+  Clipboard,
   definePropertiesMutation({
     log: {
       value(): void {
-        log(String(this));
+        return log(this.text);
       },
     },
   }),

@@ -1,4 +1,4 @@
-import clipboardy from 'clipboardy';
+import * as clipboardy from 'clipboardy';
 
 export class Clipboard {
   get value(): string {
@@ -7,10 +7,6 @@ export class Clipboard {
 
   set value(value: any) {
     clipboardy.writeSync(value);
-  }
-
-  log() {
-    console.log(String(this));
   }
 }
 

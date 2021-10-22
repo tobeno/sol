@@ -23,12 +23,12 @@ import * as objectUtils from '../utils/object';
 import * as textUtils from '../utils/text';
 import * as metadataUtils from '../utils/metadata';
 import { withHelp } from '../utils/metadata';
-import { cwd } from '../shell/env';
+import { getCwd } from '../utils/env';
 import { log } from '../utils/log';
 import { sol } from '../sol/sol';
 import { edit } from '../integrations/editor';
 import { listPlays, play, replay, unwatchPlay } from '../play/play';
-import * as shell from '../shell/shelljs';
+import * as shell from '../utils/shelljs';
 import {
   csvToData,
   jsonToData,
@@ -90,7 +90,9 @@ export const globals = {
   ),
   cwd: withHelp(
     {
-      value: cwd,
+      get() {
+        return getCwd();
+      },
     },
     'Returns the current working directory',
   ),

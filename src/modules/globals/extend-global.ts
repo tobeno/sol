@@ -4,7 +4,7 @@ import { FromPropertyDescriptorMap } from '../../interfaces/object';
 
 declare global {
   namespace NodeJS {
-    type Globals = FromPropertyDescriptorMap<typeof globals>;
+    type Global = FromPropertyDescriptorMap<typeof globals>;
   }
 }
 

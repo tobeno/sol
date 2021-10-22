@@ -6,6 +6,7 @@ import { Directory } from './directory';
 import { ItemCollection } from './item-collection';
 import { wrapString } from '../data/transformer';
 import { Text } from '../data/text';
+import { log } from '../utils/log';
 
 export class File<ContentType = any> extends Item {
   constructor(path: string) {
@@ -205,7 +206,7 @@ export class File<ContentType = any> extends Item {
   }
 
   print() {
-    console.log(String(this));
+    log(String(this));
   }
 }
 

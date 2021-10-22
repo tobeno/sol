@@ -1,5 +1,21 @@
 import { withHelp } from './metadata';
 
+export function lines(str: string): string[] {
+  return str.replace(/\r/g, '').trimEnd().split('\n');
+}
+
+export function mapLines(str: string, cb: (line: string) => any) {
+  return lines(str).map(cb).join('\n') + '\n';
+}
+
+export function sortLines(str: string): string {
+  return lines(str).sort().join('\n') + '\n';
+}
+
+export function rsortLines(str: string): string {
+  return lines(str).sort().reverse().join('\n') + '\n';
+}
+
 export const filterLines = withHelp(
   (
     str: string,
@@ -16,14 +32,14 @@ export const filterLines = withHelp(
   'Removes lines using a filter function',
 );
 
-export const rfilterLines = (
+export function rfilterLines(
   str: string,
   cb: (line: string) => boolean,
-): string => {
+): string {
   return filterLines(str, (line: string) => !cb(line));
-};
+}
 
-export const grepLines = (str: string, search: string | RegExp): string => {
+export function grepLines(str: string, search: string | RegExp): string {
   return filterLines(str, (line: string) => {
     if (search instanceof RegExp) {
       return search.test(line);
@@ -31,9 +47,9 @@ export const grepLines = (str: string, search: string | RegExp): string => {
 
     return line.includes(search);
   });
-};
+}
 
-export const rgrepLines = (str: string, search: string | RegExp): string => {
+export function rgrepLines(str: string, search: string | RegExp): string {
   return filterLines(str, (line: string) => {
     if (search instanceof RegExp) {
       return !search.test(line);
@@ -41,37 +57,21 @@ export const rgrepLines = (str: string, search: string | RegExp): string => {
 
     return !line.includes(search);
   });
-};
+}
 
-export const lines = (str: string): string[] => {
-  return str.replace(/\r/g, '').trimEnd().split('\n');
-};
-
-export const sortLines = (str: string): string => {
-  return lines(str).sort().join('\n') + '\n';
-};
-
-export const rsortLines = (str: string): string => {
-  return lines(str).sort().reverse().join('\n') + '\n';
-};
-
-export const replaceLines = (
+export function replaceLines(
   str: string,
   pattern: string | RegExp,
   replacer: any,
-) => {
+) {
   return (
     lines(str)
       .map((line) => line.replace(pattern, replacer))
       .join('\n') + '\n'
   );
-};
+}
 
-export const mapLines = (str: string, cb: (line: string) => any) => {
-  return lines(str).map(cb).join('\n') + '\n';
-};
-
-export const extractText = (str: string, pattern: RegExp | string) => {
+export function extractText(str: string, pattern: RegExp | string) {
   if (typeof pattern === 'string') {
     pattern = new RegExp(pattern, 'g');
   } else if (!pattern.global) {
@@ -79,7 +79,7 @@ export const extractText = (str: string, pattern: RegExp | string) => {
   }
 
   return [...new Set(str.match(pattern) || [])].sort();
-};
+}
 
 export function camelcaseText(
   key: string,

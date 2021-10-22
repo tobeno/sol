@@ -38,8 +38,6 @@ mutateClass(
 
     json: {
       get(): Data {
-        console.log('X');
-
         return jsonToData(this.text);
       },
     },

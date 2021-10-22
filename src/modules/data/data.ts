@@ -54,7 +54,7 @@ export class Data<
 
   get unique(): Data<AnyPartial<ValueType>> {
     if (Array.isArray(this.value)) {
-      return wrapObject([...new Set(this.value)] as any, this) as any;
+      return wrapObject(this.value.unique, this) as any;
     }
 
     const knownValues: any[] = [];

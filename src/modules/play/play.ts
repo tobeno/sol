@@ -1,13 +1,17 @@
 import { sol } from '../sol/sol';
 import { edit } from '../integrations/editor';
 import { wrapObject } from '../data/transformer';
-import { File } from '../storage/file';
+import { file, File } from '../storage/file';
 import { rerequire } from '../utils/module';
+import { Directory } from '../storage/directory';
+import { getReplServer } from '../sol/repl';
+import { log } from '../utils/log';
 
 const playWatchers: Record<string, () => void> = {};
 
 export interface PlayFile {
   play(): void;
+
   replay(): void;
 }
 
@@ -29,8 +33,29 @@ function runPlay(playFile: File) {
   return result;
 }
 
+export function getPlayDir(): Directory {
+  return sol.workspace.dir.dir('play');
+}
+
+export function getPlayFile(path?: string) {
+  path = path || `play-${new Date().toISOString().replace(/[^0-9]/g, '')}`;
+
+  if (!path.endsWith('.ts')) {
+    path += '.ts';
+  }
+
+  let playFile;
+  if (!path.includes('/')) {
+    playFile = getPlayDir().file(path);
+  } else {
+    playFile = file(path);
+  }
+
+  return playFile;
+}
+
 export function play(path?: string) {
-  const playFile = sol.playFile(path);
+  const playFile = getPlayFile(path);
   const playId = playFile.path;
 
   setupPlay(playFile.path);
@@ -58,7 +83,7 @@ export function play(path?: string) {
               return;
             }
 
-            console.log(`Running play ${playId}...`);
+            log(`Running play ${playId}...`);
 
             running = true;
             result = runPlay(playFile);
@@ -67,8 +92,8 @@ export function play(path?: string) {
           }
 
           if (typeof result !== 'undefined') {
-            console.log(result);
-            sol.server?.displayPrompt();
+            log(result);
+            getReplServer().displayPrompt();
           }
         } else if (event === 'rename') {
           if (!playFile.exists) {
@@ -79,7 +104,7 @@ export function play(path?: string) {
 
       playWatchers[playId] = unwatch;
 
-      console.log(`Watching ${playId}...`);
+      log(`Watching ${playId}...`);
     }, 1000);
   }
 
@@ -87,7 +112,7 @@ export function play(path?: string) {
 }
 
 export function listPlays() {
-  return [...sol.playDir.files()].reduce(
+  return [...getPlayDir().files()].reduce(
     (result: Record<string, PlayFile>, file) => {
       result[file.basenameWithoutExt] = {
         play: () => play(file.path),
@@ -101,7 +126,7 @@ export function listPlays() {
 }
 
 export function setupPlay(path: string) {
-  const playFile = sol.playFile(path);
+  const playFile = getPlayFile(path);
 
   playFile.create();
 
@@ -110,8 +135,8 @@ export function setupPlay(path: string) {
 // @ts-nocheck
 /* eslint-disable */
 
-import './${sol.playContextFile.dir.relativePathFrom(playFile.dir)}/${
-      sol.playContextFile.basenameWithoutExt
+import './${sol.workspace.contextFile.dir.relativePathFrom(playFile.dir)}/${
+      sol.workspace.contextFile.basenameWithoutExt
     }';
 
 export default null;
@@ -120,19 +145,19 @@ export default null;
 }
 
 export function unwatchPlay(path: string) {
-  const playFile = sol.playFile(path);
+  const playFile = getPlayFile(path);
   const playId = playFile.path;
 
   if (playWatchers[playId]) {
     playWatchers[playId]();
     delete playWatchers[playId];
 
-    console.log(`Stopped watching ${playId}`);
+    log(`Stopped watching ${playId}`);
   }
 }
 
 export function replay(path: string) {
-  const playFile = sol.playFile(path);
+  const playFile = getPlayFile(path);
 
   if (!playFile.exists) {
     throw new Error(`No play found for '${path}'`);

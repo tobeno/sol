@@ -1,9 +1,0 @@
-import './modules/os/setup';
-import './modules/integrations/setup';
-import './modules/storage/setup';
-import './modules/web/setup';
-import './modules/data/setup';
-import './modules/play/setup';
-import './modules/utils/setup';
-import './modules/globals/setup';
-import './modules/sol/setup';
