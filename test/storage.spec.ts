@@ -1,4 +1,4 @@
-import { grep } from '../src/storage/search';
+import { grep } from '../src/modules/storage/search';
 
 describe('storage', () => {
   describe('search', () => {

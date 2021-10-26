@@ -6,6 +6,6 @@ require('ts-node').register({
   transpileOnly: true,
 });
 
-const { startSolServer } = require('../dist/src/repl');
+const { startSol } = require('../dist/src/index');
 
-startSolServer();
+startSol();

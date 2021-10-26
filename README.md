@@ -155,7 +155,6 @@ Sol looks for extensions in the following locations:
 
 - Workspace: _./.sol/extensions/_
 - Home: _~/.sol/extensions/_
-- Package: _sol/dist/extensions/_ (integrated extensions)
 
 To load an extension, just add a `sol.loadExtension('your-extension')` call to your setup file.
 
