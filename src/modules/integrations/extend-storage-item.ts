@@ -5,7 +5,7 @@ import { Item } from '../storage/item';
 
 declare module '../storage/item' {
   interface Item {
-    edit(): void;
+    edit(): Item;
   }
 }
 
@@ -13,11 +13,13 @@ mutateClass(
   Item,
   definePropertiesMutation({
     edit: {
-      value(): void {
+      value(): Item {
         spawnSync(`${editor} '${this.path}'`, {
           cwd: process.cwd(),
           shell: true,
         });
+
+        return this;
       },
     },
   }),

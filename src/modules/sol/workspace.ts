@@ -1,6 +1,8 @@
 import { dir, Directory } from '../storage/directory';
 import { File } from '../storage/file';
 import { globals } from '../globals/globals';
+import { loadedExtensions } from './extension';
+import { logDebug, logError } from '../utils/log';
 
 export class Workspace {
   readonly dir: Directory;
@@ -23,6 +25,10 @@ export class Workspace {
     return this.generatedDir.file('context.ts');
   }
 
+  get setupFile(): File {
+    return this.dir.file('setup.ts');
+  }
+
   reload() {
     const workspaceDir = this.dir;
 
@@ -36,7 +42,41 @@ export class Workspace {
     this.load();
   }
 
-  load() {
+  updateContextFile(): void {
+    const contextFile = this.contextFile;
+    contextFile.create();
+    contextFile.text = `
+import { Globals } from '${this.packageDistDir.relativePathFrom(
+      this.generatedDir,
+    )}/modules/globals/globals';
+${loadedExtensions
+  .map((extension, index) =>
+    `
+import { Globals as GlobalsFromExtension${index} } from '${extension.globalsFile.dir.relativePathFrom(
+      this.generatedDir,
+    )}/${extension.globalsFile.basenameWithoutExt}';`.trimStart(),
+  )
+  .join('\n')}
+
+declare global {
+${Object.keys(globals)
+  .map((key) => `  const ${key}: Globals['${key}'];`)
+  .join('\n')}
+  
+${loadedExtensions
+  .map(
+    (extension, index) =>
+      `  // Extension: ${extension.name} (${extension.dir.path})
+${Object.keys(extension.globals)
+  .map((key) => `  const ${key}: GlobalsFromExtension${index}['${key}'];`)
+  .join('\n')}`,
+  )
+  .join('\n\n')}
+}
+`.trimStart();
+  }
+
+  prepare(force = false): void {
     const workspaceDir = this.dir;
     workspaceDir.create();
 
@@ -45,18 +85,38 @@ export class Workspace {
       gitignoreFile.text = '*';
     }
 
-    const contextFile = this.contextFile;
-    contextFile.create();
-    contextFile.text = `
-import { Globals } from '${this.packageDistDir.relativePathFrom(
-      this.generatedDir,
-    )}/modules/globals/globals';
+    this.updateContextFile();
 
-declare global {
-${Object.keys(globals)
-  .map((key) => `  const ${key}: Globals['${key}'];`)
-  .join('\n')}
-}
+    const setupFile = this.setupFile;
+    if (!setupFile.exists || force) {
+      setupFile.create();
+      setupFile.text = `
+import './${this.contextFile.dir.relativePathFrom(this.dir)}/${
+        this.contextFile.basenameWithoutExt
+      }';
+import { logDebug } from '${this.packageDistDir.relativePathFrom(
+        this.dir,
+      )}/modules/utils/log';
+      
+// ToDo: Register your first extension
+// extension('your-extension', __dirname).load();
+
+logDebug('Loaded ' + __filename);
 `.trimStart();
+    }
+  }
+
+  load() {
+    logDebug(`Loading workspace at ${this.dir.path}...`);
+
+    this.prepare();
+
+    try {
+      require(this.setupFile.path);
+    } catch (e) {
+      logError(e);
+    }
+
+    logDebug(`Loaded workspace at ${this.dir.path}`);
   }
 }

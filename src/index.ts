@@ -4,6 +4,10 @@ import { spawnSync } from 'child_process';
  * Setup Sol modules
  */
 export function setupSol(): void {
+  const { logDebug } = require('./modules/utils/log');
+
+  logDebug('Loading Sol...');
+
   require('./modules/data/setup');
   require('./modules/globals/setup');
   require('./modules/integrations/setup');
@@ -17,6 +21,8 @@ export function setupSol(): void {
   const { sol } = require('./modules/sol/sol');
 
   sol.load();
+
+  logDebug('Loaded Sol');
 }
 
 /**
@@ -35,10 +41,20 @@ export function rebuildSol(): void {
  * Unloads Sol modules
  */
 export function unsetupSol(): void {
-  const { unmutateClass, unmutateObject } = require('./modules/utils/mutation');
+  const { logDebug } = require('./modules/utils/log');
+  const {
+    unmutateClass,
+    unmutateGlobals,
+  } = require('./modules/utils/mutation');
   const { clearRequireCache } = require('./modules/utils/module');
+  const { loadedExtensions } = require('./modules/sol/extension');
+  const { unwatchPlays } = require('./modules/play/play');
 
-  unmutateObject(global);
+  logDebug('Unloading Sol...');
+
+  unwatchPlays();
+
+  unmutateGlobals(global);
   unmutateClass(Array);
   unmutateClass(String);
   unmutateClass(Number);
@@ -48,11 +64,26 @@ export function unsetupSol(): void {
   unmutateClass(Promise);
 
   const { sol } = require('./modules/sol/sol');
-  const { packageDistDir } = sol;
-  const modules = packageDistDir
-    .files('**/*.js')
-    .map((f: any) => f.pathWithoutExt);
+  const modules = [
+    ...sol.packageDistDir
+      .files('**/*.js')
+      .value.map((f: any) => f.pathWithoutExt),
+    ...sol.workspace.dir
+      .files('**/*.{ts,js}')
+      .value.map((f: any) => f.pathWithoutExt),
+    ...sol.userWorkspace.dir
+      .files('**/*.{ts,js}')
+      .value.map((f: any) => f.pathWithoutExt),
+    ...loadedExtensions.flatMap((extension: any) =>
+      extension.dir
+        .files('**/*.{ts,js}')
+        .value.map((f: any) => f.pathWithoutExt),
+    ),
+  ];
+
   modules.forEach(clearRequireCache);
+
+  logDebug('Unloaded Sol');
 }
 
 /**

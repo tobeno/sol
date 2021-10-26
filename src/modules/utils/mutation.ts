@@ -6,7 +6,7 @@ export abstract class Mutation<TargetType> {
   abstract unmutate(target: TargetType): void;
 }
 
-class DefinePropertiesMutation<TargetType> extends Mutation<TargetType> {
+export class DefinePropertiesMutation<TargetType> extends Mutation<TargetType> {
   constructor(public properties: PropertyDescriptorMap & ThisType<TargetType>) {
     super();
   }
@@ -26,7 +26,7 @@ export const MutationsSymbol = Symbol('mutations');
 
 export function definePropertiesMutation<TargetType>(
   properties: PropertyDescriptorMap & ThisType<TargetType>,
-): Mutation<TargetType> {
+): DefinePropertiesMutation<TargetType> {
   return new DefinePropertiesMutation<TargetType>(
     Object.entries(properties).reduce((result, [name, config]) => {
       result[name] = {
@@ -111,6 +111,16 @@ export function unmutateObject<TargetType>(
 
     mutations.splice(mutationIndex, 1);
   }
+}
+
+export function mutateGlobals(mutation: Mutation<typeof global>): void {
+  mutateObject(global, mutation);
+}
+
+export function unmutateGlobals(
+  mutation: Mutation<typeof global> | null = null,
+): void {
+  unmutateObject(global, mutation);
 }
 
 export function mutateFunction<FunctionType extends Function>(

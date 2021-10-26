@@ -44,6 +44,12 @@ import { DataType } from '../data/data-type';
 import { DataFormat } from '../data/data-format';
 import { DataTransformation } from '../data/data-transformation';
 import { FromPropertyDescriptorMap } from '../../interfaces/object';
+import {
+  extension,
+  loadedExtensions,
+  userExtension,
+  workspaceExtension,
+} from '../sol/extension';
 
 export const globals = {
   ast: withHelp(
@@ -197,6 +203,27 @@ export const globals = {
     },
     'List available play files',
   ),
+  extension: withHelp(
+    {
+      value: extension,
+    },
+    'Returns the extension for the given name or path',
+  ),
+  workspaceExtension: withHelp(
+    {
+      value: workspaceExtension,
+    },
+    'Returns the workspace extension for the given name',
+  ),
+  userExtension: withHelp(
+    {
+      value: userExtension,
+    },
+    'Returns the user extension for the given name',
+  ),
+  loadedExtensions: {
+    value: loadedExtensions,
+  },
   shared: withHelp(
     {
       value: {},

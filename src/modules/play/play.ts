@@ -156,6 +156,12 @@ export function unwatchPlay(path: string) {
   }
 }
 
+export function unwatchPlays() {
+  Object.keys(playWatchers).forEach((playId) => {
+    unwatchPlay(playId);
+  });
+}
+
 export function replay(path: string) {
   const playFile = getPlayFile(path);
 
