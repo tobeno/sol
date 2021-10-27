@@ -22,7 +22,7 @@ export class Workspace {
   }
 
   get contextFile(): File {
-    return this.generatedDir.file('context.ts');
+    return this.generatedDir.file('workspace-context.ts');
   }
 
   get setupFile(): File {
