@@ -1,4 +1,4 @@
-import * as tmp from 'tmp';
+import tmp from 'tmp';
 import { file } from '../../src/modules/storage/file';
 
 import { readFileSync } from 'fs';

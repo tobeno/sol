@@ -1,7 +1,8 @@
 import { Data } from './data';
 import { definePropertiesMutation, mutateClass } from '../utils/mutation';
-import { csvToData, jsonToData, yamlToData } from './transformer';
+import { csvToData, jsonToData, textToUrl, yamlToData } from './transformer';
 import { Text } from './text';
+import { Url } from './url';
 
 declare module './text' {
   interface Text<ContentType> {
@@ -10,6 +11,8 @@ declare module './text' {
     get yaml(): Data<ContentType>;
 
     get csv(): Data<ContentType>;
+
+    get url(): Url;
   }
 }
 
@@ -31,6 +34,12 @@ mutateClass(
     csv: {
       get(): Data<any> {
         return csvToData(this);
+      },
+    },
+
+    url: {
+      get(): Url {
+        return textToUrl(this);
       },
     },
   }),

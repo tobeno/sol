@@ -1,4 +1,4 @@
-import * as util from 'util';
+import util from 'util';
 
 export function inspect(output: any) {
   if (typeof output === 'string') {

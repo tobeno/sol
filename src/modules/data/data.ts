@@ -1,4 +1,4 @@
-import * as jsonata from 'jsonata';
+import jsonata from 'jsonata';
 import { Expression } from 'jsonata';
 import { transform, wrapObject, wrapString } from './transformer';
 import { Wrapper } from './wrapper';

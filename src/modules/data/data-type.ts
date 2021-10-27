@@ -13,6 +13,7 @@ export class DataType {
   static String = DataType.fromString('string');
   static Text = DataType.fromString('Text');
   static Xml = DataType.fromString('Xml');
+  static Url = DataType.fromString('Url');
 
   constructor(readonly type: string, readonly format: string | null = null) {}
 

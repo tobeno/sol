@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as prettier from 'prettier';
+import fs from 'fs';
+import path from 'path';
+import prettier from 'prettier';
 import { Item } from './item';
 import { Directory } from './directory';
 import { ItemCollection } from './item-collection';

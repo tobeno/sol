@@ -1,4 +1,4 @@
-import * as shelljs from 'shelljs';
+import shelljs from 'shelljs';
 import { Item } from '../storage/item';
 import { wrapObject } from '../data/transformer';
 

@@ -1,8 +1,8 @@
 import type { ReplOptions, REPLServer } from 'repl';
-import * as repl from 'repl';
+import repl from 'repl';
 import { loopWhile } from 'deasync';
 import { sol } from './sol';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import type { AsyncCompleter, CompleterResult } from 'readline';
 import { log } from '../utils/log';
 import { extensions } from './extension';

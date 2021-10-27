@@ -1,8 +1,8 @@
-import * as jsonata from 'jsonata';
+import jsonata from 'jsonata';
 import { JSDOM } from 'jsdom';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import * as R from 'remeda';
-import * as changeCase from 'change-case';
+import changeCase from 'change-case';
 import { grep } from '../storage/search';
 import { file, File } from '../storage/file';
 import { dir, Directory } from '../storage/directory';
@@ -32,6 +32,7 @@ import * as shell from '../utils/shelljs';
 import {
   csvToData,
   jsonToData,
+  textToUrl,
   transform,
   wrapHtml,
   wrapObject,
@@ -251,6 +252,9 @@ export const globals = {
   ),
   unwatchPlay: {
     value: unwatchPlay,
+  },
+  url: {
+    value: textToUrl,
   },
   userExtension: withHelp(
     {

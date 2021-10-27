@@ -2,7 +2,7 @@ import { Directory } from './directory';
 import { File } from './file';
 import { grep } from './search';
 import { Item } from './item';
-import * as fg from 'fast-glob';
+import fg from 'fast-glob';
 import { awaitSync } from '../utils/async';
 import { Data } from '../data/data';
 import { Text } from '../data/text';

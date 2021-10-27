@@ -9,6 +9,7 @@ import type { Data } from './data';
 import type { Html } from './html';
 import type { Xml } from './xml';
 import type { Text } from './text';
+import type { Url } from './url';
 
 let transformer: DataTransformer<any, any>;
 
@@ -31,6 +32,7 @@ function getTransformer(): DataTransformer<any, any> {
       { TextNewlineSeparatedTransformer },
       { TextSemicolonSeparatedTransformer },
       { ToStringTransformer },
+      { UrlTransformer },
       { WrappingTransformer },
     ] = awaitSync<any>(
       Promise.all([
@@ -50,6 +52,7 @@ function getTransformer(): DataTransformer<any, any> {
         import('./transformers/text-newline-separated-transformer'),
         import('./transformers/text-semicolon-separated-transformer'),
         import('./transformers/tostring-transformer'),
+        import('./transformers/url-transformer'),
         import('./transformers/wrapping-transformer'),
       ] as any),
     );
@@ -66,6 +69,7 @@ function getTransformer(): DataTransformer<any, any> {
       new TextNewlineSeparatedTransformer(),
       new TextSemicolonSeparatedTransformer(),
       new ToStringTransformer(),
+      new UrlTransformer(),
     ]);
     transformer = new SetSourceTransformationTransformer(
       new SetSourceTransformer(
@@ -199,6 +203,16 @@ export function dataToCsv<ValueType = any>(
       DataType.Data,
       DataType.Text.withFormat(DataFormat.Csv),
     ),
+  );
+}
+
+export function textToUrl(
+  value: string | String | Text,
+  source: DataSource | null = null,
+): Url {
+  return transform(
+    wrapString(value, null, source),
+    new DataTransformation(DataType.Text, DataType.Url),
   );
 }
 

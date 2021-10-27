@@ -1,7 +1,7 @@
 import { StringTransformer } from './string-transformer';
 import { DataType } from '../data-type';
 import { DataFormat } from '../data-format';
-import * as YAML from 'yaml';
+import YAML from 'yaml';
 
 export class YamlTransformer extends StringTransformer<any> {
   constructor() {

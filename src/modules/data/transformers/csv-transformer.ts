@@ -1,7 +1,7 @@
 import { StringTransformer } from './string-transformer';
 import { DataType } from '../data-type';
 import { DataFormat } from '../data-format';
-import * as Papa from 'papaparse';
+import Papa from 'papaparse';
 
 export class CsvTransformer extends StringTransformer<any[]> {
   constructor() {
