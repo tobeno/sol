@@ -1,23 +1,16 @@
 import { Url } from '../data/url';
 import { Wrapper } from '../data/wrapper';
-import open from 'open';
-import { awaitSync } from '../utils/async';
+import { open } from './open';
 
 export function browse(url?: any): Url {
   if (url instanceof Wrapper) {
     url = url.value;
   }
 
-  if (url?.startsWith('file:')) {
-    awaitSync(
-      open(url, {
-        app: {
-          name: open.apps.chrome,
-        },
-      }),
-    );
+  if (!url?.startsWith('http')) {
+    open(url, 'chrome');
   } else {
-    awaitSync(open(url || 'https://www.google.com'));
+    open(url || 'https://www.google.com');
   }
 
   return new Url(url);
