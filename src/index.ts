@@ -4,15 +4,7 @@ import { spawnSync } from 'child_process';
  * Setup Sol modules
  */
 export function setupSol(): void {
-  require('./modules/data/setup');
-  require('./modules/globals/setup');
-  require('./modules/integrations/setup');
-  require('./modules/os/setup');
-  require('./modules/play/setup');
-  require('./modules/sol/setup');
-  require('./modules/storage/setup');
-  require('./modules/utils/setup');
-  require('./modules/web/setup');
+  require('./setup');
 }
 
 export function loadSol() {

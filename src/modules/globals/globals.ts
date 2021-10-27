@@ -127,6 +127,15 @@ export const globals = {
     },
     'Opens a file for editing (defaults to code as editor)',
   ),
+  extension: withHelp(
+    {
+      value: extension,
+    },
+    'Returns the extension for the given name or path',
+  ),
+  extensions: {
+    value: extensions,
+  },
   file: withHelp(
     {
       value: file,
@@ -175,6 +184,11 @@ export const globals = {
     },
     'See https://jsonata.org/',
   ),
+  loadedExtensions: {
+    get() {
+      return extensions.filter((e) => e.loaded);
+    },
+  },
   log: withHelp(
     {
       value: log,
@@ -193,9 +207,6 @@ export const globals = {
     },
     'Opens a given play file for interactive editing',
   ),
-  replay: {
-    value: replay,
-  },
   plays: withHelp(
     {
       get() {
@@ -204,31 +215,9 @@ export const globals = {
     },
     'List available play files',
   ),
-  extension: withHelp(
-    {
-      value: extension,
-    },
-    'Returns the extension for the given name or path',
-  ),
-  workspaceExtension: withHelp(
-    {
-      value: workspaceExtension,
-    },
-    'Returns the workspace extension for the given name',
-  ),
-  userExtension: withHelp(
-    {
-      value: userExtension,
-    },
-    'Returns the user extension for the given name',
-  ),
-  extensions: {
-    value: extensions,
-  },
-  loadedExtensions: {
-    get() {
-      return extensions.filter((e) => e.loaded);
-    },
+  R: withHelp({ value: R }, 'Remeda'),
+  replay: {
+    value: replay,
   },
   shared: withHelp(
     {
@@ -248,18 +237,6 @@ export const globals = {
     },
     'Current Sol instance',
   ),
-  workspace: withHelp(
-    {
-      value: workspace,
-    },
-    'Current Sol workspace',
-  ),
-  userWorkspace: withHelp(
-    {
-      value: userWorkspace,
-    },
-    'User Sol workspace',
-  ),
   text: withHelp(
     {
       value: wrapString,
@@ -275,26 +252,17 @@ export const globals = {
   unwatchPlay: {
     value: unwatchPlay,
   },
-  withHelp: {
-    value: withHelp,
-  },
-  web: withHelp(
+  userExtension: withHelp(
     {
-      value: web,
+      value: userExtension,
     },
-    'Utilities for internet access',
+    'Returns the user extension for the given name',
   ),
-  xml: withHelp(
+  userWorkspace: withHelp(
     {
-      value: wrapXml,
+      value: userWorkspace,
     },
-    'Converts XML to Data',
-  ),
-  yaml: withHelp(
-    {
-      value: yamlToData,
-    },
-    'Converts YAML to Data',
+    'User Sol workspace',
   ),
   utils: withHelp(
     {
@@ -316,7 +284,39 @@ export const globals = {
     },
     'Basic utility functions',
   ),
-  R: withHelp({ value: R }, 'Remeda'),
+  web: withHelp(
+    {
+      value: web,
+    },
+    'Utilities for internet access',
+  ),
+  withHelp: {
+    value: withHelp,
+  },
+  workspace: withHelp(
+    {
+      value: workspace,
+    },
+    'Current Sol workspace',
+  ),
+  workspaceExtension: withHelp(
+    {
+      value: workspaceExtension,
+    },
+    'Returns the workspace extension for the given name',
+  ),
+  xml: withHelp(
+    {
+      value: wrapXml,
+    },
+    'Converts XML to Data',
+  ),
+  yaml: withHelp(
+    {
+      value: yamlToData,
+    },
+    'Converts YAML to Data',
+  ),
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;
