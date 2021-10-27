@@ -120,8 +120,8 @@ With that command the file will only be opened but not watched.
 
 Edit is also often avaiable in wrappers (e.g. `file('somefile').edit()`).
 
-By default play tries the _code_ command (typically VSCode) on the command line,
-but you can also set the _SOL_EDITOR_ environment variable to another editor of your choice.
+By default play tries the _visual studio code_ app on the command line,
+but you can also set the _SOL_EDITOR_ environment variable to another editor of your choice (e.g. `export SOL_EDITOR=webstorm`).
 
 ![Teaser Image](docs/assets/play.png)
 
