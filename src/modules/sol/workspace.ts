@@ -3,6 +3,8 @@ import { File } from '../storage/file';
 import { globals } from '../globals/globals';
 import { loadedExtensions } from './extension';
 import { logDebug, logError } from '../utils/log';
+import { sol } from './sol';
+import { getCwd } from '../utils/env';
 
 export class Workspace {
   readonly dir: Directory;
@@ -126,3 +128,13 @@ logDebug('Loaded ' + __filename);
     logDebug(`Loaded workspace at ${this.dir.path}`);
   }
 }
+
+export const workspace = new Workspace(
+  `${getCwd()}/.sol`,
+  sol.packageDistDir.path,
+);
+
+export const userWorkspace = new Workspace(
+  sol.userDir.path,
+  sol.packageDistDir.path,
+);

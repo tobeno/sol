@@ -8,6 +8,7 @@ import { log } from '../utils/log';
 import { loadedExtensions } from './extension';
 import { globals } from '../globals/globals';
 import { getSolMetadata } from '../utils/metadata';
+import { workspace } from './workspace';
 
 const color = {
   primary: chalk.keyword('coral'),
@@ -27,7 +28,7 @@ async function solCompleter(line: string): Promise<CompleterResult | void> {
 
 function setupReplHistory(server: REPLServer): void {
   let historyReady = false;
-  server.setupHistory(sol.workspace.historyFile.create().path, () => {
+  server.setupHistory(workspace.historyFile.create().path, () => {
     historyReady = true;
   });
   loopWhile(() => !historyReady);
@@ -110,7 +111,7 @@ export function startReplServer(options: ReplOptions = {}): REPLServer {
   log(
     `
 ${chalk.bold(color.primary('-=| Welcome to Sol |=-'))}
-Workspace: ${color.warn(sol.workspace.dir)}${
+Workspace: ${color.warn(workspace.dir)}${
       loadedExtensions.length
         ? `
 Extensions:
@@ -124,7 +125,7 @@ Use ${color.primary('.globals [filter]')} to find out more about your options.
 
 To enable additional extensions, load them in your workspace or user ${color.warn(
       'setup.ts',
-    )} file (e.g. using ${color.primary('sol.workspace.setupFile.edit()')}).
+    )} file (e.g. using ${color.primary('workspace.setupFile.edit()')}).
 You can create a new one by calling either ${color.primary(
       "workspaceExtension('your-name').edit()",
     )} or ${color.primary("userExtension('your-name').edit()")}.

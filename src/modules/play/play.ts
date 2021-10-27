@@ -6,6 +6,7 @@ import { rerequire } from '../utils/module';
 import { Directory } from '../storage/directory';
 import { getReplServer } from '../sol/repl';
 import { log } from '../utils/log';
+import { workspace } from '../sol/workspace';
 
 const playWatchers: Record<string, () => void> = {};
 
@@ -34,7 +35,7 @@ function runPlay(playFile: File) {
 }
 
 export function getPlayDir(): Directory {
-  return sol.workspace.dir.dir('play');
+  return workspace.dir.dir('play');
 }
 
 export function getPlayFile(path?: string) {
@@ -135,8 +136,8 @@ export function setupPlay(path: string) {
 /* eslint-disable */
 // @ts-nocheck
 
-import './${sol.workspace.contextFile.dir.relativePathFrom(playFile.dir)}/${
-      sol.workspace.contextFile.basenameWithoutExt
+import './${workspace.contextFile.dir.relativePathFrom(playFile.dir)}/${
+      workspace.contextFile.basenameWithoutExt
     }';
     
 // ToDo: Add your logic

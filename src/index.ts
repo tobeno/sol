@@ -18,9 +18,14 @@ export function setupSol(): void {
   require('./modules/utils/setup');
   require('./modules/web/setup');
 
-  const { sol } = require('./modules/sol/sol');
+  const { workspace, userWorkspace } = require('./modules/sol/workspace');
 
-  sol.load();
+  userWorkspace.load();
+  workspace.load();
+
+  // Update context files again
+  userWorkspace.updateContextFile();
+  workspace.updateContextFile();
 
   logDebug('Loaded Sol');
 }
@@ -49,6 +54,7 @@ export function unsetupSol(): void {
   const { clearRequireCache } = require('./modules/utils/module');
   const { loadedExtensions } = require('./modules/sol/extension');
   const { unwatchPlays } = require('./modules/play/play');
+  const { workspace, userWorkspace } = require('./modules/sol/workspace');
 
   logDebug('Unloading Sol...');
 
@@ -68,10 +74,10 @@ export function unsetupSol(): void {
     ...sol.packageDistDir
       .files('**/*.js')
       .value.map((f: any) => f.pathWithoutExt),
-    ...sol.workspace.dir
+    ...workspace.dir
       .files('**/*.{ts,js}')
       .value.map((f: any) => f.pathWithoutExt),
-    ...sol.userWorkspace.dir
+    ...userWorkspace.dir
       .files('**/*.{ts,js}')
       .value.map((f: any) => f.pathWithoutExt),
     ...loadedExtensions.flatMap((extension: any) =>

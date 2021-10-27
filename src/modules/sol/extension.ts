@@ -2,6 +2,7 @@ import { dir, Directory } from '../storage/directory';
 import { sol } from './sol';
 import { File } from '../storage/file';
 import { logDebug, logError } from '../utils/log';
+import { userWorkspace, workspace } from './workspace';
 
 export class Extension {
   static extensions = [];
@@ -134,9 +135,9 @@ export function extension(
 }
 
 export function workspaceExtension(name: string): Extension {
-  return extension(name, sol.workspace.dir);
+  return extension(name, workspace.dir);
 }
 
 export function userExtension(name: string): Extension {
-  return extension(name, sol.userWorkspace.dir);
+  return extension(name, userWorkspace.dir);
 }

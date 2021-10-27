@@ -50,6 +50,7 @@ import {
   userExtension,
   workspaceExtension,
 } from '../sol/extension';
+import { userWorkspace, workspace } from '../sol/workspace';
 
 export const globals = {
   ast: withHelp(
@@ -241,6 +242,18 @@ export const globals = {
       value: sol,
     },
     'Current Sol instance',
+  ),
+  workspace: withHelp(
+    {
+      value: workspace,
+    },
+    'Current Sol workspace',
+  ),
+  userWorkspace: withHelp(
+    {
+      value: userWorkspace,
+    },
+    'User Sol workspace',
   ),
   text: withHelp(
     {
