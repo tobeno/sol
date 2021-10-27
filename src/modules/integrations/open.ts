@@ -3,6 +3,10 @@ import openInternal from 'open';
 import { awaitSync } from '../utils/async';
 
 function mapApp(app: string): string {
+  if (app.startsWith('open ')) {
+    app = app.trim().split(' ').pop() as string;
+  }
+
   switch (app) {
     case 'chrome':
       return openInternal.apps.chrome as string;
