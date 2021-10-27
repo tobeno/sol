@@ -44,6 +44,9 @@ export class Extension {
     if (!globalsFile.exists || force) {
       globalsFile.create();
       globalsFile.text = `
+/* eslint-disable */
+// @ts-nocheck
+      
 import type { FromPropertyDescriptorMap } from '${sol.packageDistDir.relativePathFrom(
         this.dir,
       )}/interfaces/object';
@@ -64,6 +67,9 @@ export type Globals = FromPropertyDescriptorMap<typeof globals>;
     if (!setupFile.exists || force) {
       setupFile.create();
       setupFile.text = `
+/* eslint-disable */
+// @ts-nocheck
+      
 import { globals } from './globals';
 import { definePropertiesMutation, mutateGlobals } from '${sol.packageDistDir.relativePathFrom(
         this.dir,

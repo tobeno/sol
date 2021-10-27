@@ -46,6 +46,9 @@ export class Workspace {
     const contextFile = this.contextFile;
     contextFile.create();
     contextFile.text = `
+/* eslint-disable */
+// @ts-nocheck
+    
 import { Globals } from '${this.packageDistDir.relativePathFrom(
       this.generatedDir,
     )}/modules/globals/globals';
@@ -91,6 +94,9 @@ ${Object.keys(extension.globals)
     if (!setupFile.exists || force) {
       setupFile.create();
       setupFile.text = `
+/* eslint-disable */
+// @ts-nocheck
+
 import './${this.contextFile.dir.relativePathFrom(this.dir)}/${
         this.contextFile.basenameWithoutExt
       }';

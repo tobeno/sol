@@ -132,12 +132,14 @@ export function setupPlay(path: string) {
 
   if (!playFile.size) {
     playFile.text = `
-// @ts-nocheck
 /* eslint-disable */
+// @ts-nocheck
 
 import './${sol.workspace.contextFile.dir.relativePathFrom(playFile.dir)}/${
       sol.workspace.contextFile.basenameWithoutExt
     }';
+    
+// ToDo: Add your logic
 
 export default null;
 `.trimStart();
