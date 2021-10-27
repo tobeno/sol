@@ -218,6 +218,29 @@ export class Data<
     return result ? (wrapObject(result, this) as any) : null;
   }
 
+  reduce<ResultType>(
+    cb: (result: ResultType, item: ItemType, index: KeyType) => ResultType,
+    initial: ResultType,
+  ): Data<ResultType> {
+    if (Array.isArray(this.value)) {
+      return wrapObject<ResultType>(
+        this.value.reduce(
+          (result, value, index) => cb(result, value, index as any),
+          initial,
+        ),
+        this,
+      );
+    }
+
+    return wrapObject(
+      this.entries.reduce(
+        (result, [key, value]) => cb(result, value, key),
+        initial,
+      ),
+      this,
+    );
+  }
+
   some(cb: (value: ItemType, index: KeyType) => boolean): boolean {
     if (Array.isArray(this.value)) {
       return this.value.some(cb as any);
