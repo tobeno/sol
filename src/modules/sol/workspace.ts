@@ -106,6 +106,9 @@ import './${this.contextFile.dir.relativePathFrom(this.dir)}/${
 import { logDebug } from '${this.packageDistDir.relativePathFrom(
         this.dir,
       )}/modules/utils/log';
+import { extension } from '${this.packageDistDir.relativePathFrom(
+        this.dir,
+      )}/modules/sol/extension';
       
 // ToDo: Register your first extension
 // extension('your-extension', __dirname).load();

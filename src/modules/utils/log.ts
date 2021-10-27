@@ -7,7 +7,7 @@ export function log(...args: any[]): void {
 }
 
 export function logDebug(...args: any[]): void {
-  if (process.env.LOG_LEVEL?.toLowerCase() !== LogLevel.DEBUG) {
+  if (process.env.SOL_LOG_LEVEL?.toLowerCase() !== LogLevel.DEBUG) {
     return;
   }
 

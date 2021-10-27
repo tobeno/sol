@@ -1,6 +1,10 @@
 import { spawnSync } from 'child_process';
 import { sol } from './modules/sol/sol';
-import { logDebug } from './modules/utils/log';
+import { log, logDebug } from './modules/utils/log';
+import { extensions } from './modules/sol/extension';
+import chalk from 'chalk';
+import { workspace } from './modules/sol/workspace';
+import { solReplColor } from './modules/sol/repl';
 
 /**
  * Setup Sol modules
@@ -128,7 +132,7 @@ export function reloadSol(): void {
  * Start Sol REPL server
  */
 export function startSol(): void {
-  setupSol();
+  loadSol();
 
   const { startReplServer } = require('./modules/sol/repl');
 
@@ -170,6 +174,36 @@ export function startSol(): void {
       }, 0);
     },
   });
+
+  const loadedExtensions = extensions.filter((e) => e.loaded);
+
+  log(
+    `
+${chalk.bold(solReplColor.primary('-=| Welcome to Sol |=-'))}
+Workspace: ${solReplColor.warn(workspace.dir)}${
+      loadedExtensions.length
+        ? `
+Extensions:
+${loadedExtensions
+  .map((e) => `- ${solReplColor.ok(e.name)} (${solReplColor.warn(e.dir.path)})`)
+  .join('\n')}`
+        : ''
+    }
+
+Use ${solReplColor.primary(
+      '.globals [filter]',
+    )} to find out more about your options.
+
+To enable additional extensions, load them in your workspace or user ${solReplColor.warn(
+      'setup.ts',
+    )} file (e.g. using ${solReplColor.primary('workspace.setupFile.edit()')}).
+You can create a new one by calling either ${solReplColor.primary(
+      "workspaceExtension('your-name').edit()",
+    )} or ${solReplColor.primary("userExtension('your-name').edit()")}.
+
+For usage details see: ${solReplColor.warn(`${sol.packageDir.path}/README.md`)}
+`.trimEnd(),
+  );
 
   server.displayPrompt();
 }

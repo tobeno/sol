@@ -1,7 +1,6 @@
 import type { ReplOptions, REPLServer } from 'repl';
 import repl from 'repl';
 import { loopWhile } from 'deasync';
-import { sol } from './sol';
 import chalk from 'chalk';
 import type { AsyncCompleter, CompleterResult } from 'readline';
 import { log } from '../utils/log';
@@ -10,7 +9,7 @@ import { globals } from '../globals/globals';
 import { getSolMetadata } from '../utils/metadata';
 import { workspace } from './workspace';
 
-const color = {
+export const solReplColor = {
   primary: chalk.keyword('coral'),
   ok: chalk.hex('83da44'),
   err: chalk.keyword('crimson'),
@@ -72,7 +71,7 @@ ${
         .map(([key, value]) => {
           const help = getSolMetadata(value)?.help;
 
-          return `- ${color.primary(key)}${help ? `: ${help}` : ''}`;
+          return `- ${solReplColor.primary(key)}${help ? `: ${help}` : ''}`;
         })
         .join('\n')
     : 'No matches found'
@@ -97,7 +96,7 @@ export function getReplServer(): REPLServer {
 
 export function startReplServer(options: ReplOptions = {}): REPLServer {
   const server = repl.start({
-    prompt: color.dim('> '),
+    prompt: solReplColor.dim('> '),
     writer: solWriter,
     ignoreUndefined: true,
     useGlobal: true,
@@ -109,34 +108,6 @@ export function startReplServer(options: ReplOptions = {}): REPLServer {
   setupReplHistory(server);
   setupReplCompleter(server);
   setupReplCommands(server);
-
-  const loadedExtensions = extensions.filter((e) => e.loaded);
-
-  log(
-    `
-${chalk.bold(color.primary('-=| Welcome to Sol |=-'))}
-Workspace: ${color.warn(workspace.dir)}${
-      loadedExtensions.length
-        ? `
-Extensions:
-${loadedExtensions
-  .map((e) => `- ${color.ok(e.name)} (${color.warn(e.dir.path)})`)
-  .join('\n')}`
-        : ''
-    }
-
-Use ${color.primary('.globals [filter]')} to find out more about your options.
-
-To enable additional extensions, load them in your workspace or user ${color.warn(
-      'setup.ts',
-    )} file (e.g. using ${color.primary('workspace.setupFile.edit()')}).
-You can create a new one by calling either ${color.primary(
-      "workspaceExtension('your-name').edit()",
-    )} or ${color.primary("userExtension('your-name').edit()")}.
-
-For usage details see: ${color.warn(`${sol.packageDir.path}/README.md`)}
-`.trimEnd(),
-  );
 
   return server;
 }
