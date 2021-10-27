@@ -225,6 +225,11 @@ export const globals = {
   extensions: {
     value: extensions,
   },
+  loadedExtensions: {
+    get() {
+      return extensions.filter((e) => e.loaded);
+    },
+  },
   shared: withHelp(
     {
       value: {},
