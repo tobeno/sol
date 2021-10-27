@@ -1,12 +1,13 @@
 import clipboardy from 'clipboardy';
+import { awaitSync } from '../utils/async';
 
 export class Clipboard {
   get value(): string {
-    return clipboardy.readSync();
+    return awaitSync(clipboardy.read());
   }
 
   set value(value: any) {
-    clipboardy.writeSync(value);
+    awaitSync(clipboardy.write(value));
   }
 }
 
