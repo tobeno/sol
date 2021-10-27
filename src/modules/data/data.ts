@@ -95,6 +95,17 @@ export class Data<
     return this.sort();
   }
 
+  get reversed(): Data<ValueType extends Array<any> ? ValueType : any> {
+    if (Array.isArray(this.value)) {
+      return wrapObject(this.value.reverse(), this) as any;
+    }
+
+    return wrapObject(
+      Object.fromEntries(Object.entries(this.value).reverse()),
+      this,
+    ) as any;
+  }
+
   get filtered(): Data<AnyPartial<ValueType>> {
     return this.filter((value: any) => !!value);
   }
@@ -182,9 +193,13 @@ export class Data<
     return wrapObject(newValue, this) as any;
   }
 
-  find(cb: (value: ItemType, index: KeyType) => boolean): Data<ItemType> {
+  find(
+    cb: (value: ItemType, index: KeyType) => boolean,
+  ): Data<ItemType> | undefined {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.find(cb as any) as any, this) as any;
+      const result = this.value.find(cb as any) as any;
+
+      return result ? (wrapObject(result, this) as any) : undefined;
     }
 
     let result: any = null;
@@ -197,12 +212,12 @@ export class Data<
       }
     }
 
-    return result ? (wrapObject(result, this) as any) : null;
+    return result ? (wrapObject(result, this) as any) : undefined;
   }
 
-  findIndex(cb: (value: ItemType, index: KeyType) => boolean): Data<KeyType> {
+  findIndex(cb: (value: ItemType, index: KeyType) => boolean): KeyType {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.findIndex(cb as any) as any, this) as any;
+      return this.value.findIndex(cb as any) as any;
     }
 
     let result: any = null;
@@ -215,7 +230,7 @@ export class Data<
       }
     }
 
-    return result ? (wrapObject(result, this) as any) : null;
+    return result;
   }
 
   reduce<ResultType>(
