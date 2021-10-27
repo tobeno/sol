@@ -52,6 +52,11 @@ export function updateSol(): void {
     shell: true,
   });
 
+  spawnSync('npm install', {
+    cwd: sol.packageDir.path,
+    shell: true,
+  });
+
   logDebug('Fetched latest version from GitHub');
 
   rebuildSol();
