@@ -56,7 +56,7 @@ export function unloadSol(): void {
     unmutateGlobals,
   } = require('./modules/utils/mutation');
   const { clearRequireCache } = require('./modules/utils/module');
-  const { loadedExtensions } = require('./modules/sol/extension');
+  const { extensions } = require('./modules/sol/extension');
   const { unwatchPlays } = require('./modules/play/play');
   const { workspace, userWorkspace } = require('./modules/sol/workspace');
 
@@ -84,11 +84,13 @@ export function unloadSol(): void {
     ...userWorkspace.dir
       .files('**/*.{ts,js}')
       .value.map((f: any) => f.pathWithoutExt),
-    ...loadedExtensions.flatMap((extension: any) =>
-      extension.dir
-        .files('**/*.{ts,js}')
-        .value.map((f: any) => f.pathWithoutExt),
-    ),
+    ...extensions
+      .filter((e: any) => e.loaded)
+      .flatMap((extension: any) =>
+        extension.dir
+          .files('**/*.{ts,js}')
+          .value.map((f: any) => f.pathWithoutExt),
+      ),
   ];
 
   modules.forEach(clearRequireCache);

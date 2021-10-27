@@ -1,7 +1,7 @@
 import { dir, Directory } from '../storage/directory';
 import { File } from '../storage/file';
 import { globals } from '../globals/globals';
-import { loadedExtensions } from './extension';
+import { extensions } from './extension';
 import { logDebug, logError } from '../utils/log';
 import { sol } from './sol';
 import { getCwd } from '../utils/env';
@@ -9,6 +9,7 @@ import { getCwd } from '../utils/env';
 export class Workspace {
   readonly dir: Directory;
   readonly packageDistDir: Directory;
+  loaded = false;
 
   constructor(workspacePath: string, packageDistPath: string) {
     this.dir = dir(workspacePath);
@@ -54,7 +55,7 @@ export class Workspace {
 import { Globals } from '${this.packageDistDir.relativePathFrom(
       this.generatedDir,
     )}/modules/globals/globals';
-${loadedExtensions
+${extensions
   .map((extension, index) =>
     `
 import { Globals as GlobalsFromExtension${index} } from '${extension.globalsFile.dir.relativePathFrom(
@@ -68,7 +69,7 @@ ${Object.keys(globals)
   .map((key) => `  const ${key}: Globals['${key}'];`)
   .join('\n')}
   
-${loadedExtensions
+${extensions
   .map(
     (extension, index) =>
       `  // Extension: ${extension.name} (${extension.dir.path})
@@ -115,6 +116,12 @@ logDebug('Loaded ' + __filename);
   }
 
   load() {
+    if (this.loaded) {
+      return;
+    }
+
+    this.loaded = true;
+
     logDebug(`Loading workspace at ${this.dir.path}...`);
 
     this.prepare();

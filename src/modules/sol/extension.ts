@@ -8,6 +8,7 @@ export class Extension {
   static extensions = [];
 
   readonly dir: Directory;
+  loaded = false;
 
   constructor(path: string) {
     this.dir = dir(path);
@@ -87,6 +88,12 @@ logDebug('Loaded ' + __filename);
   }
 
   load(): void {
+    if (this.loaded) {
+      return;
+    }
+
+    this.loaded = true;
+
     logDebug(`Loading extension ${this.name} at ${this.dir.path}...`);
 
     this.prepare();
@@ -101,7 +108,7 @@ logDebug('Loaded ' + __filename);
   }
 }
 
-export const loadedExtensions: Extension[] = [];
+export const extensions: Extension[] = [];
 
 export function extension(
   pathOrExtension: string | Extension,
@@ -122,13 +129,13 @@ export function extension(
     );
   }
 
-  const loadedExtension = loadedExtensions.find(
+  const existingExtension = extensions.find(
     (e) => e.dir.path === foundExtension.dir.path,
   );
-  if (loadedExtension) {
-    foundExtension = loadedExtension;
+  if (existingExtension) {
+    foundExtension = existingExtension;
   } else {
-    loadedExtensions.push(foundExtension);
+    extensions.push(foundExtension);
   }
 
   return foundExtension;

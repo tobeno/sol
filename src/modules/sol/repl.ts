@@ -5,7 +5,7 @@ import { sol } from './sol';
 import * as chalk from 'chalk';
 import type { AsyncCompleter, CompleterResult } from 'readline';
 import { log } from '../utils/log';
-import { loadedExtensions } from './extension';
+import { extensions } from './extension';
 import { globals } from '../globals/globals';
 import { getSolMetadata } from '../utils/metadata';
 import { workspace } from './workspace';
@@ -53,7 +53,9 @@ function setupReplCommands(server: REPLServer): void {
       let globalEntries = [
         ...new Set([
           ...Object.entries(globals),
-          ...loadedExtensions.flatMap((e) => Object.entries(e.globals)),
+          ...extensions
+            .filter((e) => e.loaded)
+            .flatMap((e) => Object.entries(e.globals)),
         ]),
       ].sort((entry1, entry2) => entry1[0].localeCompare(entry2[0]));
 
@@ -107,6 +109,8 @@ export function startReplServer(options: ReplOptions = {}): REPLServer {
   setupReplHistory(server);
   setupReplCompleter(server);
   setupReplCommands(server);
+
+  const loadedExtensions = extensions.filter((e) => e.loaded);
 
   log(
     `

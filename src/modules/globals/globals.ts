@@ -46,7 +46,7 @@ import { DataTransformation } from '../data/data-transformation';
 import { FromPropertyDescriptorMap } from '../../interfaces/object';
 import {
   extension,
-  loadedExtensions,
+  extensions,
   userExtension,
   workspaceExtension,
 } from '../sol/extension';
@@ -222,8 +222,8 @@ export const globals = {
     },
     'Returns the user extension for the given name',
   ),
-  loadedExtensions: {
-    value: loadedExtensions,
+  extensions: {
+    value: extensions,
   },
   shared: withHelp(
     {
