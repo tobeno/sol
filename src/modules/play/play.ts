@@ -1,4 +1,3 @@
-import { sol } from '../sol/sol';
 import { edit } from '../integrations/editor';
 import { wrapObject } from '../data/transformer';
 import { file, File } from '../storage/file';
