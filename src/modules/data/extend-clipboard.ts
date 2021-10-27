@@ -4,9 +4,9 @@ import { Clipboard } from '../os/clipboard';
 import {
   csvToData,
   jsonToData,
-  textToUrl,
   unwrapString,
   wrapString,
+  wrapUrl,
   yamlToData,
 } from './transformer';
 import { Url } from './url';
@@ -60,7 +60,7 @@ mutateClass(
 
     url: {
       get(): Url {
-        return textToUrl(this.text);
+        return wrapUrl(this.text);
       },
     },
   }),

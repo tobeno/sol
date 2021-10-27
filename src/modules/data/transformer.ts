@@ -206,16 +206,6 @@ export function dataToCsv<ValueType = any>(
   );
 }
 
-export function textToUrl(
-  value: string | String | Text,
-  source: DataSource | null = null,
-): Url {
-  return transform(
-    wrapString(value, null, source),
-    new DataTransformation(DataType.Text, DataType.Url),
-  );
-}
-
 export function codeToAst(
   value: string | String | Text,
   source: DataSource | null = null,
@@ -310,6 +300,20 @@ export function wrapHtml(
 
 export function unwrapHtml<ContentType = any>(value: Html): Text<ContentType> {
   return wrapString(value.value, DataFormat.Html, value.source);
+}
+
+export function wrapUrl(
+  value: string | String | Text,
+  source: DataSource | null = null,
+): Url {
+  return transform(
+    wrapString(value, null, source),
+    new DataTransformation(DataType.Text, DataType.Url),
+  );
+}
+
+export function unwrapUrl<ContentType = any>(value: Url): Text<ContentType> {
+  return wrapString(value.value);
 }
 
 export function wrapXml(

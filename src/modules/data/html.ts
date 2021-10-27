@@ -23,6 +23,18 @@ export class Html extends Data<string> {
     return node ? wrapHtml(node.outerHTML) : null;
   }
 
+  queryAll(selector: string): Html[] {
+    const nodes = this.root.querySelectorAll(selector);
+
+    const result: Html[] = [];
+
+    nodes.forEach((node) => {
+      result.push(wrapHtml(node.outerHTML));
+    });
+
+    return result;
+  }
+
   toString() {
     return String(this);
   }

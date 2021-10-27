@@ -32,11 +32,11 @@ import * as shell from '../utils/shelljs';
 import {
   csvToData,
   jsonToData,
-  textToUrl,
   transform,
   wrapHtml,
   wrapObject,
   wrapString,
+  wrapUrl,
   wrapXml,
   yamlToData,
 } from '../data/transformer';
@@ -261,7 +261,7 @@ export const globals = {
     value: unwatchPlay,
   },
   url: {
-    value: textToUrl,
+    value: wrapUrl,
   },
   userExtension: withHelp(
     {

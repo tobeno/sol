@@ -8,10 +8,12 @@ import {
   dataToJson,
   dataToYaml,
   jsonToData,
+  wrapHtml,
   yamlToData,
 } from './transformer';
 import { File } from '../storage/file';
 import { Ast } from './ast';
+import { Html } from './html';
 
 declare module '../storage/file' {
   interface File<ContentType = any> {
@@ -26,6 +28,8 @@ declare module '../storage/file' {
     get csv(): Data<ContentType>;
 
     set csv(value: Data<ContentType>);
+
+    get html(): Html;
 
     get ast(): Ast;
 
@@ -60,6 +64,12 @@ mutateClass(
       },
       set(value: Data<any>) {
         this.text = dataToCsv(value);
+      },
+    },
+
+    html: {
+      get(): Html {
+        return wrapHtml(this.text);
       },
     },
 
