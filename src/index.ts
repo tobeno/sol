@@ -1,4 +1,6 @@
 import { spawnSync } from 'child_process';
+import { sol } from './modules/sol/sol';
+import { logDebug } from './modules/utils/log';
 
 /**
  * Setup Sol modules
@@ -36,6 +38,25 @@ export function rebuildSol(): void {
     cwd: sol.packageDir.path,
     shell: true,
   });
+}
+
+/**
+ * Update Sol from git remote
+ */
+export function updateSol(): void {
+  logDebug('Updating Sol...');
+  logDebug('Fetching latest version from GitHub...');
+
+  spawnSync('git pull --rebase', {
+    cwd: sol.packageDir.path,
+    shell: true,
+  });
+
+  logDebug('Fetched latest version from GitHub');
+
+  rebuildSol();
+
+  logDebug('Updated Sol');
 }
 
 /**
@@ -125,6 +146,18 @@ export function startSol(): void {
     help: 'Reloads Sol files to reflect latest build',
     action() {
       reloadSol();
+      server.close();
+
+      setTimeout(() => {
+        startSol();
+      }, 0);
+    },
+  });
+
+  server.defineCommand('update', {
+    help: 'Update Sol to latest version',
+    action() {
+      updateSol();
       server.close();
 
       setTimeout(() => {
