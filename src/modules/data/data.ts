@@ -1,5 +1,4 @@
-import jsonata from 'jsonata';
-import { Expression } from 'jsonata';
+import jsonata, { Expression } from 'jsonata';
 import { transform, wrapObject, wrapString } from './transformer';
 import { Wrapper } from './wrapper';
 import { Text } from './text';
@@ -50,6 +49,32 @@ export class Data<
     }
 
     return this as any;
+  }
+
+  get first(): Data<ItemType> | null {
+    if (Array.isArray(this.value)) {
+      return this.value.length
+        ? wrapObject<ItemType>(this.value[0], this)
+        : null;
+    }
+
+    const values = Object.values(this.value);
+
+    return values.length ? wrapObject<ItemType>(values[0], this) : null;
+  }
+
+  get last(): Data<ItemType> | null {
+    if (Array.isArray(this.value)) {
+      return this.value.length
+        ? wrapObject<ItemType>(this.value[this.value.length - 1], this)
+        : null;
+    }
+
+    const values = Object.values(this.value);
+
+    return values.length
+      ? wrapObject<ItemType>(values[values.length - 1], this)
+      : null;
   }
 
   get unique(): Data<AnyPartial<ValueType>> {

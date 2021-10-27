@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
 import { Data } from './data';
-import { wrapHtml } from './transformer';
+import { wrapHtml, wrapObject } from './transformer';
 
 /**
  * Wrapper for HTML strings
@@ -23,7 +23,7 @@ export class Html extends Data<string> {
     return node ? wrapHtml(node.outerHTML) : null;
   }
 
-  queryAll(selector: string): Html[] {
+  queryAll(selector: string): Data<Html[]> {
     const nodes = this.root.querySelectorAll(selector);
 
     const result: Html[] = [];
@@ -32,7 +32,7 @@ export class Html extends Data<string> {
       result.push(wrapHtml(node.outerHTML));
     });
 
-    return result;
+    return wrapObject(result);
   }
 
   toString() {
