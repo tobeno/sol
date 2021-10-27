@@ -110,11 +110,15 @@ export function startReplServer(options: ReplOptions = {}): REPLServer {
   log(
     `
 ${chalk.bold(color.primary('-=| Welcome to Sol |=-'))}
-Workspace: ${color.warn(sol.workspace.dir)}
+Workspace: ${color.warn(sol.workspace.dir)}${
+      loadedExtensions.length
+        ? `
 Extensions:
 ${loadedExtensions
   .map((e) => `- ${color.ok(e.name)} (${color.warn(e.dir.path)})`)
-  .join('\n')}
+  .join('\n')}`
+        : ''
+    }
 
 Use ${color.primary('.globals [filter]')} to find out more about your options.
 

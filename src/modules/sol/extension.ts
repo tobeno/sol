@@ -29,7 +29,12 @@ export class Extension {
       return {};
     }
 
-    return require(this.globalsFile.path).globals;
+    try {
+      return require(this.globalsFile.path).globals;
+    } catch (e) {
+      logError(e);
+      return {};
+    }
   }
 
   prepare(force = false): void {
