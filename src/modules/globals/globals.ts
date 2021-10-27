@@ -52,6 +52,7 @@ import {
   workspaceExtension,
 } from '../sol/extension';
 import { userWorkspace, workspace } from '../sol/workspace';
+import { browse } from '../integrations/browser';
 
 export const globals = {
   ast: withHelp(
@@ -71,6 +72,12 @@ export const globals = {
       value: awaitSync,
     },
     'Waits for the given promise before continuing',
+  ),
+  browse: withHelp(
+    {
+      value: browse,
+    },
+    'Opens the given URL in the browser',
   ),
   chalk: withHelp(
     {

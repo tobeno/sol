@@ -8,7 +8,17 @@ export function browse(url?: any): Url {
     url = url.value;
   }
 
-  awaitSync(open(url || 'https://www.google.com'));
+  if (url?.startsWith('file:')) {
+    awaitSync(
+      open(url, {
+        app: {
+          name: open.apps.chrome,
+        },
+      }),
+    );
+  } else {
+    awaitSync(open(url || 'https://www.google.com'));
+  }
 
   return new Url(url);
 }

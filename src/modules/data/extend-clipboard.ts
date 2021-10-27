@@ -4,10 +4,12 @@ import { Clipboard } from '../os/clipboard';
 import {
   csvToData,
   jsonToData,
+  textToUrl,
   unwrapString,
   wrapString,
   yamlToData,
 } from './transformer';
+import { Url } from './url';
 
 declare module '../os/clipboard' {
   interface Clipboard {
@@ -20,6 +22,8 @@ declare module '../os/clipboard' {
     get yaml(): Data;
 
     get csv(): Data;
+
+    get url(): Url;
   }
 }
 
@@ -51,6 +55,12 @@ mutateClass(
     csv: {
       get(): Data {
         return csvToData(this.text);
+      },
+    },
+
+    url: {
+      get(): Url {
+        return textToUrl(this.text);
       },
     },
   }),
