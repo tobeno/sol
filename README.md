@@ -91,7 +91,7 @@ so all REPL features are available.
 The most important ones are:
 
 - You can access the **previous command result** using `_`
-- It has a command **history** available (stored in _~/.sol/history_)
+- It has a command **history** available (stored in _./.sol/history_)
   - You can **search** this history using Control + R (on MacOS)
 - You can **autocomplete** using TAB
 - To **exit** the shell either enter `.exit` or press Control + C twice
@@ -101,9 +101,7 @@ The most important ones are:
 Sol is based around the concept of **workspaces**.
 By default a _.sol_ subdirectory in the current working directory is used as workspace.
 
-This workspace contains a setup file (_.sol/setup.js_) as well as workspace specific extensions (_.sol/extensions/_).
-
-By default every workspace is generated with a **workspace extension**, which can be used as a starting point for customizing your workspace experience.
+This workspace contains a setup file (_.sol/setup.ts_) as well as workspace specific extensions (_.sol/extensions/_).
 
 In addition to the workspace, there is also a global config directory in your home directory (_~/.sol_). This directory is intended for global things which are shared across workspaces.
 
@@ -132,19 +130,15 @@ but you can also set the _SOL_EDITOR_ environment variable to another editor of 
 Extensions are **additional features** that can be loaded into Sol.
 In the end they are just **JavaScript files** which are directly loaded by Sol.
 
-They are **enabled** or disabled using your workspace setup file.
+They are **enabled** using your workspace or user setup file.
 
 **Important:** As all extensions have full access to the NodeJS environment,
 be careful when using third-party extensions not provided by you or Sol.
 So only load extensions which you fully trust. Treat them as you would NPM packages.
 
-Every extension must contain a root **setup file** (e.g. _extensions/some-extension/setup.js_),
-which is called when the extension is loaded.
-
-The extension then hooks into Sol using its extension class (see generated _workspace_ extension).
-
-It can register global variables using `extension.registerGlobals({ ... })` and
-add additional properties to existing objects using `extension.registerProperties(SomeClass.prototype, { ... })`. The later one can also be used to extend core classes like `File` with additional helper methods.
+Every extension must contain a root **setup file** (e.g. _extensions/some-extension/setup.ts_),
+which is called when the extension is loaded. In addition it also contains a **globals file**
+(_extensions/some-extension/globals.ts_) that includes globals added by this extension.
 
 To avoid integration / reload issues you should **not** add globals directly.
 
@@ -156,7 +150,13 @@ Sol looks for extensions in the following locations:
 - Workspace: _./.sol/extensions/_
 - Home: _~/.sol/extensions/_
 
-To load an extension, just add a `sol.loadExtension('your-extension')` call to your setup file.
+To load an extension, just add a `extension('your-extension', __dirname).load()` call to your setup file.
+To quickly open the right setup file, you can use `workspace.setupFile.edit()`.
+
+To create a new extension, you can use `workspaceExtension('your-extension').edit()` to create a new workspace extension
+or `userExtension('your-extension').edit()` to create a new user level extension.
+
+After the creation you still need to load the extension as described above.
 
 ## Development
 
@@ -166,6 +166,8 @@ To get started simply run `npm install`.
 
 ### Building
 
-The project can be updated using `npm run build` (or `npm run build:watch`).
+The project can be rebuilt using `npm run build` (or `npm run build:watch`).
 
 You can also update it from within the Sol CLI using `.rebuild`.
+
+To do a full update of Sol from GitHub, you can use `.update`.
