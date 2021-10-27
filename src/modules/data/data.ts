@@ -118,28 +118,30 @@ export class Data<
     return wrapObject(snakecaseObject(this.value), this) as any;
   }
 
-  get keys(): KeyType[] {
+  get keys(): Data<KeyType[]> {
     if (Array.isArray(this.value)) {
-      return (this.value as any).map((_: any, index: any) => index) as any;
+      return wrapObject(
+        (this.value as any).map((_: any, index: any) => index),
+      ) as any;
     }
 
-    return Object.keys(this.value) as any;
+    return wrapObject(Object.keys(this.value)) as any;
   }
 
-  get values(): ItemType[] {
+  get values(): Data<ItemType[]> {
     if (Array.isArray(this.value)) {
-      return this.value as any;
+      return wrapObject(this.value) as any;
     }
 
-    return Object.values(this.value);
+    return wrapObject(Object.values(this.value));
   }
 
-  get entries(): [KeyType, ItemType][] {
+  get entries(): Data<[KeyType, ItemType][]> {
     if (Array.isArray(this.value)) {
-      return this.value.entries() as any;
+      return wrapObject(this.value.entries()) as any;
     }
 
-    return Object.entries(this.value) as any;
+    return wrapObject(Object.entries(this.value)) as any;
   }
 
   setSource(source: DataSource | null): Data<ValueType> {
@@ -155,7 +157,7 @@ export class Data<
       return wrapObject([...this.value].sort(compareFn), this) as any;
     }
 
-    const entries = this.entries;
+    const entries = this.entries.value;
     entries.sort(([aIndex, a], [bIndex, b]) => {
       if (compareFn) {
         return compareFn(a, b);
@@ -203,7 +205,7 @@ export class Data<
     }
 
     let result: any = null;
-    for (const index of this.keys) {
+    for (const index of this.keys.value) {
       const value = (this.value as any)[index];
       if (cb(value, index)) {
         result = value;
@@ -221,7 +223,7 @@ export class Data<
     }
 
     let result: any = null;
-    for (const index of this.keys) {
+    for (const index of this.keys.value) {
       const value = (this.value as any)[index];
       if (cb(value, index)) {
         result = index;
@@ -248,7 +250,7 @@ export class Data<
     }
 
     return wrapObject(
-      this.entries.reduce(
+      this.entries.value.reduce(
         (result, [key, value]) => cb(result, value, key),
         initial,
       ),
@@ -262,7 +264,7 @@ export class Data<
     }
 
     let result = false;
-    for (const index of this.keys) {
+    for (const index of this.keys.value) {
       const value = (this.value as any)[index];
       if (cb(value, index)) {
         result = true;
@@ -280,7 +282,7 @@ export class Data<
     }
 
     let result = true;
-    for (const index of this.keys) {
+    for (const index of this.keys.value) {
       const value = (this.value as any)[index];
       if (!cb(value, index)) {
         result = false;
