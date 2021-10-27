@@ -4,10 +4,6 @@ import { spawnSync } from 'child_process';
  * Setup Sol modules
  */
 export function setupSol(): void {
-  const { logDebug } = require('./modules/utils/log');
-
-  logDebug('Loading Sol...');
-
   require('./modules/data/setup');
   require('./modules/globals/setup');
   require('./modules/integrations/setup');
@@ -17,6 +13,14 @@ export function setupSol(): void {
   require('./modules/storage/setup');
   require('./modules/utils/setup');
   require('./modules/web/setup');
+}
+
+export function loadSol() {
+  const { logDebug } = require('./modules/utils/log');
+
+  logDebug('Loading Sol...');
+
+  setupSol();
 
   const { workspace, userWorkspace } = require('./modules/sol/workspace');
 
@@ -45,7 +49,7 @@ export function rebuildSol(): void {
 /**
  * Unloads Sol modules
  */
-export function unsetupSol(): void {
+export function unloadSol(): void {
   const { logDebug } = require('./modules/utils/log');
   const {
     unmutateClass,
@@ -95,9 +99,9 @@ export function unsetupSol(): void {
 /**
  * Unloads Sol and reload it again afterwards
  */
-export function resetupSol(): void {
-  unsetupSol();
-  setupSol();
+export function reloadSol(): void {
+  unloadSol();
+  loadSol();
 }
 
 /**
@@ -114,7 +118,7 @@ export function startSol(): void {
     help: 'Rebuilds and reloads Sol using the current source files',
     action() {
       rebuildSol();
-      resetupSol();
+      reloadSol();
       server.close();
 
       setTimeout(() => {
@@ -126,7 +130,7 @@ export function startSol(): void {
   server.defineCommand('reload', {
     help: 'Reloads Sol files to reflect latest build',
     action() {
-      resetupSol();
+      reloadSol();
       server.close();
 
       setTimeout(() => {

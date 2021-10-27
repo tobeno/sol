@@ -1,23 +1,8 @@
 import { homedir } from 'os';
 import { dir, Directory } from '../storage/directory';
-import { Workspace } from './workspace';
-import { getCwd, getSolPath } from '../utils/env';
+import { getSolPath } from '../utils/env';
 
 export class Sol {
-  workspace: Workspace;
-  userWorkspace: Workspace;
-
-  constructor() {
-    this.workspace = new Workspace(
-      `${getCwd()}/.sol`,
-      this.packageDistDir.path,
-    );
-    this.userWorkspace = new Workspace(
-      this.userDir.path,
-      this.packageDistDir.path,
-    );
-  }
-
   get packageDir(): Directory {
     return dir(getSolPath());
   }

@@ -1,9 +1,9 @@
-import { grep } from '../src/modules/storage/search';
+import { grep } from '../../src/modules/storage/search';
 
-describe('storage', () => {
+describe('storage module', () => {
   describe('search', () => {
     it('should grep by string', async () => {
-      const files = grep('shoe', `${__dirname}/assets/search`);
+      const files = grep('shoe', `${__dirname}/../assets/search`);
 
       expect(files.map((file) => file.basename).value).toEqual([
         'men.json',
@@ -18,7 +18,10 @@ describe('storage', () => {
     });
 
     it('should grep by regex', async () => {
-      const files = grep(/"name": "[^"]+shoe"/, `${__dirname}/assets/search`);
+      const files = grep(
+        /"name": "[^"]+shoe"/,
+        `${__dirname}/../assets/search`,
+      );
 
       expect(files.map((file) => file.basename).value).toEqual([
         'men.json',
