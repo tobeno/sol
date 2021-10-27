@@ -1,9 +1,12 @@
 import { Wrapper } from './wrapper';
-import { browse } from '../integrations/browser';
 import { URL, URLSearchParams } from 'url';
 
 export class Url extends Wrapper<string> {
-  constructor(value: string) {
+  constructor(value: string | URL) {
+    if (value instanceof URL) {
+      value = value.toJSON();
+    }
+
     super(value);
   }
 
@@ -29,9 +32,5 @@ export class Url extends Wrapper<string> {
 
   get hash(): string {
     return this.parsed.hash;
-  }
-
-  browse(): void {
-    browse(this);
   }
 }
