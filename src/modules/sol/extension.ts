@@ -1,8 +1,8 @@
 import { dir, Directory } from '../storage/directory';
-import { sol } from './sol';
+import { getSol } from './sol';
 import { File } from '../storage/file';
 import { logDebug, logError } from '../utils/log';
-import { userWorkspace, workspace } from './workspace';
+import { getCurrentWorkspace, getUserWorkspace } from './workspace';
 
 export class Extension {
   static extensions = [];
@@ -41,6 +41,8 @@ export class Extension {
 
   prepare(force = false): void {
     this.dir.create();
+
+    const sol = getSol();
 
     const globalsFile = this.globalsFile;
     if (!globalsFile.exists || force) {
@@ -108,7 +110,19 @@ logDebug('Loaded ' + __filename);
   }
 }
 
-export const extensions: Extension[] = [];
+let extensions: Extension[] | null = null;
+
+export function getExtensions(): Extension[] {
+  if (!extensions) {
+    extensions = [];
+  }
+
+  return extensions;
+}
+
+export function getLoadedExtensions(): Extension[] {
+  return getExtensions().filter((e) => e.loaded);
+}
 
 export function extension(
   pathOrExtension: string | Extension,
@@ -129,6 +143,8 @@ export function extension(
     );
   }
 
+  const extensions = getExtensions();
+
   const existingExtension = extensions.find(
     (e) => e.dir.path === foundExtension.dir.path,
   );
@@ -142,9 +158,9 @@ export function extension(
 }
 
 export function workspaceExtension(name: string): Extension {
-  return extension(name, workspace.dir);
+  return extension(name, getCurrentWorkspace().dir);
 }
 
 export function userExtension(name: string): Extension {
-  return extension(name, userWorkspace.dir);
+  return extension(name, getUserWorkspace().dir);
 }

@@ -2,8 +2,6 @@ import { File, file } from '../storage/file';
 import { tmp } from '../storage/tmp';
 import { Text } from '../data/text';
 
-export const editor = process.env.SOL_EDITOR || 'code';
-
 export function edit(pathOrValue?: any): File {
   let f: File;
 

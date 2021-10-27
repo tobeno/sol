@@ -1,10 +1,12 @@
 import { homedir } from 'os';
 import { dir, Directory } from '../storage/directory';
-import { getSolPath } from '../utils/env';
+import path from 'path';
 
 export class Sol {
-  get packageDir(): Directory {
-    return dir(getSolPath());
+  readonly packageDir: Directory;
+
+  constructor(readonly packagePath: string) {
+    this.packageDir = dir(packagePath);
   }
 
   get packageDistDir(): Directory {
@@ -16,4 +18,22 @@ export class Sol {
   }
 }
 
-export const sol = new Sol();
+let sol: Sol | null = null;
+
+export function getSol(): Sol {
+  if (!sol) {
+    sol = new Sol(getSolPackageDir().path);
+  }
+
+  return sol;
+}
+
+export function getSolPackageDir(): Directory {
+  let rootPath = path.resolve(__dirname, '../../..');
+
+  if (path.basename(rootPath) === 'dist') {
+    rootPath = path.dirname(rootPath);
+  }
+
+  return dir(rootPath);
+}

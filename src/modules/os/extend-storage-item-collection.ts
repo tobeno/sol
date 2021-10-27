@@ -1,6 +1,6 @@
 import { definePropertiesMutation, mutateClass } from '../utils/mutation';
 import { GenericItemCollection } from '../storage/item-collection';
-import { clipboard } from './clipboard';
+import { getClipboard } from './clipboard';
 import { Item } from '../storage/item';
 
 declare module '../storage/item-collection' {
@@ -14,7 +14,7 @@ mutateClass(
   definePropertiesMutation({
     copy: {
       value(): void {
-        clipboard.text = this.toString();
+        getClipboard().text = this.toString();
       },
     },
   }),

@@ -11,4 +11,12 @@ export class Clipboard {
   }
 }
 
-export const clipboard = new Clipboard();
+let clipboard: Clipboard | null = null;
+
+export function getClipboard(): Clipboard {
+  if (!clipboard) {
+    clipboard = new Clipboard();
+  }
+
+  return clipboard;
+}

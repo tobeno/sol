@@ -4,10 +4,10 @@ import { loopWhile } from 'deasync';
 import chalk from 'chalk';
 import type { AsyncCompleter, CompleterResult } from 'readline';
 import { log } from '../utils/log';
-import { extensions } from './extension';
+import { getLoadedExtensions } from './extension';
 import { globals } from '../globals/globals';
 import { getSolMetadata } from '../utils/metadata';
-import { workspace } from './workspace';
+import { getCurrentWorkspaceDir } from './workspace';
 
 export const solReplColor = {
   primary: chalk.keyword('coral'),
@@ -27,9 +27,12 @@ async function solCompleter(line: string): Promise<CompleterResult | void> {
 
 function setupReplHistory(server: REPLServer): void {
   let historyReady = false;
-  server.setupHistory(workspace.historyFile.create().path, () => {
-    historyReady = true;
-  });
+  server.setupHistory(
+    getCurrentWorkspaceDir().file('history').create().path,
+    () => {
+      historyReady = true;
+    },
+  );
   loopWhile(() => !historyReady);
 }
 
@@ -52,9 +55,7 @@ function setupReplCommands(server: REPLServer): void {
       let globalEntries = [
         ...new Set([
           ...Object.entries(globals),
-          ...extensions
-            .filter((e) => e.loaded)
-            .flatMap((e) => Object.entries(e.globals)),
+          ...getLoadedExtensions().flatMap((e) => Object.entries(e.globals)),
         ]),
       ].sort((entry1, entry2) => entry1[0].localeCompare(entry2[0]));
 

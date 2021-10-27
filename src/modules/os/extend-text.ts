@@ -1,6 +1,6 @@
 import { definePropertiesMutation, mutateClass } from '../utils/mutation';
 import { Text } from '../data/text';
-import { clipboard } from './clipboard';
+import { getClipboard } from './clipboard';
 
 declare module '../data/text' {
   interface Text {
@@ -13,7 +13,7 @@ mutateClass(
   definePropertiesMutation({
     copy: {
       value(): void {
-        clipboard.text = String(this);
+        getClipboard().text = String(this);
       },
     },
   }),

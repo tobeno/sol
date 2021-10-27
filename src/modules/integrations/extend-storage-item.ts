@@ -1,5 +1,4 @@
 import { definePropertiesMutation, mutateClass } from '../utils/mutation';
-import { editor } from './editor';
 import { Item } from '../storage/item';
 import { browse } from './browser';
 import { open } from './open';
@@ -19,7 +18,7 @@ mutateClass(
   definePropertiesMutation({
     edit: {
       value(): Item {
-        open(this.uri, editor);
+        open(this.uri, process.env.SOL_EDITOR || 'code');
 
         return this;
       },

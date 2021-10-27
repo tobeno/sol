@@ -22,6 +22,7 @@ export abstract class StringTransformer<TargetType>
   }
 
   abstract stringify(input: TargetType): string;
+
   abstract parse(input: string): TargetType;
 
   matchesStringifyTransformation(transformation: DataTransformation): boolean {

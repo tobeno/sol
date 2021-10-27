@@ -15,7 +15,7 @@ import {
   ItemCollection,
 } from '../storage/item-collection';
 import { web } from '../web';
-import { clipboard } from '../os/clipboard';
+import { getClipboard } from '../os/clipboard';
 import * as asyncUtils from '../utils/async';
 import { awaitSync } from '../utils/async';
 import * as arrayUtils from '../utils/array';
@@ -25,7 +25,7 @@ import * as metadataUtils from '../utils/metadata';
 import { withHelp } from '../utils/metadata';
 import { getCwd } from '../utils/env';
 import { log } from '../utils/log';
-import { sol } from '../sol/sol';
+import { getSol } from '../sol/sol';
 import { edit } from '../integrations/editor';
 import { listPlays, play, replay, unwatchPlay } from '../play/play';
 import * as shell from '../utils/shelljs';
@@ -47,11 +47,11 @@ import { DataTransformation } from '../data/data-transformation';
 import { FromPropertyDescriptorMap } from '../../interfaces/object';
 import {
   extension,
-  extensions,
-  userExtension,
+  getExtensions,
+  getLoadedExtensions,
   workspaceExtension,
 } from '../sol/extension';
-import { userWorkspace, workspace } from '../sol/workspace';
+import { getCurrentWorkspace, getUserWorkspace } from '../sol/workspace';
 import { browse } from '../integrations/browser';
 import { open, openApp } from '../integrations/open';
 
@@ -94,7 +94,9 @@ export const globals = {
   ),
   clipboard: withHelp(
     {
-      value: clipboard,
+      get() {
+        return getClipboard();
+      },
     },
     'Exposes the system clipboard',
   ),
@@ -143,7 +145,9 @@ export const globals = {
     'Returns the extension for the given name or path',
   ),
   extensions: {
-    value: extensions,
+    get() {
+      return getExtensions();
+    },
   },
   file: withHelp(
     {
@@ -195,7 +199,7 @@ export const globals = {
   ),
   loadedExtensions: {
     get() {
-      return extensions.filter((e) => e.loaded);
+      return getLoadedExtensions();
     },
   },
   log: withHelp(
@@ -248,7 +252,9 @@ export const globals = {
   ),
   sol: withHelp(
     {
-      value: sol,
+      get() {
+        return getSol();
+      },
     },
     'Current Sol instance',
   ),
@@ -272,13 +278,17 @@ export const globals = {
   },
   userExtension: withHelp(
     {
-      value: userExtension,
+      get() {
+        return getUserWorkspace();
+      },
     },
     'Returns the user extension for the given name',
   ),
   userWorkspace: withHelp(
     {
-      value: userWorkspace,
+      get() {
+        return getUserWorkspace();
+      },
     },
     'User Sol workspace',
   ),
@@ -313,7 +323,9 @@ export const globals = {
   },
   workspace: withHelp(
     {
-      value: workspace,
+      get() {
+        return getCurrentWorkspace();
+      },
     },
     'Current Sol workspace',
   ),

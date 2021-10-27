@@ -1,10 +1,5 @@
 import { spawnSync } from 'child_process';
-import { sol } from './modules/sol/sol';
-import { log, logDebug } from './modules/utils/log';
-import { extensions } from './modules/sol/extension';
 import chalk from 'chalk';
-import { workspace } from './modules/sol/workspace';
-import { solReplColor } from './modules/sol/repl';
 
 /**
  * Setup Sol modules
@@ -20,7 +15,13 @@ export function loadSol() {
 
   setupSol();
 
-  const { workspace, userWorkspace } = require('./modules/sol/workspace');
+  const {
+    getCurrentWorkspace,
+    getUserWorkspace,
+  } = require('./modules/sol/workspace');
+
+  const workspace = getCurrentWorkspace();
+  const userWorkspace = getUserWorkspace();
 
   userWorkspace.load();
   workspace.load();
@@ -36,10 +37,10 @@ export function loadSol() {
  * Runs the build command for Sol
  */
 export function rebuildSol(): void {
-  const { sol } = require('./modules/sol/sol');
+  const { getSol } = require('./modules/sol/sol');
 
   spawnSync('npm run build', {
-    cwd: sol.packageDir.path,
+    cwd: getSol().packageDir.path,
     shell: true,
   });
 }
@@ -48,8 +49,14 @@ export function rebuildSol(): void {
  * Update Sol from git remote
  */
 export function updateSol(): void {
+  const { logDebug } = require('./modules/utils/log');
+
   logDebug('Updating Sol...');
   logDebug('Fetching latest version from GitHub...');
+
+  const { getSol } = require('./modules/sol/sol');
+
+  const sol = getSol();
 
   spawnSync('git pull --rebase', {
     cwd: sol.packageDir.path,
@@ -78,9 +85,12 @@ export function unloadSol(): void {
     unmutateGlobals,
   } = require('./modules/utils/mutation');
   const { clearRequireCache } = require('./modules/utils/module');
-  const { extensions } = require('./modules/sol/extension');
+  const { getLoadedExtensions } = require('./modules/sol/extension');
+  const {
+    getCurrentWorkspaceDir,
+    getUserWorkspaceDir,
+  } = require('./modules/sol/workspace');
   const { unwatchPlays } = require('./modules/play/play');
-  const { workspace, userWorkspace } = require('./modules/sol/workspace');
 
   logDebug('Unloading Sol...');
 
@@ -95,24 +105,22 @@ export function unloadSol(): void {
   unmutateClass(Object);
   unmutateClass(Promise);
 
-  const { sol } = require('./modules/sol/sol');
+  const { getSol } = require('./modules/sol/sol');
   const modules = [
-    ...sol.packageDistDir
-      .files('**/*.js')
+    ...getSol()
+      .packageDistDir.files('**/*.js')
       .value.map((f: any) => f.pathWithoutExt),
-    ...workspace.dir
+    ...getCurrentWorkspaceDir()
       .files('**/*.{ts,js}')
       .value.map((f: any) => f.pathWithoutExt),
-    ...userWorkspace.dir
+    ...getUserWorkspaceDir()
       .files('**/*.{ts,js}')
       .value.map((f: any) => f.pathWithoutExt),
-    ...extensions
-      .filter((e: any) => e.loaded)
-      .flatMap((extension: any) =>
-        extension.dir
-          .files('**/*.{ts,js}')
-          .value.map((f: any) => f.pathWithoutExt),
-      ),
+    ...getLoadedExtensions().flatMap((extension: any) =>
+      extension.dir
+        .files('**/*.{ts,js}')
+        .value.map((f: any) => f.pathWithoutExt),
+    ),
   ];
 
   modules.forEach(clearRequireCache);
@@ -134,7 +142,7 @@ export function reloadSol(): void {
 export function startSol(): void {
   loadSol();
 
-  const { startReplServer } = require('./modules/sol/repl');
+  const { startReplServer, solReplColor } = require('./modules/sol/repl');
 
   const server = startReplServer();
 
@@ -175,17 +183,26 @@ export function startSol(): void {
     },
   });
 
-  const loadedExtensions = extensions.filter((e) => e.loaded);
+  const { getSol } = require('./modules/sol/sol');
+  const { getLoadedExtensions } = require('./modules/sol/extension');
+  const { log } = require('./modules/utils/log');
+  const { getCurrentWorkspaceDir } = require('./modules/sol/workspace');
+
+  const loadedExtensions = getLoadedExtensions();
+  const sol = getSol();
 
   log(
     `
 ${chalk.bold(solReplColor.primary('-=| Welcome to Sol |=-'))}
-Workspace: ${solReplColor.warn(workspace.dir)}${
+Workspace: ${solReplColor.warn(getCurrentWorkspaceDir().path)}${
       loadedExtensions.length
         ? `
 Extensions:
 ${loadedExtensions
-  .map((e) => `- ${solReplColor.ok(e.name)} (${solReplColor.warn(e.dir.path)})`)
+  .map(
+    (e: any) =>
+      `- ${solReplColor.ok(e.name)} (${solReplColor.warn(e.dir.path)})`,
+  )
   .join('\n')}`
         : ''
     }

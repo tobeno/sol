@@ -5,7 +5,7 @@ import { rerequire } from '../utils/module';
 import { Directory } from '../storage/directory';
 import { getReplServer } from '../sol/repl';
 import { log } from '../utils/log';
-import { workspace } from '../sol/workspace';
+import { getCurrentWorkspace, getCurrentWorkspaceDir } from '../sol/workspace';
 
 const playWatchers: Record<string, () => void> = {};
 
@@ -34,7 +34,7 @@ function runPlay(playFile: File) {
 }
 
 export function getPlayDir(): Directory {
-  return workspace.dir.dir('play');
+  return getCurrentWorkspaceDir().dir('play');
 }
 
 export function getPlayFile(path?: string) {
@@ -127,6 +127,7 @@ export function listPlays() {
 
 export function setupPlay(path: string) {
   const playFile = getPlayFile(path);
+  const workspace = getCurrentWorkspace();
 
   playFile.create();
 

@@ -1,9 +1,9 @@
 import { dir, Directory } from '../storage/directory';
 import { File } from '../storage/file';
 import { globals } from '../globals/globals';
-import { extensions } from './extension';
+import { getLoadedExtensions } from './extension';
 import { logDebug, logError } from '../utils/log';
-import { sol } from './sol';
+import { getSol } from './sol';
 import { getCwd } from '../utils/env';
 
 export class Workspace {
@@ -14,10 +14,6 @@ export class Workspace {
   constructor(workspacePath: string, packageDistPath: string) {
     this.dir = dir(workspacePath);
     this.packageDistDir = dir(packageDistPath);
-  }
-
-  get historyFile(): File {
-    return this.dir.file('history');
   }
 
   get generatedDir(): Directory {
@@ -47,6 +43,8 @@ export class Workspace {
 
   updateContextFile(): void {
     const contextFile = this.contextFile;
+    const extensions = getLoadedExtensions();
+
     contextFile.create();
     contextFile.text = `
 /* eslint-disable */
@@ -139,12 +137,36 @@ logDebug('Loaded ' + __filename);
   }
 }
 
-export const workspace = new Workspace(
-  `${getCwd()}/.sol`,
-  sol.packageDistDir.path,
-);
+export function getCurrentWorkspaceDir(): Directory {
+  return dir(`${getCwd()}/.sol`);
+}
 
-export const userWorkspace = new Workspace(
-  sol.userDir.path,
-  sol.packageDistDir.path,
-);
+let currentWorkspace: Workspace | null = null;
+
+export function getCurrentWorkspace(): Workspace {
+  if (!currentWorkspace) {
+    currentWorkspace = new Workspace(
+      getCurrentWorkspaceDir().path,
+      getSol().packageDistDir.path,
+    );
+  }
+
+  return currentWorkspace;
+}
+
+export function getUserWorkspaceDir(): Directory {
+  return getSol().userDir;
+}
+
+let userWorkspace: Workspace | null = null;
+
+export function getUserWorkspace(): Workspace {
+  if (!userWorkspace) {
+    userWorkspace = new Workspace(
+      getUserWorkspaceDir().path,
+      getSol().packageDistDir.path,
+    );
+  }
+
+  return userWorkspace;
+}
