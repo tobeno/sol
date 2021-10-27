@@ -9,7 +9,11 @@ import { Text } from './text';
  * Wrapper for HTML strings
  */
 export class Ast extends Data<babelTypes.Node> {
-  constructor(public value: babelTypes.Node) {
+  constructor(
+    public value: babelTypes.Node,
+    public scope: Scope | null = null,
+    public parentPath: NodePath | null = null,
+  ) {
     super(value);
   }
 
@@ -27,7 +31,13 @@ export class Ast extends Data<babelTypes.Node> {
     state?: any,
     parentPath?: NodePath,
   ): this {
-    traverse(this.value, opts, scope, state, parentPath);
+    traverse(
+      this.value,
+      opts,
+      scope || this.scope || undefined,
+      state,
+      parentPath || this.parentPath || undefined,
+    );
 
     return this;
   }
@@ -41,7 +51,7 @@ export class Ast extends Data<babelTypes.Node> {
     const matches: Ast[] = [];
     this.traverse({
       [type]: (path: NodePath) => {
-        matches.push(new Ast(path.node));
+        matches.push(new Ast(path.node, path.scope, path));
       },
     });
 
