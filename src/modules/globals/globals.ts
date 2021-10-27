@@ -53,6 +53,7 @@ import {
 } from '../sol/extension';
 import { userWorkspace, workspace } from '../sol/workspace';
 import { browse } from '../integrations/browser';
+import { open, openApp } from '../integrations/open';
 
 export const globals = {
   ast: withHelp(
@@ -203,6 +204,12 @@ export const globals = {
     },
     'Logs to the console',
   ),
+  open: {
+    value: open,
+  },
+  openApp: {
+    value: openApp,
+  },
   pipe: withHelp(
     {
       value: R.pipe,
