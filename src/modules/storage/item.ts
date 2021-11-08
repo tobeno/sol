@@ -1,11 +1,17 @@
 import path from 'path';
 import fs from 'fs';
 import { inspect } from 'util';
+import * as os from 'os';
 
 export abstract class Item {
   absolutePath: string;
 
   constructor(relativePath: string, public basePath?: string) {
+    // Resolve home directory references
+    if (relativePath.startsWith('~/')) {
+      relativePath = path.join(os.homedir(), relativePath.substr(2));
+    }
+
     this.absolutePath = path.resolve(
       basePath ? path.join(basePath, relativePath) : relativePath,
     );
