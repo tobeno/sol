@@ -20,7 +20,7 @@ interface ProductsFile {
   products: Product[];
 }
 
-xdescribe('data module', () => {
+describe('data module', () => {
   describe('transformation', () => {
     describe('file', () => {
       it('should transform a JSON file', async () => {

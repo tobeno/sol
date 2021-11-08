@@ -1,6 +1,6 @@
 import { grep } from '../../src/modules/storage/search';
 
-xdescribe('storage module', () => {
+describe('storage module', () => {
   describe('search', () => {
     it('should grep by string', async () => {
       const files = grep('shoe', `${__dirname}/../assets/search`);

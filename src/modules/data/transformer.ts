@@ -2,13 +2,26 @@ import { DataTransformation } from './data-transformation';
 import { DataType } from './data-type';
 import { DataFormat } from './data-format';
 import { DataSource } from './data-source';
-import { awaitSync } from '../utils/async';
 import type { Ast } from './ast';
 import type { Data } from './data';
 import type { Html } from './html';
 import type { Xml } from './xml';
 import type { Text } from './text';
 import type { Url } from './url';
+import type { Constructor } from '../../interfaces/util';
+
+// Hepler functions with dynamic imports to avoid circular dependencies
+function getDataClass(): Constructor<Data> {
+  return require('./data').Data;
+}
+
+function getAstClass(): Constructor<Ast> {
+  return require('./ast').Ast;
+}
+
+function getTextClass(): Constructor<Text> {
+  return require('./text').Text;
+}
 
 export function transform<InputType = any, OutputType = any>(
   input: InputType,
@@ -19,9 +32,7 @@ export function transform<InputType = any, OutputType = any>(
   }
 
   // Import dynamically to avoid circular imports
-  const { getRootTransformer } = awaitSync(
-    import('./transformers/root-transformer'),
-  );
+  const { getRootTransformer } = require('./transformers/root-transformer');
 
   return getRootTransformer().transform(input, transformation);
 }
@@ -45,10 +56,10 @@ export function dataToJson<ValueType = any>(
   value: Data<ValueType> | any,
   source: DataSource | null = null,
 ): Text<ValueType> {
-  const { Data } = awaitSync(import('./data'));
+  const Data = getDataClass();
 
   if (!(value instanceof Data)) {
-    value = new Data<ValueType>(value);
+    value = new Data(value);
   }
 
   if (source) {
@@ -81,7 +92,7 @@ export function dataToYaml<ValueType = any>(
   value: Data<ValueType> | any,
   source: DataSource | null = null,
 ): Text<ValueType> {
-  const { Data } = awaitSync(import('./data'));
+  const Data = getDataClass();
 
   if (!(value instanceof Data)) {
     value = new Data(value);
@@ -117,7 +128,7 @@ export function dataToCsv<ValueType = any>(
   value: Data<ValueType> | any,
   source: DataSource | null = null,
 ): Text<ValueType> {
-  const { Data } = awaitSync(import('./data'));
+  const Data = getDataClass();
 
   if (!(value instanceof Data)) {
     value = new Data(value);
@@ -150,7 +161,7 @@ export function astToCode(
   value: Ast | any,
   source: DataSource | null = null,
 ): Text {
-  const { Ast } = awaitSync(import('./ast'));
+  const Ast = getAstClass();
   if (!(value instanceof Ast)) {
     value = new Ast(value);
   }
@@ -167,7 +178,7 @@ export function wrapString<ContentType = any>(
   format: string | null = null,
   source: DataSource | null = null,
 ): Text<ContentType> {
-  const { Text } = awaitSync(import('./text'));
+  const Text = getTextClass();
   if (value instanceof Text) {
     let text = value;
 
@@ -182,11 +193,11 @@ export function wrapString<ContentType = any>(
     return text;
   }
 
-  return new Text<ContentType>(value, format, source);
+  return new Text(value, format, source);
 }
 
 export function unwrapString(value: string | String | Text): string {
-  const { Text } = awaitSync(import('./text'));
+  const Text = getTextClass();
   if (value instanceof Text) {
     value = value.value;
   }
@@ -198,15 +209,25 @@ export function wrapObject<ValueType = any>(
   value: ValueType,
   source: DataSource | null = null,
 ): Data<ValueType> {
-  const { Data } = awaitSync(import('./data'));
+  const Data = getDataClass();
 
-  return new Data<ValueType>(value, source);
+  if (value instanceof Data) {
+    let valueGeneric = value as any;
+
+    if (source) {
+      valueGeneric = valueGeneric.setSource(source);
+    }
+
+    return valueGeneric;
+  }
+
+  return new Data(value, source) as any;
 }
 
 export function unwrapObject<ValueType = any>(
   value: ValueType | Data<ValueType>,
 ): ValueType {
-  const { Data } = awaitSync(import('./data'));
+  const Data = getDataClass();
 
   if (value instanceof Data) {
     value = value.value;
