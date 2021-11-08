@@ -49,6 +49,7 @@ import {
   extension,
   getExtensions,
   getLoadedExtensions,
+  userExtension,
   workspaceExtension,
 } from '../sol/extension';
 import { getCurrentWorkspace, getUserWorkspace } from '../sol/workspace';
@@ -278,9 +279,7 @@ export const globals = {
   },
   userExtension: withHelp(
     {
-      get() {
-        return getUserWorkspace();
-      },
+      value: userExtension,
     },
     'Returns the user extension for the given name',
   ),
