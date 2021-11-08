@@ -1,5 +1,5 @@
 import jsonata, { Expression } from 'jsonata';
-import { transform, wrapObject, wrapString } from './transformer';
+import { transform, wrapString } from './transformer';
 import { Wrapper } from './wrapper';
 import { Text } from './text';
 import { DataSource } from './data-source';
@@ -38,14 +38,14 @@ export class Data<
   }
 
   get clone(): Data<ValueType> {
-    return wrapObject<ValueType>(JSON.parse(JSON.stringify(this.value)), this);
+    return new Data<ValueType>(JSON.parse(JSON.stringify(this.value)), this);
   }
 
   get flattened(): Data<
     ValueType extends Array<any> ? FlatArray<ValueType, 1> : ValueType
   > {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.flat() as any, this) as any;
+      return new Data(this.value.flat() as any, this) as any;
     }
 
     return this as any;
@@ -53,33 +53,31 @@ export class Data<
 
   get first(): Data<ItemType> | null {
     if (Array.isArray(this.value)) {
-      return this.value.length
-        ? wrapObject<ItemType>(this.value[0], this)
-        : null;
+      return this.value.length ? new Data<ItemType>(this.value[0], this) : null;
     }
 
     const values = Object.values(this.value);
 
-    return values.length ? wrapObject<ItemType>(values[0], this) : null;
+    return values.length ? new Data<ItemType>(values[0], this) : null;
   }
 
   get last(): Data<ItemType> | null {
     if (Array.isArray(this.value)) {
       return this.value.length
-        ? wrapObject<ItemType>(this.value[this.value.length - 1], this)
+        ? new Data<ItemType>(this.value[this.value.length - 1], this)
         : null;
     }
 
     const values = Object.values(this.value);
 
     return values.length
-      ? wrapObject<ItemType>(values[values.length - 1], this)
+      ? new Data<ItemType>(values[values.length - 1], this)
       : null;
   }
 
   get unique(): Data<AnyPartial<ValueType>> {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.unique, this) as any;
+      return new Data(this.value.unique, this) as any;
     }
 
     const knownValues: any[] = [];
@@ -97,10 +95,10 @@ export class Data<
 
   get reversed(): Data<ValueType extends Array<any> ? ValueType : any> {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.reverse(), this) as any;
+      return new Data(this.value.reverse(), this) as any;
     }
 
-    return wrapObject(
+    return new Data(
       Object.fromEntries(Object.entries(this.value).reverse()),
       this,
     ) as any;
@@ -111,37 +109,37 @@ export class Data<
   }
 
   get camelcased(): Data<any> {
-    return wrapObject(camelcaseObject(this.value), this) as any;
+    return new Data(camelcaseObject(this.value), this) as any;
   }
 
   get snakecased(): Data<any> {
-    return wrapObject(snakecaseObject(this.value), this) as any;
+    return new Data(snakecaseObject(this.value), this) as any;
   }
 
   get keys(): Data<KeyType[]> {
     if (Array.isArray(this.value)) {
-      return wrapObject(
+      return new Data(
         (this.value as any).map((_: any, index: any) => index),
       ) as any;
     }
 
-    return wrapObject(Object.keys(this.value)) as any;
+    return new Data(Object.keys(this.value)) as any;
   }
 
   get values(): Data<ItemType[]> {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value) as any;
+      return new Data(this.value) as any;
     }
 
-    return wrapObject(Object.values(this.value));
+    return new Data(Object.values(this.value));
   }
 
   get entries(): Data<[KeyType, ItemType][]> {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.entries()) as any;
+      return new Data(this.value.entries()) as any;
     }
 
-    return wrapObject(Object.entries(this.value)) as any;
+    return new Data(Object.entries(this.value)) as any;
   }
 
   setSource(source: DataSource | null): Data<ValueType> {
@@ -154,7 +152,7 @@ export class Data<
     compareFn?: (a: ItemType, b: ItemType) => number,
   ): Data<ValueType extends Array<any> ? ValueType : any> {
     if (Array.isArray(this.value)) {
-      return wrapObject([...this.value].sort(compareFn), this) as any;
+      return new Data([...this.value].sort(compareFn), this) as any;
     }
 
     const entries = this.entries.value;
@@ -174,14 +172,14 @@ export class Data<
       return 0;
     });
 
-    return wrapObject(Object.fromEntries(entries), this) as any;
+    return new Data(Object.fromEntries(entries), this) as any;
   }
 
   filter(
     cb: (value: ItemType, index: KeyType) => boolean,
   ): Data<AnyPartial<ValueType>> {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.filter(cb as any) as any, this) as any;
+      return new Data(this.value.filter(cb as any) as any, this) as any;
     }
 
     const newValue: any = {};
@@ -192,7 +190,7 @@ export class Data<
       }
     });
 
-    return wrapObject(newValue, this) as any;
+    return new Data(newValue, this) as any;
   }
 
   find(
@@ -201,7 +199,7 @@ export class Data<
     if (Array.isArray(this.value)) {
       const result = this.value.find(cb as any) as any;
 
-      return result ? (wrapObject(result, this) as any) : undefined;
+      return result ? (new Data(result, this) as any) : undefined;
     }
 
     let result: any = null;
@@ -214,7 +212,7 @@ export class Data<
       }
     }
 
-    return result ? (wrapObject(result, this) as any) : undefined;
+    return result ? (new Data(result, this) as any) : undefined;
   }
 
   findIndex(cb: (value: ItemType, index: KeyType) => boolean): KeyType {
@@ -240,7 +238,7 @@ export class Data<
     initial: ResultType,
   ): Data<ResultType> {
     if (Array.isArray(this.value)) {
-      return wrapObject<ResultType>(
+      return new Data<ResultType>(
         this.value.reduce(
           (result, value, index) => cb(result, value, index as any),
           initial,
@@ -249,7 +247,7 @@ export class Data<
       );
     }
 
-    return wrapObject(
+    return new Data(
       this.entries.value.reduce(
         (result, [key, value]) => cb(result, value, key),
         initial,
@@ -304,7 +302,7 @@ export class Data<
       : any
   > {
     if (Array.isArray(this.value)) {
-      return wrapObject((this.value as any).map(cb as any) as any, this) as any;
+      return new Data((this.value as any).map(cb as any) as any, this) as any;
     }
 
     const newValue: any = {};
@@ -313,7 +311,7 @@ export class Data<
       newValue[index] = cb(value, index);
     });
 
-    return wrapObject(newValue, this) as any;
+    return new Data(newValue, this) as any;
   }
 
   join(separator: string): Text {
@@ -342,7 +340,7 @@ export class Data<
       exp = jsonata(exp);
     }
 
-    return wrapObject(exp.evaluate(this.value), this) as any;
+    return new Data(exp.evaluate(this.value), this) as any;
   }
 
   transformTo<TargetType = any>(targetType: DataType | string): TargetType {
