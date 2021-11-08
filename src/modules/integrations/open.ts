@@ -1,6 +1,6 @@
 import { Wrapper } from '../data/wrapper';
 import openInternal from 'open';
-import { awaitSync } from '../utils/async';
+import { catchAsyncErrors } from '../utils/async';
 
 function mapApp(app: string): string {
   if (app.startsWith('open ')) {
@@ -26,7 +26,7 @@ export function openApp(
   app: string,
   options?: openInternal.OpenAppOptions,
 ): void {
-  awaitSync(openInternal.openApp(mapApp(app), options));
+  catchAsyncErrors(openInternal.openApp(mapApp(app), options));
 }
 
 export function open(
@@ -42,7 +42,7 @@ export function open(
     value = value.value;
   }
 
-  awaitSync(
+  catchAsyncErrors(
     openInternal(value, {
       ...options,
       ...(app

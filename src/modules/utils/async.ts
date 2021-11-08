@@ -1,4 +1,5 @@
 import { loopWhile } from 'deasync';
+import { logError } from './log';
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
 
@@ -17,6 +18,19 @@ export function sleep(seconds: number): void {
   }, seconds * 1000);
 
   loopWhile(() => !done);
+}
+
+export function catchAsyncErrors<T>(
+  promise: T | PromiseLike<T>,
+  onError: ((e: Error | any) => void) | null = null,
+): void {
+  Promise.resolve(promise).catch((e) => {
+    if (onError) {
+      onError(e);
+    } else {
+      logError(e);
+    }
+  });
 }
 
 export function awaitSync<T>(promise: T | PromiseLike<T>): T {

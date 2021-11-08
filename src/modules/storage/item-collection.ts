@@ -3,7 +3,6 @@ import { File } from './file';
 import { grep } from './search';
 import { Item } from './item';
 import fg from 'fast-glob';
-import { awaitSync } from '../utils/async';
 import { Data } from '../data/data';
 import { Text } from '../data/text';
 import { wrapString } from '../data/transformer';
@@ -98,14 +97,14 @@ export class GenericItemCollection<ItemType extends Item> extends Data<
     return new FileCollection(result);
   }
 
-  updateName(cb: (name: string) => string | Promise<string>): this {
-    this.forEach((f) => (f.name = awaitSync(cb(f.name))));
+  updateName(cb: (name: string) => string): this {
+    this.forEach((f) => (f.name = cb(f.name)));
 
     return this;
   }
 
-  updateBasename(cb: (basename: string) => string | Promise<string>): this {
-    this.forEach((f) => (f.basename = awaitSync(cb(f.basename))));
+  updateBasename(cb: (basename: string) => string): this {
+    this.forEach((f) => (f.basename = cb(f.basename)));
 
     return this;
   }
@@ -146,16 +145,14 @@ export class FileCollection extends GenericItemCollection<File> {
     return this;
   }
 
-  updateExt(cb: (ext: string) => string | Promise<string>): ItemCollection {
-    this.forEach((f) => (f.ext = awaitSync(cb(f.ext))));
+  updateExt(cb: (ext: string) => string): ItemCollection {
+    this.forEach((f) => (f.ext = cb(f.ext)));
 
     return this;
   }
 
-  updateExts(
-    cb: (exts: string[]) => string[] | Promise<string[]>,
-  ): ItemCollection {
-    this.forEach((f) => (f.exts = awaitSync(cb(f.exts))));
+  updateExts(cb: (exts: string[]) => string[]): ItemCollection {
+    this.forEach((f) => (f.exts = cb(f.exts)));
 
     return this;
   }
