@@ -1,5 +1,5 @@
 import { RecordItemType } from '../../interfaces/util';
-import { camelcaseText, snakecaseText } from './text';
+import { camelcaseText, constantcaseText, snakecaseText } from './text';
 
 export function sortObjectKeys<T extends Record<string, any>>(obj: T): T {
   return Object.assign(
@@ -234,41 +234,35 @@ export function camelcaseObject(
     includeConstantCase = false,
   }: { capitalize?: boolean | null; includeConstantCase?: boolean | null } = {},
 ): any {
-  if (!obj || typeof obj !== 'object' || obj instanceof Date) {
-    return obj;
-  }
-
-  if (Array.isArray(obj)) {
-    return obj.map((item) => camelcaseObject(item));
-  }
-
-  return Object.keys(obj).reduce((result, key) => {
-    const value = obj[key];
-
-    result[
-      camelcaseText(key, {
-        capitalize,
-        includeConstantCase,
-      })
-    ] = camelcaseObject(value);
-
-    return result;
-  }, {} as any);
+  return mapObjectKeys(obj, (key) =>
+    camelcaseText(key, {
+      capitalize,
+      includeConstantCase,
+    }),
+  );
 }
 
 export function snakecaseObject(obj: any): any {
+  return mapObjectKeys(obj, snakecaseText);
+}
+
+export function constantcaseObject(obj: any): any {
+  return mapObjectKeys(obj, constantcaseText);
+}
+
+export function mapObjectKeys(obj: any, cb: (key: string) => string): any {
   if (!obj || typeof obj !== 'object' || obj instanceof Date) {
     return obj;
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => snakecaseObject(item));
+    return obj.map((item) => mapObjectKeys(item, cb));
   }
 
   return Object.keys(obj).reduce((result, key) => {
     const value = obj[key];
 
-    result[snakecaseText(key)] = snakecaseObject(value);
+    result[cb(key)] = mapObjectKeys(value, cb);
 
     return result;
   }, {} as any);

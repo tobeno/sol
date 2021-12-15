@@ -10,7 +10,11 @@ import type {
   AnyKeyType,
   AnyPartial,
 } from '../../interfaces/util';
-import { camelcaseObject, snakecaseObject } from '../utils/object';
+import {
+  camelcaseObject,
+  constantcaseObject,
+  snakecaseObject,
+} from '../utils/object';
 import { DataType } from './data-type';
 
 /**
@@ -114,6 +118,10 @@ export class Data<
 
   get snakecased(): Data<any> {
     return new Data(snakecaseObject(this.value), this) as any;
+  }
+
+  get constantcased(): Data<any> {
+    return new Data(constantcaseObject(this.value), this) as any;
   }
 
   get keys(): Data<KeyType[]> {

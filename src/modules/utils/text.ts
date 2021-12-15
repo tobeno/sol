@@ -1,4 +1,5 @@
 import { withHelp } from './metadata';
+import * as changeCase from 'change-case';
 
 export function lines(str: string): string[] {
   return str.replace(/\r/g, '').trimEnd().split('\n');
@@ -81,20 +82,32 @@ export function extractText(str: string, pattern: RegExp | string) {
   return [...new Set(str.match(pattern) || [])].sort();
 }
 
+export function capitalizeText(str: string): string {
+  return str.slice(0, 1).toUpperCase() + str.slice(1);
+}
+
+export function decapitalizeText(str: string): string {
+  return str.slice(0, 1).toLowerCase() + str.slice(1);
+}
+
+export function pascalcaseText(str: string): string {
+  return changeCase.pascalCase(str);
+}
+
 export function camelcaseText(
-  key: string,
+  str: string,
   {
     capitalize = false,
     includeConstantCase = false,
   }: { capitalize?: boolean | null; includeConstantCase?: boolean | null } = {},
 ): string {
-  if (includeConstantCase || !/^[A-Z0-9_]+$/.test(key)) {
-    key = key.replace(/_([a-z0-9])/g, (...matches) => matches[1].toUpperCase());
+  if (includeConstantCase || !/^[A-Z0-9_]+$/.test(str)) {
+    str = changeCase.camelCase(str);
 
     if (capitalize === true) {
-      key = key.slice(0, 1).toUpperCase() + key.slice(1);
+      str = capitalizeText(str);
     } else if (capitalize === false) {
-      key = key
+      str = str
         .replace(
           /^([A-Z])([a-z0-9])/g,
           (...matches) => `${matches[1].toLowerCase()}${matches[2]}`,
@@ -106,12 +119,21 @@ export function camelcaseText(
     }
   }
 
-  return key;
+  return str;
+}
+
+export function titlecaseText(str: string): string {
+  return changeCase.capitalCase(str);
+}
+
+export function kebabcaseText(str: string): string {
+  return changeCase.paramCase(str);
+}
+
+export function constantcaseText(str: string): string {
+  return changeCase.constantCase(str);
 }
 
 export function snakecaseText(str: string): string {
-  return str.replace(
-    /([a-z0-9])([A-Z])/g,
-    (...matches) => `${matches[1]}_${matches[2].toLowerCase()}`,
-  );
+  return changeCase.snakeCase(str);
 }
