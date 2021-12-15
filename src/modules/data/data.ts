@@ -79,6 +79,21 @@ export class Data<
       : null;
   }
 
+  get sum(): Data<number> {
+    const values = this.values;
+
+    return values.reduce(
+      (result, value) => result + (parseFloat(value as any) || 0),
+      0,
+    );
+  }
+
+  get avg(): Data<number> {
+    const values = this.values;
+
+    return new Data(values.sum.value / values.length);
+  }
+
   get unique(): Data<AnyPartial<ValueType>> {
     if (Array.isArray(this.value)) {
       return new Data(this.value.unique, this) as any;
@@ -140,6 +155,10 @@ export class Data<
     }
 
     return new Data(Object.values(this.value));
+  }
+
+  get length(): number {
+    return (this.value as any).length;
   }
 
   get entries(): Data<[KeyType, ItemType][]> {
