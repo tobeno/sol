@@ -226,6 +226,16 @@ export class Data<
     }, {} as Record<KeyType, GroupType>);
   }
 
+  groupCount<KeyType extends string | number | symbol>(
+    keyFn: (item: ItemType) => KeyType,
+  ) {
+    return this.group(
+      keyFn,
+      (r) => r + 1,
+      () => 0,
+    );
+  }
+
   sort(
     compareFn?: (a: ItemType, b: ItemType) => number,
   ): Data<ValueType extends Array<any> ? ValueType : any> {
