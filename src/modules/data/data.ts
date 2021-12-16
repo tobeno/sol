@@ -175,6 +175,30 @@ export class Data<
     return this as any;
   }
 
+  group<KeyType extends string | number | symbol, GroupType = ItemType[]>(
+    keyFn: (item: ItemType) => KeyType,
+    reduceFn: (group: GroupType, item: ItemType) => GroupType = (
+      group,
+      item,
+    ) => [...group, item],
+    groupFn: (key: KeyType) => GroupType,
+  ): Data<Record<KeyType, ItemType[]>> {
+    const values = this.values;
+
+    return values.reduce((result, item) => {
+      const key = keyFn(item);
+      let group = result[key];
+      if (!group) {
+        group = [];
+        result[key] = group;
+      }
+
+      group.push(item);
+
+      return result;
+    }, {} as Record<KeyType, ItemType[]>);
+  }
+
   sort(
     compareFn?: (a: ItemType, b: ItemType) => number,
   ): Data<ValueType extends Array<any> ? ValueType : any> {
