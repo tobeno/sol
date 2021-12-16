@@ -10,12 +10,16 @@ import type {
   AnyKeyType,
   AnyPartial,
 } from '../../interfaces/util';
-import {
-  camelcaseObject,
-  constantcaseObject,
-  snakecaseObject,
-} from '../utils/object';
+import { mapObjectKeys } from '../utils/object';
 import { DataType } from './data-type';
+import {
+  camelcaseText,
+  constantcaseText,
+  kebabcaseText,
+  pascalcaseText,
+  snakecaseText,
+  titlecaseText,
+} from '../utils/text';
 
 /**
  * Generic wrapper for runtime objects
@@ -127,16 +131,28 @@ export class Data<
     return this.filter((value: any) => !!value);
   }
 
-  get camelcased(): Data<any> {
-    return new Data(camelcaseObject(this.value), this) as any;
+  get camelcased(): Data {
+    return this.changeCase(camelcaseText);
   }
 
-  get snakecased(): Data<any> {
-    return new Data(snakecaseObject(this.value), this) as any;
+  get snakecased(): Data {
+    return this.changeCase(snakecaseText);
   }
 
-  get constantcased(): Data<any> {
-    return new Data(constantcaseObject(this.value), this) as any;
+  get constantcased(): Data {
+    return this.changeCase(constantcaseText);
+  }
+
+  get titlecased(): Data {
+    return this.changeCase(titlecaseText);
+  }
+
+  get pascalcased(): Data {
+    return this.changeCase(pascalcaseText);
+  }
+
+  get kebabcased(): Data {
+    return this.changeCase(kebabcaseText);
   }
 
   get keys(): Data<KeyType[]> {
@@ -169,6 +185,18 @@ export class Data<
     return new Data(Object.entries(this.value)) as any;
   }
 
+  changeCase(cb: (text: string) => string): Data {
+    if (Array.isArray(this.value)) {
+      return new Data(
+        this.value.map((item) =>
+          typeof item === 'string' ? cb(item) : mapObjectKeys(item, cb),
+        ),
+      );
+    }
+
+    return new Data(mapObjectKeys(this.value, cb), this);
+  }
+
   setSource(source: DataSource | null): Data<ValueType> {
     this.source = source;
 
@@ -177,26 +205,25 @@ export class Data<
 
   group<KeyType extends string | number | symbol, GroupType = ItemType[]>(
     keyFn: (item: ItemType) => KeyType,
-    reduceFn: (group: GroupType, item: ItemType) => GroupType = (
+    reduceFn: (group: GroupType, item: ItemType, key: KeyType) => GroupType = (
       group,
       item,
-    ) => [...group, item],
-    groupFn: (key: KeyType) => GroupType,
-  ): Data<Record<KeyType, ItemType[]>> {
+    ) => [...(group as any), item] as any,
+    groupFn: (key: KeyType) => GroupType = () => [] as any,
+  ): Data<Record<KeyType, GroupType>> {
     const values = this.values;
 
     return values.reduce((result, item) => {
       const key = keyFn(item);
       let group = result[key];
       if (!group) {
-        group = [];
-        result[key] = group;
+        group = groupFn(key);
       }
 
-      group.push(item);
+      result[key] = reduceFn(group, item, key);
 
       return result;
-    }, {} as Record<KeyType, ItemType[]>);
+    }, {} as Record<KeyType, GroupType>);
   }
 
   sort(
@@ -227,17 +254,17 @@ export class Data<
   }
 
   filter(
-    cb: (value: ItemType, index: KeyType) => boolean,
+    cb: (value: ItemType, key: KeyType) => boolean,
   ): Data<AnyPartial<ValueType>> {
     if (Array.isArray(this.value)) {
       return new Data(this.value.filter(cb as any) as any, this) as any;
     }
 
     const newValue: any = {};
-    this.keys.forEach((index: any) => {
-      const value = (this.value as any)[index];
-      if (cb(value, index)) {
-        newValue[index] = value;
+    this.keys.forEach((key: any) => {
+      const value = (this.value as any)[key];
+      if (cb(value, key)) {
+        newValue[key] = value;
       }
     });
 
@@ -245,7 +272,7 @@ export class Data<
   }
 
   find(
-    cb: (value: ItemType, index: KeyType) => boolean,
+    cb: (value: ItemType, key: KeyType) => boolean,
   ): Data<ItemType> | undefined {
     if (Array.isArray(this.value)) {
       const result = this.value.find(cb as any) as any;
@@ -254,9 +281,9 @@ export class Data<
     }
 
     let result: any = null;
-    for (const index of this.keys.value) {
-      const value = (this.value as any)[index];
-      if (cb(value, index)) {
+    for (const key of this.keys.value) {
+      const value = (this.value as any)[key];
+      if (cb(value, key)) {
         result = value;
 
         break;
@@ -266,16 +293,16 @@ export class Data<
     return result ? (new Data(result, this) as any) : undefined;
   }
 
-  findIndex(cb: (value: ItemType, index: KeyType) => boolean): KeyType {
+  findIndex(cb: (value: ItemType, key: KeyType) => boolean): KeyType {
     if (Array.isArray(this.value)) {
       return this.value.findIndex(cb as any) as any;
     }
 
     let result: any = null;
-    for (const index of this.keys.value) {
-      const value = (this.value as any)[index];
-      if (cb(value, index)) {
-        result = index;
+    for (const key of this.keys.value) {
+      const value = (this.value as any)[key];
+      if (cb(value, key)) {
+        result = key;
 
         break;
       }
@@ -284,14 +311,67 @@ export class Data<
     return result;
   }
 
+  some(cb: (value: ItemType, key: KeyType) => boolean): boolean {
+    if (Array.isArray(this.value)) {
+      return this.value.some(cb as any);
+    }
+
+    let result = false;
+    for (const key of this.keys.value) {
+      const value = (this.value as any)[key];
+      if (cb(value, key)) {
+        result = true;
+
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  every(cb: (value: ItemType, key: KeyType) => boolean): boolean {
+    if (Array.isArray(this.value)) {
+      return this.value.every(cb as any);
+    }
+
+    let result = true;
+    for (const key of this.keys.value) {
+      const value = (this.value as any)[key];
+      if (!cb(value, key)) {
+        result = false;
+
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  pipe<ResultType>(
+    operation: (value: ValueType) => ResultType,
+  ): Data<ResultType> {
+    return new Data(operation(this.value), this);
+  }
+
+  forEach(cb: (value: ItemType, key: KeyType) => any) {
+    if (Array.isArray(this.value)) {
+      return this.value.forEach(cb as any);
+    }
+
+    this.keys.forEach((key: any) => {
+      const value = (this.value as any)[key];
+      cb(value, key);
+    });
+  }
+
   reduce<ResultType>(
-    cb: (result: ResultType, item: ItemType, index: KeyType) => ResultType,
+    cb: (result: ResultType, item: ItemType, key: KeyType) => ResultType,
     initial: ResultType,
   ): Data<ResultType> {
     if (Array.isArray(this.value)) {
       return new Data<ResultType>(
         this.value.reduce(
-          (result, value, index) => cb(result, value, index as any),
+          (result, value, key) => cb(result, value, key as any),
           initial,
         ),
         this,
@@ -307,44 +387,8 @@ export class Data<
     );
   }
 
-  some(cb: (value: ItemType, index: KeyType) => boolean): boolean {
-    if (Array.isArray(this.value)) {
-      return this.value.some(cb as any);
-    }
-
-    let result = false;
-    for (const index of this.keys.value) {
-      const value = (this.value as any)[index];
-      if (cb(value, index)) {
-        result = true;
-
-        break;
-      }
-    }
-
-    return result;
-  }
-
-  every(cb: (value: ItemType, index: KeyType) => boolean): boolean {
-    if (Array.isArray(this.value)) {
-      return this.value.every(cb as any);
-    }
-
-    let result = true;
-    for (const index of this.keys.value) {
-      const value = (this.value as any)[index];
-      if (!cb(value, index)) {
-        result = false;
-
-        break;
-      }
-    }
-
-    return result;
-  }
-
   map<MappedItemType = any>(
-    cb: (value: ItemType, index: KeyType) => MappedItemType,
+    cb: (value: ItemType, key: KeyType) => MappedItemType,
   ): Data<
     ValueType extends Array<any>
       ? MappedItemType[]
@@ -357,9 +401,32 @@ export class Data<
     }
 
     const newValue: any = {};
-    this.keys.forEach((index: any) => {
-      const value = (this.value as any)[index];
-      newValue[index] = cb(value, index);
+    this.keys.forEach((key: any) => {
+      const value = (this.value as any)[key];
+      newValue[key] = cb(value, key);
+    });
+
+    return new Data(newValue, this) as any;
+  }
+
+  mapKeys(cb: (key: KeyType, item: ItemType) => KeyType): this {
+    if (Array.isArray(this.value)) {
+      return new Data(
+        (this.value as any).reduce(
+          (result: any, item: ItemType, key: KeyType) => {
+            result[cb(key, item)] = item;
+            return result;
+          },
+          [] as any,
+        ) as any,
+        this,
+      ) as any;
+    }
+
+    const newValue: any = {};
+    this.keys.forEach((key: any) => {
+      const value = (this.value as any)[key];
+      newValue[cb(key, value)] = value;
     });
 
     return new Data(newValue, this) as any;
@@ -371,17 +438,6 @@ export class Data<
     }
 
     return wrapString(Object.values(this.value).join(separator), null, this);
-  }
-
-  forEach(cb: (value: ItemType, index: KeyType) => any) {
-    if (Array.isArray(this.value)) {
-      return this.value.forEach(cb as any);
-    }
-
-    this.keys.forEach((index: any) => {
-      const value = (this.value as any)[index];
-      cb(value, index);
-    });
   }
 
   extract<ExtractedValueType = any>(

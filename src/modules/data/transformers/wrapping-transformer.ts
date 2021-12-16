@@ -2,6 +2,7 @@ import { DataTransformer } from './data-transformer';
 import { DataTransformation } from '../data-transformation';
 import { DataType, DataTypeMatchType } from '../data-type';
 import { Wrapper } from '../wrapper';
+import { Text } from '../text';
 import { Constructor } from '../../../interfaces/util';
 
 /**
@@ -74,6 +75,10 @@ export class WrappingTransformer implements DataTransformer<any, any> {
 
     if (targetWrapped) {
       output = new this.wrapper(output);
+
+      if (transformation.targetType.format && output instanceof Text) {
+        output.setFormat(transformation.targetType.format);
+      }
     }
 
     return output;

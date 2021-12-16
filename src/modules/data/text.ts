@@ -2,6 +2,15 @@ import { DataFormat } from './data-format';
 import { DataSource } from './data-source';
 import { DataTransformation } from './data-transformation';
 import { inspect } from 'util';
+import {
+  camelcaseText,
+  capitalizeText,
+  constantcaseText,
+  decapitalizeText,
+  kebabcaseText,
+  pascalcaseText,
+  titlecaseText,
+} from '../utils/text';
 
 /**
  * Wrapper for strings
@@ -34,6 +43,46 @@ export class Text<ContentType = any> extends String {
 
   get text(): this {
     return this;
+  }
+
+  get camelcased(): Text<ContentType> {
+    return new Text<ContentType>(camelcaseText(this.value), this.format, this);
+  }
+
+  get pascalcased(): Text<ContentType> {
+    return new Text<ContentType>(pascalcaseText(this.value), this.format, this);
+  }
+
+  get constantcased(): Text<ContentType> {
+    return new Text<ContentType>(
+      constantcaseText(this.value),
+      this.format,
+      this,
+    );
+  }
+
+  get titlecased(): Text<ContentType> {
+    return new Text<ContentType>(titlecaseText(this.value), this.format, this);
+  }
+
+  get kebabcased(): Text<ContentType> {
+    return new Text<ContentType>(kebabcaseText(this.value), this.format, this);
+  }
+
+  get uppercased(): Text<ContentType> {
+    return new Text<ContentType>(this.value.toUpperCase());
+  }
+
+  get lowercased(): Text<ContentType> {
+    return new Text<ContentType>(this.value.toLowerCase());
+  }
+
+  get capitalized(): Text<ContentType> {
+    return new Text<ContentType>(capitalizeText(this.value));
+  }
+
+  get decapitalized(): Text<ContentType> {
+    return new Text<ContentType>(decapitalizeText(this.value));
   }
 
   setFormat(format: string | null): this {
