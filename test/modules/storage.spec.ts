@@ -5,7 +5,7 @@ describe('storage module', () => {
     it('should grep by string', async () => {
       const files = grep('shoe', `${__dirname}/../assets/search`);
 
-      expect(files.map((file) => file.basename).value).toEqual([
+      expect(files.map((file) => file.basename).sorted.value).toEqual([
         'men.json',
         'women.json',
       ]);
@@ -23,12 +23,14 @@ describe('storage module', () => {
         `${__dirname}/../assets/search`,
       );
 
-      expect(files.map((file) => file.basename).value).toEqual([
+      expect(files.map((file) => file.basename).sorted.value).toEqual([
         'men.json',
         'women.json',
       ]);
 
-      const text = files.map((file) => file.basename.slice(0, -5)).join(',');
+      const text = files
+        .map((file) => file.basename.slice(0, -5))
+        .sorted.join(',');
 
       expect(text.value).toBe('men,women');
 
