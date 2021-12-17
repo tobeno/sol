@@ -1,11 +1,11 @@
 import { edit } from '../integrations/editor';
-import { wrapObject } from '../data/transformer';
 import { file, File } from '../storage/file';
 import { rerequire } from '../utils/module';
 import { Directory } from '../storage/directory';
 import { getReplServer } from '../sol/repl';
 import { log } from '../utils/log';
 import { getCurrentWorkspace, getCurrentWorkspaceDir } from '../sol/workspace';
+import { wrapObject } from '../data/data';
 
 const playWatchers: Record<string, () => void> = {};
 

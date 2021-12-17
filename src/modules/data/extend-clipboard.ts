@@ -1,15 +1,9 @@
 import { Data } from './data';
 import { definePropertiesMutation, mutateClass } from '../utils/mutation';
 import { Clipboard } from '../os/clipboard';
-import {
-  csvToData,
-  jsonToData,
-  unwrapString,
-  wrapString,
-  wrapUrl,
-  yamlToData,
-} from './transformer';
-import { Url } from './url';
+import { csvToData, jsonToData, yamlToData } from './transformer';
+import { Url, wrapUrl } from './url';
+import { unwrapString, wrapString } from './text';
 
 declare module '../os/clipboard' {
   interface Clipboard {

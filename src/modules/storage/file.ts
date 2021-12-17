@@ -4,8 +4,7 @@ import prettier from 'prettier';
 import { Item } from './item';
 import { Directory } from './directory';
 import { ItemCollection } from './item-collection';
-import { wrapString } from '../data/transformer';
-import { Text } from '../data/text';
+import { Text, wrapString } from '../data/text';
 import { log } from '../utils/log';
 
 export class File<ContentType = any> extends Item {

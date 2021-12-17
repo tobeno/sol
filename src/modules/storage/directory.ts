@@ -12,7 +12,7 @@ import {
   glob,
   ItemCollection,
 } from './item-collection';
-import { wrapString } from '../data/transformer';
+import { wrapString } from '../data/text';
 
 export class Directory extends Item {
   get cmd() {

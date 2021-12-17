@@ -4,8 +4,7 @@ import { grep } from './search';
 import { Item } from './item';
 import fg from 'fast-glob';
 import { Data } from '../data/data';
-import { Text } from '../data/text';
-import { wrapString } from '../data/transformer';
+import { Text, wrapString } from '../data/text';
 import { log } from '../utils/log';
 
 export class GenericItemCollection<ItemType extends Item> extends Data<

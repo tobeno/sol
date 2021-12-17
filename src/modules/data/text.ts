@@ -101,7 +101,41 @@ export class Text<ContentType = any> extends String {
     return eval(this.toString());
   }
 
+  count(pattern: RegExp | string): number {
+    if (!(pattern instanceof RegExp)) {
+      pattern = new RegExp(pattern, 'g');
+    }
+
+    return [...this.value.matchAll(pattern)].length;
+  }
+
   [inspect.custom]() {
     return this.toString();
   }
+}
+
+export function wrapString<ContentType = any>(
+  value: string | String | Text,
+  format: string | null = null,
+  source: DataSource | null = null,
+): Text<ContentType> {
+  if (value instanceof Text) {
+    let text = value;
+
+    if (format) {
+      text = text.setFormat(format);
+    }
+
+    if (source) {
+      text = text.setSource(source);
+    }
+
+    return text;
+  }
+
+  return new Text(value, format, source);
+}
+
+export function unwrapString(value: string | String | Text): string {
+  return String(value);
 }

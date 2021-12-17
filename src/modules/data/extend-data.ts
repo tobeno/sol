@@ -1,7 +1,7 @@
 import { Data } from './data';
 import { definePropertiesMutation, mutateClass } from '../utils/mutation';
-import { dataToCsv, dataToJson, dataToYaml, wrapString } from './transformer';
-import { Text } from './text';
+import { dataToCsv, dataToJson, dataToYaml } from './transformer';
+import { Text, wrapString } from './text';
 
 declare module './data' {
   interface Data {

@@ -2,7 +2,8 @@ import tmp from 'tmp';
 import { file } from '../../src/modules/storage/file';
 
 import { readFileSync } from 'fs';
-import { wrapObject, wrapString } from '../../src/modules/data/transformer';
+import { wrapObject } from '../../src/modules/data/data';
+import { wrapString } from '../../src/modules/data/text';
 
 interface ProductVariant {
   id: string;

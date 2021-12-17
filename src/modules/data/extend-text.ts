@@ -1,17 +1,10 @@
 import { Data } from './data';
 import { definePropertiesMutation, mutateClass } from '../utils/mutation';
-import {
-  codeToAst,
-  csvToData,
-  jsonToData,
-  wrapHtml,
-  wrapUrl,
-  yamlToData,
-} from './transformer';
+import { codeToAst, csvToData, jsonToData, yamlToData } from './transformer';
 import { Text } from './text';
-import { Url } from './url';
+import { Url, wrapUrl } from './url';
 import { Ast } from './ast';
-import { Html } from './html';
+import { Html, wrapHtml } from './html';
 
 declare module './text' {
   interface Text<ContentType> {

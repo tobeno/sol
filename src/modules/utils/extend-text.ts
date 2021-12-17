@@ -1,7 +1,6 @@
 import { definePropertiesMutation, mutateClass } from './mutation';
-import { Data } from '../data/data';
+import { Data, wrapObject } from '../data/data';
 import { log } from './log';
-import { wrapObject, wrapString } from '../data/transformer';
 import {
   extractText,
   filterLines,
@@ -14,7 +13,7 @@ import {
   rsortLines,
   sortLines,
 } from './text';
-import { Text } from '../data/text';
+import { Text, wrapString } from '../data/text';
 
 declare module '../data/text' {
   interface Text<ContentType> {

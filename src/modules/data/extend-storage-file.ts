@@ -8,12 +8,11 @@ import {
   dataToJson,
   dataToYaml,
   jsonToData,
-  wrapHtml,
   yamlToData,
 } from './transformer';
 import { File } from '../storage/file';
 import { Ast } from './ast';
-import { Html } from './html';
+import { Html, wrapHtml } from './html';
 
 declare module '../storage/file' {
   interface File<ContentType = any> {

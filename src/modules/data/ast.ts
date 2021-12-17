@@ -1,6 +1,6 @@
 import babelTypes from '@babel/types';
 import { inspect } from 'util';
-import { Data } from './data';
+import { Data, wrapObject } from './data';
 import { astToCode } from './transformer';
 import traverse, { NodePath, Scope, TraverseOptions } from '@babel/traverse';
 import { Text } from './text';
@@ -42,7 +42,7 @@ export class Ast extends Data<babelTypes.Node> {
     return this;
   }
 
-  extractNodes(type: string | Function): Ast[] {
+  extractNodes(type: string | Function): Data<Ast[]> {
     // Allow also builder functions as type (e.g. ast.Identifier)
     if (typeof type === 'function') {
       type = type.name.slice(0, 1).toUpperCase() + type.name.slice(1);
@@ -55,7 +55,7 @@ export class Ast extends Data<babelTypes.Node> {
       },
     });
 
-    return matches;
+    return wrapObject(matches, this);
   }
 
   /**

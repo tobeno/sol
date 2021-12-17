@@ -1,6 +1,6 @@
 import shelljs from 'shelljs';
 import { Item } from '../storage/item';
-import { wrapObject } from '../data/transformer';
+import { wrapObject } from '../data/data';
 
 function wrap<FnType extends (...args: any[]) => any>(fn: FnType): FnType {
   return ((...args: any[]): any => {

@@ -33,11 +33,6 @@ import {
   csvToData,
   jsonToData,
   transform,
-  wrapHtml,
-  wrapObject,
-  wrapString,
-  wrapUrl,
-  wrapXml,
   yamlToData,
 } from '../data/transformer';
 import { astTypes } from '../data/ast';
@@ -55,6 +50,11 @@ import {
 import { getCurrentWorkspace, getUserWorkspace } from '../sol/workspace';
 import { browse } from '../integrations/browser';
 import { open, openApp } from '../integrations/open';
+import { wrapObject } from '../data/data';
+import { wrapXml } from '../data/xml';
+import { wrapUrl } from '../data/url';
+import { wrapHtml } from '../data/html';
+import { wrapString } from '../data/text';
 
 export const globals = {
   ast: withHelp(
