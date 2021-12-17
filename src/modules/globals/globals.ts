@@ -1,8 +1,6 @@
 import jsonata from 'jsonata';
 import { JSDOM } from 'jsdom';
 import chalk from 'chalk';
-import * as R from 'remeda';
-import changeCase from 'change-case';
 import { grep } from '../storage/search';
 import { file, File } from '../storage/file';
 import { dir, Directory } from '../storage/directory';
@@ -86,12 +84,6 @@ export const globals = {
       value: chalk,
     },
     'See https://github.com/chalk/chalk#readme',
-  ),
-  changeCase: withHelp(
-    {
-      value: changeCase,
-    },
-    'See https://github.com/blakeembrey/change-case',
   ),
   clipboard: withHelp(
     {
@@ -215,12 +207,6 @@ export const globals = {
   openApp: {
     value: openApp,
   },
-  pipe: withHelp(
-    {
-      value: R.pipe,
-    },
-    'Pipe helper from Remeda',
-  ),
   play: withHelp(
     {
       value: play,
@@ -235,7 +221,6 @@ export const globals = {
     },
     'List available play files',
   ),
-  R: withHelp({ value: R }, 'Remeda'),
   replay: {
     value: replay,
   },
