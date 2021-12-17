@@ -10,7 +10,7 @@ import type {
   AnyKeyType,
   AnyPartial,
 } from '../../interfaces/util';
-import { mapObjectKeys } from '../utils/object';
+import { mapObjectKeys, traverseObject } from '../utils/object';
 import { DataType } from './data-type';
 import {
   camelcaseText,
@@ -323,6 +323,12 @@ export class Data<
     return result;
   }
 
+  traverse(cb: (obj: Record<string | number | symbol, any>) => void): this {
+    traverseObject(this.value, cb);
+
+    return this;
+  }
+
   some(cb: (value: ItemType, key: KeyType) => boolean): boolean {
     if (Array.isArray(this.value)) {
       return this.value.some(cb as any);
@@ -468,6 +474,10 @@ export class Data<
     }
 
     return transform(this, new DataTransformation(DataType.Data, targetType));
+  }
+
+  valueOf() {
+    return this.value;
   }
 
   [inspect.custom]() {

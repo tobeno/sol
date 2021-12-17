@@ -25,7 +25,7 @@ export class Ast extends Data<babelTypes.Node> {
     return astToCode(this);
   }
 
-  traverse(
+  traverseNodes(
     opts: TraverseOptions,
     scope?: Scope,
     state?: any,
@@ -49,7 +49,7 @@ export class Ast extends Data<babelTypes.Node> {
     }
 
     const matches: Ast[] = [];
-    this.traverse({
+    this.traverseNodes({
       [type]: (path: NodePath) => {
         matches.push(new Ast(path.node, path.scope, path));
       },

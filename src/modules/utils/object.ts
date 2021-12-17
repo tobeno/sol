@@ -167,6 +167,34 @@ export function mapObject<T extends Record<string, any>>(
   return result;
 }
 
+/**
+ * Runs callback for all (nested) objects included in obj, including the root object
+ */
+export function traverseObject(
+  obj: any,
+  cb: (item: Record<string | number | symbol, any>) => void,
+): void {
+  if (!obj || obj instanceof Date) {
+    return;
+  }
+
+  if (Array.isArray(obj)) {
+    obj.forEach((item) => {
+      traverseObject(item, cb);
+    });
+
+    return;
+  }
+
+  if (typeof obj === 'object') {
+    Object.values(obj).forEach((value) => {
+      traverseObject(value, cb);
+    });
+
+    cb(obj);
+  }
+}
+
 export function grepObjectKeys<T extends Record<string, any>>(
   obj: T,
   search: string | RegExp,
