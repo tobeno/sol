@@ -10,7 +10,9 @@ describe('storage module', () => {
         'women.json',
       ]);
 
-      const text = files.map((file) => file.basename.slice(0, -5)).join(',');
+      const text = files
+        .map((file) => file.basename.slice(0, -5))
+        .sorted.join(',');
 
       expect(text.value).toBe('men,women');
 
