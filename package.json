@@ -26,7 +26,7 @@
     "@babel/parser": "^7.16.6",
     "@babel/traverse": "^7.16.5",
     "@babel/types": "^7.16.0",
-    "axios": "^0.24.0",
+    "axios": "^0.26.1",
     "chalk": "^4.1.2",
     "change-case": "^4.1.2",
     "clipboardy": "^2.3.0",
