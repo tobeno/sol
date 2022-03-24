@@ -55,7 +55,7 @@
     "@types/jsonata": "^1.5.1",
     "@types/node": "^16.11.14",
     "@types/papaparse": "^5.3.1",
-    "@types/prettier": "^2.4.2",
+    "@types/prettier": "^2.4.4",
     "@types/shelljs": "^0.8.10",
     "@types/tmp": "^0.2.3",
     "babel-jest": "^27.4.5",
