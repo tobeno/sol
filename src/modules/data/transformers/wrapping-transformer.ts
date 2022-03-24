@@ -15,7 +15,7 @@ export class WrappingTransformer implements DataTransformer<any, any> {
     readonly transformer: DataTransformer<any, any>,
   ) {}
 
-  get wrapperType() {
+  get wrapperType(): DataType {
     return new DataType(this.wrapper.name);
   }
 
@@ -39,7 +39,7 @@ export class WrappingTransformer implements DataTransformer<any, any> {
     return this.transformer.supports(input, transformation);
   }
 
-  transform(input: any, transformation: DataTransformation) {
+  transform(input: any, transformation: DataTransformation): any {
     const { wrapperType } = this;
 
     const baseWrapped = transformation.baseType.matches(

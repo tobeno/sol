@@ -109,7 +109,7 @@ export class Text<ContentType = any> extends String {
     return [...this.value.matchAll(pattern)].length;
   }
 
-  [inspect.custom]() {
+  [inspect.custom](): string {
     return this.toString();
   }
 }

@@ -15,7 +15,7 @@ export class UrlTransformer extends StringTransformer<any> {
     return input;
   }
 
-  parse(input: string) {
+  parse(input: string): Url {
     return new Url(input);
   }
 }

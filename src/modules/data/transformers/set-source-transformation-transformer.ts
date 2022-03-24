@@ -15,7 +15,7 @@ export class SetSourceTransformationTransformer
     return this.transformer.supports(input, transformation);
   }
 
-  transform(input: any, transformation: DataTransformation) {
+  transform(input: any, transformation: DataTransformation): any {
     const output = this.transformer.transform(input, transformation);
 
     if (output instanceof Data || output instanceof Text) {

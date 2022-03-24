@@ -28,7 +28,7 @@ export class Xml extends Data<string> {
     return node ? new Xml(node.outerHTML) : null;
   }
 
-  toString() {
+  toString(): string {
     return String(this);
   }
 }

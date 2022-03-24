@@ -9,7 +9,7 @@ export class DataFormat {
   static TextCommaSeparated = 'text/x-comma-separated';
   static TextSemicolonSeparated = 'text/x-semicolon-separated';
 
-  static toExt(format: string | null) {
+  static toExt(format: string | null): string {
     switch (format) {
       case DataFormat.Json:
         return 'json';

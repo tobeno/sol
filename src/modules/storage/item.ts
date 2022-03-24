@@ -72,7 +72,7 @@ export abstract class Item {
   /**
    * Prints just the path when inspecting (e.g. for console.log)
    */
-  [inspect.custom]() {
+  [inspect.custom](): string {
     const relativePath = this.relativePath;
 
     return relativePath.includes('../') ? this.path : relativePath;

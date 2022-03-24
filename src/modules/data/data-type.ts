@@ -40,14 +40,14 @@ export class DataType {
     return new DataType(this.type, newFormat);
   }
 
-  toString() {
+  toString(): string {
     return this.format ? `${this.type}<${this.format}>` : this.type;
   }
 
   /**
    * @param fullType Data type with format "[Type](<[format]>)" (e.g. "Text<application/json>")
    */
-  static fromString(fullType: string) {
+  static fromString(fullType: string): DataType {
     const match = fullType.match(/^(.+?)(\<(.+)\>)?$/);
     if (!match) {
       throw new Error(`Invalid type ${fullType}`);

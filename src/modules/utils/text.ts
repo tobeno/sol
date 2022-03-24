@@ -5,7 +5,7 @@ export function lines(str: string): string[] {
   return str.replace(/\r/g, '').trimEnd().split('\n');
 }
 
-export function mapLines(str: string, cb: (line: string) => any) {
+export function mapLines(str: string, cb: (line: string) => any): string {
   return lines(str).map(cb).join('\n') + '\n';
 }
 
@@ -72,7 +72,7 @@ export function replaceLines(
   );
 }
 
-export function extractText(str: string, pattern: RegExp | string) {
+export function extractText(str: string, pattern: RegExp | string): string[] {
   if (typeof pattern === 'string') {
     pattern = new RegExp(pattern, 'g');
   } else if (!pattern.global) {

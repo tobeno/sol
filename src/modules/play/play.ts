@@ -15,7 +15,7 @@ export interface PlayFile {
   replay(): void;
 }
 
-function runPlay(playFile: File) {
+function runPlay(playFile: File): any {
   let result = rerequire(playFile.path);
 
   if (typeof result.default !== 'undefined') {
@@ -37,7 +37,7 @@ export function getPlayDir(): Directory {
   return getCurrentWorkspaceDir().dir('play');
 }
 
-export function getPlayFile(path?: string) {
+export function getPlayFile(path?: string): File {
   path = path || `play-${new Date().toISOString().replace(/[^0-9]/g, '')}`;
 
   if (!path.endsWith('.ts')) {
@@ -54,7 +54,7 @@ export function getPlayFile(path?: string) {
   return playFile;
 }
 
-export function play(path?: string) {
+export function play(path?: string): File {
   const playFile = getPlayFile(path);
   const playId = playFile.path;
 
@@ -111,7 +111,7 @@ export function play(path?: string) {
   return playFile;
 }
 
-export function listPlays() {
+export function listPlays(): Record<string, PlayFile> {
   return [...getPlayDir().files()].reduce(
     (result: Record<string, PlayFile>, file) => {
       result[file.basenameWithoutExt] = {
@@ -125,7 +125,7 @@ export function listPlays() {
   );
 }
 
-export function setupPlay(path: string) {
+export function setupPlay(path: string): void {
   const playFile = getPlayFile(path);
   const workspace = getCurrentWorkspace();
 
@@ -147,7 +147,7 @@ export default null;
   }
 }
 
-export function unwatchPlay(path: string) {
+export function unwatchPlay(path: string): void {
   const playFile = getPlayFile(path);
   const playId = playFile.path;
 
@@ -159,13 +159,13 @@ export function unwatchPlay(path: string) {
   }
 }
 
-export function unwatchPlays() {
+export function unwatchPlays(): void {
   Object.keys(playWatchers).forEach((playId) => {
     unwatchPlay(playId);
   });
 }
 
-export function replay(path: string) {
+export function replay(path: string): any {
   const playFile = getPlayFile(path);
 
   if (!playFile.exists) {

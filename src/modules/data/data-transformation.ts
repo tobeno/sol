@@ -14,18 +14,18 @@ export class DataTransformation {
     return new DataTransformation(this.targetType, this.baseType);
   }
 
-  withBaseType(newBaseType: DataType) {
+  withBaseType(newBaseType: DataType): DataTransformation {
     return new DataTransformation(newBaseType, this.targetType);
   }
 
-  withTargetType(newTargetType: DataType) {
+  withTargetType(newTargetType: DataType): DataTransformation {
     return new DataTransformation(this.baseType, newTargetType);
   }
 
   matches(
     other: DataTransformation,
     matchType: DataTransformationMatchType = DataTransformationMatchType.Exact,
-  ) {
+  ): boolean {
     const baseMatches = this.baseType.matches(
       other.baseType,
       [
@@ -49,7 +49,7 @@ export class DataTransformation {
     return baseMatches && targetMatches;
   }
 
-  toString() {
+  toString(): string {
     return `${this.baseType}:${this.targetType}`;
   }
 
@@ -57,7 +57,7 @@ export class DataTransformation {
    *
    * @param transformation Transformation with format "[SourceType]:[TargetType]" (e.g. "object:string" or "object:string<application/json>")
    */
-  static fromString(transformation: string) {
+  static fromString(transformation: string): DataTransformation {
     const [baseType, targetType] = transformation.split(':');
 
     return new DataTransformation(

@@ -10,7 +10,7 @@ mutateClass(
   Array,
   definePropertiesMutation({
     copy: {
-      value() {
+      value(): void {
         this.json.copy();
       },
     },

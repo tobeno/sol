@@ -230,7 +230,7 @@ export class Data<
 
   groupCount<KeyType extends string | number | symbol>(
     keyFn: (item: ItemType) => KeyType,
-  ) {
+  ): Data<Record<KeyType, number>> {
     return this.group(
       keyFn,
       (r) => r + 1,
@@ -371,7 +371,7 @@ export class Data<
     return wrapObject(operation(this.value), this) as any;
   }
 
-  forEach(cb: (value: ItemType, key: KeyType) => any) {
+  forEach(cb: (value: ItemType, key: KeyType) => any): void {
     if (Array.isArray(this.value)) {
       return this.value.forEach(cb as any);
     }
@@ -476,11 +476,11 @@ export class Data<
     return transform(this, new DataTransformation(DataType.Data, targetType));
   }
 
-  valueOf() {
+  valueOf(): ValueType {
     return this.value;
   }
 
-  [inspect.custom]() {
+  [inspect.custom](): string {
     return `Data ${inspect(this.value)}`;
   }
 }

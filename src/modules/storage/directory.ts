@@ -2,7 +2,8 @@ import path from 'path';
 import fs from 'fs';
 import { exec } from 'shelljs';
 import { Item } from './item';
-import { file } from './file';
+import { File, file } from './file';
+import { Text } from '../data/text';
 import { grep, replaceText } from './search';
 import {
   DirectoryCollection,
@@ -15,7 +16,7 @@ import {
 import { wrapString } from '../data/text';
 
 export class Directory extends Item {
-  get cmd() {
+  get cmd(): Text {
     return wrapString(`dir(${JSON.stringify(this.path)})`);
   }
 
@@ -79,7 +80,7 @@ export class Directory extends Item {
     return files(path.join(this.path, exp || '*'));
   }
 
-  file(path: string) {
+  file(path: string): File {
     return file(`${this.path}/${path}`);
   }
 
@@ -87,7 +88,7 @@ export class Directory extends Item {
     return dirs(path.join(this.path, exp || '*'));
   }
 
-  dir(path: string) {
+  dir(path: string): Directory {
     return dir(`${this.path}/${path}`);
   }
 

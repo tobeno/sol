@@ -12,7 +12,7 @@ export class File<ContentType = any> extends Item {
     super(path);
   }
 
-  get cmd() {
+  get cmd(): Text {
     return wrapString(`file(${JSON.stringify(this.path)})`);
   }
 
@@ -109,11 +109,11 @@ export class File<ContentType = any> extends Item {
     fs.writeFileSync(this.path, value.toString(), 'utf8');
   }
 
-  get length() {
+  get length(): number {
     return this.text.length;
   }
 
-  get size() {
+  get size(): number {
     return this.stats.size;
   }
 
@@ -204,7 +204,7 @@ export class File<ContentType = any> extends Item {
     return this;
   }
 
-  print() {
+  print(): void {
     log(String(this));
   }
 }

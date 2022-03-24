@@ -17,7 +17,7 @@ export const solReplColor = {
   dim: chalk.dim,
 };
 
-function solWriter(output: any) {
+function solWriter(output: any): string {
   return chalk.bold(require('../utils/inspect').inspect(output));
 }
 
@@ -51,7 +51,7 @@ function setupReplCompleter(server: REPLServer): void {
 function setupReplCommands(server: REPLServer): void {
   server.defineCommand('globals', {
     help: 'Shows available globals',
-    action(filter: string | null = null) {
+    action(filter: string | null = null): void {
       let globalEntries = [
         ...new Set([
           ...Object.entries(globals),

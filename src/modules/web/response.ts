@@ -1,6 +1,6 @@
 import { inspect } from 'util';
 import { Data, wrapObject } from '../data/data';
-import { AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders } from 'axios';
 import { DataFormat } from '../data/data-format';
 import { DataType } from '../data/data-type';
 import { web } from './index';
@@ -22,7 +22,7 @@ export class Response extends Data {
     });
   }
 
-  get request() {
+  get request(): AxiosRequestConfig {
     return this.value.request;
   }
 
@@ -30,29 +30,29 @@ export class Response extends Data {
     return wrapObject(this.value.data, this as any);
   }
 
-  get contentExt() {
+  get contentExt(): string {
     return DataFormat.toExt(this.contentFormat);
   }
 
-  get contentType() {
+  get contentType(): DataType {
     return DataType.String.withFormat(this.contentFormat);
   }
 
-  get contentFormat() {
+  get contentFormat(): string {
     const contentType = this.value.headers['content-type'];
 
     return contentType ? contentType.split(';')[0] : null;
   }
 
-  get headers() {
+  get headers(): AxiosResponseHeaders {
     return this.value.headers;
   }
 
-  get status() {
+  get status(): number {
     return this.value.status;
   }
 
-  get statusText() {
+  get statusText(): string {
     return this.value.statusText;
   }
 
@@ -71,11 +71,11 @@ export class Response extends Data {
   /**
    * Prints just the data when inspecting (e.g. for console.log)
    */
-  [inspect.custom]() {
+  [inspect.custom](): string {
     return this.value;
   }
 
-  toString() {
+  toString(): string {
     return this.json.toString();
   }
 }

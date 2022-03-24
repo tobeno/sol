@@ -28,7 +28,7 @@ export class Workspace {
     return this.dir.file('setup.ts');
   }
 
-  reload() {
+  reload(): void {
     const workspaceDir = this.dir;
 
     const modules = workspaceDir
@@ -116,7 +116,7 @@ logDebug('Loaded ' + __filename);
     }
   }
 
-  load() {
+  load(): void {
     if (this.loaded) {
       return;
     }

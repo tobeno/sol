@@ -10,7 +10,7 @@ export class AnyTransformer implements DataTransformer<any, any> {
     );
   }
 
-  transform(input: any, transformation: DataTransformation) {
+  transform(input: any, transformation: DataTransformation): any {
     const transformer = this.transformers.find((currentTransformer) =>
       currentTransformer.supports(input, transformation),
     );

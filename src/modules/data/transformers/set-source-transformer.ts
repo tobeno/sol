@@ -13,7 +13,7 @@ export class SetSourceTransformer implements DataTransformer<any, any> {
     return this.transformer.supports(input, transformation);
   }
 
-  transform(input: any, transformation: DataTransformation) {
+  transform(input: any, transformation: DataTransformation): any {
     let source = null;
     if (input instanceof Data || input instanceof Text) {
       source = input;

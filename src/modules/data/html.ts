@@ -37,7 +37,7 @@ export class Html extends Data<string> {
     return wrapObject(result);
   }
 
-  toString() {
+  toString(): string {
     return String(this);
   }
 }

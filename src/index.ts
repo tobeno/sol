@@ -9,7 +9,7 @@ export function setupSol(): void {
   require('./setup');
 }
 
-export function loadSol() {
+export function loadSol(): void {
   const { logDebug } = require('./modules/utils/log');
 
   logDebug('Loading Sol...');
@@ -125,7 +125,7 @@ export function startSol(): void {
 
   server.defineCommand('rebuild', {
     help: 'Rebuilds and reloads Sol using the current source files',
-    action() {
+    action(): void {
       rebuildSol();
       reloadSol();
       server.close();
@@ -138,7 +138,7 @@ export function startSol(): void {
 
   server.defineCommand('reload', {
     help: 'Reloads Sol files to reflect latest build',
-    action() {
+    action(): void {
       reloadSol();
       server.close();
 
@@ -150,7 +150,7 @@ export function startSol(): void {
 
   server.defineCommand('update', {
     help: 'Update Sol to latest version',
-    action() {
+    action(): void {
       updateSol();
       server.close();
 

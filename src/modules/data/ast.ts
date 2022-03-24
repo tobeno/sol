@@ -61,11 +61,11 @@ export class Ast extends Data<babelTypes.Node> {
   /**
    * Prints just the data when inspecting (e.g. for console.log)
    */
-  [inspect.custom]() {
+  [inspect.custom](): string {
     return `Ast { ${this.code} }`;
   }
 
-  toString() {
+  toString(): string {
     return this.code.value;
   }
 }

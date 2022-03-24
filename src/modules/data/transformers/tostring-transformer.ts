@@ -7,7 +7,7 @@ export class ToStringTransformer implements DataTransformer<any, any> {
     return targetType.type === 'string' && !targetType.format;
   }
 
-  transform(input: any) {
+  transform(input: any): string {
     return String(input);
   }
 }
