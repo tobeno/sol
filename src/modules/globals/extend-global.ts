@@ -5,7 +5,6 @@ import { definePropertiesMutation, mutateGlobals } from '../utils/mutation';
 declare global {
   type BufferSource = any;
   type FormData = any;
-  type URLSearchParams = any;
 }
 
 mutateGlobals(definePropertiesMutation(globals));

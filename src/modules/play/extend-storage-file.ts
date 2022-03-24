@@ -1,16 +1,14 @@
 import { definePropertiesMutation, mutateClass } from '../utils/mutation';
 import { File } from '../storage/file';
-import { play, replay, setupPlay, unwatchPlay } from './play';
+import { play, PlayFile, replay, unplay } from './play';
 
 declare module '../storage/file' {
   interface File<ContentType = any> {
     play(): File;
 
-    setupPlay(): void;
-
     replay(): any;
 
-    unwatchPlay(): void;
+    unplay(): void;
   }
 }
 
@@ -18,26 +16,20 @@ mutateClass(
   File,
   definePropertiesMutation({
     play: {
-      value(): File {
-        return play(this.path);
-      },
-    },
-
-    setupPlay: {
-      value(): void {
-        setupPlay(this.path);
+      value(): PlayFile {
+        return play(this);
       },
     },
 
     replay: {
       value(): any {
-        return replay(this.path);
+        return replay(this);
       },
     },
 
-    unwatchPlay: {
+    unplay: {
       value(): void {
-        unwatchPlay(this.path);
+        unplay(this);
       },
     },
   }),

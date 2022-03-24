@@ -11,6 +11,7 @@ export { Xml } from '../data/xml';
 export { Clipboard } from '../os/clipboard';
 export { Extension } from '../sol/extension';
 export { Sol } from '../sol/sol';
+export { PlayFile } from '../play/play';
 export { Workspace } from '../sol/workspace';
 export { Directory } from '../storage/directory';
 export {

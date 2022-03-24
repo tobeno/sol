@@ -1,5 +1,4 @@
-import { edit } from '../integrations/editor';
-import { file, File } from '../storage/file';
+import { File } from '../storage/file';
 import { rerequire } from '../utils/module';
 import { Directory } from '../storage/directory';
 import { getReplServer } from '../sol/repl';
@@ -7,117 +6,179 @@ import { log } from '../utils/log';
 import { getCurrentWorkspace, getCurrentWorkspaceDir } from '../sol/workspace';
 import { wrapObject } from '../data/data';
 
-const playWatchers: Record<string, () => void> = {};
+export class PlayFile {
+  static instances: Record<string, PlayFile> = {};
 
-export interface PlayFile {
-  play(): void;
+  private unwatch: (() => void) | null = null;
 
-  replay(): void;
-}
+  file: File;
 
-function runPlay(playFile: File): any {
-  let result = rerequire(playFile.path);
-
-  if (typeof result.default !== 'undefined') {
-    result = result.default;
+  get id(): string {
+    return this.file.path;
   }
 
-  if (result && typeof result === 'object') {
-    if (result.constructor === Object) {
-      result = wrapObject(result);
-    } else if (result.constructor === Array) {
-      result = wrapObject(result);
+  constructor(path: string) {
+    this.file = new File(path);
+  }
+
+  prepare(): void {
+    const workspace = getCurrentWorkspace();
+
+    const file = this.file;
+    file.create();
+
+    if (!file.size) {
+      file.text = `
+/* eslint-disable */
+// @ts-nocheck
+
+import './${workspace.contextFile.dir.relativePathFrom(file.dir)}/${
+        workspace.contextFile.basenameWithoutExt
+      }';
+    
+// ToDo: Add your logic
+
+export default null;
+`.trimStart();
     }
   }
 
-  return result;
+  edit(): File {
+    return this.file.edit() as File;
+  }
+
+  play(): void {
+    const file = this.file;
+    const playId = file.path;
+
+    this.prepare();
+
+    this.edit();
+
+    if (!this.unwatch) {
+      let running = false;
+
+      setTimeout(() => {
+        let prevText: string | null = null;
+
+        this.unwatch = file.watch((event) => {
+          if (event === 'change') {
+            let result = undefined;
+            try {
+              const text = file.text.value;
+              if (text === prevText) {
+                return;
+              }
+
+              prevText = text;
+
+              if (running) {
+                return;
+              }
+
+              log(`Running play ${playId}...`);
+
+              running = true;
+              result = this.replay();
+            } finally {
+              running = false;
+            }
+
+            if (typeof result !== 'undefined') {
+              log(result);
+              getReplServer().displayPrompt();
+            }
+          } else if (event === 'rename') {
+            if (!file.exists) {
+              this.unplay();
+            }
+          }
+        });
+
+        log(`Watching ${playId}...`);
+      }, 1000);
+    }
+  }
+
+  unplay(): void {
+    const playId = this.id;
+
+    if (this.unwatch) {
+      this.unwatch();
+      this.unwatch = null;
+
+      log(`Stopped watching ${playId}`);
+    }
+  }
+
+  replay(): any {
+    const file = this.file;
+    if (!file.exists) {
+      throw new Error(`No play found for '${file.path}'`);
+    }
+
+    let result = rerequire(file.path);
+
+    if (typeof result.default !== 'undefined') {
+      result = result.default;
+    }
+
+    if (result && typeof result === 'object') {
+      if (result.constructor === Object) {
+        result = wrapObject(result);
+      } else if (result.constructor === Array) {
+        result = wrapObject(result);
+      }
+    }
+
+    return result;
+  }
+
+  static create(pathOrFile: string | File | null): PlayFile {
+    let path: string;
+    if (!(pathOrFile instanceof File)) {
+      path =
+        pathOrFile || `play-${new Date().toISOString().replace(/[^0-9]/g, '')}`;
+
+      if (!path.endsWith('.ts')) {
+        path += '.ts';
+      }
+
+      if (!path.includes('/')) {
+        path = getPlayDir().file(path).path;
+      }
+    } else {
+      path = pathOrFile.path;
+    }
+
+    if (!this.instances[path]) {
+      this.instances[path] = new PlayFile(path);
+    }
+
+    return this.instances[path];
+  }
 }
 
 export function getPlayDir(): Directory {
   return getCurrentWorkspaceDir().dir('play');
 }
 
-export function getPlayFile(path?: string): File {
-  path = path || `play-${new Date().toISOString().replace(/[^0-9]/g, '')}`;
-
-  if (!path.endsWith('.ts')) {
-    path += '.ts';
-  }
-
-  let playFile;
-  if (!path.includes('/')) {
-    playFile = getPlayDir().file(path);
-  } else {
-    playFile = file(path);
-  }
-
-  return playFile;
+export function playFile(pathOrFile: string | File | null = null): PlayFile {
+  return PlayFile.create(pathOrFile);
 }
 
-export function play(path?: string): File {
-  const playFile = getPlayFile(path);
-  const playId = playFile.path;
+export function play(pathOrFile: string | File | null = null): PlayFile {
+  const f = playFile(pathOrFile);
 
-  setupPlay(playFile.path);
+  f.play();
 
-  edit(playFile.path);
-
-  if (!playWatchers[playId]) {
-    let running = false;
-
-    setTimeout(() => {
-      let prevText: string | null = null;
-
-      const unwatch = playFile.watch((event) => {
-        if (event === 'change') {
-          let result = undefined;
-          try {
-            const text = playFile.text.value;
-            if (text === prevText) {
-              return;
-            }
-
-            prevText = text;
-
-            if (running) {
-              return;
-            }
-
-            log(`Running play ${playId}...`);
-
-            running = true;
-            result = runPlay(playFile);
-          } finally {
-            running = false;
-          }
-
-          if (typeof result !== 'undefined') {
-            log(result);
-            getReplServer().displayPrompt();
-          }
-        } else if (event === 'rename') {
-          if (!playFile.exists) {
-            unwatchPlay(playId);
-          }
-        }
-      });
-
-      playWatchers[playId] = unwatch;
-
-      log(`Watching ${playId}...`);
-    }, 1000);
-  }
-
-  return playFile;
+  return f;
 }
 
 export function listPlays(): Record<string, PlayFile> {
   return [...getPlayDir().files()].reduce(
     (result: Record<string, PlayFile>, file) => {
-      result[file.basenameWithoutExt] = {
-        play: () => play(file.path),
-        replay: () => replay(file.path),
-      };
+      result[file.basenameWithoutExt] = new PlayFile(file.path);
 
       return result;
     },
@@ -125,52 +186,20 @@ export function listPlays(): Record<string, PlayFile> {
   );
 }
 
-export function setupPlay(path: string): void {
-  const playFile = getPlayFile(path);
-  const workspace = getCurrentWorkspace();
+export function unplay(pathOrFile: string | File | null = null): void {
+  if (pathOrFile) {
+    const f = playFile(pathOrFile);
 
-  playFile.create();
-
-  if (!playFile.size) {
-    playFile.text = `
-/* eslint-disable */
-// @ts-nocheck
-
-import './${workspace.contextFile.dir.relativePathFrom(playFile.dir)}/${
-      workspace.contextFile.basenameWithoutExt
-    }';
-    
-// ToDo: Add your logic
-
-export default null;
-`.trimStart();
+    f.unplay();
+  } else {
+    Object.values(PlayFile.instances).forEach((f) => {
+      f.unplay();
+    });
   }
 }
 
-export function unwatchPlay(path: string): void {
-  const playFile = getPlayFile(path);
-  const playId = playFile.path;
+export function replay(pathOrFile: string | File): any {
+  const f = playFile(pathOrFile);
 
-  if (playWatchers[playId]) {
-    playWatchers[playId]();
-    delete playWatchers[playId];
-
-    log(`Stopped watching ${playId}`);
-  }
-}
-
-export function unwatchPlays(): void {
-  Object.keys(playWatchers).forEach((playId) => {
-    unwatchPlay(playId);
-  });
-}
-
-export function replay(path: string): any {
-  const playFile = getPlayFile(path);
-
-  if (!playFile.exists) {
-    throw new Error(`No play found for '${path}'`);
-  }
-
-  return runPlay(playFile);
+  return f.replay();
 }

@@ -18,7 +18,7 @@ import { getCwd } from '../utils/env';
 import { log } from '../utils/log';
 import { getSol } from '../sol/sol';
 import { edit } from '../integrations/editor';
-import { listPlays, play, replay, unwatchPlay } from '../play/play';
+import { listPlays, play, playFile, replay } from '../play/play';
 import * as shell from '../utils/shelljs';
 import {
   csvToData,
@@ -198,6 +198,12 @@ export const globals = {
     },
     'Opens a given play file for interactive editing',
   ),
+  playFile: withHelp(
+    {
+      value: playFile,
+    },
+    'Returns a PlayFile instance for the given path or file',
+  ),
   plays: withHelp(
     {
       get() {
@@ -241,9 +247,6 @@ export const globals = {
     },
     'Transforms data between data types using transformations',
   ),
-  unwatchPlay: {
-    value: unwatchPlay,
-  },
   url: {
     value: wrapUrl,
   },
