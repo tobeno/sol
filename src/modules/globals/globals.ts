@@ -1,17 +1,10 @@
 import jsonata from 'jsonata';
-import { JSDOM } from 'jsdom';
 import chalk from 'chalk';
 import { grep } from '../storage/search';
-import { file, File } from '../storage/file';
-import { dir, Directory } from '../storage/directory';
-import {
-  DirectoryCollection,
-  dirs,
-  FileCollection,
-  files,
-  glob,
-  ItemCollection,
-} from '../storage/item-collection';
+
+import { file } from '../storage/file';
+import { dir } from '../storage/directory';
+import { dirs, files, glob } from '../storage/item-collection';
 import { web } from '../web';
 import { getClipboard } from '../os/clipboard';
 import * as asyncUtils from '../utils/async';
@@ -34,9 +27,7 @@ import {
   yamlToData,
 } from '../data/transformer';
 import { astTypes } from '../data/ast';
-import { DataType } from '../data/data-type';
-import { DataFormat } from '../data/data-format';
-import { DataTransformation } from '../data/data-transformation';
+import * as classes from './classes';
 import { FromPropertyDescriptorMap } from '../../interfaces/object';
 import {
   extension,
@@ -172,12 +163,6 @@ export const globals = {
     },
     'Converts HTML to Data',
   ),
-  JSDOM: withHelp(
-    {
-      value: JSDOM,
-    },
-    'See https://github.com/jsdom/jsdom',
-  ),
   json: withHelp(
     {
       value: jsonToData,
@@ -276,6 +261,12 @@ export const globals = {
     },
     'User Sol workspace',
   ),
+  classes: withHelp(
+    {
+      value: classes,
+    },
+    'Classes',
+  ),
   utils: withHelp(
     {
       value: {
@@ -284,14 +275,6 @@ export const globals = {
         ...arrayUtils,
         ...objectUtils,
         ...textUtils,
-        DataType,
-        DataFormat,
-        DataTransformation,
-        Directory,
-        DirectoryCollection,
-        File,
-        FileCollection,
-        ItemCollection,
       },
     },
     'Basic utility functions',
