@@ -7,7 +7,7 @@
   "repository": "https://www.github.com/tobeno/sol",
   "main": "dist/src/index.js",
   "bin": {
-    "sol": "./bin/sol.js"
+    "sol": "bin/sol"
   },
   "engines": {
     "node": ">=12"
@@ -17,7 +17,7 @@
     "build": "rimraf dist/* && tsc",
     "build:watch": "rimraf dist/* && tsc --watch",
     "lint-staged": "lint-staged",
-    "sol": "node --experimental-repl-await ./bin/sol.js",
+    "sol": "node --experimental-repl-await bin/sol",
     "format": "prettier --write \"src/**/*.ts\" \"*.{js,ts,json,yml,yaml}\"",
     "test": "jest",
     "test:watch": "jest --watch"

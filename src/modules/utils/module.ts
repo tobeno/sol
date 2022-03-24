@@ -1,12 +1,20 @@
 /**
  * Does a fresh require of the given module ID (without cache)
  */
-export function rerequire(id: string) {
-  clearRequireCache(id);
+export function rerequire(module: string) {
+  clearRequireCache([module]);
 
-  return require(id);
+  return require(module);
 }
 
-export function clearRequireCache(id: string) {
-  delete require.cache[require.resolve(id)];
+export function clearRequireCache(modules: string[] | null = null) {
+  if (modules) {
+    modules.forEach((module) => {
+      delete require.cache[require.resolve(module)];
+    });
+  } else {
+    Object.keys(require.cache).forEach((module) => {
+      delete require.cache[module];
+    });
+  }
 }

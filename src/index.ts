@@ -1,5 +1,6 @@
 import { spawnSync } from 'child_process';
 import chalk from 'chalk';
+import { clearRequireCache } from './modules/utils/module';
 
 /**
  * Setup Sol modules
@@ -84,12 +85,6 @@ export function unloadSol(): void {
     unmutateClass,
     unmutateGlobals,
   } = require('./modules/utils/mutation');
-  const { clearRequireCache } = require('./modules/utils/module');
-  const { getLoadedExtensions } = require('./modules/sol/extension');
-  const {
-    getCurrentWorkspaceDir,
-    getUserWorkspaceDir,
-  } = require('./modules/sol/workspace');
   const { unwatchPlays } = require('./modules/play/play');
 
   logDebug('Unloading Sol...');
@@ -105,25 +100,7 @@ export function unloadSol(): void {
   unmutateClass(Object);
   unmutateClass(Promise);
 
-  const { getSol } = require('./modules/sol/sol');
-  const modules = [
-    ...getSol()
-      .packageDistDir.files('**/*.js')
-      .value.map((f: any) => f.pathWithoutExt),
-    ...getCurrentWorkspaceDir()
-      .files('**/*.{ts,js}')
-      .value.map((f: any) => f.pathWithoutExt),
-    ...getUserWorkspaceDir()
-      .files('**/*.{ts,js}')
-      .value.map((f: any) => f.pathWithoutExt),
-    ...getLoadedExtensions().flatMap((extension: any) =>
-      extension.dir
-        .files('**/*.{ts,js}')
-        .value.map((f: any) => f.pathWithoutExt),
-    ),
-  ];
-
-  modules.forEach(clearRequireCache);
+  clearRequireCache();
 
   logDebug('Unloaded Sol');
 }

@@ -1,13 +1,21 @@
-#!/usr/bin/env bash
+#!/usr/bin/env node
+const path = require('path');
+const fs = require('fs');
+const { spawnSync } = require('child_process');
 
-{
-   DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+const rootPath = path.join(__dirname, '..');
 
-   pushd $DIR/..
-   if [ ! -d "node_modules" ]; then
-      npm i
-   fi
-   popd
-} &> /dev/null
+if (!fs.existsSync(path.join(rootPath, 'node_modules'))) {
+  spawnSync('npm i', {
+    cwd: rootPath,
+  });
+}
 
-node $DIR/sol.js
+require('ts-node').register({
+  project: path.join(rootPath, 'tsconfig.json'),
+  transpileOnly: true,
+});
+
+const { startSol } = require('../dist/src/index');
+
+startSol();
