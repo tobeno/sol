@@ -178,7 +178,7 @@ export function play(pathOrFile: string | File | null = null): PlayFile {
 export function listPlays(): Record<string, PlayFile> {
   return [...getPlayDir().files()].reduce(
     (result: Record<string, PlayFile>, file) => {
-      result[file.basenameWithoutExt] = new PlayFile(file.path);
+      result[file.basenameWithoutExt] = playFile(file.path);
 
       return result;
     },
@@ -195,6 +195,7 @@ export function unplay(pathOrFile: string | File | null = null): void {
     Object.values(PlayFile.instances).forEach((f) => {
       f.unplay();
     });
+    PlayFile.instances = {};
   }
 }
 
