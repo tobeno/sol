@@ -1,7 +1,6 @@
 import { spawnSync } from 'child_process';
 import chalk from 'chalk';
 import { clearRequireCache } from './modules/utils/module';
-import { unplay } from './modules/play/play';
 
 /**
  * Setup Sol modules
@@ -86,6 +85,7 @@ export function unloadSol(): void {
     unmutateClass,
     unmutateGlobals,
   } = require('./modules/utils/mutation');
+  const { unplay } = require('./modules/play/play');
   logDebug('Unloading Sol...');
 
   unplay();
