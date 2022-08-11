@@ -2,8 +2,16 @@
 const path = require('path');
 const fs = require('fs');
 const { spawnSync } = require('child_process');
+const tsConfigPaths = require('tsconfig-paths');
+const omit = require('lodash/omit');
+const { register } = require('@swc-node/register/register');
 
 const rootPath = path.join(__dirname, '..');
+const tsconfig = JSON.parse(
+  fs
+    .readFileSync(path.join(rootPath, 'tsconfig.json'), 'utf8')
+    .replace(/(\s\/\*[^/]+?\*\/|\n *\/\/.+)/g, ''),
+);
 
 if (!fs.existsSync(path.join(rootPath, 'node_modules'))) {
   spawnSync('npm i', {
@@ -11,11 +19,18 @@ if (!fs.existsSync(path.join(rootPath, 'node_modules'))) {
   });
 }
 
-require('ts-node').register({
-  project: path.join(rootPath, 'tsconfig.json'),
-  transpileOnly: true,
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+const basePath = path.resolve(__dirname, '..');
+
+// Still need to use tsconfig-paths as the paths support in SWC is... not great
+tsConfigPaths.register({
+  cwd: basePath,
+  ...tsconfig.compilerOptions,
 });
 
-const { startSol } = require('../dist/src/index');
+register(omit(tsconfig.compilerOptions, ['paths', 'baseUrl']));
+
+const { startSol } = require('../src/index');
 
 startSol();

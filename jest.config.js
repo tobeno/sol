@@ -3,9 +3,17 @@
  * https://jestjs.io/docs/en/configuration.html
  */
 
-import { Config } from '@jest/types';
+const fs = require('fs');
+const path = require('path');
 
-const config: Config.InitialOptions = {
+const rootPath = __dirname;
+const tsconfig = JSON.parse(
+  fs
+    .readFileSync(path.join(rootPath, 'tsconfig.json'), 'utf8')
+    .replace(/(\s\/\*[^/]+?\*\/|\n *\/\/.+)/g, ''),
+);
+
+module.exports = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -83,7 +91,12 @@ const config: Config.InitialOptions = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: Object.fromEntries(
+    Object.entries(tsconfig.compilerOptions.paths).map(([alias, [path]]) => [
+      alias.replace('*', '(.*)$'),
+      `<rootDir>/../${path.replace('*', '$1')}`,
+    ]),
+  ),
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -95,7 +108,7 @@ const config: Config.InitialOptions = {
   // notifyMode: "failure-change",
 
   // A preset that is used as a base for Jest's configuration
-  preset: 'ts-jest',
+  // preset: 'ts-jest',
 
   // Run tests from one or more projects
   // projects: undefined,
@@ -176,7 +189,9 @@ const config: Config.InitialOptions = {
   // timers: "real",
 
   // A map from regular expressions to paths to transformers
-  // transform: undefined,
+  transform: {
+    '^.+\\.(t|j)sx?$': ['@swc/jest'],
+  },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [
@@ -196,5 +211,3 @@ const config: Config.InitialOptions = {
   // Whether to use watchman for file crawling
   // watchman: true,
 };
-
-export default config;

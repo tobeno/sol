@@ -9,10 +9,6 @@ export class Sol {
     this.packageDir = dir(packagePath);
   }
 
-  get packageDistDir(): Directory {
-    return this.packageDir.dir('dist/src');
-  }
-
   get userDir(): Directory {
     return dir(`${homedir()}/.sol`);
   }
@@ -29,11 +25,7 @@ export function getSol(): Sol {
 }
 
 export function getSolPackageDir(): Directory {
-  let rootPath = path.resolve(__dirname, '../../..');
-
-  if (path.basename(rootPath) === 'dist') {
-    rootPath = path.dirname(rootPath);
-  }
+  const rootPath = path.resolve(__dirname, '../../..');
 
   return dir(rootPath);
 }

@@ -8,12 +8,12 @@ import { getCwd } from '../utils/env';
 
 export class Workspace {
   readonly dir: Directory;
-  readonly packageDistDir: Directory;
+  readonly packageDir: Directory;
   loaded = false;
 
-  constructor(workspacePath: string, packageDistPath: string) {
+  constructor(workspacePath: string, packagePath: string) {
     this.dir = dir(workspacePath);
-    this.packageDistDir = dir(packageDistPath);
+    this.packageDir = dir(packagePath);
   }
 
   get generatedDir(): Directory {
@@ -50,7 +50,7 @@ export class Workspace {
 /* eslint-disable */
 // @ts-nocheck
     
-import { Globals } from '${this.packageDistDir.relativePathFrom(
+import { Globals } from '${this.packageDir.relativePathFrom(
       this.generatedDir,
     )}/modules/globals/globals';
 ${extensions
@@ -101,10 +101,10 @@ ${Object.keys(extension.globals)
 import './${this.contextFile.dir.relativePathFrom(this.dir)}/${
         this.contextFile.basenameWithoutExt
       }';
-import { logDebug } from '${this.packageDistDir.relativePathFrom(
+import { logDebug } from '${this.packageDir.relativePathFrom(
         this.dir,
       )}/modules/utils/log';
-import { extension } from '${this.packageDistDir.relativePathFrom(
+import { extension } from '${this.packageDir.relativePathFrom(
         this.dir,
       )}/modules/sol/extension';
       
@@ -128,7 +128,7 @@ logDebug('Loaded ' + __filename);
     this.prepare();
 
     try {
-      require(this.setupFile.path);
+      require(this.setupFile.pathWithoutExt);
     } catch (e) {
       logError(e);
     }
@@ -147,7 +147,7 @@ export function getCurrentWorkspace(): Workspace {
   if (!currentWorkspace) {
     currentWorkspace = new Workspace(
       getCurrentWorkspaceDir().path,
-      getSol().packageDistDir.path,
+      getSol().packageDir.path,
     );
   }
 
@@ -164,7 +164,7 @@ export function getUserWorkspace(): Workspace {
   if (!userWorkspace) {
     userWorkspace = new Workspace(
       getUserWorkspaceDir().path,
-      getSol().packageDistDir.path,
+      getSol().packageDir.path,
     );
   }
 

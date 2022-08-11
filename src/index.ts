@@ -35,18 +35,6 @@ export function loadSol(): void {
 }
 
 /**
- * Runs the build command for Sol
- */
-export function rebuildSol(): void {
-  const { getSol } = require('./modules/sol/sol');
-
-  spawnSync('npm run build', {
-    cwd: getSol().packageDir.path,
-    shell: true,
-  });
-}
-
-/**
  * Update Sol from git remote
  */
 export function updateSol(): void {
@@ -70,8 +58,6 @@ export function updateSol(): void {
   });
 
   logDebug('Fetched latest version from GitHub');
-
-  rebuildSol();
 
   logDebug('Updated Sol');
 }
@@ -121,19 +107,6 @@ export function startSol(): void {
   const { startReplServer, solReplColor } = require('./modules/sol/repl');
 
   const server = startReplServer();
-
-  server.defineCommand('rebuild', {
-    help: 'Rebuilds and reloads Sol using the current source files',
-    action(): void {
-      rebuildSol();
-      reloadSol();
-      server.close();
-
-      setTimeout(() => {
-        startSol();
-      }, 0);
-    },
-  });
 
   server.defineCommand('reload', {
     help: 'Reloads Sol files to reflect latest build',

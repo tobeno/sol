@@ -17,12 +17,13 @@ It is a small, interactive **JavaScript shell**.
 
 You can do this:
 
-```js
+```
 // Get all TypeScript files in current directory (recursively)
 > files('**/*.ts')
 
 // Gather all import statements
-> let imports = _.map(f => f.text.match(/(?<=^|\n)import[^;]+;/g) || []).flat()
+> let
+imports = _.map(f => f.text.match(/(?<=^|\n)import[^;]+;/g) || []).flat()
 
 // Open import list in editor
 > imports.map(i => i.replace(/\r?\n/g, ' ')).join('\n').edit()
@@ -36,7 +37,7 @@ You can do this:
 
 Or this:
 
-```js
+```
 // Get todos
 > const j = fetch('https://jsonplaceholder.typicode.com/todos').content
 
@@ -44,10 +45,10 @@ Or this:
 > const open = j.filter(todo => !todo.completed)
 
 // Show all IDs of users with open ToDos using jsonata expression
-> open.extract('userId').sort().unique
+> open.extract('userId').sort().uniqu
 
 // Save open ToDos in CSV
-> open.csv.saveAs('todos.csv')
+> open.csv.saveAs('todos.csv'
 
 // Open CSV file in editor
 > _.edit()
@@ -57,7 +58,7 @@ Or this:
 
 To use Sol, you need to have NodeJS >= 12 installed globally.
 
-To setup the shell, you need to run `npm install && npm run build` once.
+To setup the shell, you need to run `npm install` once.
 
 Symlink the _bin/sol_ (or _bin/sol.js_) file to a location in your path.
 
@@ -68,22 +69,27 @@ Symlink the _bin/sol_ (or _bin/sol.js_) file to a location in your path.
 Most features of Sol are available as **global variables** (e.g. `play(...)` or `web.get(...)`).
 You can use `.globals [filter]` to list and filter the available global functions.
 
-Sol is heavily focused on **chaining things** together and tries to avoid back & forward jumps when writing commands. This is similar to what you know of pipes on many shells (e.g. `ls | grep '.json' | xargs cat`). Sol tries it make as easy as possible to write processing **pipelines**.
+Sol is heavily focused on **chaining things** together and tries to avoid back & forward jumps when writing commands.
+This is similar to what you know of pipes on many shells (e.g. `ls | grep '.json' | xargs cat`). Sol tries it make as
+easy as possible to write processing **pipelines**.
 
-So to open a file, interpret as JSON and then extract something, you would use e.g. `file('package.json').json.transform('dependencies').keys`.
+So to open a file, interpret as JSON and then extract something, you would use
+e.g. `file('package.json').json.transform('dependencies').keys`.
 
 You can always **interrupt a pipeline** and execute the command. To resume start with `_` (e.g. `_.join(',')`).
 
 The **final result** of a command / pipeline is printed on the shell (e.g. `['a', 'b'].join(', ')` will show `a, b`).
 
-For longer pipelines it is best to also use **variables** like `let f = files('**/*.ts')` or `let f = _`. This ensures you wont loose a result when switching between pipelines.
+For longer pipelines it is best to also use **variables** like `let f = files('**/*.ts')` or `let f = _`. This ensures
+you wont loose a result when switching between pipelines.
 
 Sol also **extends some core types** (like String) for convenience.
 
 Other than NodeJS, Sol is mostly **synchronous**.
 So even commands like `fetch(...)` are executed synchrously.
 
-If you want to use a **Promise-based method**, you can make it synchronous by either using `awaitSync(someAsyncFn())` or by using the await helper method `someAsyncFn().await` available on Promises.
+If you want to use a **Promise-based method**, you can make it synchronous by either using `awaitSync(someAsyncFn())` or
+by using the await helper method `someAsyncFn().await` available on Promises.
 
 Sol is based on the [NodeJS REPL](https://nodejs.org/api/repl.html),
 so all REPL features are available.
@@ -103,7 +109,8 @@ By default a _.sol_ subdirectory in the current working directory is used as wor
 
 This workspace contains a setup file (_.sol/setup.ts_) as well as workspace specific extensions (_.sol/extensions/_).
 
-In addition to the workspace, there is also a global config directory in your home directory (_~/.sol_). This directory is intended for global things which are shared across workspaces.
+In addition to the workspace, there is also a global config directory in your home directory (_~/.sol_). This directory
+is intended for global things which are shared across workspaces.
 
 ### Play / Edit
 
@@ -121,7 +128,8 @@ With that command the file will only be opened but not watched.
 Edit is also often avaiable in wrappers (e.g. `file('somefile').edit()`).
 
 By default play tries the _visual studio code_ app on the command line,
-but you can also set the _SOL_EDITOR_ environment variable to another editor of your choice (e.g. `export SOL_EDITOR=webstorm`).
+but you can also set the _SOL_EDITOR_ environment variable to another editor of your choice (
+e.g. `export SOL_EDITOR=webstorm`).
 
 ![Teaser Image](docs/assets/play.png)
 
@@ -164,10 +172,6 @@ After the creation you still need to load the extension as described above.
 
 To get started simply run `npm install`.
 
-### Building
-
-The project can be rebuilt using `npm run build` (or `npm run build:watch`).
-
-You can also update it from within the Sol CLI using `.rebuild`.
+### Update
 
 To do a full update of Sol from GitHub, you can use `.update`.

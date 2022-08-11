@@ -51,7 +51,7 @@ export class Extension {
 /* eslint-disable */
 // @ts-nocheck
       
-import type { FromPropertyDescriptorMap } from '${sol.packageDistDir.relativePathFrom(
+import type { FromPropertyDescriptorMap } from '${sol.packageDir.relativePathFrom(
         this.dir,
       )}/interfaces/object';
 
@@ -75,10 +75,10 @@ export type Globals = FromPropertyDescriptorMap<typeof globals>;
 // @ts-nocheck
       
 import { globals } from './globals';
-import { definePropertiesMutation, mutateGlobals } from '${sol.packageDistDir.relativePathFrom(
+import { definePropertiesMutation, mutateGlobals } from '${sol.packageDir.relativePathFrom(
         this.dir,
       )}/modules/utils/mutation';
-import { logDebug } from '${sol.packageDistDir.relativePathFrom(
+import { logDebug } from '${sol.packageDir.relativePathFrom(
         this.dir,
       )}/modules/utils/log';
 
