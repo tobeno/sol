@@ -22,8 +22,7 @@ You can do this:
 > files('**/*.ts')
 
 // Gather all import statements
-> let
-imports = _.map(f => f.text.match(/(?<=^|\n)import[^;]+;/g) || []).flat()
+> let imports = _.map(f => f.text.match(/(?<=^|\n)import[^;]+;/g) || []).flat()
 
 // Open import list in editor
 > imports.map(i => i.replace(/\r?\n/g, ' ')).join('\n').edit()
