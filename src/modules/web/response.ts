@@ -6,24 +6,9 @@ import { DataType } from '../data/data-type';
 import { web } from './index';
 import { Text, wrapString } from '../data/text';
 
-export class Response extends Data {
-  constructor(private axiosResponse: AxiosResponse) {
-    super({
-      status: axiosResponse.status,
-      statusText: axiosResponse.statusText,
-      headers: axiosResponse.headers,
-      data: axiosResponse.data,
-      request: {
-        url: axiosResponse.config.url,
-        method: (axiosResponse.config.method || 'get').toLowerCase(),
-        auth: axiosResponse.config.auth,
-        headers: axiosResponse.config.headers,
-      },
-    });
-  }
-
+export class Response extends Data<AxiosResponse> {
   get request(): AxiosRequestConfig {
-    return this.value.request;
+    return this.value.config;
   }
 
   get content(): Data {
@@ -41,7 +26,7 @@ export class Response extends Data {
   get contentFormat(): string {
     const contentType = this.value.headers['content-type'];
 
-    return contentType ? contentType.split(';')[0] : null;
+    return contentType ? contentType.split(';')[0] : '';
   }
 
   get headers(): AxiosResponseHeaders {
@@ -61,14 +46,25 @@ export class Response extends Data {
   }
 
   refresh(): Response {
-    return web.request(this.axiosResponse.config);
+    return web.request(this.value.config);
   }
 
   /**
    * Prints just the data when inspecting (e.g. for console.log)
    */
   [inspect.custom](): string {
-    return this.value;
+    return `Response ${inspect({
+      status: this.value.status,
+      statusText: this.value.statusText,
+      headers: this.value.headers,
+      data: this.value.data,
+      request: {
+        url: this.value.config.url,
+        method: (this.value.config.method || 'get').toLowerCase(),
+        auth: this.value.config.auth,
+        headers: this.value.config.headers,
+      },
+    })}`;
   }
 
   toString(): string {
