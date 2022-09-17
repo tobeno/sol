@@ -51,7 +51,7 @@ export class Data<
       return this.value.length ? (wrapObject(this.value[0]) as any) : null;
     }
 
-    const values = Object.values(this.value);
+    const values = Object.values(this.value as any);
 
     return values.length ? (wrapObject(values[0]) as any) : null;
   }
@@ -63,7 +63,7 @@ export class Data<
         : null;
     }
 
-    const values = Object.values(this.value);
+    const values = Object.values(this.value as any);
 
     return values.length
       ? (wrapObject(values[values.length - 1]) as any)
@@ -109,7 +109,7 @@ export class Data<
     }
 
     return wrapObject(
-      Object.fromEntries(Object.entries(this.value).reverse()),
+      Object.fromEntries(Object.entries(this.value as any).reverse()),
     ) as any;
   }
 
@@ -148,7 +148,7 @@ export class Data<
       ) as any;
     }
 
-    return wrapObject(Object.keys(this.value)) as any;
+    return wrapObject(Object.keys(this.value as any)) as any;
   }
 
   get values(): Data<ItemType[]> {
@@ -156,7 +156,7 @@ export class Data<
       return wrapObject(this.value) as any;
     }
 
-    return wrapObject(Object.values(this.value)) as any;
+    return wrapObject(Object.values(this.value as any)) as any;
   }
 
   get length(): number {
@@ -168,7 +168,7 @@ export class Data<
       return wrapObject(this.value.entries()) as any;
     }
 
-    return wrapObject(Object.entries(this.value)) as any;
+    return wrapObject(Object.entries(this.value as any)) as any;
   }
 
   changeCase(cb: (text: string) => string): Data {
@@ -430,7 +430,7 @@ export class Data<
       return wrapString(this.value.join(separator));
     }
 
-    return wrapString(Object.values(this.value).join(separator));
+    return wrapString(Object.values(this.value as any).join(separator));
   }
 
   extract<ExtractedValueType = any>(
