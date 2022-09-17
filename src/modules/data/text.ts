@@ -1,6 +1,4 @@
 import { DataFormat } from './data-format';
-import { DataSource } from './data-source';
-import { DataTransformation } from './data-transformation';
 import { inspect } from 'util';
 import {
   camelcaseText,
@@ -16,25 +14,12 @@ import {
  * Wrapper for strings
  */
 export class Text<ContentType = any> extends String {
-  constructor(
-    value: string | String,
-    public format: string | null = null,
-    public source: DataSource | null = null,
-    public sourceTransformation: DataTransformation | null = null,
-  ) {
+  constructor(value: string | String, public format: string | null = null) {
     super(value.toString());
   }
 
   get value(): string {
     return this.toString();
-  }
-
-  get rootSource(): DataSource | null {
-    if (!this.source) {
-      return null;
-    }
-
-    return this.source.rootSource || this.source;
   }
 
   get ext(): string {
@@ -46,27 +31,23 @@ export class Text<ContentType = any> extends String {
   }
 
   get camelcased(): Text<ContentType> {
-    return new Text<ContentType>(camelcaseText(this.value), this.format, this);
+    return new Text<ContentType>(camelcaseText(this.value), this.format);
   }
 
   get pascalcased(): Text<ContentType> {
-    return new Text<ContentType>(pascalcaseText(this.value), this.format, this);
+    return new Text<ContentType>(pascalcaseText(this.value), this.format);
   }
 
   get constantcased(): Text<ContentType> {
-    return new Text<ContentType>(
-      constantcaseText(this.value),
-      this.format,
-      this,
-    );
+    return new Text<ContentType>(constantcaseText(this.value), this.format);
   }
 
   get titlecased(): Text<ContentType> {
-    return new Text<ContentType>(titlecaseText(this.value), this.format, this);
+    return new Text<ContentType>(titlecaseText(this.value), this.format);
   }
 
   get kebabcased(): Text<ContentType> {
-    return new Text<ContentType>(kebabcaseText(this.value), this.format, this);
+    return new Text<ContentType>(kebabcaseText(this.value), this.format);
   }
 
   get uppercased(): Text<ContentType> {
@@ -91,12 +72,6 @@ export class Text<ContentType = any> extends String {
     return this;
   }
 
-  setSource(source: DataSource | null): this {
-    this.source = source;
-
-    return this;
-  }
-
   eval(): any {
     return eval(this.toString());
   }
@@ -117,7 +92,6 @@ export class Text<ContentType = any> extends String {
 export function wrapString<ContentType = any>(
   value: string | String | Text,
   format: string | null = null,
-  source: DataSource | null = null,
 ): Text<ContentType> {
   if (value instanceof Text) {
     let text = value;
@@ -126,14 +100,10 @@ export function wrapString<ContentType = any>(
       text = text.setFormat(format);
     }
 
-    if (source) {
-      text = text.setSource(source);
-    }
-
     return text;
   }
 
-  return new Text(value, format, source);
+  return new Text(value, format);
 }
 
 export function unwrapString(value: string | String | Text): string {

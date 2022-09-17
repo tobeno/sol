@@ -1,6 +1,5 @@
 import { Data } from './data';
 import { Text, wrapString } from './text';
-import { DataSource } from './data-source';
 import { DataFormat } from './data-format';
 import { DataTransformation } from './data-transformation';
 import { DataType } from './data-type';
@@ -15,12 +14,9 @@ export class Xml extends Data<string> {
   }
 }
 
-export function wrapXml(
-  value: string | String | Text,
-  source: DataSource | null = null,
-): Xml {
+export function wrapXml(value: string | String | Text): Xml {
   return transform(
-    wrapString(value, DataFormat.Xml, source),
+    wrapString(value, DataFormat.Xml),
     new DataTransformation(
       DataType.String.withFormat(DataFormat.Xml),
       DataType.Xml,
@@ -29,5 +25,5 @@ export function wrapXml(
 }
 
 export function unwrapXml(value: Xml): Text {
-  return wrapString(value.value, DataFormat.Xml, value.source);
+  return wrapString(value.value, DataFormat.Xml);
 }

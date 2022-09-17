@@ -1,7 +1,6 @@
 import { Wrapper } from './wrapper';
 import { URL, URLSearchParams } from 'url';
 import { Text, wrapString } from './text';
-import { DataSource } from './data-source';
 import { DataTransformation } from './data-transformation';
 import { DataType } from './data-type';
 import { transform } from './transformer';
@@ -40,12 +39,9 @@ export class Url extends Wrapper<string> {
   }
 }
 
-export function wrapUrl(
-  value: string | String | Text,
-  source: DataSource | null = null,
-): Url {
+export function wrapUrl(value: string | String | Text): Url {
   return transform(
-    wrapString(value, null, source),
+    wrapString(value),
     new DataTransformation(DataType.Text, DataType.Url),
   );
 }

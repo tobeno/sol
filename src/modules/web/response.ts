@@ -27,7 +27,7 @@ export class Response extends Data {
   }
 
   get content(): Data {
-    return wrapObject(this.value.data, this as any);
+    return wrapObject(this.value.data);
   }
 
   get contentExt(): string {
@@ -57,11 +57,7 @@ export class Response extends Data {
   }
 
   get cmd(): Text {
-    return wrapString(
-      `web.request(${JSON.stringify(this.request)})`,
-      null,
-      this,
-    );
+    return wrapString(`web.request(${JSON.stringify(this.request)})`);
   }
 
   refresh(): Response {

@@ -59,7 +59,7 @@ mutateClass(
 
     csv: {
       get(): Data<any> {
-        return csvToData(this.text, this);
+        return csvToData(this.text);
       },
       set(value: Data<any>) {
         this.text = dataToCsv(value);

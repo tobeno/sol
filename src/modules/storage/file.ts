@@ -102,7 +102,7 @@ export class File<ContentType = any> extends Item {
   }
 
   get text(): Text | any {
-    return wrapString(fs.readFileSync(this.path, 'utf8'), null, this);
+    return wrapString(fs.readFileSync(this.path, 'utf8'));
   }
 
   set text(value: Text | any) {

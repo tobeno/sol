@@ -12,10 +12,8 @@ import { AnyTransformer } from './any-transformer';
 import { UrlTransformer } from './url-transformer';
 import { TextNewlineSeparatedTransformer } from './text-newline-separated-transformer';
 import { TextSemicolonSeparatedTransformer } from './text-semicolon-separated-transformer';
-import { SetSourceTransformer } from './set-source-transformer';
 import { Data } from '../data';
 import { Text } from '../text';
-import { SetSourceTransformationTransformer } from './set-source-transformation-transformer';
 import { WrappingTransformer } from './wrapping-transformer';
 import { ToStringTransformer } from './tostring-transformer';
 
@@ -37,14 +35,10 @@ export function getRootTransformer(): DataTransformer<any, any> {
       new ToStringTransformer(),
       new UrlTransformer(),
     ]);
-    rootTransformer = new SetSourceTransformationTransformer(
-      new SetSourceTransformer(
-        new WrappingTransformer(
-          Data,
-          DataType.Object,
-          new WrappingTransformer(Text, DataType.String, anyTransformer),
-        ),
-      ),
+    rootTransformer = new WrappingTransformer(
+      Data,
+      DataType.Object,
+      new WrappingTransformer(Text, DataType.String, anyTransformer),
     );
   }
 

@@ -26,7 +26,7 @@ mutateClass(
   definePropertiesMutation({
     text: {
       get(): any {
-        return wrapString(this.value, null, this);
+        return wrapString(this.value);
       },
 
       set(value: any) {

@@ -1,12 +1,12 @@
 import { DataTransformation } from './data-transformation';
 import { DataType } from './data-type';
 import { DataFormat } from './data-format';
-import { DataSource } from './data-source';
 import type { Ast } from './ast';
 import type { Data } from './data';
 import type { Text } from './text';
 import { wrapString } from './text';
 import type { Constructor } from '../../interfaces/util';
+import { wrapObject } from './data';
 
 // Hepler functions with dynamic imports to avoid circular dependencies
 function getDataClass(): Constructor<Data> {
@@ -33,12 +33,9 @@ export function transform<InputType = any, OutputType = any>(
 
 export function jsonToData<ValueType = any>(
   value: string | Text,
-  source: DataSource | null = null,
 ): Data<ValueType> {
-  source = source || (value as any).source || null;
-
   return transform(
-    wrapString(value, DataFormat.Json, source),
+    wrapString(value, DataFormat.Json),
     new DataTransformation(
       DataType.Text.withFormat(DataFormat.Json),
       DataType.Data,
@@ -47,21 +44,16 @@ export function jsonToData<ValueType = any>(
 }
 
 export function dataToJson<ValueType = any>(
-  value: Data<ValueType> | any,
-  source: DataSource | null = null,
+  value: Data<ValueType> | ValueType,
 ): Text<ValueType> {
   const Data = getDataClass();
 
   if (!(value instanceof Data)) {
-    value = new Data(value);
-  }
-
-  if (source) {
-    value.setSource(source);
+    value = new Data(value) as Data<ValueType>;
   }
 
   return transform(
-    value,
+    wrapObject(value),
     new DataTransformation(
       DataType.Data,
       DataType.Text.withFormat(DataFormat.Json),
@@ -71,10 +63,9 @@ export function dataToJson<ValueType = any>(
 
 export function yamlToData<ValueType = any>(
   value: string | String | Text,
-  source: DataSource | null = null,
 ): Data<ValueType> {
   return transform(
-    wrapString(value, DataFormat.Yaml, source),
+    wrapString(value, DataFormat.Yaml),
     new DataTransformation(
       DataType.Text.withFormat(DataFormat.Yaml),
       DataType.Data,
@@ -83,17 +74,12 @@ export function yamlToData<ValueType = any>(
 }
 
 export function dataToYaml<ValueType = any>(
-  value: Data<ValueType> | any,
-  source: DataSource | null = null,
+  value: Data<ValueType> | ValueType,
 ): Text<ValueType> {
   const Data = getDataClass();
 
   if (!(value instanceof Data)) {
-    value = new Data(value);
-  }
-
-  if (source) {
-    value.setSource(source);
+    value = new Data(value) as Data<ValueType>;
   }
 
   return transform(
@@ -107,10 +93,9 @@ export function dataToYaml<ValueType = any>(
 
 export function csvToData<ValueType = any>(
   value: string | String | Text,
-  source: DataSource | null = null,
 ): Data<ValueType> {
   return transform(
-    wrapString(value, DataFormat.Csv, source),
+    wrapString(value, DataFormat.Csv),
     new DataTransformation(
       DataType.Text.withFormat(DataFormat.Csv),
       DataType.Data,
@@ -119,17 +104,12 @@ export function csvToData<ValueType = any>(
 }
 
 export function dataToCsv<ValueType = any>(
-  value: Data<ValueType> | any,
-  source: DataSource | null = null,
+  value: Data<ValueType> | ValueType,
 ): Text<ValueType> {
   const Data = getDataClass();
 
   if (!(value instanceof Data)) {
-    value = new Data(value);
-  }
-
-  if (source) {
-    value.setSource(source);
+    value = new Data(value) as Data<ValueType>;
   }
 
   return transform(
@@ -141,27 +121,17 @@ export function dataToCsv<ValueType = any>(
   );
 }
 
-export function codeToAst(
-  value: string | String | Text,
-  source: DataSource | null = null,
-): Ast {
+export function codeToAst(value: string | String | Text): Ast {
   return transform(
-    wrapString(value, null, source),
+    wrapString(value, null),
     new DataTransformation(DataType.Text, DataType.Ast),
   );
 }
 
-export function astToCode(
-  value: Ast | any,
-  source: DataSource | null = null,
-): Text {
+export function astToCode(value: Ast | any): Text {
   const Ast = getAstClass();
   if (!(value instanceof Ast)) {
     value = new Ast(value);
-  }
-
-  if (source) {
-    value = value.withSource(source);
   }
 
   return transform(value, new DataTransformation(DataType.Ast, DataType.Text));

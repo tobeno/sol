@@ -55,7 +55,7 @@ export class Ast extends Data<babelTypes.Node> {
       },
     });
 
-    return wrapObject(matches, this);
+    return wrapObject(matches);
   }
 
   /**

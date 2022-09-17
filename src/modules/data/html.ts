@@ -1,6 +1,5 @@
 import { Data } from './data';
 import { Text } from './text';
-import { DataSource } from './data-source';
 import { DataFormat } from './data-format';
 
 /**
@@ -12,19 +11,10 @@ export class Html extends Data<string> {
   }
 }
 
-export function wrapHtml(
-  value: string | String | Text,
-  source: DataSource | null = null,
-): Html {
-  const html = new Html(String(value));
-
-  if (source) {
-    html.setSource(source);
-  }
-
-  return html;
+export function wrapHtml(value: string | String | Text): Html {
+  return new Html(String(value));
 }
 
 export function unwrapHtml<ContentType = any>(value: Html): Text<ContentType> {
-  return new Text<ContentType>(value.value, DataFormat.Html, value.source);
+  return new Text<ContentType>(value.value, DataFormat.Html);
 }

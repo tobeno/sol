@@ -1,4 +1,6 @@
+import '../../src/setup';
 import tmp from 'tmp';
+
 import { file } from '../../src/modules/storage/file';
 
 import { readFileSync } from 'fs';
@@ -79,8 +81,6 @@ describe('data module', () => {
       it('should transform an array', async () => {
         let data = wrapObject([{ id: '1' }, { id: '2' }] as { id: string }[]);
 
-        const originalData = data;
-
         expect(data.json.value).toMatchSnapshot();
 
         const filteredData = data.filter((item) => item.id === '1');
@@ -88,9 +88,6 @@ describe('data module', () => {
         const mappedData = filteredData.map((item) => item.id);
 
         expect(mappedData.value).toEqual(['1']);
-
-        expect(mappedData.source).toBe(filteredData);
-        expect(mappedData.rootSource).toBe(originalData);
       });
 
       it('should transform an object', async () => {
@@ -99,8 +96,6 @@ describe('data module', () => {
           'product-2': { name: 'Shirt' },
         } as Record<string, { name: string }>);
 
-        const originalData = data;
-
         expect(data.json.value).toMatchSnapshot();
 
         const filteredData = data.filter((item) => item.name === 'Shoe');
@@ -108,17 +103,12 @@ describe('data module', () => {
         const mappedData = filteredData.map((item) => item.name);
 
         expect(mappedData.value).toEqual({ 'product-1': 'Shoe' });
-
-        expect(mappedData.source).toBe(filteredData);
-        expect(mappedData.rootSource).toBe(originalData);
       });
 
       it('should transform a string', async () => {
         let text = wrapString(
           'Product 1: Shoe\nProduct 2: Shirt\nProduct 3: Jeans',
         );
-
-        const originalText = text;
 
         let data = text.lines
           .map((line) => {
@@ -132,14 +122,9 @@ describe('data module', () => {
           .filter((item) => !!item)
           .map((item) => JSON.stringify(item));
 
-        const mappedLines = data;
-
         text = data.join('.');
 
         expect(text.value).toMatchSnapshot();
-
-        expect(text.source).toBe(mappedLines);
-        expect(text.rootSource).toBe(originalText);
       });
     });
   });

@@ -1,3 +1,4 @@
+import '../../src/setup';
 import { grep } from '../../src/modules/storage/search';
 
 describe('storage module', () => {
@@ -15,8 +16,6 @@ describe('storage module', () => {
         .sorted.join(',');
 
       expect(text.value).toBe('men,women');
-
-      expect(text.rootSource).toBe(files);
     });
 
     it('should grep by regex', async () => {
@@ -35,8 +34,6 @@ describe('storage module', () => {
         .sorted.join(',');
 
       expect(text.value).toBe('men,women');
-
-      expect(text.rootSource).toBe(files);
     });
   });
 });

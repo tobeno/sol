@@ -25,7 +25,7 @@ mutateClass(
           value = this.json;
         }
 
-        return wrapString(value, null, this);
+        return wrapString(value);
       },
     },
 
