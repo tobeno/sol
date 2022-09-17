@@ -52,7 +52,7 @@ export class Workspace {
     
 import { Globals } from '${this.packageDir.relativePathFrom(
       this.generatedDir,
-    )}/modules/globals/globals';
+    )}/src/modules/globals/globals';
 ${extensions
   .map((extension, index) =>
     `
