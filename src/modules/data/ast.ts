@@ -1,20 +1,25 @@
-import babelTypes from '@babel/types';
+import type babelTypes from '@babel/types';
 import { inspect } from 'util';
-import { Data, wrapObject } from './data';
-import { astToCode } from './transformer';
-import traverse, { NodePath, Scope, TraverseOptions } from '@babel/traverse';
+import { Data } from './data';
+import { astToCode } from '../transform/transformer';
+import type { NodePath, Scope, TraverseOptions } from '@babel/traverse';
 import { Text } from './text';
+import { Wrapper } from '@sol/modules/data/wrapper';
 
 /**
  * Wrapper for HTML strings
  */
-export class Ast extends Data<babelTypes.Node> {
+export class Ast extends Wrapper<babelTypes.Node> {
   constructor(
     public value: babelTypes.Node,
     public scope: Scope | null = null,
     public parentPath: NodePath | null = null,
   ) {
     super(value);
+  }
+
+  get data(): Data {
+    return Data.create(this.value);
   }
 
   get node(): babel.Node {
@@ -31,7 +36,7 @@ export class Ast extends Data<babelTypes.Node> {
     state?: any,
     parentPath?: NodePath,
   ): this {
-    traverse(
+    require('@babel/traverse').traverse(
       this.value,
       opts,
       scope || this.scope || undefined,
@@ -55,7 +60,7 @@ export class Ast extends Data<babelTypes.Node> {
       },
     });
 
-    return wrapObject(matches);
+    return Data.create(matches);
   }
 
   /**
@@ -68,6 +73,16 @@ export class Ast extends Data<babelTypes.Node> {
   toString(): string {
     return this.code.value;
   }
-}
 
-export * as astTypes from '@babel/types';
+  static create(
+    value: babelTypes.Node | Ast,
+    scope: Scope | null = null,
+    parentPath: NodePath | null = null,
+  ): Ast {
+    if (value instanceof Ast) {
+      return value;
+    }
+
+    return new Ast(value, scope, parentPath);
+  }
+}

@@ -1,8 +1,7 @@
 import path from 'path';
 import fs from 'fs';
-import { exec } from 'shelljs';
-import { Item } from './item';
-import { File, file } from './file';
+import { StorageItem } from './storage-item';
+import { File } from './file';
 import { Text } from '../data/text';
 import { grep, replaceText } from './search';
 import {
@@ -11,13 +10,13 @@ import {
   FileCollection,
   files,
   glob,
-  ItemCollection,
-} from './item-collection';
-import { wrapString } from '../data/text';
+  StorageItemCollection,
+} from './storage-item-collection';
+import { exec } from '@sol/utils/shelljs';
 
-export class Directory extends Item {
+export class Directory extends StorageItem {
   get cmd(): Text {
-    return wrapString(`dir(${JSON.stringify(this.path)})`);
+    return Text.create(`dir(${JSON.stringify(this.path)})`);
   }
 
   get parent(): Directory {
@@ -25,7 +24,7 @@ export class Directory extends Item {
   }
 
   set parent(value: Directory) {
-    this.moveTo(`${value.path}/${this.basename}`);
+    this.renameTo(`${value.path}/${this.basename}`);
   }
 
   get size(): number {
@@ -72,7 +71,7 @@ export class Directory extends Item {
     return path.relative(target, this.path) || '.';
   }
 
-  items(): ItemCollection {
+  items(): StorageItemCollection {
     return this.glob();
   }
 
@@ -81,7 +80,7 @@ export class Directory extends Item {
   }
 
   file(path: string): File {
-    return file(`${this.path}/${path}`);
+    return File.create(`${this.path}/${path}`);
   }
 
   dirs(exp?: string): DirectoryCollection {
@@ -89,29 +88,19 @@ export class Directory extends Item {
   }
 
   dir(path: string): Directory {
-    return dir(`${this.path}/${path}`);
+    return Directory.create(`${this.path}/${path}`);
   }
 
   grep(pattern: string | RegExp): FileCollection {
     return grep(pattern, this.path);
   }
 
-  glob(exp?: string): ItemCollection {
+  glob(exp?: string): StorageItemCollection {
     return glob(path.join(this.path, exp || '*'));
   }
 
-  moveTo(newPath: string | Directory): this {
-    if (newPath instanceof Directory) {
-      newPath = `${newPath.path}/`;
-    }
-
-    if (newPath.endsWith('/')) {
-      // Copy into
-      exec(`mv '${this.path}' '${newPath}'`);
-    } else {
-      // Copy to
-      exec(`mv '${this.path}/' '${newPath}/'`);
-    }
+  renameTo(newPath: string): this {
+    exec(`mv '${this.path}/' '${newPath}/'`);
 
     this.path = newPath;
 
@@ -128,10 +117,6 @@ export class Directory extends Item {
     }
 
     return new Directory(newPath);
-  }
-
-  renameTo(newBasename: string): Directory {
-    return this.moveTo(`${this.parent.path}/${newBasename}`);
   }
 
   serve(): this {
@@ -165,10 +150,12 @@ export class Directory extends Item {
   pretty(): void {
     this.files('**').forEach((f) => f.pretty());
   }
-}
 
-// export class Directory extends WithPrint(WithCopy(UnwrappedDirectory)) {}
+  static create(pathOrDirectory: string | Directory): Directory {
+    if (pathOrDirectory instanceof Directory) {
+      return pathOrDirectory;
+    }
 
-export function dir(path?: string): Directory {
-  return new Directory(path || '.');
+    return new Directory(pathOrDirectory);
+  }
 }

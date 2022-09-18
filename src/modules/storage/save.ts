@@ -1,4 +1,4 @@
-import { file, File } from './file';
+import { File } from './file';
 import { tmp } from './tmp';
 import { Text } from '../data/text';
 
@@ -33,7 +33,7 @@ export function save(content: any): File {
 }
 
 export function saveAs(content: any, path: string): File {
-  const f = file(path);
+  const f = File.create(path);
   f.text = content;
   return f;
 }

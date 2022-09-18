@@ -1,10 +1,10 @@
 import { File } from '../storage/file';
-import { rerequire } from '../utils/module';
+import { rerequire } from '@sol/utils/module';
 import { Directory } from '../storage/directory';
 import { getReplServer } from '../sol/repl';
-import { log } from '../utils/log';
+import { log } from '@sol/utils/log';
 import { getCurrentWorkspace, getCurrentWorkspaceDir } from '../sol/workspace';
-import { wrapObject } from '../data/data';
+import { Data } from '@sol/modules/data/data';
 
 export class PlayFile {
   static instances: Record<string, PlayFile> = {};
@@ -111,7 +111,7 @@ export default null;
     }
   }
 
-  replay(): any {
+  replay<ResultType = any>(): ResultType {
     const file = this.file;
     if (!file.exists) {
       throw new Error(`No play found for '${file.path}'`);
@@ -125,9 +125,9 @@ export default null;
 
     if (result && typeof result === 'object') {
       if (result.constructor === Object) {
-        result = wrapObject(result);
+        result = Data.create(result);
       } else if (result.constructor === Array) {
-        result = wrapObject(result);
+        result = Data.create(result);
       }
     }
 
@@ -199,7 +199,9 @@ export function unplay(pathOrFile: string | File | null = null): void {
   }
 }
 
-export function replay(pathOrFile: string | File): any {
+export function replay<ResultType = any>(
+  pathOrFile: string | File,
+): ResultType {
   const f = playFile(pathOrFile);
 
   return f.replay();

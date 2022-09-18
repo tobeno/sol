@@ -1,18 +1,27 @@
 import { inspect } from 'util';
-import { Data, wrapObject } from '../data/data';
-import { AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders } from 'axios';
+import { Data } from '../data/data';
+import type {
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosResponseHeaders,
+} from 'axios';
 import { DataFormat } from '../data/data-format';
 import { DataType } from '../data/data-type';
 import { web } from './index';
-import { Text, wrapString } from '../data/text';
+import { Text } from '../data/text';
+import { Wrapper } from '@sol/modules/data/wrapper';
 
-export class Response extends Data<AxiosResponse> {
+export class Response extends Wrapper<AxiosResponse> {
+  get data(): Data<AxiosResponse> {
+    return Data.create(this.value);
+  }
+
   get request(): AxiosRequestConfig {
     return this.value.config;
   }
 
   get content(): Data {
-    return wrapObject(this.value.data);
+    return Data.create(this.value.data);
   }
 
   get contentExt(): string {
@@ -42,7 +51,7 @@ export class Response extends Data<AxiosResponse> {
   }
 
   get cmd(): Text {
-    return wrapString(`web.request(${JSON.stringify(this.request)})`);
+    return Text.create(`web.request(${JSON.stringify(this.request)})`);
   }
 
   refresh(): Response {
@@ -68,7 +77,7 @@ export class Response extends Data<AxiosResponse> {
   }
 
   toString(): string {
-    return this.json.toString();
+    return this.data.json.toString();
   }
 }
 

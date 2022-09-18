@@ -1,5 +1,5 @@
-import './extend-array';
-import './extend-data';
-import './extend-text';
-import './extend-storage-item';
-import './extend-storage-item-collection';
+import './mutations/array.mutation';
+import './mutations/data.mutation';
+import './mutations/text.mutation';
+import './mutations/storage-item.mutation';
+import './mutations/storage-item-collection.mutation';

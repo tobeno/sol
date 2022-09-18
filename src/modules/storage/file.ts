@@ -1,19 +1,19 @@
-import fs from 'fs';
+import fs, { mkdirSync } from 'fs';
 import path from 'path';
 import prettier from 'prettier';
-import { Item } from './item';
+import { StorageItem } from './storage-item';
 import { Directory } from './directory';
-import { ItemCollection } from './item-collection';
-import { Text, wrapString } from '../data/text';
-import { log } from '../utils/log';
+import { StorageItemCollection } from './storage-item-collection';
+import { Text } from '../data/text';
+import { log } from '@sol/utils/log';
 
-export class File<ContentType = any> extends Item {
+export class File<ContentType = any> extends StorageItem {
   constructor(path: string) {
     super(path);
   }
 
   get cmd(): Text {
-    return wrapString(`file(${JSON.stringify(this.path)})`);
+    return Text.create(`file(${JSON.stringify(this.path)})`);
   }
 
   get pathWithoutExt(): string {
@@ -42,8 +42,10 @@ export class File<ContentType = any> extends Item {
     return name.slice(pos + 1).split('.');
   }
 
-  set exts(ext: string[]) {
-    this.renameTo(ext.join('.'));
+  set exts(exts: string[]) {
+    this.renameTo(
+      `${this.dir.path}/${this.name}${exts.length ? `.${exts.join('.')}` : ''}`,
+    );
   }
 
   get ext(): string {
@@ -78,7 +80,9 @@ export class File<ContentType = any> extends Item {
   set name(name: string) {
     const exts = this.exts;
 
-    this.renameTo(`${name}${exts.length ? `.${this.exts.join('.')}` : ''}`);
+    this.renameTo(
+      `${this.dir.path}/${name}${exts.length ? `.${this.exts.join('.')}` : ''}`,
+    );
   }
 
   get dir(): Directory {
@@ -86,7 +90,7 @@ export class File<ContentType = any> extends Item {
   }
 
   set dir(value: Directory) {
-    this.moveTo(`${value.path}/${this.basename}`);
+    this.renameTo(`${value.path}/${this.basename}`);
   }
 
   get exists(): boolean {
@@ -102,7 +106,7 @@ export class File<ContentType = any> extends Item {
   }
 
   get text(): Text | any {
-    return wrapString(fs.readFileSync(this.path, 'utf8'));
+    return Text.create(fs.readFileSync(this.path, 'utf8'));
   }
 
   set text(value: Text | any) {
@@ -136,17 +140,20 @@ export class File<ContentType = any> extends Item {
     return this as any;
   }
 
-  items(): ItemCollection {
-    return new ItemCollection(this as any);
+  items(): StorageItemCollection {
+    return new StorageItemCollection(this as any);
   }
 
   delete(): void {
     fs.unlinkSync(this.path);
   }
 
-  moveTo(newPath: string | Directory): this {
-    if (newPath instanceof Directory) {
-      newPath = `${newPath.path}/${this.basename}`;
+  renameTo(newPath: string): this {
+    const newDirPath = path.dirname(newPath);
+    if (!fs.existsSync(newDirPath)) {
+      mkdirSync(newDirPath, {
+        recursive: true,
+      });
     }
 
     fs.renameSync(this.path, newPath);
@@ -156,10 +163,11 @@ export class File<ContentType = any> extends Item {
     return this;
   }
 
-  renameTo(newBasename: string): this {
-    return this.moveTo(`${this.dir.path}/${newBasename}`);
-  }
-
+  replaceText(pattern: string | RegExp, replacement: string): this;
+  replaceText(
+    pattern: string | RegExp,
+    replacer: (...matches: string[]) => string,
+  ): this;
   replaceText(pattern: string | RegExp, replacer: any): this {
     this.text = this.text.replace(pattern, replacer);
 
@@ -172,7 +180,7 @@ export class File<ContentType = any> extends Item {
     return new File(newPath);
   }
 
-  eval(): any {
+  eval<ResultType = any>(): ResultType {
     return eval(this.text.toString());
   }
 
@@ -207,8 +215,14 @@ export class File<ContentType = any> extends Item {
   print(): void {
     log(String(this));
   }
-}
 
-export function file<ContentType = any>(path: string): File<ContentType> {
-  return new File<ContentType>(path);
+  static create<ContentType = any>(
+    pathOrFile: string | File,
+  ): File<ContentType> {
+    if (pathOrFile instanceof File) {
+      return pathOrFile;
+    }
+
+    return new File<ContentType>(pathOrFile);
+  }
 }

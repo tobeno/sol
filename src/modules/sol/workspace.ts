@@ -1,10 +1,10 @@
-import { dir, Directory } from '../storage/directory';
+import { Directory } from '../storage/directory';
 import { File } from '../storage/file';
 import { globals } from '../globals/globals';
 import { getLoadedExtensions } from './extension';
-import { logDebug, logError } from '../utils/log';
+import { logDebug, logError } from '@sol/utils/log';
 import { getSol } from './sol';
-import { getCwd } from '../utils/env';
+import { getCwd } from '@sol/utils/env';
 
 export class Workspace {
   readonly dir: Directory;
@@ -12,8 +12,8 @@ export class Workspace {
   loaded = false;
 
   constructor(workspacePath: string, packagePath: string) {
-    this.dir = dir(workspacePath);
-    this.packageDir = dir(packagePath);
+    this.dir = Directory.create(workspacePath);
+    this.packageDir = Directory.create(packagePath);
   }
 
   get generatedDir(): Directory {
@@ -103,7 +103,7 @@ import './${this.contextFile.dir.relativePathFrom(this.dir)}/${
       }';
 import { logDebug } from '${this.packageDir.relativePathFrom(
         this.dir,
-      )}/modules/utils/log';
+      )}/utils/log';
 import { extension } from '${this.packageDir.relativePathFrom(
         this.dir,
       )}/modules/sol/extension';
@@ -138,7 +138,7 @@ logDebug('Loaded ' + __filename);
 }
 
 export function getCurrentWorkspaceDir(): Directory {
-  return dir(`${getCwd()}/.sol`);
+  return Directory.create(`${getCwd()}/.sol`);
 }
 
 let currentWorkspace: Workspace | null = null;

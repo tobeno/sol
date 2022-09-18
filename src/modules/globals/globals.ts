@@ -2,33 +2,33 @@ import jsonata from 'jsonata';
 import chalk from 'chalk';
 import { grep } from '../storage/search';
 
-import { file } from '../storage/file';
-import { dir } from '../storage/directory';
-import { dirs, files, glob } from '../storage/item-collection';
+import { File } from '../storage/file';
+import { Directory } from '../storage/directory';
+import { dirs, files, glob } from '../storage/storage-item-collection';
 import { web } from '../web';
 import { getClipboard } from '../os/clipboard';
-import * as asyncUtils from '../utils/async';
-import { awaitSync } from '../utils/async';
-import * as arrayUtils from '../utils/array';
-import * as objectUtils from '../utils/object';
-import * as textUtils from '../utils/text';
-import * as metadataUtils from '../utils/metadata';
-import { withHelp } from '../utils/metadata';
-import { getCwd } from '../utils/env';
-import { log } from '../utils/log';
+import * as asyncUtils from '@sol/utils/async';
+import { awaitSync } from '@sol/utils/async';
+import * as arrayUtils from '@sol/utils/array';
+import * as objectUtils from '@sol/utils/object';
+import * as textUtils from '@sol/utils/text';
+import * as metadataUtils from '@sol/utils/metadata';
+import { withHelp } from '@sol/utils/metadata';
+import { getCwd } from '@sol/utils/env';
+import { log } from '@sol/utils/log';
 import { getSol } from '../sol/sol';
 import { edit } from '../integrations/editor';
 import { listPlays, play, playFile, replay } from '../play/play';
-import * as shell from '../utils/shelljs';
+import * as shell from '@sol/utils/shelljs';
 import {
   csvToData,
   jsonToData,
   transform,
   yamlToData,
-} from '../data/transformer';
-import { astTypes } from '../data/ast';
+} from '../transform/transformer';
 import * as classes from './classes';
-import { FromPropertyDescriptorMap } from '../../interfaces/object';
+import { Data, Text, Url } from './classes';
+import { FromPropertyDescriptorMap } from '@sol/interfaces/object';
 import {
   extension,
   getExtensions,
@@ -39,11 +39,6 @@ import {
 import { getCurrentWorkspace, getUserWorkspace } from '../sol/workspace';
 import { browse } from '../integrations/browser';
 import { open, openApp } from '../integrations/open';
-import { wrapObject } from '../data/data';
-import { wrapXml } from '../data/xml';
-import { wrapUrl } from '../data/url';
-import { wrapHtml } from '../data/html';
-import { wrapString } from '../data/text';
 
 export const globals = {
   ast: withHelp(
@@ -54,7 +49,9 @@ export const globals = {
   ),
   astTypes: withHelp(
     {
-      value: astTypes,
+      get() {
+        return require('@babel/types');
+      },
     },
     'See https://babeljs.io/docs/en/babel-types',
   ),
@@ -100,13 +97,13 @@ export const globals = {
   ),
   data: withHelp(
     {
-      value: wrapObject,
+      value: Data.create,
     },
     'Wraps the given object as Data',
   ),
   dir: withHelp(
     {
-      value: dir,
+      value: Directory.create,
     },
     'Wrapper for directories',
   ),
@@ -135,7 +132,7 @@ export const globals = {
   },
   file: withHelp(
     {
-      value: file,
+      value: File.create,
     },
     'Wrapper for files',
   ),
@@ -156,12 +153,6 @@ export const globals = {
       value: grep,
     },
     'Finds files using the given RegExp pattern',
-  ),
-  html: withHelp(
-    {
-      value: wrapHtml,
-    },
-    'Converts HTML to Data',
   ),
   json: withHelp(
     {
@@ -237,7 +228,7 @@ export const globals = {
   ),
   text: withHelp(
     {
-      value: wrapString,
+      value: Text.create,
     },
     'Wraps a string as Text',
   ),
@@ -248,7 +239,7 @@ export const globals = {
     'Transforms data between data types using transformations',
   ),
   url: {
-    value: wrapUrl,
+    value: Url.create,
   },
   userExtension: withHelp(
     {
@@ -304,12 +295,6 @@ export const globals = {
       value: workspaceExtension,
     },
     'Returns the workspace extension for the given name',
-  ),
-  xml: withHelp(
-    {
-      value: wrapXml,
-    },
-    'Converts XML to Data',
   ),
   yaml: withHelp(
     {

@@ -1,12 +1,10 @@
-import clipboardy from 'clipboardy';
-
 export class Clipboard {
   get value(): string {
-    return clipboardy.readSync();
+    return require('clipboardy').readSync();
   }
 
   set value(value: any) {
-    clipboardy.writeSync(value);
+    require('clipboardy').writeSync(value);
   }
 }
 

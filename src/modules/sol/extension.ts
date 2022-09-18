@@ -1,7 +1,7 @@
-import { dir, Directory } from '../storage/directory';
+import { Directory } from '../storage/directory';
 import { getSol } from './sol';
 import { File } from '../storage/file';
-import { logDebug, logError } from '../utils/log';
+import { logDebug, logError } from '@sol/utils/log';
 import { getCurrentWorkspace, getUserWorkspace } from './workspace';
 
 export class Extension {
@@ -11,7 +11,7 @@ export class Extension {
   loaded = false;
 
   constructor(path: string) {
-    this.dir = dir(path);
+    this.dir = Directory.create(path);
   }
 
   get name(): string {
@@ -77,10 +77,10 @@ export type Globals = FromPropertyDescriptorMap<typeof globals>;
 import { globals } from './globals';
 import { definePropertiesMutation, mutateGlobals } from '${sol.packageDir.relativePathFrom(
         this.dir,
-      )}/modules/utils/mutation';
+      )}/utils/mutation';
 import { logDebug } from '${sol.packageDir.relativePathFrom(
         this.dir,
-      )}/modules/utils/log';
+      )}/utils/log';
 
 mutateGlobals(definePropertiesMutation(globals));
 
@@ -130,7 +130,7 @@ export function extension(
 ): Extension {
   let foundExtension: Extension;
   if (typeof extensionsPath === 'string') {
-    extensionsPath = dir(extensionsPath);
+    extensionsPath = Directory.create(extensionsPath);
   }
 
   if (pathOrExtension instanceof Extension) {

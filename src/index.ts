@@ -1,6 +1,6 @@
 import { spawnSync } from 'child_process';
 import chalk from 'chalk';
-import { clearRequireCache } from './modules/utils/module';
+import { clearRequireCache } from './utils/module';
 
 /**
  * Setup Sol modules
@@ -10,7 +10,7 @@ export function setupSol(): void {
 }
 
 export function loadSol(): void {
-  const { logDebug } = require('./modules/utils/log');
+  const { logDebug } = require('./utils/log');
 
   logDebug('Loading Sol...');
 
@@ -38,7 +38,7 @@ export function loadSol(): void {
  * Update Sol from git remote
  */
 export function updateSol(): void {
-  const { logDebug } = require('./modules/utils/log');
+  const { logDebug } = require('./utils/log');
 
   logDebug('Updating Sol...');
   logDebug('Fetching latest version from GitHub...');
@@ -66,11 +66,8 @@ export function updateSol(): void {
  * Unloads Sol modules
  */
 export function unloadSol(): void {
-  const { logDebug } = require('./modules/utils/log');
-  const {
-    unmutateClass,
-    unmutateGlobals,
-  } = require('./modules/utils/mutation');
+  const { logDebug } = require('./utils/log');
+  const { unmutateClass, unmutateGlobals } = require('./utils/mutation');
   const { unplay } = require('./modules/play/play');
   logDebug('Unloading Sol...');
 
@@ -134,7 +131,7 @@ export function startSol(): void {
 
   const { getSol } = require('./modules/sol/sol');
   const { getLoadedExtensions } = require('./modules/sol/extension');
-  const { log } = require('./modules/utils/log');
+  const { log } = require('./utils/log');
   const { getCurrentWorkspaceDir } = require('./modules/sol/workspace');
 
   const loadedExtensions = getLoadedExtensions();

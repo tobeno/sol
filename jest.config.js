@@ -94,7 +94,7 @@ module.exports = {
   moduleNameMapper: Object.fromEntries(
     Object.entries(tsconfig.compilerOptions.paths).map(([alias, [path]]) => [
       alias.replace('*', '(.*)$'),
-      `<rootDir>/../${path.replace('*', '$1')}`,
+      `<rootDir>/${path.replace('*', '$1')}`,
     ]),
   ),
 

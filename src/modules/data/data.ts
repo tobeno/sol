@@ -1,16 +1,9 @@
 import jsonata, { Expression } from 'jsonata';
-import { transform } from './transformer';
 import { Wrapper } from './wrapper';
-import { Text, wrapString } from './text';
+import { Text } from './text';
 import { inspect } from 'util';
-import { DataTransformation } from './data-transformation';
-import type {
-  AnyItemType,
-  AnyKeyType,
-  AnyPartial,
-} from '../../interfaces/util';
-import { mapObjectKeys, traverseObject } from '../utils/object';
-import { DataType } from './data-type';
+import type { AnyItemType, AnyKeyType, AnyPartial } from '@sol/interfaces/util';
+import { mapObjectKeys, traverseObject } from '@sol/utils/object';
 import {
   camelcaseText,
   constantcaseText,
@@ -18,7 +11,8 @@ import {
   pascalcaseText,
   snakecaseText,
   titlecaseText,
-} from '../utils/text';
+} from '@sol/utils/text';
+import { log } from '@sol/utils/log';
 
 /**
  * Generic wrapper for runtime objects
@@ -33,14 +27,14 @@ export class Data<
   }
 
   get clone(): Data<ValueType> {
-    return wrapObject(JSON.parse(JSON.stringify(this.value))) as any;
+    return Data.create(JSON.parse(JSON.stringify(this.value))) as any;
   }
 
   get flattened(): Data<
     ValueType extends Array<any> ? FlatArray<ValueType, 1> : ValueType
   > {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.flat() as any) as any;
+      return Data.create(this.value.flat() as any) as any;
     }
 
     return this as any;
@@ -48,25 +42,25 @@ export class Data<
 
   get first(): Data<ItemType> | null {
     if (Array.isArray(this.value)) {
-      return this.value.length ? (wrapObject(this.value[0]) as any) : null;
+      return this.value.length ? (Data.create(this.value[0]) as any) : null;
     }
 
     const values = Object.values(this.value as any);
 
-    return values.length ? (wrapObject(values[0]) as any) : null;
+    return values.length ? (Data.create(values[0]) as any) : null;
   }
 
   get last(): Data<ItemType> | null {
     if (Array.isArray(this.value)) {
       return this.value.length
-        ? (wrapObject(this.value[this.value.length - 1]) as any)
+        ? (Data.create(this.value[this.value.length - 1]) as any)
         : null;
     }
 
     const values = Object.values(this.value as any);
 
     return values.length
-      ? (wrapObject(values[values.length - 1]) as any)
+      ? (Data.create(values[values.length - 1]) as any)
       : null;
   }
 
@@ -82,12 +76,12 @@ export class Data<
   get avg(): Data<number> {
     const values = this.values;
 
-    return wrapObject(values.sum.value / values.length) as any;
+    return Data.create(values.sum.value / values.length) as any;
   }
 
   get unique(): Data<AnyPartial<ValueType>> {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.unique) as any;
+      return Data.create(this.value.unique) as any;
     }
 
     const knownValues: any[] = [];
@@ -103,12 +97,16 @@ export class Data<
     return this.sort();
   }
 
+  get sortedKeys(): Data<ValueType extends Array<any> ? ValueType : any> {
+    return this.sortKeys();
+  }
+
   get reversed(): Data<ValueType extends Array<any> ? ValueType : any> {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.reverse()) as any;
+      return Data.create(this.value.reverse()) as any;
     }
 
-    return wrapObject(
+    return Data.create(
       Object.fromEntries(Object.entries(this.value as any).reverse()),
     ) as any;
   }
@@ -141,22 +139,28 @@ export class Data<
     return this.changeCase(kebabcaseText);
   }
 
+  get logged(): this {
+    log(String(this.json));
+
+    return this;
+  }
+
   get keys(): Data<KeyType[]> {
     if (Array.isArray(this.value)) {
-      return wrapObject(
+      return Data.create(
         (this.value as any).map((_: any, index: any) => index),
       ) as any;
     }
 
-    return wrapObject(Object.keys(this.value as any)) as any;
+    return Data.create(Object.keys(this.value as any)) as any;
   }
 
   get values(): Data<ItemType[]> {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value) as any;
+      return Data.create(this.value) as any;
     }
 
-    return wrapObject(Object.values(this.value as any)) as any;
+    return Data.create(Object.values(this.value as any)) as any;
   }
 
   get length(): number {
@@ -165,22 +169,22 @@ export class Data<
 
   get entries(): Data<[KeyType, ItemType][]> {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.entries()) as any;
+      return Data.create(this.value.entries()) as any;
     }
 
-    return wrapObject(Object.entries(this.value as any)) as any;
+    return Data.create(Object.entries(this.value as any)) as any;
   }
 
   changeCase(cb: (text: string) => string): Data {
     if (Array.isArray(this.value)) {
-      return wrapObject(
+      return Data.create(
         this.value.map((item) =>
           typeof item === 'string' ? cb(item) : mapObjectKeys(item, cb),
         ),
       );
     }
 
-    return wrapObject(mapObjectKeys(this.value, cb));
+    return Data.create(mapObjectKeys(this.value, cb));
   }
 
   group<KeyType extends string | number | symbol, GroupType = ItemType[]>(
@@ -220,7 +224,7 @@ export class Data<
     compareFn?: (a: ItemType, b: ItemType) => number,
   ): Data<ValueType extends Array<any> ? ValueType : any> {
     if (Array.isArray(this.value)) {
-      return wrapObject([...this.value].sort(compareFn)) as any;
+      return Data.create([...this.value].sort(compareFn)) as any;
     }
 
     const entries = this.entries.value;
@@ -240,14 +244,41 @@ export class Data<
       return 0;
     });
 
-    return wrapObject(Object.fromEntries(entries)) as any;
+    return Data.create(Object.fromEntries(entries)) as any;
+  }
+
+  sortKeys(
+    compareFn?: (a: KeyType, b: KeyType) => number,
+  ): Data<ValueType extends Array<any> ? ValueType : any> {
+    if (Array.isArray(this.value)) {
+      return Data.create([...this.value].sort(compareFn)) as any;
+    }
+
+    const entries = this.entries.value;
+    entries.sort(([aIndex], [bIndex]) => {
+      if (compareFn) {
+        return compareFn(aIndex, bIndex);
+      }
+
+      if (aIndex < bIndex) {
+        return -1;
+      }
+
+      if (aIndex > bIndex) {
+        return 1;
+      }
+
+      return 0;
+    });
+
+    return Data.create(Object.fromEntries(entries)) as any;
   }
 
   filter(
     cb: (value: ItemType, key: KeyType) => boolean,
   ): Data<AnyPartial<ValueType>> {
     if (Array.isArray(this.value)) {
-      return wrapObject(this.value.filter(cb as any) as any) as any;
+      return Data.create(this.value.filter(cb as any) as any) as any;
     }
 
     const newValue: any = {};
@@ -258,7 +289,7 @@ export class Data<
       }
     });
 
-    return wrapObject(newValue) as any;
+    return Data.create(newValue) as any;
   }
 
   find(
@@ -267,7 +298,7 @@ export class Data<
     if (Array.isArray(this.value)) {
       const result = this.value.find(cb as any) as any;
 
-      return result ? (wrapObject(result) as any) : undefined;
+      return result ? (Data.create(result) as any) : undefined;
     }
 
     let result: any = null;
@@ -280,7 +311,7 @@ export class Data<
       }
     }
 
-    return result ? (wrapObject(result) as any) : undefined;
+    return result ? (Data.create(result) as any) : undefined;
   }
 
   findIndex(cb: (value: ItemType, key: KeyType) => boolean): KeyType {
@@ -346,7 +377,7 @@ export class Data<
   pipe<ResultType>(
     operation: (value: ValueType) => ResultType,
   ): Data<ResultType> {
-    return wrapObject(operation(this.value)) as any;
+    return Data.create(operation(this.value)) as any;
   }
 
   forEach(cb: (value: ItemType, key: KeyType) => any): void {
@@ -365,7 +396,7 @@ export class Data<
     initial: ResultType,
   ): Data<ResultType> {
     if (Array.isArray(this.value)) {
-      return wrapObject(
+      return Data.create(
         this.value.reduce(
           (result, value, key) => cb(result, value, key as any),
           initial,
@@ -373,7 +404,7 @@ export class Data<
       ) as any;
     }
 
-    return wrapObject(
+    return Data.create(
       this.entries.value.reduce(
         (result, [key, value]) => cb(result, value, key),
         initial,
@@ -391,7 +422,7 @@ export class Data<
       : any
   > {
     if (Array.isArray(this.value)) {
-      return wrapObject((this.value as any).map(cb as any) as any) as any;
+      return Data.create((this.value as any).map(cb as any) as any) as any;
     }
 
     const newValue: any = {};
@@ -400,12 +431,12 @@ export class Data<
       newValue[key] = cb(value, key);
     });
 
-    return wrapObject(newValue) as any;
+    return Data.create(newValue) as any;
   }
 
   mapKeys(cb: (key: KeyType, item: ItemType) => KeyType): this {
     if (Array.isArray(this.value)) {
-      return wrapObject(
+      return Data.create(
         (this.value as any).reduce(
           (result: any, item: ItemType, key: KeyType) => {
             result[cb(key, item)] = item;
@@ -422,15 +453,15 @@ export class Data<
       newValue[cb(key, value)] = value;
     });
 
-    return wrapObject(newValue) as any;
+    return Data.create(newValue) as any;
   }
 
   join(separator: string): Text {
     if (Array.isArray(this.value)) {
-      return wrapString(this.value.join(separator));
+      return Text.create(this.value.join(separator));
     }
 
-    return wrapString(Object.values(this.value as any).join(separator));
+    return Text.create(Object.values(this.value as any).join(separator));
   }
 
   extract<ExtractedValueType = any>(
@@ -440,15 +471,7 @@ export class Data<
       exp = jsonata(exp);
     }
 
-    return wrapObject(exp.evaluate(this.value)) as any;
-  }
-
-  transformTo<TargetType = any>(targetType: DataType | string): TargetType {
-    if (typeof targetType === 'string') {
-      targetType = DataType.fromString(targetType);
-    }
-
-    return transform(this, new DataTransformation(DataType.Data, targetType));
+    return Data.create(exp.evaluate(this.value)) as any;
   }
 
   valueOf(): ValueType {
@@ -458,12 +481,12 @@ export class Data<
   [inspect.custom](): string {
     return `Data ${inspect(this.value)}`;
   }
-}
 
-export function wrapObject<ValueType = any>(value: ValueType): Data<ValueType> {
-  return value instanceof Data ? (value as any) : new Data(value);
-}
+  static create<ValueType = any>(value: ValueType | any): Data<ValueType> {
+    if (value instanceof Data) {
+      return value;
+    }
 
-export function unwrapObject<ValueType = any>(value: Data): ValueType {
-  return value instanceof Data ? value.value : value;
+    return new Data(value);
+  }
 }

@@ -1,4 +1,4 @@
-import { File, file } from '../storage/file';
+import { File } from '../storage/file';
 import { tmp } from '../storage/tmp';
 import { Text } from '../data/text';
 
@@ -37,7 +37,7 @@ export function edit(pathOrValue?: any): File {
       f.json = pathOrValue;
     }
   } else {
-    f = file(pathOrValue);
+    f = File.create(pathOrValue);
   }
 
   f.create();

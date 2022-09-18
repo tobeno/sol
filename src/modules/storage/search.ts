@@ -1,6 +1,6 @@
+import { exec } from '@sol/utils/shelljs';
 import { File } from './file';
-import { FileCollection } from './item-collection';
-import { exec } from 'shelljs';
+import { FileCollection } from './storage-item-collection';
 
 export function grep(pattern: string | RegExp, path?: string): FileCollection {
   return new FileCollection(

@@ -1,13 +1,18 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Response } from './response';
-import { deasync } from '../utils/async';
+import { deasync } from '@sol/utils/async';
 
 function wrap<FnType extends (...args: any) => Promise<AxiosResponse>>(
-  fn: FnType,
+  makeFn: () => FnType,
 ): (...params: Parameters<FnType>) => Response {
-  const fnSync = deasync(fn);
+  let fnSync: ((...args: Parameters<FnType>) => any) | null = null;
 
-  return (...args: Parameters<typeof fnSync>) => {
+  return (...args: Parameters<FnType>) => {
+    if (!fnSync) {
+      const fn = makeFn();
+      fnSync = deasync(fn);
+    }
+
     return new Response(fnSync(...args));
   };
 }
@@ -28,11 +33,11 @@ export const web = {
       ...init,
     });
   },
-  get: wrap(axios.get),
-  post: wrap(axios.post),
-  delete: wrap(axios.delete),
-  patch: wrap(axios.patch),
-  put: wrap(axios.put),
-  head: wrap(axios.head),
-  request: wrap(axios.request),
+  get: wrap(() => require('axios').get),
+  post: wrap(() => require('axios').post),
+  delete: wrap(() => require('axios').delete),
+  patch: wrap(() => require('axios').patch),
+  put: wrap(() => require('axios').put),
+  head: wrap(() => require('axios').head),
+  request: wrap(() => require('axios').request),
 };

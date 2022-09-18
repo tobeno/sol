@@ -1,1 +1,1 @@
-import './extend-storage-file';
+import './mutations/file.mutation';

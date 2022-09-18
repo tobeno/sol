@@ -1,9 +1,9 @@
 import { Wrapper } from './wrapper';
 import { URL, URLSearchParams } from 'url';
-import { Text, wrapString } from './text';
-import { DataTransformation } from './data-transformation';
-import { DataType } from './data-type';
-import { transform } from './transformer';
+import { Text } from '@sol/modules/data/text';
+import { transform } from '@sol/modules/transform/transformer';
+import { DataTransformation } from '@sol/modules/transform/data-transformation';
+import { DataType } from '@sol/modules/data/data-type';
 
 export class Url extends Wrapper<string> {
   constructor(value: string | URL) {
@@ -37,15 +37,15 @@ export class Url extends Wrapper<string> {
   get hash(): string {
     return this.parsed.hash;
   }
-}
 
-export function wrapUrl(value: string | String | Text): Url {
-  return transform(
-    wrapString(value),
-    new DataTransformation(DataType.Text, DataType.Url),
-  );
-}
+  static create(value: string | String | Text | any): Url {
+    if (value instanceof Url) {
+      return value;
+    }
 
-export function unwrapUrl<ContentType = any>(value: Url): Text<ContentType> {
-  return wrapString(value.value);
+    return transform(
+      Text.create(value),
+      new DataTransformation(DataType.Text, DataType.Url),
+    );
+  }
 }

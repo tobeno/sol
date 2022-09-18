@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const { spawnSync } = require('child_process');
 const tsConfigPaths = require('tsconfig-paths');
-const omit = require('lodash/omit');
 const { register } = require('@swc-node/register/register');
 
 const rootPath = path.join(__dirname, '..');
@@ -29,7 +28,7 @@ tsConfigPaths.register({
   ...tsconfig.compilerOptions,
 });
 
-register(omit(tsconfig.compilerOptions, ['paths', 'baseUrl']));
+register({ ...tsconfig.compilerOptions, paths: undefined, baseUrl: undefined });
 
 const { startSol } = require('../src/index');
 

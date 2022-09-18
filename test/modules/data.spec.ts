@@ -1,11 +1,11 @@
 import '../../src/setup';
 import tmp from 'tmp';
 
-import { file } from '../../src/modules/storage/file';
+import { File } from '../../src/modules/storage/file';
 
 import { readFileSync } from 'fs';
-import { wrapObject } from '../../src/modules/data/data';
-import { wrapString } from '../../src/modules/data/text';
+import { Data } from '../../src/modules/data/data';
+import { Text } from '@sol/modules/data/text';
 
 interface ProductVariant {
   id: string;
@@ -27,7 +27,7 @@ describe('data module', () => {
   describe('transformation', () => {
     describe('file', () => {
       it('should transform a JSON file', async () => {
-        const data = file<ProductsFile>(
+        const data = File.create<ProductsFile>(
           `${__dirname}/../assets/products.json`,
         ).json;
         const obj = data.value;
@@ -35,7 +35,7 @@ describe('data module', () => {
         expect(obj).toHaveProperty('products');
 
         (obj as any).variants = Array.from(
-          wrapObject(obj.products).extract('variants').value,
+          Data.create(obj.products).extract('variants').value,
         );
 
         const tmpFile = tmp.fileSync();
@@ -50,7 +50,7 @@ describe('data module', () => {
       });
 
       it('should transform a YAML file', async () => {
-        const data = file<ProductsFile>(
+        const data = File.create<ProductsFile>(
           `${__dirname}/../assets/products.yaml`,
         ).yaml;
         const obj = data.value;
@@ -64,7 +64,7 @@ describe('data module', () => {
       });
 
       it('should transform a CSV file', async () => {
-        let data = file<ProductVariant[]>(
+        let data = File.create<ProductVariant[]>(
           `${__dirname}/../assets/variants.csv`,
         ).csv;
 
@@ -79,11 +79,13 @@ describe('data module', () => {
 
     describe('object', () => {
       it('should transform an array', async () => {
-        let data = wrapObject([{ id: '1' }, { id: '2' }] as { id: string }[]);
+        let jsonData = Data.create([{ id: '1' }, { id: '2' }] as {
+          id: string;
+        }[]);
 
-        expect(data.json.value).toMatchSnapshot();
+        expect(jsonData.json.value).toMatchSnapshot();
 
-        const filteredData = data.filter((item) => item.id === '1');
+        const filteredData = jsonData.filter((item) => item.id === '1');
 
         const mappedData = filteredData.map((item) => item.id);
 
@@ -91,7 +93,7 @@ describe('data module', () => {
       });
 
       it('should transform an object', async () => {
-        let data = wrapObject({
+        let data = Data.create({
           'product-1': { name: 'Shoe' },
           'product-2': { name: 'Shirt' },
         } as Record<string, { name: string }>);
@@ -106,7 +108,7 @@ describe('data module', () => {
       });
 
       it('should transform a string', async () => {
-        let text = wrapString(
+        let text = Text.create(
           'Product 1: Shoe\nProduct 2: Shirt\nProduct 3: Jeans',
         );
 
