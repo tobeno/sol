@@ -1,6 +1,7 @@
 import { StringTransformer } from './string.transformer';
 import { DataType } from '../../data/data-type';
 import { DataFormat } from '../../data/data-format';
+import stripJsonComments from 'strip-json-comments';
 
 export class JsonTransformer extends StringTransformer<any> {
   constructor() {
@@ -12,6 +13,6 @@ export class JsonTransformer extends StringTransformer<any> {
   }
 
   parse(input: string): any {
-    return JSON.parse(input);
+    return JSON.parse(stripJsonComments(input));
   }
 }
