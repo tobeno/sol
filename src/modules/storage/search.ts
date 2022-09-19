@@ -8,6 +8,9 @@ export function grep(pattern: string | RegExp, path?: string): FileCollection {
       `egrep -rl '${(pattern instanceof RegExp ? pattern.source : pattern)
         .replace(/'/g, "\\'")
         .replace('\n', '\\n')}' '${path || '.'}' || true`,
+      {
+        silent: true,
+      },
     )
       .split('\n')
       .filter((file) => !!file)
