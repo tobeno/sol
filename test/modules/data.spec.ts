@@ -5,7 +5,7 @@ import { File } from '../../src/modules/storage/file';
 
 import { readFileSync } from 'fs';
 import { Data } from '../../src/modules/data/data';
-import { Text } from '@sol/modules/data/text';
+import { Text } from '../../src/modules/data/text';
 
 interface ProductVariant {
   id: string;

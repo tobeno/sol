@@ -1,4 +1,4 @@
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 
 declare global {
   interface Array<T> {

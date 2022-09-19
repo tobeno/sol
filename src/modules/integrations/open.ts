@@ -1,6 +1,6 @@
 import { Wrapper } from '../data/wrapper';
 import openInternal from 'open';
-import { catchAsyncErrors } from '@sol/utils/async';
+import { catchAsyncErrors } from '../../utils/async';
 
 function mapApp(app: string): string {
   if (app.startsWith('open ')) {

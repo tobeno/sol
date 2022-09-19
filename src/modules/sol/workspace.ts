@@ -2,9 +2,9 @@ import { Directory } from '../storage/directory';
 import { File } from '../storage/file';
 import { globals } from '../globals/globals';
 import { getLoadedExtensions } from './extension';
-import { logDebug, logError } from '@sol/utils/log';
+import { logDebug, logError } from '../../utils/log';
 import { getSol } from './sol';
-import { getCwd } from '@sol/utils/env';
+import { getCwd } from '../../utils/env';
 import dotenv from 'dotenv';
 
 export class Workspace {

@@ -1,4 +1,4 @@
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { GenericStorageItemCollection } from '../../storage/storage-item-collection';
 import { getClipboard } from '../clipboard';
 import { StorageItem } from '../../storage/storage-item';

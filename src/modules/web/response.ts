@@ -9,7 +9,7 @@ import { DataFormat } from '../data/data-format';
 import { DataType } from '../data/data-type';
 import { web } from './index';
 import { Text } from '../data/text';
-import { Wrapper } from '@sol/modules/data/wrapper';
+import { Wrapper } from '../data/wrapper';
 
 export class Response extends Wrapper<AxiosResponse> {
   get data(): Data<AxiosResponse> {

@@ -1,4 +1,4 @@
-import { exec } from '@sol/modules/shell/sh';
+import { exec } from '../shell/sh';
 import { File } from './file';
 import { FileCollection } from './storage-item-collection';
 

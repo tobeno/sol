@@ -5,8 +5,8 @@ import { StorageItem } from './storage-item';
 import type fg from 'fast-glob';
 import { Data } from '../data/data';
 import { Text } from '../data/text';
-import { log } from '@sol/utils/log';
-import { Wrapper } from '@sol/modules/data/wrapper';
+import { log } from '../../utils/log';
+import { Wrapper } from '../data/wrapper';
 
 export class GenericStorageItemCollection<
   ItemType extends StorageItem,

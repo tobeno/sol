@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Response } from './response';
-import { deasync } from '@sol/utils/async';
+import { deasync } from '../../utils/async';
 
 function wrap<FnType extends (...args: any) => Promise<AxiosResponse>>(
   makeFn: () => FnType,

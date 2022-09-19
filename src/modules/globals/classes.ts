@@ -19,5 +19,5 @@ export {
 } from '../storage/storage-item-collection';
 export { File } from '../storage/file';
 export { StorageItem } from '../storage/storage-item';
-export { DefinePropertiesMutation, Mutation } from '@sol/utils/mutation';
+export { DefinePropertiesMutation, Mutation } from '../../utils/mutation';
 export { Response } from '../web/response';

@@ -1,7 +1,7 @@
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { dataToJson, dataToYaml } from '../transformer';
-import { Text } from '@sol/modules/data/text';
-import { Ast } from '@sol/modules/data/ast';
+import { Text } from '../../data/text';
+import { Ast } from '../../data/ast';
 
 declare module '../../data/ast' {
   interface Ast {

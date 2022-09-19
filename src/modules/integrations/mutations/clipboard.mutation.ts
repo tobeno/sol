@@ -1,4 +1,4 @@
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { Clipboard } from '../../os/clipboard';
 import { edit } from '../editor';
 import { File } from '../../storage/file';

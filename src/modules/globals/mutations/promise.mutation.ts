@@ -1,5 +1,5 @@
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
-import { awaitSync } from '@sol/utils/async';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
+import { awaitSync } from '../../../utils/async';
 import { inspect } from 'util';
 
 declare global {

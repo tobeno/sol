@@ -3,7 +3,7 @@ import { DataTransformation } from '../data-transformation';
 import { DataType, DataTypeMatchType } from '../../data/data-type';
 import { Wrapper } from '../../data/wrapper';
 import { Text } from '../../data/text';
-import { Constructor } from '@sol/interfaces/util';
+import { Constructor } from '../../../interfaces/util';
 
 /**
  * A transformer, which adds / removes a wrapper class, before passing the transformation on to another mapper

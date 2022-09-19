@@ -1,7 +1,7 @@
 import type shelljs from 'shelljs';
 import { StorageItem } from '../storage/storage-item';
-import { Text } from '@sol/modules/data/text';
-import { Data } from '@sol/modules/data/data';
+import { Text } from '../data/text';
+import { Data } from '../data/data';
 
 type Shelljs = typeof shelljs;
 

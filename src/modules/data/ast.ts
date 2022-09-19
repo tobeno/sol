@@ -4,7 +4,7 @@ import { Data } from './data';
 import { astToCode } from '../transform/transformer';
 import type { NodePath, Scope, TraverseOptions } from '@babel/traverse';
 import { Text } from './text';
-import { Wrapper } from '@sol/modules/data/wrapper';
+import { Wrapper } from './wrapper';
 
 /**
  * Wrapper for HTML strings

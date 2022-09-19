@@ -1,7 +1,7 @@
 import { Directory } from '../storage/directory';
 import { getSol } from './sol';
 import { File } from '../storage/file';
-import { logDebug, logError } from '@sol/utils/log';
+import { logDebug, logError } from '../../utils/log';
 import { getCurrentWorkspace, getUserWorkspace } from './workspace';
 
 export class Extension {

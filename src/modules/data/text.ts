@@ -18,8 +18,8 @@ import {
   rsortLines,
   sortLines,
   titlecaseText,
-} from '@sol/utils/text';
-import { Data } from '@sol/modules/data/data';
+} from '../../utils/text';
+import { Data } from './data';
 
 /**
  * Wrapper for strings

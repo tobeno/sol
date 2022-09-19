@@ -1,5 +1,5 @@
 import { Data } from '../../data/data';
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { dataToCsv, dataToJson, dataToYaml } from '../transformer';
 import { Text } from '../../data/text';
 

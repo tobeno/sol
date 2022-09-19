@@ -2,8 +2,12 @@ import jsonata, { Expression } from 'jsonata';
 import { Wrapper } from './wrapper';
 import { Text } from './text';
 import { inspect } from 'util';
-import type { AnyItemType, AnyKeyType, AnyPartial } from '@sol/interfaces/util';
-import { mapObjectKeys, traverseObject } from '@sol/utils/object';
+import type {
+  AnyItemType,
+  AnyKeyType,
+  AnyPartial,
+} from '../../interfaces/util';
+import { mapObjectKeys, traverseObject } from '../../utils/object';
 import {
   camelcaseText,
   constantcaseText,
@@ -11,8 +15,8 @@ import {
   pascalcaseText,
   snakecaseText,
   titlecaseText,
-} from '@sol/utils/text';
-import { log } from '@sol/utils/log';
+} from '../../utils/text';
+import { log } from '../../utils/log';
 
 /**
  * Generic wrapper for runtime objects

@@ -1,9 +1,9 @@
 import { Wrapper } from './wrapper';
 import { URL, URLSearchParams } from 'url';
-import { Text } from '@sol/modules/data/text';
-import { transform } from '@sol/modules/transform/transformer';
-import { DataTransformation } from '@sol/modules/transform/data-transformation';
-import { DataType } from '@sol/modules/data/data-type';
+import { Text } from './text';
+import { transform } from '../transform/transformer';
+import { DataTransformation } from '../transform/data-transformation';
+import { DataType } from './data-type';
 
 export class Url extends Wrapper<string> {
   constructor(value: string | URL) {

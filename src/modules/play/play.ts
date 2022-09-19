@@ -1,10 +1,10 @@
 import { File } from '../storage/file';
-import { rerequire } from '@sol/utils/module';
+import { rerequire } from '../../utils/module';
 import { Directory } from '../storage/directory';
 import { getReplServer } from '../sol/repl';
-import { log } from '@sol/utils/log';
+import { log } from '../../utils/log';
 import { getCurrentWorkspace, getCurrentWorkspaceDir } from '../sol/workspace';
-import { Data } from '@sol/modules/data/data';
+import { Data } from '../data/data';
 
 export class PlayFile {
   static instances: Record<string, PlayFile> = {};

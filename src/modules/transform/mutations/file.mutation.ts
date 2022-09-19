@@ -1,5 +1,5 @@
 import { Data } from '../../data/data';
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import {
   astToCode,
   codeToAst,

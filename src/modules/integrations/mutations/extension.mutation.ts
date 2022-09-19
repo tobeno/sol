@@ -1,4 +1,4 @@
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Directory } from '../../storage/directory';
 import { Extension } from '../../sol/extension';

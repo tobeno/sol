@@ -1,4 +1,4 @@
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { StorageItem } from '../../storage/storage-item';
 import { browse } from '../browser';
 import { open } from '../open';

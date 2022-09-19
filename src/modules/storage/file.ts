@@ -5,7 +5,7 @@ import { StorageItem } from './storage-item';
 import { Directory } from './directory';
 import { StorageItemCollection } from './storage-item-collection';
 import { Text } from '../data/text';
-import { log } from '@sol/utils/log';
+import { log } from '../../utils/log';
 
 export class File<ContentType = any> extends StorageItem {
   constructor(path: string) {

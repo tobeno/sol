@@ -12,7 +12,7 @@ import {
   glob,
   StorageItemCollection,
 } from './storage-item-collection';
-import { exec } from '@sol/modules/shell/sh';
+import { exec } from '../shell/sh';
 
 export class Directory extends StorageItem {
   get cmd(): Text {

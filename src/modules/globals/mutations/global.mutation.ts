@@ -1,5 +1,8 @@
 import { globals } from '../globals';
-import { definePropertiesMutation, mutateGlobals } from '@sol/utils/mutation';
+import {
+  definePropertiesMutation,
+  mutateGlobals,
+} from '../../../utils/mutation';
 
 // DOM globals
 declare global {

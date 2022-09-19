@@ -1,9 +1,9 @@
 import { Data } from '../../data/data';
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { Clipboard } from '../../os/clipboard';
 import { csvToData, jsonToData, yamlToData } from '../transformer';
 import { Url } from '../../data/url';
-import { Text } from '@sol/modules/data/text';
+import { Text } from '../../data/text';
 
 declare module '../../os/clipboard' {
   interface Clipboard {

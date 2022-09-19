@@ -1,7 +1,7 @@
-import { definePropertiesMutation, mutateClass } from '@sol/utils/mutation';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { dataToJson, dataToYaml } from '../transformer';
-import { Text } from '@sol/modules/data/text';
-import { Response } from '@sol/modules/web/response';
+import { Text } from '../../data/text';
+import { Response } from '../../web/response';
 
 declare module '../../web/response' {
   interface Response {

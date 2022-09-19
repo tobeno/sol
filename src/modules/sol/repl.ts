@@ -3,10 +3,10 @@ import repl from 'repl';
 import { loopWhile } from 'deasync';
 import chalk from 'chalk';
 import type { AsyncCompleter, CompleterResult } from 'readline';
-import { log } from '@sol/utils/log';
+import { log } from '../../utils/log';
 import { getLoadedExtensions } from './extension';
 import { globals } from '../globals/globals';
-import { getSolMetadata } from '@sol/utils/metadata';
+import { getSolMetadata } from '../../utils/metadata';
 import { getCurrentWorkspaceDir } from './workspace';
 
 export const solReplColor = {
@@ -18,7 +18,7 @@ export const solReplColor = {
 };
 
 function solWriter(output: any): string {
-  return chalk.bold(require('@sol/utils/inspect').inspect(output));
+  return chalk.bold(require('../../utils/inspect').inspect(output));
 }
 
 async function solCompleter(line: string): Promise<CompleterResult | void> {

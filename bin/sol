@@ -2,7 +2,6 @@
 const path = require('path');
 const fs = require('fs');
 const { spawnSync } = require('child_process');
-const tsConfigPaths = require('tsconfig-paths');
 const { register } = require('@swc-node/register/register');
 
 const rootPath = path.join(__dirname, '..');
@@ -20,15 +19,7 @@ if (!fs.existsSync(path.join(rootPath, 'node_modules'))) {
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-const basePath = path.resolve(__dirname, '..');
-
-// Still need to use tsconfig-paths as the paths support in SWC is... not great
-tsConfigPaths.register({
-  cwd: basePath,
-  ...tsconfig.compilerOptions,
-});
-
-register({ ...tsconfig.compilerOptions, paths: undefined, baseUrl: undefined });
+register(tsconfig.compilerOptions);
 
 const { startSol } = require('../src/index');
 
