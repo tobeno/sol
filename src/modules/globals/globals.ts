@@ -19,7 +19,7 @@ import { log } from '@sol/utils/log';
 import { getSol } from '../sol/sol';
 import { edit } from '../integrations/editor';
 import { listPlays, play, playFile, replay } from '../play/play';
-import * as shell from '@sol/utils/shelljs';
+import * as shell from '@sol/modules/shell/sh';
 import {
   csvToData,
   jsonToData,
@@ -212,7 +212,7 @@ export const globals = {
     },
     'Variables shared between play scripts and the shell',
   ),
-  shell: withHelp(
+  sh: withHelp(
     {
       value: shell,
     },

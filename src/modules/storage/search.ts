@@ -1,4 +1,4 @@
-import { exec } from '@sol/utils/shelljs';
+import { exec } from '@sol/modules/shell/sh';
 import { File } from './file';
 import { FileCollection } from './storage-item-collection';
 
@@ -7,7 +7,7 @@ export function grep(pattern: string | RegExp, path?: string): FileCollection {
     exec(
       `egrep -rl '${(pattern instanceof RegExp ? pattern.source : pattern)
         .replace(/'/g, "\\'")
-        .replace('\n', '\\n')}' ${path || '.'} || true`,
+        .replace('\n', '\\n')}' '${path || '.'}' || true`,
     )
       .split('\n')
       .filter((file) => !!file)

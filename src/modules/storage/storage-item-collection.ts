@@ -6,14 +6,15 @@ import type fg from 'fast-glob';
 import { Data } from '../data/data';
 import { Text } from '../data/text';
 import { log } from '@sol/utils/log';
+import { Wrapper } from '@sol/modules/data/wrapper';
 
 export class GenericStorageItemCollection<
   ItemType extends StorageItem,
-> extends Data<ItemType[]> {
+> extends Wrapper<ItemType[]> {
   get size(): number {
     let result = 0;
 
-    this.forEach((item) => {
+    this.value.forEach((item) => {
       if (item instanceof Directory || item instanceof File) {
         result += item.size;
       }
@@ -70,6 +71,16 @@ export class GenericStorageItemCollection<
 
   items(): StorageItemCollection {
     return this as any;
+  }
+
+  forEach(cb: (item: ItemType) => void): void {
+    this.value.forEach(cb);
+  }
+
+  map<ResultItemType>(
+    cb: (item: ItemType) => ResultItemType,
+  ): Data<ResultItemType[]> {
+    return Data.create(this.value.map(cb));
   }
 
   glob(exp: string): StorageItemCollection {
@@ -159,13 +170,25 @@ export class FileCollection extends GenericStorageItemCollection<File> {
 
     return this;
   }
+
+  static create(items: File[]): FileCollection {
+    return new FileCollection(items);
+  }
 }
 
-export class DirectoryCollection extends GenericStorageItemCollection<Directory> {}
+export class DirectoryCollection extends GenericStorageItemCollection<Directory> {
+  static create(items: Directory[]): DirectoryCollection {
+    return new DirectoryCollection(items);
+  }
+}
 
 export class StorageItemCollection extends GenericStorageItemCollection<
   File | Directory
-> {}
+> {
+  static create(items: (File | Directory)[]): StorageItemCollection {
+    return new StorageItemCollection(items);
+  }
+}
 
 export type AnyStorageItemCollection =
   | FileCollection
