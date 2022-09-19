@@ -32,7 +32,6 @@ import { FromPropertyDescriptorMap } from '../../interfaces/object';
 import {
   extension,
   getExtensions,
-  getLoadedExtensions,
   userExtension,
   workspaceExtension,
 } from '../sol/extension';
@@ -125,17 +124,6 @@ export const globals = {
     },
     'Returns the environment variables',
   ),
-  extension: withHelp(
-    {
-      value: extension,
-    },
-    'Returns the extension for the given name or path',
-  ),
-  extensions: {
-    get() {
-      return getExtensions();
-    },
-  },
   file: withHelp(
     {
       value: File.create,
@@ -172,23 +160,24 @@ export const globals = {
     },
     'See https://jsonata.org/',
   ),
-  loadedExtensions: {
-    get() {
-      return getLoadedExtensions();
-    },
-  },
   log: withHelp(
     {
       value: log,
     },
     'Logs to the console',
   ),
-  open: {
-    value: open,
-  },
-  openApp: {
-    value: openApp,
-  },
+  open: withHelp(
+    {
+      value: open,
+    },
+    'Opens the given file or URL',
+  ),
+  openApp: withHelp(
+    {
+      value: openApp,
+    },
+    'Opens the given app',
+  ),
   play: withHelp(
     {
       value: play,
@@ -209,9 +198,12 @@ export const globals = {
     },
     'List available play files',
   ),
-  replay: {
-    value: replay,
-  },
+  replay: withHelp(
+    {
+      value: replay,
+    },
+    'Replays the given play file',
+  ),
   shared: withHelp(
     {
       value: {},
@@ -232,6 +224,48 @@ export const globals = {
     },
     'Current Sol instance',
   ),
+  solExtension: withHelp(
+    {
+      value: extension,
+    },
+    'Returns the extension for the given name or path',
+  ),
+  solExtensions: withHelp(
+    {
+      get() {
+        return getExtensions();
+      },
+    },
+    'Returns known sol extensions',
+  ),
+  solUserExtension: withHelp(
+    {
+      value: userExtension,
+    },
+    'Returns the user extension for the given name',
+  ),
+  solUserWorkspace: withHelp(
+    {
+      get() {
+        return getUserWorkspace();
+      },
+    },
+    'User Sol workspace',
+  ),
+  solWorkspace: withHelp(
+    {
+      get() {
+        return getCurrentWorkspace();
+      },
+    },
+    'Current Sol workspace',
+  ),
+  solWorkspaceExtension: withHelp(
+    {
+      value: workspaceExtension,
+    },
+    'Returns the workspace extension for the given name',
+  ),
   text: withHelp(
     {
       value: Text.create,
@@ -244,22 +278,11 @@ export const globals = {
     },
     'Transforms data between data types using transformations',
   ),
-  url: {
-    value: Url.create,
-  },
-  userExtension: withHelp(
+  url: withHelp(
     {
-      value: userExtension,
+      value: Url.create,
     },
-    'Returns the user extension for the given name',
-  ),
-  userWorkspace: withHelp(
-    {
-      get() {
-        return getUserWorkspace();
-      },
-    },
-    'User Sol workspace',
+    'Wraps a text URL as a Url',
   ),
   classes: withHelp(
     {
@@ -288,20 +311,6 @@ export const globals = {
   withHelp: {
     value: withHelp,
   },
-  workspace: withHelp(
-    {
-      get() {
-        return getCurrentWorkspace();
-      },
-    },
-    'Current Sol workspace',
-  ),
-  workspaceExtension: withHelp(
-    {
-      value: workspaceExtension,
-    },
-    'Returns the workspace extension for the given name',
-  ),
   yaml: withHelp(
     {
       value: yamlToData,
