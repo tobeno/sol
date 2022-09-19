@@ -5,6 +5,7 @@ import { getLoadedExtensions } from './extension';
 import { logDebug, logError } from '@sol/utils/log';
 import { getSol } from './sol';
 import { getCwd } from '@sol/utils/env';
+import dotenv from 'dotenv';
 
 export class Workspace {
   readonly dir: Directory;
@@ -26,6 +27,10 @@ export class Workspace {
 
   get setupFile(): File {
     return this.dir.file('setup.ts');
+  }
+
+  get envFile(): File {
+    return this.dir.file('.env');
   }
 
   reload(): void {
@@ -101,17 +106,12 @@ ${Object.keys(extension.globals)
 import './${this.contextFile.dir.relativePathFrom(this.dir)}/${
         this.contextFile.basenameWithoutExt
       }';
-import { logDebug } from '${this.packageDir.relativePathFrom(
-        this.dir,
-      )}/utils/log';
 import { extension } from '${this.packageDir.relativePathFrom(
         this.dir,
       )}/modules/sol/extension';
       
 // ToDo: Register your first extension
 // extension('your-extension', __dirname).load();
-
-logDebug('Loaded ' + __filename);
 `.trimStart();
     }
   }
@@ -129,8 +129,19 @@ logDebug('Loaded ' + __filename);
 
     try {
       require(this.setupFile.pathWithoutExt);
+      logDebug(`Loaded setup file at ${this.setupFile.path}`);
     } catch (e) {
       logError(e);
+    }
+
+    const envFile = this.envFile;
+    if (envFile.exists) {
+      try {
+        dotenv.config({ path: envFile.path });
+        logDebug(`Loaded environment variables from ${envFile.path}`);
+      } catch (e) {
+        logError(e);
+      }
     }
 
     logDebug(`Loaded workspace at ${this.dir.path}`);

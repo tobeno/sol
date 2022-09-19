@@ -78,13 +78,8 @@ import { globals } from './globals';
 import { definePropertiesMutation, mutateGlobals } from '${sol.packageDir.relativePathFrom(
         this.dir,
       )}/utils/mutation';
-import { logDebug } from '${sol.packageDir.relativePathFrom(
-        this.dir,
-      )}/utils/log';
 
 mutateGlobals(definePropertiesMutation(globals));
-
-logDebug('Loaded ' + __filename);
 `.trimStart();
     }
   }
@@ -102,6 +97,7 @@ logDebug('Loaded ' + __filename);
 
     try {
       require(this.setupFile.path);
+      logDebug(`Loaded setup file at ${this.setupFile.path}`);
     } catch (e) {
       logError(e);
     }

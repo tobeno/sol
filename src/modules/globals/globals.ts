@@ -119,6 +119,12 @@ export const globals = {
     },
     'Opens a file for editing (defaults to code as editor)',
   ),
+  env: withHelp(
+    {
+      value: process.env,
+    },
+    'Returns the environment variables',
+  ),
   extension: withHelp(
     {
       value: extension,
