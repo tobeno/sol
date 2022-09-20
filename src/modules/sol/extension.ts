@@ -54,13 +54,16 @@ export class Extension {
 import type { FromPropertyDescriptorMap } from '${sol.packageDir.relativePathFrom(
         this.dir,
       )}/interfaces/object';
+import { withHelp } from '${sol.packageDir.relativePathFrom(
+        this.dir,
+      )}/utils/metadata';
 
 export const globals = {
-   example: {
+   example: withHelp({
       value(): string {
          return 'Hello world!';
       }
-   }
+   })
 }
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;

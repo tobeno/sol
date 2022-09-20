@@ -7,7 +7,7 @@ import { Text } from './text';
 import { Wrapper } from './wrapper';
 
 /**
- * Wrapper for HTML strings
+ * Wrapper for AST code trees
  */
 export class Ast extends Wrapper<babelTypes.Node> {
   constructor(

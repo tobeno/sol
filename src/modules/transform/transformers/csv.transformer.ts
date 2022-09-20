@@ -1,7 +1,6 @@
 import { StringTransformer } from './string.transformer';
 import { DataType } from '../../data/data-type';
 import { DataFormat } from '../../data/data-format';
-import Papa from 'papaparse';
 
 export class CsvTransformer extends StringTransformer<any[]> {
   constructor() {
@@ -9,13 +8,13 @@ export class CsvTransformer extends StringTransformer<any[]> {
   }
 
   stringify(input: any[]): string {
-    return Papa.unparse(input, {
+    return require('papaparse').unparse(input, {
       header: true,
     });
   }
 
   parse(input: string): any[] {
-    return Papa.parse<Record<string, any>>(input, {
+    return require('papaparse').parse(input, {
       header: true,
     }).data;
   }
