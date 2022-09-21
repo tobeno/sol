@@ -24,6 +24,21 @@ export class Response extends Wrapper<AxiosResponse> {
     return Data.create(this.value.data);
   }
 
+  get serializable(): Data {
+    return Data.create({
+      status: this.value.status,
+      statusText: this.value.statusText,
+      headers: this.value.headers,
+      data: this.value.data,
+      config: {
+        url: this.value.config.url,
+        method: (this.value.config.method || 'get').toLowerCase(),
+        auth: this.value.config.auth,
+        headers: this.value.config.headers,
+      },
+    });
+  }
+
   get contentExt(): string {
     return DataFormat.toExt(this.contentFormat);
   }

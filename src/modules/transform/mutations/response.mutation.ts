@@ -16,13 +16,13 @@ mutateClass(
   definePropertiesMutation({
     json: {
       get(): Text {
-        return dataToJson(this.value);
+        return dataToJson(this.serializable);
       },
     },
 
     yaml: {
       get(): Text {
-        return dataToYaml(this.value);
+        return dataToYaml(this.serializable);
       },
     },
   }),

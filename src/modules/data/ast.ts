@@ -5,6 +5,7 @@ import { astToCode } from '../transform/transformer';
 import type { NodePath, Scope, TraverseOptions } from '@babel/traverse';
 import { Text } from './text';
 import { Wrapper } from './wrapper';
+import { open } from '../integrations/open';
 
 /**
  * Wrapper for AST code trees
@@ -30,13 +31,23 @@ export class Ast extends Wrapper<babelTypes.Node> {
     return astToCode(this);
   }
 
+  explore(): this {
+    this.code.copy();
+
+    open('https://astexplorer.net/');
+
+    return this;
+  }
+
   traverseNodes(
     opts: TraverseOptions,
     scope?: Scope,
     state?: any,
     parentPath?: NodePath,
   ): this {
-    require('@babel/traverse').traverse(
+    const traverse = require('@babel/traverse').default;
+
+    traverse(
       this.value,
       opts,
       scope || this.scope || undefined,
