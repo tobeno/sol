@@ -103,9 +103,6 @@ ${Object.keys(extension.globals)
 /* eslint-disable */
 // @ts-nocheck
 
-import './${this.contextFile.dir.relativePathFrom(this.dir)}/${
-        this.contextFile.basenameWithoutExt
-      }';
 import { extension } from '${this.packageDir.relativePathFrom(
         this.dir,
       )}/modules/sol/extension';
