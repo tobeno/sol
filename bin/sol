@@ -21,6 +21,6 @@ if (!fs.existsSync(path.join(rootPath, 'node_modules'))) {
 
 register(tsconfig.compilerOptions);
 
-const { startSol } = require('../src/index');
+const { startSol } = require('../src/modules/sol/sol-server');
 
 startSol();

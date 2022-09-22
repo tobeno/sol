@@ -32,15 +32,15 @@ describe('shell module', () => {
         `${__dirname}/../assets/search/*.json`,
       ).lines.value;
 
-      expect(files[0]).toMatch(/men\.json$/);
-      expect(files[1]).toMatch(/women\.json$/);
+      expect(files[0].value).toMatch(/men\.json$/);
+      expect(files[1].value).toMatch(/women\.json$/);
     });
 
     it('should find matches by string', async () => {
       const matches = sh.grep('shoe', `${__dirname}/../assets/search/*.json`)
         .lines.value;
 
-      expect(matches[0]).toBe(`      "name": "Leather shoe",`);
+      expect(matches[0].value).toBe(`      "name": "Leather shoe",`);
     });
   });
 });

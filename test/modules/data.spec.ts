@@ -30,12 +30,13 @@ describe('data module', () => {
         const data = File.create<ProductsFile>(
           `${__dirname}/../assets/products.json`,
         ).json;
+
         const obj = data.value;
 
         expect(obj).toHaveProperty('products');
 
         (obj as any).variants = Array.from(
-          Data.create(obj.products).extract('variants').value,
+          Data.create(obj.products).get('variants')?.value,
         );
 
         const tmpFile = tmp.fileSync();
@@ -44,7 +45,7 @@ describe('data module', () => {
         tmpFile.removeCallback();
 
         const tmpFile2 = tmp.fileSync();
-        data.extract('variants').csv.saveAs(tmpFile2.name);
+        data.get('variants')?.csv.saveAs(tmpFile2.name);
         expect(readFileSync(tmpFile2.name, 'utf-8')).toMatchSnapshot();
         tmpFile2.removeCallback();
       });

@@ -5,7 +5,7 @@ import { Text } from '../../data/text';
 
 declare module '../../data/data' {
   interface Data {
-    get text(): any;
+    get text(): Text;
 
     get json(): Text;
 

@@ -9,6 +9,7 @@ export class DataType {
   static Data = DataType.fromString('Data');
   static Date = DataType.fromString('Date');
   static Html = DataType.fromString('Html');
+  static Markdown = DataType.fromString('Markdown');
   static Object = DataType.fromString('object');
   static String = DataType.fromString('string');
   static Text = DataType.fromString('Text');

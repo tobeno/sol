@@ -1,43 +1,52 @@
-import jsonata from 'jsonata';
-import chalk from 'chalk';
-import { grep } from '../storage/search';
-
-import { File } from '../storage/file';
-import { Directory } from '../storage/directory';
-import { dirs, files, glob } from '../storage/storage-item-collection';
-import { web } from '../web';
-import { getClipboard } from '../os/clipboard';
-import * as asyncUtils from '../../utils/async';
-import { awaitSync } from '../../utils/async';
-import * as arrayUtils from '../../utils/array';
-import * as objectUtils from '../../utils/object';
-import * as textUtils from '../../utils/text';
-import * as metadataUtils from '../../utils/metadata';
-import { withHelp } from '../../utils/metadata';
-import { getCwd } from '../../utils/env';
-import { log } from '../../utils/log';
-import { getSol } from '../sol/sol';
-import { edit } from '../integrations/editor';
-import { listPlays, play, playFile, replay } from '../play/play';
-import * as shell from '../shell/sh';
+import {
+  definePropertiesMutation,
+  mutateGlobals,
+} from '../../../utils/mutation';
+import * as metadataUtils from '../../../utils/metadata';
+import { withHelp } from '../../../utils/metadata';
 import {
   csvToData,
   jsonToData,
   transform,
   yamlToData,
-} from '../transform/transformer';
-import * as classes from './classes';
-import { Data, Text, Url } from './classes';
-import { FromPropertyDescriptorMap } from '../../interfaces/object';
+} from '../../transform/transformer';
+import * as asyncUtils from '../../../utils/async';
+import { awaitSync } from '../../../utils/async';
+import { browse } from '../../integrations/browser';
+import chalk from 'chalk';
+import { getClipboard } from '../../clipboard/clipboard';
+import { getCwd, getEnv } from '../../../utils/env';
+import { Data } from '../../data/data';
+import { Directory } from '../../storage/directory';
+import { dirs, files, glob } from '../../storage/storage-item-collection';
+import { edit } from '../../integrations/editor';
+import { File } from '../../storage/file';
+import { grep } from '../../storage/search';
+import jsonata from 'jsonata';
+import { log } from '../../../utils/log';
+import { open, openApp } from '../../integrations/open';
+import { listPlays, play, playFile, replay } from '../../play/play';
+import * as shell from '../../shell/sh';
+import { getSol } from '../../sol/sol';
 import {
-  extension,
-  getExtensions,
-  userExtension,
-  workspaceExtension,
-} from '../sol/extension';
-import { getCurrentWorkspace, getUserWorkspace } from '../sol/workspace';
-import { browse } from '../integrations/browser';
-import { open, openApp } from '../integrations/open';
+  solExtension,
+  getSolExtensions,
+  solUserExtension,
+  solWorkspaceExtension,
+} from '../../sol/sol-extension';
+import {
+  getCurrentSolWorkspace,
+  getSolUserWorkspace,
+} from '../../sol/sol-workspace';
+import { Text } from '../../data/text';
+import { Url } from '../../data/url';
+import * as classes from '../classes';
+import * as arrayUtils from '../../../utils/array';
+import * as objectUtils from '../../../utils/object';
+import * as textUtils from '../../../utils/text';
+import { web } from '../../web/web';
+import { FromPropertyDescriptorMap } from '../../../interfaces/object';
+import { Markdown } from '../../data/markdown';
 
 export const globals = {
   ast: withHelp(
@@ -89,7 +98,7 @@ export const globals = {
   cwd: withHelp(
     {
       get() {
-        return getCwd();
+        return Directory.create(getCwd());
       },
     },
     'Returns the current working directory',
@@ -120,7 +129,9 @@ export const globals = {
   ),
   env: withHelp(
     {
-      value: process.env,
+      get() {
+        return getEnv();
+      },
     },
     'Returns the environment variables',
   ),
@@ -165,6 +176,12 @@ export const globals = {
       value: log,
     },
     'Logs to the console',
+  ),
+  markdown: withHelp(
+    {
+      value: Markdown.create,
+    },
+    'Wraps the given string as Markdown',
   ),
   open: withHelp(
     {
@@ -226,28 +243,28 @@ export const globals = {
   ),
   solExtension: withHelp(
     {
-      value: extension,
+      value: solExtension,
     },
     'Returns the extension for the given name or path',
   ),
   solExtensions: withHelp(
     {
       get() {
-        return getExtensions();
+        return getSolExtensions();
       },
     },
     'Returns known sol extensions',
   ),
   solUserExtension: withHelp(
     {
-      value: userExtension,
+      value: solUserExtension,
     },
     'Returns the user extension for the given name',
   ),
   solUserWorkspace: withHelp(
     {
       get() {
-        return getUserWorkspace();
+        return getSolUserWorkspace();
       },
     },
     'User Sol workspace',
@@ -255,14 +272,14 @@ export const globals = {
   solWorkspace: withHelp(
     {
       get() {
-        return getCurrentWorkspace();
+        return getCurrentSolWorkspace();
       },
     },
     'Current Sol workspace',
   ),
   solWorkspaceExtension: withHelp(
     {
-      value: workspaceExtension,
+      value: solWorkspaceExtension,
     },
     'Returns the workspace extension for the given name',
   ),
@@ -320,3 +337,55 @@ export const globals = {
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;
+
+declare global {
+  const ast: Globals['ast'];
+  const astTypes: Globals['astTypes'];
+  const awaitSync: Globals['awaitSync'];
+  const browse: Globals['browse'];
+  const chalk: Globals['chalk'];
+  const clipboard: Globals['clipboard'];
+  const csv: Globals['csv'];
+  const cwd: Globals['cwd'];
+  const data: Globals['data'];
+  const dir: Globals['dir'];
+  const dirs: Globals['dirs'];
+  const edit: Globals['edit'];
+  const env: Globals['env'];
+  const file: Globals['file'];
+  const files: Globals['files'];
+  const glob: Globals['glob'];
+  const grep: Globals['grep'];
+  const json: Globals['json'];
+  const jsonata: Globals['jsonata'];
+  const log: Globals['log'];
+  const open: Globals['open'];
+  const openApp: Globals['openApp'];
+  const play: Globals['play'];
+  const playFile: Globals['playFile'];
+  const plays: Globals['plays'];
+  const replay: Globals['replay'];
+  const shared: Globals['shared'];
+  const sh: Globals['sh'];
+  const sol: Globals['sol'];
+  const solExtension: Globals['solExtension'];
+  const solExtensions: Globals['solExtensions'];
+  const solUserExtension: Globals['solUserExtension'];
+  const solUserWorkspace: Globals['solUserWorkspace'];
+  const solWorkspace: Globals['solWorkspace'];
+  const solWorkspaceExtension: Globals['solWorkspaceExtension'];
+  const text: Globals['text'];
+  const transform: Globals['transform'];
+  const url: Globals['url'];
+  const classes: Globals['classes'];
+  const utils: Globals['utils'];
+  const web: Globals['web'];
+  const withHelp: Globals['withHelp'];
+  const yaml: Globals['yaml'];
+
+  // DOM globals
+  type BufferSource = any;
+  type FormData = any;
+}
+
+mutateGlobals(definePropertiesMutation(globals));

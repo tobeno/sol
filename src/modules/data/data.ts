@@ -7,7 +7,11 @@ import type {
   AnyKeyType,
   AnyPartial,
 } from '../../interfaces/util';
-import { mapObjectKeys, traverseObject } from '../../utils/object';
+import {
+  flattenObject,
+  mapObjectKeys,
+  traverseObject,
+} from '../../utils/object';
 import {
   camelcaseText,
   constantcaseText,
@@ -41,7 +45,7 @@ export class Data<
       return Data.create(this.value.flat() as any) as any;
     }
 
-    return this as any;
+    return Data.create(flattenObject(this.value)) as any;
   }
 
   get first(): Data<ItemType> | null {
@@ -177,6 +181,36 @@ export class Data<
     }
 
     return Data.create(Object.entries(this.value as any)) as any;
+  }
+
+  get unentries(): Data<Record<string, any>> {
+    if (Array.isArray(this.value)) {
+      return Data.create(Object.fromEntries(this.value)) as any;
+    }
+
+    throw new Error('Not an array.');
+  }
+
+  get(path: string | number | Expression): Data | Text | null {
+    let result: any;
+    if (typeof path === 'string') {
+      const expression = jsonata(path);
+      result = expression.evaluate(this.value);
+    } else if (path && typeof path === 'object') {
+      result = path.evaluate(this.value);
+    } else {
+      result = (this.value as any)[path] || null;
+    }
+
+    if (result === null || result === undefined) {
+      return null;
+    }
+
+    if (typeof result === 'string' || result instanceof Text) {
+      return Text.create(result);
+    }
+
+    return Data.create(result);
   }
 
   changeCase(cb: (text: string) => string): Data {
@@ -468,16 +502,6 @@ export class Data<
     return Text.create(Object.values(this.value as any).join(separator));
   }
 
-  extract<ExtractedValueType = any>(
-    exp: string | Expression,
-  ): Data<ExtractedValueType> {
-    if (typeof exp === 'string') {
-      exp = jsonata(exp);
-    }
-
-    return Data.create(exp.evaluate(this.value)) as any;
-  }
-
   valueOf(): ValueType {
     return this.value;
   }
@@ -486,9 +510,9 @@ export class Data<
     return `Data ${inspect(this.value)}`;
   }
 
-  static create<ValueType = any>(value: ValueType | any): Data<ValueType> {
+  static create<ValueType = any>(value: ValueType): Data<ValueType> {
     if (value instanceof Data) {
-      return value;
+      return value as any;
     }
 
     return new Data(value);

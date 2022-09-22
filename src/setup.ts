@@ -1,6 +1,6 @@
-import './modules/globals/setup';
+import './modules/global/setup';
 import './modules/integrations/setup';
-import './modules/os/setup';
+import './modules/clipboard/setup';
 import './modules/play/setup';
 import './modules/sol/setup';
 import './modules/storage/setup';

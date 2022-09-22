@@ -1,5 +1,4 @@
 import { inspect } from 'util';
-import { Data } from '../data/data';
 import type {
   AxiosRequestConfig,
   AxiosResponse,
@@ -7,21 +6,15 @@ import type {
 } from 'axios';
 import { DataFormat } from '../data/data-format';
 import { DataType } from '../data/data-type';
-import { web } from './index';
+import { web } from './web';
 import { Text } from '../data/text';
 import { Wrapper } from '../data/wrapper';
+import { ResponseContent } from './response-content';
+import { Data } from '../data/data';
 
 export class Response extends Wrapper<AxiosResponse> {
-  get data(): Data<AxiosResponse> {
-    return Data.create(this.value);
-  }
-
   get request(): AxiosRequestConfig {
     return this.value.config;
-  }
-
-  get content(): Data {
-    return Data.create(this.value.data);
   }
 
   get serializable(): Data {
@@ -30,13 +23,17 @@ export class Response extends Wrapper<AxiosResponse> {
       statusText: this.value.statusText,
       headers: this.value.headers,
       data: this.value.data,
-      config: {
+      request: {
         url: this.value.config.url,
         method: (this.value.config.method || 'get').toLowerCase(),
         auth: this.value.config.auth,
         headers: this.value.config.headers,
       },
     });
+  }
+
+  get content(): ResponseContent {
+    return ResponseContent.create(this.value.data);
   }
 
   get contentExt(): string {
@@ -77,25 +74,10 @@ export class Response extends Wrapper<AxiosResponse> {
    * Prints just the data when inspecting (e.g. for console.log)
    */
   [inspect.custom](): string {
-    return `Response ${inspect({
-      status: this.value.status,
-      statusText: this.value.statusText,
-      headers: this.value.headers,
-      data: this.value.data,
-      request: {
-        url: this.value.config.url,
-        method: (this.value.config.method || 'get').toLowerCase(),
-        auth: this.value.config.auth,
-        headers: this.value.config.headers,
-      },
-    })}`;
+    return `Response ${inspect(this.serializable.value)}`;
   }
 
   toString(): string {
-    return this.data.json.toString();
+    return `Response ${inspect(this.value.data)}`;
   }
 }
-
-/* export class Response extends WithPrint(
-  WithEdit(WithCopy(WithSave(Response))),
-) {} */

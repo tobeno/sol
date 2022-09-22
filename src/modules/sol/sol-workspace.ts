@@ -1,13 +1,12 @@
 import { Directory } from '../storage/directory';
 import { File } from '../storage/file';
-import { globals } from '../globals/globals';
-import { getLoadedExtensions } from './extension';
+import { getLoadedSolExtensions } from './sol-extension';
 import { logDebug, logError } from '../../utils/log';
 import { getSol } from './sol';
 import { getCwd } from '../../utils/env';
 import dotenv from 'dotenv';
 
-export class Workspace {
+export class SolWorkspace {
   readonly dir: Directory;
   readonly packageDir: Directory;
   loaded = false;
@@ -48,40 +47,22 @@ export class Workspace {
 
   updateContextFile(): void {
     const contextFile = this.contextFile;
-    const extensions = getLoadedExtensions();
+    const extensions = getLoadedSolExtensions();
 
     contextFile.create();
     contextFile.text = `
 /* eslint-disable */
 // @ts-nocheck
     
-import { Globals } from '${this.packageDir.relativePathFrom(
-      this.generatedDir,
-    )}/src/modules/globals/globals';
+import '${this.packageDir.relativePathFrom(this.generatedDir)}/src/setup';
 ${extensions
   .map((extension, index) =>
     `
-import { Globals as GlobalsFromExtension${index} } from '${extension.globalsFile.dir.relativePathFrom(
-      this.generatedDir,
-    )}/${extension.globalsFile.basenameWithoutExt}';`.trimStart(),
+import '${extension.setupFile.dir.relativePathFrom(this.generatedDir)}/${
+      extension.setupFile.basenameWithoutExt
+    }';`.trimStart(),
   )
   .join('\n')}
-
-declare global {
-${Object.keys(globals)
-  .map((key) => `  const ${key}: Globals['${key}'];`)
-  .join('\n')}
-  
-${extensions
-  .map(
-    (extension, index) =>
-      `  // Extension: ${extension.name} (${extension.dir.path})
-${Object.keys(extension.globals)
-  .map((key) => `  const ${key}: GlobalsFromExtension${index}['${key}'];`)
-  .join('\n')}`,
-  )
-  .join('\n\n')}
-}
 `.trimStart();
   }
 
@@ -145,33 +126,33 @@ import { extension } from '${this.packageDir.relativePathFrom(
   }
 }
 
-export function getCurrentWorkspaceDir(): Directory {
+export function getCurrentSolWorkspaceDir(): Directory {
   return Directory.create(`${getCwd()}/.sol`);
 }
 
-let currentWorkspace: Workspace | null = null;
+let currentSolWorkspace: SolWorkspace | null = null;
 
-export function getCurrentWorkspace(): Workspace {
-  if (!currentWorkspace) {
-    currentWorkspace = new Workspace(
-      getCurrentWorkspaceDir().path,
+export function getCurrentSolWorkspace(): SolWorkspace {
+  if (!currentSolWorkspace) {
+    currentSolWorkspace = new SolWorkspace(
+      getCurrentSolWorkspaceDir().path,
       getSol().packageDir.path,
     );
   }
 
-  return currentWorkspace;
+  return currentSolWorkspace;
 }
 
-export function getUserWorkspaceDir(): Directory {
+export function getSolUserWorkspaceDir(): Directory {
   return getSol().userDir;
 }
 
-let userWorkspace: Workspace | null = null;
+let userWorkspace: SolWorkspace | null = null;
 
-export function getUserWorkspace(): Workspace {
+export function getSolUserWorkspace(): SolWorkspace {
   if (!userWorkspace) {
-    userWorkspace = new Workspace(
-      getUserWorkspaceDir().path,
+    userWorkspace = new SolWorkspace(
+      getSolUserWorkspaceDir().path,
       getSol().packageDir.path,
     );
   }

@@ -1,9 +1,12 @@
 import { File } from '../storage/file';
 import { rerequire } from '../../utils/module';
 import { Directory } from '../storage/directory';
-import { getReplServer } from '../sol/repl';
+import { getSolReplServer } from '../sol/sol-repl';
 import { log } from '../../utils/log';
-import { getCurrentWorkspace, getCurrentWorkspaceDir } from '../sol/workspace';
+import {
+  getCurrentSolWorkspace,
+  getCurrentSolWorkspaceDir,
+} from '../sol/sol-workspace';
 import { Data } from '../data/data';
 
 export class PlayFile {
@@ -22,7 +25,7 @@ export class PlayFile {
   }
 
   prepare(): void {
-    const workspace = getCurrentWorkspace();
+    const workspace = getCurrentSolWorkspace();
 
     const file = this.file;
     file.create();
@@ -86,7 +89,7 @@ export default null;
 
             if (typeof result !== 'undefined') {
               log(result);
-              getReplServer().displayPrompt();
+              getSolReplServer().displayPrompt();
             }
           } else if (event === 'rename') {
             if (!file.exists) {
@@ -160,7 +163,7 @@ export default null;
 }
 
 export function getPlayDir(): Directory {
-  return getCurrentWorkspaceDir().dir('play');
+  return getCurrentSolWorkspaceDir().dir('play');
 }
 
 export function playFile(pathOrFile: string | File | null = null): PlayFile {

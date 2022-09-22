@@ -1,11 +1,11 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Directory } from '../../storage/directory';
-import { Extension } from '../../sol/extension';
+import { SolExtension } from '../../sol/sol-extension';
 import { StorageItem } from '../../storage/storage-item';
 import { open } from '../open';
 
-declare module '../../sol/extension' {
+declare module '../../sol/sol-extension' {
   interface Extension {
     edit(): Directory;
 
@@ -14,10 +14,12 @@ declare module '../../sol/extension' {
 }
 
 mutateClass(
-  Extension,
+  SolExtension,
   definePropertiesMutation({
     edit: {
       value(): Directory {
+        this.prepare();
+
         edit(this.dir.path);
 
         return this.dir;
@@ -25,6 +27,8 @@ mutateClass(
     },
     open: {
       value(app?: string): StorageItem {
+        this.prepare();
+
         open(this.dir.uri, app);
 
         return this.dir;

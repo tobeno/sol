@@ -1,13 +1,13 @@
+import { Data } from '../../data/data';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { dataToJson, dataToYaml } from '../transformer';
 import { Text } from '../../data/text';
 import { Response } from '../../web/response';
 
 declare module '../../web/response' {
   interface Response {
-    get json(): Text;
+    get json(): Data;
 
-    get yaml(): Text;
+    get yaml(): Data;
   }
 }
 
@@ -16,13 +16,13 @@ mutateClass(
   definePropertiesMutation({
     json: {
       get(): Text {
-        return dataToJson(this.serializable);
+        return this.serializable.json;
       },
     },
 
     yaml: {
       get(): Text {
-        return dataToYaml(this.serializable);
+        return this.serializable.yaml;
       },
     },
   }),

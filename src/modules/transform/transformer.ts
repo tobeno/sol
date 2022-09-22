@@ -4,6 +4,7 @@ import { DataFormat } from '../data/data-format';
 import type { Ast } from '../data/ast';
 import type { Data } from '../data/data';
 import type { Text } from '../data/text';
+import { Markdown } from '../data/markdown';
 
 // Hepler functions with dynamic imports to avoid circular dependencies
 function getDataClass() {
@@ -16,6 +17,10 @@ function getAstClass() {
 
 function getTextClass() {
   return require('../data/text').Text;
+}
+
+function getMarkdownClass() {
+  return require('../data/markdown').Markdown;
 }
 
 function getRootTransformer() {
@@ -37,9 +42,14 @@ export function transform<InputType = any, OutputType = any>(
 }
 
 export function jsonToData<ValueType = any>(
-  value: string | Text,
+  value: string | Text | any,
 ): Data<ValueType> {
   const Text = getTextClass();
+  if (value && typeof value === 'object' && !(value instanceof Text)) {
+    const Data = getDataClass();
+
+    return Data.create(value) as any;
+  }
 
   return transform(
     Text.create(value, DataFormat.Json),
@@ -148,4 +158,19 @@ export function astToCode(value: Ast | any): Text {
   }
 
   return transform(value, new DataTransformation(DataType.Ast, DataType.Text));
+}
+
+export function markdownToHtml(value: Markdown | any): Text {
+  const Markdown = getMarkdownClass();
+  if (!(value instanceof Markdown)) {
+    value = Markdown.create(value);
+  }
+
+  return transform(
+    value,
+    new DataTransformation(
+      DataType.Markdown,
+      DataType.Text.withFormat(DataFormat.Html),
+    ),
+  );
 }

@@ -304,3 +304,35 @@ export function isObjectPropertyDescriptor(
     Object.keys(obj).every((key) => ['get', 'set'].includes(key))
   );
 }
+
+export function isNativeObject(obj: any): boolean {
+  return obj instanceof Date || obj instanceof Error || obj instanceof RegExp;
+}
+
+export function flattenObject(obj: any, prefix: string = ''): any {
+  if (
+    obj &&
+    typeof obj === 'object' &&
+    !Array.isArray(obj) &&
+    !isNativeObject(obj)
+  ) {
+    return Object.keys(obj).reduce((result, key) => {
+      const value = obj[key];
+
+      if (
+        value &&
+        typeof value === 'object' &&
+        !Array.isArray(value) &&
+        !isNativeObject(value)
+      ) {
+        Object.assign(result, flattenObject(value, prefix + key + '.'));
+      } else {
+        result[`${prefix}${key}`] = value;
+      }
+
+      return result;
+    }, {} as any);
+  }
+
+  return obj;
+}

@@ -1,28 +1,28 @@
 import { spawnSync } from 'child_process';
 import chalk from 'chalk';
-import { clearRequireCache } from './utils/module';
+import { clearRequireCache } from '../../utils/module';
 
 /**
  * Setup Sol modules
  */
 export function setupSol(): void {
-  require('./setup');
+  require('../../setup');
 }
 
 export function loadSol(): void {
-  const { logDebug } = require('./utils/log');
+  const { logDebug } = require('../../utils/log');
 
   logDebug('Loading Sol...');
 
   setupSol();
 
   const {
-    getCurrentWorkspace,
-    getUserWorkspace,
-  } = require('./modules/sol/workspace');
+    getCurrentSolWorkspace,
+    getSolUserWorkspace,
+  } = require('./sol-workspace');
 
-  const workspace = getCurrentWorkspace();
-  const userWorkspace = getUserWorkspace();
+  const workspace = getCurrentSolWorkspace();
+  const userWorkspace = getSolUserWorkspace();
 
   userWorkspace.load();
   workspace.load();
@@ -38,12 +38,12 @@ export function loadSol(): void {
  * Update Sol from git remote
  */
 export function updateSol(): void {
-  const { logDebug } = require('./utils/log');
+  const { logDebug } = require('../../utils/log');
 
   logDebug('Updating Sol...');
   logDebug('Fetching latest version from GitHub...');
 
-  const { getSol } = require('./modules/sol/sol');
+  const { getSol } = require('./sol');
 
   const sol = getSol();
 
@@ -66,9 +66,9 @@ export function updateSol(): void {
  * Unloads Sol modules
  */
 export function unloadSol(): void {
-  const { logDebug } = require('./utils/log');
-  const { unmutateClass, unmutateGlobals } = require('./utils/mutation');
-  const { unplay } = require('./modules/play/play');
+  const { logDebug } = require('../../utils/log');
+  const { unmutateClass, unmutateGlobals } = require('../../utils/mutation');
+  const { unplay } = require('../play/play');
   logDebug('Unloading Sol...');
 
   unplay();
@@ -101,9 +101,9 @@ export function reloadSol(): void {
 export function startSol(): void {
   loadSol();
 
-  const { startReplServer, solReplColor } = require('./modules/sol/repl');
+  const { startSolReplServer, solReplColor } = require('./sol-repl');
 
-  const server = startReplServer();
+  const server = startSolReplServer();
 
   server.defineCommand('reload', {
     help: 'Reloads Sol files to reflect latest build',
@@ -129,18 +129,18 @@ export function startSol(): void {
     },
   });
 
-  const { getSol } = require('./modules/sol/sol');
-  const { getLoadedExtensions } = require('./modules/sol/extension');
-  const { log } = require('./utils/log');
-  const { getCurrentWorkspaceDir } = require('./modules/sol/workspace');
+  const { getSol } = require('./sol');
+  const { getLoadedSolExtensions } = require('./sol-extension');
+  const { log } = require('../../utils/log');
+  const { getCurrentSolWorkspaceDir } = require('./sol-workspace');
 
-  const loadedExtensions = getLoadedExtensions();
+  const loadedExtensions = getLoadedSolExtensions();
   const sol = getSol();
 
   log(
     `
 ${chalk.bold(solReplColor.primary('-=| Welcome to Sol |=-'))}
-Workspace: ${solReplColor.warn(getCurrentWorkspaceDir().path)}${
+Workspace: ${solReplColor.warn(getCurrentSolWorkspaceDir().path)}${
       loadedExtensions.length
         ? `
 Extensions:
@@ -159,10 +159,12 @@ Use ${solReplColor.primary(
 
 To enable additional extensions, load them in your workspace or user ${solReplColor.warn(
       'setup.ts',
-    )} file (e.g. using ${solReplColor.primary('workspace.setupFile.edit()')}).
+    )} file (e.g. using ${solReplColor.primary(
+      'solWorkspace.setupFile.edit()',
+    )}).
 You can create a new one by calling either ${solReplColor.primary(
-      "workspaceExtension('your-name').edit()",
-    )} or ${solReplColor.primary("userExtension('your-name').edit()")}.
+      "solWorkspaceExtension('your-name').edit()",
+    )} or ${solReplColor.primary("solUserExtension('your-name').edit()")}.
 
 For usage details see: ${solReplColor.warn(`${sol.packageDir.path}/README.md`)}
 `.trimEnd(),

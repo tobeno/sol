@@ -1,10 +1,10 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { File } from '../file';
-import { saveAs } from '../save';
-import { Clipboard } from '../../clipboard/clipboard';
+import { save, saveAs } from '../save';
+import { Markdown } from '../../data/markdown';
 
-declare module '../../clipboard/clipboard' {
-  interface Clipboard {
+declare module '../../data/markdown' {
+  interface Markdown {
     saveAs(path: string): File;
 
     save(): File;
@@ -12,11 +12,17 @@ declare module '../../clipboard/clipboard' {
 }
 
 mutateClass(
-  Clipboard,
+  Markdown,
   definePropertiesMutation({
     saveAs: {
       value(path: string): File {
         return saveAs(this, path);
+      },
+    },
+
+    save: {
+      value(): File {
+        return save(this);
       },
     },
   }),

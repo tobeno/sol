@@ -4,10 +4,12 @@ import { loopWhile } from 'deasync';
 import chalk from 'chalk';
 import type { AsyncCompleter, CompleterResult } from 'readline';
 import { log } from '../../utils/log';
-import { getLoadedExtensions } from './extension';
-import { globals } from '../globals/globals';
 import { getSolMetadata } from '../../utils/metadata';
-import { getCurrentWorkspaceDir } from './workspace';
+import { getCurrentSolWorkspaceDir } from './sol-workspace';
+import {
+  DefinePropertiesMutation,
+  getAppliedMutations,
+} from '../../utils/mutation';
 
 export const solReplColor = {
   primary: chalk.keyword('coral'),
@@ -25,10 +27,10 @@ async function solCompleter(line: string): Promise<CompleterResult | void> {
   // ToDo: Add custom completion logic
 }
 
-function setupReplHistory(server: REPLServer): void {
+function setupSolReplHistory(server: REPLServer): void {
   let historyReady = false;
   server.setupHistory(
-    getCurrentWorkspaceDir().file('history').create().path,
+    getCurrentSolWorkspaceDir().file('history').create().path,
     () => {
       historyReady = true;
     },
@@ -36,7 +38,7 @@ function setupReplHistory(server: REPLServer): void {
   loopWhile(() => !historyReady);
 }
 
-function setupReplCompleter(server: REPLServer): void {
+function setupSolReplCompleter(server: REPLServer): void {
   const originalCompleter = server.completer.bind(repl);
   (server as any).completer = (async (line, cb) => {
     const result = await solCompleter(line);
@@ -48,16 +50,23 @@ function setupReplCompleter(server: REPLServer): void {
   }) as AsyncCompleter;
 }
 
-function setupReplCommands(server: REPLServer): void {
+function setupSolReplCommands(server: REPLServer): void {
   server.defineCommand('globals', {
     help: 'Shows available globals',
     action(filter: string | null = null): void {
-      let globalEntries = [
-        ...new Set([
-          ...Object.entries(globals),
-          ...getLoadedExtensions().flatMap((e) => Object.entries(e.globals)),
-        ]),
-      ].sort((entry1, entry2) => entry1[0].localeCompare(entry2[0]));
+      let globalEntries = getAppliedMutations(global)
+        .filter(
+          (mutation): mutation is DefinePropertiesMutation<typeof global> =>
+            mutation instanceof DefinePropertiesMutation,
+        )
+        .reduce(
+          (result, mutation) => [
+            ...result,
+            ...Object.entries(mutation.properties),
+          ],
+          [] as [string, PropertyDescriptor][],
+        )
+        .sort((entry1, entry2) => entry1[0].localeCompare(entry2[0]));
 
       if (filter) {
         globalEntries = globalEntries.filter(([key]) => key.includes(filter));
@@ -87,7 +96,7 @@ ${
 
 let currentServer: REPLServer | null = null;
 
-export function getReplServer(): REPLServer {
+export function getSolReplServer(): REPLServer {
   if (!currentServer) {
     throw new Error('REPL server not started.');
   }
@@ -95,7 +104,7 @@ export function getReplServer(): REPLServer {
   return currentServer;
 }
 
-export function startReplServer(options: ReplOptions = {}): REPLServer {
+export function startSolReplServer(options: ReplOptions = {}): REPLServer {
   const server = repl.start({
     prompt: solReplColor.dim('> '),
     writer: solWriter,
@@ -106,9 +115,9 @@ export function startReplServer(options: ReplOptions = {}): REPLServer {
 
   currentServer = server;
 
-  setupReplHistory(server);
-  setupReplCompleter(server);
-  setupReplCommands(server);
+  setupSolReplHistory(server);
+  setupSolReplCompleter(server);
+  setupSolReplCommands(server);
 
   return server;
 }

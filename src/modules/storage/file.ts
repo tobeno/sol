@@ -1,6 +1,5 @@
 import fs, { mkdirSync } from 'fs';
 import path from 'path';
-import prettier from 'prettier';
 import { StorageItem } from './storage-item';
 import { Directory } from './directory';
 import { StorageItemCollection } from './storage-item-collection';
@@ -105,11 +104,11 @@ export class File<ContentType = any> extends StorageItem {
     }
   }
 
-  get text(): Text | any {
+  get text(): Text {
     return Text.create(fs.readFileSync(this.path, 'utf8'));
   }
 
-  set text(value: Text | any) {
+  set text(value: Text | string) {
     fs.writeFileSync(this.path, value.toString(), 'utf8');
   }
 
@@ -205,9 +204,13 @@ export class File<ContentType = any> extends StorageItem {
   }
 
   pretty(): this {
-    this.text = prettier.format(this.text, {
-      filepath: this.path,
-    });
+    const prettier = require('prettier');
+
+    this.text = Text.create(
+      prettier.format(this.text.value, {
+        filepath: this.path,
+      }),
+    );
 
     return this;
   }

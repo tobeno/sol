@@ -29,11 +29,16 @@ export function definePropertiesMutation<TargetType>(
 ): DefinePropertiesMutation<TargetType> {
   return new DefinePropertiesMutation<TargetType>(
     Object.entries(properties).reduce((result, [name, config]) => {
-      result[name] = {
-        configurable: true,
-        enumerable: false,
-        ...config,
-      };
+      Object.assign(
+        config,
+        {
+          configurable: true,
+          enumerable: false,
+        },
+        config,
+      );
+
+      result[name] = config;
 
       return result;
     }, {} as PropertyDescriptorMap & ThisType<TargetType>),

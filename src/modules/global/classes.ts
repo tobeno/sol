@@ -6,11 +6,11 @@ export { DataType } from '../data/data-type';
 export { Text } from '../data/text';
 export { Url } from '../data/url';
 export { Wrapper } from '../data/wrapper';
-export { Clipboard } from '../os/clipboard';
-export { Extension } from '../sol/extension';
+export { Clipboard } from '../clipboard/clipboard';
+export { SolExtension } from '../sol/sol-extension';
 export { Sol } from '../sol/sol';
 export { PlayFile } from '../play/play';
-export { Workspace } from '../sol/workspace';
+export { SolWorkspace } from '../sol/sol-workspace';
 export { Directory } from '../storage/directory';
 export {
   DirectoryCollection,

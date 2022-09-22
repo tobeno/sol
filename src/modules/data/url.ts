@@ -14,6 +14,10 @@ export class Url extends Wrapper<string> {
     super(value);
   }
 
+  get text(): Text {
+    return Text.create(this.value);
+  }
+
   get parsed(): URL {
     return new URL(this.value);
   }

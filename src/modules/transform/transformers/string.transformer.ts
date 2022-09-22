@@ -21,9 +21,12 @@ export abstract class StringTransformer<TargetType>
     );
   }
 
-  abstract stringify(input: TargetType): string;
+  abstract stringify(
+    input: TargetType,
+    transformation: DataTransformation,
+  ): string;
 
-  abstract parse(input: string): TargetType;
+  abstract parse(input: string, transformation: DataTransformation): TargetType;
 
   matchesStringifyTransformation(transformation: DataTransformation): boolean {
     return this.stringifyTransformation.matches(transformation);
@@ -42,11 +45,11 @@ export abstract class StringTransformer<TargetType>
 
   transform(input: any, transformation: DataTransformation): any {
     if (this.matchesStringifyTransformation(transformation)) {
-      return this.stringify(input);
+      return this.stringify(input, transformation);
     }
 
     if (this.matchesParseTransformation(transformation)) {
-      return this.parse(input);
+      return this.parse(input, transformation);
     }
 
     throw new Error(`Got unexpected transformation ${transformation}`);

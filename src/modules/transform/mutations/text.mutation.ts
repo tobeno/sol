@@ -4,6 +4,8 @@ import { codeToAst, csvToData, jsonToData, yamlToData } from '../transformer';
 import { Text } from '../../data/text';
 import { Url } from '../../data/url';
 import { Ast } from '../../data/ast';
+import { Markdown } from '../../data/markdown';
+import { DataFormat } from '../../data/data-format';
 
 declare module '../../data/text' {
   interface Text<ContentType> {
@@ -16,6 +18,10 @@ declare module '../../data/text' {
     get ast(): Ast;
 
     get url(): Url;
+
+    get html(): Text<any>;
+
+    get md(): Markdown;
   }
 }
 
@@ -49,6 +55,18 @@ mutateClass(
     url: {
       get(): Url {
         return Url.create(this);
+      },
+    },
+
+    html: {
+      get(): Text {
+        return Text.create(this, DataFormat.Html);
+      },
+    },
+
+    md: {
+      get(): Markdown {
+        return Markdown.create(this);
       },
     },
   }),

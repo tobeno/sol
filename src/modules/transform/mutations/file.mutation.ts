@@ -12,24 +12,31 @@ import {
 } from '../transformer';
 import { File } from '../../storage/file';
 import { Ast } from '../../data/ast';
+import { Markdown } from '../../data/markdown';
+import { Text } from '../../data/text';
+import { DataFormat } from '../../data/data-format';
 
 declare module '../../storage/file' {
   interface File<ContentType = any> {
     get json(): Data<ContentType>;
 
-    set json(value: Data<ContentType>);
+    set json(value: Data<ContentType> | any);
 
     get yaml(): Data<ContentType>;
 
-    set yaml(value: Data<ContentType>);
+    set yaml(value: Data<ContentType> | any);
 
     get csv(): Data<ContentType>;
 
-    set csv(value: Data<ContentType>);
+    set csv(value: Data<ContentType> | any);
 
     get ast(): Ast;
 
-    set ast(value: Ast);
+    set ast(value: Ast | any);
+
+    get md(): Markdown;
+
+    set md(value: Markdown | any);
   }
 }
 
@@ -69,6 +76,25 @@ mutateClass(
       },
       set(value: Ast) {
         this.text = astToCode(value);
+      },
+    },
+
+    html: {
+      get(): any {
+        return Text.create(this.text, DataFormat.Html);
+      },
+
+      set(value: any) {
+        this.text = String(value);
+      },
+    },
+
+    md: {
+      get(): Markdown {
+        return Markdown.create(this.text);
+      },
+      set(value: Markdown) {
+        this.text = value.text;
       },
     },
   }),

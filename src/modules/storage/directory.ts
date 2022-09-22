@@ -121,7 +121,7 @@ export class Directory extends StorageItem {
 
   serve(): this {
     exec(
-      `${path.resolve(__dirname, '../../node_modules/.bin/serve')} ${
+      `${path.resolve(__dirname, '../../../node_modules/.bin/serve')} ${
         this.path
       }`,
     );

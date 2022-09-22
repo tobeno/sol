@@ -1,12 +1,12 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Clipboard } from '../../clipboard/clipboard';
-import { edit } from '../editor';
 import { File } from '../../storage/file';
-import { StorageItem } from '../../storage/storage-item';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
+import { edit } from '../editor';
+import { Markdown } from '../../data/markdown';
 import { tmp } from '../../storage/tmp';
+import { StorageItem } from '../../storage/storage-item';
 
-declare module '../../clipboard/clipboard' {
-  interface Clipboard {
+declare module '../../data/markdown' {
+  interface Markdown {
     edit(): File;
 
     browse(): StorageItem;
@@ -16,7 +16,7 @@ declare module '../../clipboard/clipboard' {
 }
 
 mutateClass(
-  Clipboard,
+  Markdown,
   definePropertiesMutation({
     edit: {
       value(): File {

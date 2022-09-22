@@ -15,6 +15,7 @@ import { Constructor } from '../../../interfaces/util';
 import { Wrapper } from '../../data/wrapper';
 import { JoinTransformer } from './join.transformer';
 import { DataFormat } from '../../data/data-format';
+import { MarkdownTransformer } from './markdown.transformer';
 
 let rootTransformer: DataTransformer<any, any>;
 
@@ -25,6 +26,7 @@ export function getRootTransformer(): DataTransformer<any, any> {
       new CsvTransformer(),
       new JsonTransformer(),
       new YamlTransformer(),
+      new MarkdownTransformer(),
       new TextDateTransformer(),
       new JoinTransformer(',', DataFormat.TextCommaSeparated),
       new JoinTransformer('\n', DataFormat.TextNewlineSeparated),

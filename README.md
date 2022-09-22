@@ -157,11 +157,11 @@ Sol looks for extensions in the following locations:
 - Workspace: _./.sol/extensions/_
 - Home: _~/.sol/extensions/_
 
-To load an extension, just add a `extension('your-extension', __dirname).load()` call to your setup file.
-To quickly open the right setup file, you can use `workspace.setupFile.edit()`.
+To load an extension, just add a `solExtension('your-extension', __dirname).load()` call to your setup file.
+To quickly open the right setup file, you can use `solWorkspace.setupFile.edit()`.
 
-To create a new extension, you can use `workspaceExtension('your-extension').edit()` to create a new workspace extension
-or `userExtension('your-extension').edit()` to create a new user level extension.
+To create a new extension, you can use `solWorkspaceExtension('your-extension').edit()` to create a new workspace extension
+or `solUserExtension('your-extension').edit()` to create a new user level extension.
 
 After the creation you still need to load the extension as described above.
 
