@@ -77,8 +77,8 @@ export class Text<ContentType = any> extends String {
     return new Text<ContentType>(decapitalizeText(this.value));
   }
 
-  get lines(): Data<string[]> {
-    return Data.create(lines(this.toString()));
+  get lines(): Data<Text[]> {
+    return Data.create(lines(this.toString()).map((line) => Text.create(line)));
   }
 
   grepLines(search: string | RegExp): Text {

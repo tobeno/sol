@@ -14,7 +14,7 @@ import * as objectUtils from '../../utils/object';
 import * as textUtils from '../../utils/text';
 import * as metadataUtils from '../../utils/metadata';
 import { withHelp } from '../../utils/metadata';
-import { getCwd } from '../../utils/env';
+import { getCwd, getEnv } from '../../utils/env';
 import { log } from '../../utils/log';
 import { getSol } from '../sol/sol';
 import { edit } from '../integrations/editor';
@@ -120,7 +120,9 @@ export const globals = {
   ),
   env: withHelp(
     {
-      value: process.env,
+      get() {
+        return getEnv();
+      },
     },
     'Returns the environment variables',
   ),

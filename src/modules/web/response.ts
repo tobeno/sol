@@ -24,7 +24,7 @@ export class Response extends Wrapper<AxiosResponse> {
     return Data.create(this.value.data);
   }
 
-  get serializable(): Data {
+  get serializable() {
     return Data.create({
       status: this.value.status,
       statusText: this.value.statusText,
@@ -92,10 +92,6 @@ export class Response extends Wrapper<AxiosResponse> {
   }
 
   toString(): string {
-    return this.data.json.toString();
+    return this.serializable.json.toString();
   }
 }
-
-/* export class Response extends WithPrint(
-  WithEdit(WithCopy(WithSave(Response))),
-) {} */
