@@ -12,7 +12,8 @@ import {
   glob,
   StorageItemCollection,
 } from './storage-item-collection';
-import { exec } from '../shell/sh';
+import { exec, spawn } from '../shell/sh';
+import { logError } from '../../utils/log';
 
 export class Directory extends StorageItem {
   get cmd(): Text {
@@ -120,10 +121,12 @@ export class Directory extends StorageItem {
   }
 
   serve(): this {
-    exec(
-      `${path.resolve(__dirname, '../../../node_modules/.bin/serve')} ${
-        this.path
-      }`,
+    spawn(
+      `${path.resolve(__dirname, '../../../node_modules/.bin/serve')}`,
+      [this.path],
+      {
+        stdio: 'inherit',
+      },
     );
 
     return this;

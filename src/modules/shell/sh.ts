@@ -2,6 +2,7 @@ import type shelljs from 'shelljs';
 import { StorageItem } from '../storage/storage-item';
 import { Text } from '../data/text';
 import { Data } from '../data/data';
+import { spawn as spawnInternal } from 'child_process';
 
 type Shelljs = typeof shelljs;
 
@@ -61,6 +62,7 @@ export const exec = wrapShelljsFn('exec') as any as (
   command: string,
   options?: shelljs.ExecOptions & { async?: false | undefined },
 ) => shelljs.ShellString;
+export const spawn = spawnInternal;
 export const exit = wrapShelljsFn('exit');
 export const cp = wrapShelljsFn('cp');
 export const cat = wrapShelljsFn('cat');
