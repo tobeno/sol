@@ -135,6 +135,12 @@ export const globals = {
     },
     'Returns the environment variables',
   ),
+  fetch: withHelp(
+    {
+      value: web.fetch,
+    },
+    'HTTP fetch compatible to node-fetch',
+  ),
   file: withHelp(
     {
       value: File.create,

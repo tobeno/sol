@@ -4,12 +4,9 @@ import type {
   AxiosResponse,
   AxiosResponseHeaders,
 } from 'axios';
-import { DataFormat } from '../data/data-format';
-import { DataType } from '../data/data-type';
 import { web } from './web';
 import { Text } from '../data/text';
 import { Wrapper } from '../data/wrapper';
-import { ResponseContent } from './response-content';
 import { Data } from '../data/data';
 
 export class Response extends Wrapper<AxiosResponse> {
@@ -32,16 +29,13 @@ export class Response extends Wrapper<AxiosResponse> {
     });
   }
 
-  get content(): ResponseContent {
-    return ResponseContent.create(this.value.data);
-  }
+  get content(): Text {
+    let content = this.value.data;
+    if (content && typeof content === 'object') {
+      content = JSON.stringify(content, null, 2);
+    }
 
-  get contentExt(): string {
-    return DataFormat.toExt(this.contentFormat);
-  }
-
-  get contentType(): DataType {
-    return DataType.String.withFormat(this.contentFormat);
+    return Text.create(content, this.contentFormat);
   }
 
   get contentFormat(): string {

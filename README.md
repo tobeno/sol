@@ -22,7 +22,7 @@ You can do this:
 > files('**/*.ts')
 
 // Gather all import statements
-> let imports = _.map(f => f.text.match(/(?<=^|\n)import[^;]+;/g) || []).flat()
+> let imports = _.map(f => f.text.match(/(?<=^|\n)import[^;]+;/g) || []).flattened
 
 // Open import list in editor
 > imports.map(i => i.replace(/\r?\n/g, ' ')).join('\n').edit()
@@ -31,14 +31,14 @@ You can do this:
 > _.text.trim().split('\n')
 
 // Get import source using abstract syntax tree
-> _.map(i => ast(i).program.body[0].source.value)
+> _.map(i => ast(i).node.body[0].source.value)
 ```
 
 Or this:
 
 ```
 // Get todos
-> const j = fetch('https://jsonplaceholder.typicode.com/todos').content
+> const j = web.fetch('https://jsonplaceholder.typicode.com/todos').content.json
 
 // Get all open ToDos
 > const open = j.filter(todo => !todo.completed)
