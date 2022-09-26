@@ -84,12 +84,12 @@ import '${extension.setupFile.dir.relativePathFrom(this.generatedDir)}/${
 /* eslint-disable */
 // @ts-nocheck
 
-import { extension } from '${this.packageDir.relativePathFrom(
+import { solExtension } from '${this.packageDir.relativePathFrom(
         this.dir,
-      )}/modules/sol/extension';
+      )}/src/modules/sol/sol-extension';
       
 // ToDo: Register your first extension
-// extension('your-extension', __dirname).load();
+// solExtension('your-extension', __dirname).load();
 `.trimStart();
     }
   }
