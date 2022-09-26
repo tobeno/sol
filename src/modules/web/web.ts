@@ -24,8 +24,8 @@ export const web = {
   fetch: (
     url: string,
     init: {
-      method: AxiosRequestConfig['method'];
-      headers: AxiosRequestConfig['headers'];
+      method?: AxiosRequestConfig['method'];
+      headers?: AxiosRequestConfig['headers'];
     },
   ) => {
     return web.request({

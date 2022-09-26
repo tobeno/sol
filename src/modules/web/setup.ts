@@ -1,1 +1,1 @@
-export {};
+import './mutations/url.mutation';
