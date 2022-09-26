@@ -1,10 +1,10 @@
+import './mutations/ast.mutation';
 import './mutations/clipboard.mutation';
 import './mutations/data.mutation';
 import './mutations/markdown.mutation';
-import './mutations/ast.mutation';
-import './mutations/extension.mutation';
+import './mutations/sol-extension.mutation';
+import './mutations/sol-workspace.mutation';
 import './mutations/sol.mutation';
-import './mutations/workspace.mutation';
+import './mutations/storage-item.mutation';
 import './mutations/text.mutation';
 import './mutations/url.mutation';
-import './mutations/storage-item.mutation';
