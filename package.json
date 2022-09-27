@@ -59,7 +59,7 @@
     "@types/jest": "^29.0.3",
     "@types/jsonata": "^1.5.1",
     "@types/marked": "^4.0.7",
-    "@types/node": "^18.7.21",
+    "@types/node": "^18.7.23",
     "@types/papaparse": "^5.3.5",
     "@types/prettier": "^2.7.1",
     "@types/shelljs": "^0.8.11",
