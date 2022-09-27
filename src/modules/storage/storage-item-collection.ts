@@ -7,6 +7,7 @@ import { Data } from '../data/data';
 import { Text } from '../data/text';
 import { log } from '../../utils/log';
 import { Wrapper } from '../data/wrapper';
+import { inspect } from 'util';
 
 export class GenericStorageItemCollection<
   ItemType extends StorageItem,
@@ -149,6 +150,10 @@ export class GenericStorageItemCollection<
 
   [Symbol.iterator]() {
     return this.value[Symbol.iterator]();
+  }
+
+  [inspect.custom](): string {
+    return `${this.constructor.name} ${inspect(this.value)}`;
   }
 }
 

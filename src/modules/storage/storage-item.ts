@@ -73,6 +73,8 @@ export abstract class StorageItem {
   [inspect.custom](): string {
     const relativePath = this.relativePath;
 
-    return relativePath.includes('../') ? this.path : relativePath;
+    return `${this.constructor.name} { ${
+      relativePath.includes('../') ? this.path : relativePath
+    } }`;
   }
 }

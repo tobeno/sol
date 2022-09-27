@@ -5,6 +5,7 @@ import {
 import * as metadataUtils from '../../../utils/metadata';
 import { withHelp } from '../../../utils/metadata';
 import {
+  codeToAst,
   csvToData,
   jsonToData,
   transform,
@@ -51,7 +52,7 @@ import { Markdown } from '../../data/markdown';
 export const globals = {
   ast: withHelp(
     {
-      value: csvToData,
+      value: codeToAst,
     },
     'Converts code to its AST to Data',
   ),
