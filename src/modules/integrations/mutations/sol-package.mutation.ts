@@ -1,12 +1,12 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
-import { Sol } from '../../sol/sol';
 import { Directory } from '../../storage/directory';
 import { StorageItem } from '../../storage/storage-item';
 import { open } from '../open';
+import { SolPackage } from '../../sol/sol-package';
 
-declare module '../../sol/sol' {
-  interface Sol {
+declare module '../../sol/sol-package' {
+  interface SolPackage {
     edit(): Directory;
 
     open(app?: string): Directory;
@@ -14,20 +14,20 @@ declare module '../../sol/sol' {
 }
 
 mutateClass(
-  Sol,
+  SolPackage,
   definePropertiesMutation({
     edit: {
       value(): Directory {
-        edit(this.packageDir.path);
+        edit(this.dir.path);
 
-        return this.packageDir;
+        return this.dir;
       },
     },
     open: {
       value(app?: string): StorageItem {
-        open(this.packageDir.uri, app);
+        open(this.dir.uri, app);
 
-        return this.packageDir;
+        return this.dir;
       },
     },
   }),

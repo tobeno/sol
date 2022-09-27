@@ -4,7 +4,7 @@ import './mutations/data.mutation';
 import './mutations/markdown.mutation';
 import './mutations/sol-extension.mutation';
 import './mutations/sol-workspace.mutation';
-import './mutations/sol.mutation';
+import './mutations/sol-package.mutation';
 import './mutations/storage-item.mutation';
 import './mutations/text.mutation';
 import './mutations/url.mutation';

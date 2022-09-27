@@ -1,13 +1,11 @@
 import { Directory } from '../storage/directory';
-import { getSol } from './sol';
 import { File } from '../storage/file';
 import { logDebug, logError } from '../../utils/log';
 import { getCurrentSolWorkspace, getSolUserWorkspace } from './sol-workspace';
 import { camelcaseText } from '../../utils/text';
+import { getSolPackage } from './sol-package';
 
 export class SolExtension {
-  static extensions = [];
-
   readonly dir: Directory;
   loaded = false;
 
@@ -26,7 +24,7 @@ export class SolExtension {
   prepare(force = false): void {
     this.dir.create();
 
-    const sol = getSol();
+    const solPackage = getSolPackage();
 
     const globalMutationFile = this.dir.file('mutations/global.mutation.ts');
     const setupFile = this.setupFile;
@@ -50,13 +48,13 @@ import './${globalMutationFile.dir.relativePathFrom(setupFile.dir)}/${
       globalMutationFile.text = `
 /* eslint-disable */
 
-import { withHelp } from '${sol.packageDir.relativePathFrom(
+import { withHelp } from '${solPackage.dir.relativePathFrom(
         globalMutationFile.dir,
       )}/src/utils/metadata';
-import { definePropertiesMutation, mutateGlobals } from '${sol.packageDir.relativePathFrom(
+import { definePropertiesMutation, mutateGlobals } from '${solPackage.dir.relativePathFrom(
         globalMutationFile.dir,
       )}/src/utils/mutation';
-import { FromPropertyDescriptorMap } from '${sol.packageDir.relativePathFrom(
+import { FromPropertyDescriptorMap } from '${solPackage.dir.relativePathFrom(
         globalMutationFile.dir,
       )}/src/interfaces/object';
 

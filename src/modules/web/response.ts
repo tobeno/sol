@@ -14,21 +14,6 @@ export class Response extends Wrapper<AxiosResponse> {
     return this.value.config;
   }
 
-  get serializable(): Data {
-    return Data.create({
-      status: this.value.status,
-      statusText: this.value.statusText,
-      headers: this.value.headers,
-      data: this.value.data,
-      request: {
-        url: this.value.config.url,
-        method: (this.value.config.method || 'get').toLowerCase(),
-        auth: this.value.config.auth,
-        headers: this.value.config.headers,
-      },
-    });
-  }
-
   get content(): Text {
     let content = this.value.data;
     if (content && typeof content === 'object') {
@@ -62,6 +47,21 @@ export class Response extends Wrapper<AxiosResponse> {
 
   refresh(): Response {
     return web.request(this.value.config);
+  }
+
+  get serializable(): Data {
+    return Data.create({
+      status: this.value.status,
+      statusText: this.value.statusText,
+      headers: this.value.headers,
+      data: this.value.data,
+      request: {
+        url: this.value.config.url,
+        method: (this.value.config.method || 'get').toLowerCase(),
+        auth: this.value.config.auth,
+        headers: this.value.config.headers,
+      },
+    });
   }
 
   /**

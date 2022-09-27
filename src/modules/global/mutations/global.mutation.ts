@@ -28,10 +28,9 @@ import { log } from '../../../utils/log';
 import { open, openApp } from '../../integrations/open';
 import { listPlays, play, playFile, replay } from '../../play/play';
 import * as shell from '../../shell/sh';
-import { getSol } from '../../sol/sol';
 import {
-  solExtension,
   getSolExtensions,
+  solExtension,
   solUserExtension,
   solWorkspaceExtension,
 } from '../../sol/sol-extension';
@@ -44,10 +43,12 @@ import { Url } from '../../data/url';
 import * as classes from '../classes';
 import * as arrayUtils from '../../../utils/array';
 import * as objectUtils from '../../../utils/object';
+import { sortObjectKeys } from '../../../utils/object';
 import * as textUtils from '../../../utils/text';
 import { web } from '../../web/web';
 import { FromPropertyDescriptorMap } from '../../../interfaces/object';
 import { Markdown } from '../../data/markdown';
+import { getSolPackage } from '../../sol/sol-package';
 
 export const globals = {
   ast: withHelp(
@@ -240,14 +241,6 @@ export const globals = {
     },
     'Shell utilities',
   ),
-  sol: withHelp(
-    {
-      get() {
-        return getSol();
-      },
-    },
-    'Current Sol instance',
-  ),
   solExtension: withHelp(
     {
       value: solExtension,
@@ -261,6 +254,14 @@ export const globals = {
       },
     },
     'Returns known sol extensions',
+  ),
+  solPackage: withHelp(
+    {
+      get() {
+        return getSolPackage();
+      },
+    },
+    'Returns the sol package',
   ),
   solUserExtension: withHelp(
     {
@@ -310,7 +311,7 @@ export const globals = {
   ),
   classes: withHelp(
     {
-      value: classes,
+      value: sortObjectKeys(classes),
     },
     'Classes',
   ),
@@ -374,9 +375,9 @@ declare global {
   const replay: Globals['replay'];
   const shared: Globals['shared'];
   const sh: Globals['sh'];
-  const sol: Globals['sol'];
   const solExtension: Globals['solExtension'];
   const solExtensions: Globals['solExtensions'];
+  const solPackage: Globals['solPackage'];
   const solUserExtension: Globals['solUserExtension'];
   const solUserWorkspace: Globals['solUserWorkspace'];
   const solWorkspace: Globals['solWorkspace'];

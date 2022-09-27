@@ -2,19 +2,10 @@ import { spawnSync } from 'child_process';
 import chalk from 'chalk';
 import { clearRequireCache } from '../../utils/module';
 
-/**
- * Setup Sol modules
- */
-export function setupSol(): void {
-  require('../../setup');
-}
-
 export function loadSol(): void {
   const { logDebug } = require('../../utils/log');
 
   logDebug('Loading Sol...');
-
-  setupSol();
 
   const {
     getCurrentSolWorkspace,
@@ -39,21 +30,20 @@ export function loadSol(): void {
  */
 export function updateSol(): void {
   const { logDebug } = require('../../utils/log');
+  const { getSolPackage } = require('./sol-package');
+
+  const packageDir = getSolPackage();
 
   logDebug('Updating Sol...');
   logDebug('Fetching latest version from GitHub...');
 
-  const { getSol } = require('./sol');
-
-  const sol = getSol();
-
   spawnSync('git pull --rebase', {
-    cwd: sol.packageDir.path,
+    cwd: packageDir.path,
     shell: true,
   });
 
   spawnSync('npm install', {
-    cwd: sol.packageDir.path,
+    cwd: packageDir.path,
     shell: true,
   });
 
@@ -73,7 +63,7 @@ export function unloadSol(): void {
 
   unplay();
 
-  unmutateGlobals(global);
+  unmutateGlobals();
   unmutateClass(Array);
   unmutateClass(String);
   unmutateClass(Number);
@@ -92,6 +82,10 @@ export function unloadSol(): void {
  */
 export function reloadSol(): void {
   unloadSol();
+
+  // Load setup again
+  require('../../setup');
+
   loadSol();
 }
 
@@ -123,24 +117,26 @@ export function startSol(): void {
       updateSol();
       server.close();
 
+      log('✅ Sol updated successfully');
+
       setTimeout(() => {
         startSol();
       }, 0);
     },
   });
 
-  const { getSol } = require('./sol');
+  const { getSolPackage } = require('./sol-package');
   const { getLoadedSolExtensions } = require('./sol-extension');
   const { log } = require('../../utils/log');
-  const { getCurrentSolWorkspaceDir } = require('./sol-workspace');
+  const { getCurrentSolWorkspace } = require('./sol-workspace');
 
   const loadedExtensions = getLoadedSolExtensions();
-  const sol = getSol();
+  const solPackage = getSolPackage();
 
   log(
     `
 ${chalk.bold(solReplColor.primary('-=| Welcome to Sol |=-'))}
-Workspace: ${solReplColor.warn(getCurrentSolWorkspaceDir().path)}${
+Workspace: ${solReplColor.warn(getCurrentSolWorkspace().dir.path)}${
       loadedExtensions.length
         ? `
 Extensions:
@@ -166,7 +162,7 @@ You can create a new one by calling either ${solReplColor.primary(
       "solWorkspaceExtension('your-name').edit()",
     )} or ${solReplColor.primary("solUserExtension('your-name').edit()")}.
 
-For usage details see: ${solReplColor.warn(`${sol.packageDir.path}/README.md`)}
+For usage details see: ${solReplColor.warn(`${solPackage.dir.path}/README.md`)}
 `.trimEnd(),
   );
 

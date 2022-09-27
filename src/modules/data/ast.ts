@@ -1,11 +1,8 @@
 import type babelTypes from '@babel/types';
 import { inspect } from 'util';
 import { Data } from './data';
-import { astToCode } from '../transform/transformer';
 import type { NodePath, Scope, TraverseOptions } from '@babel/traverse';
-import { Text } from './text';
 import { Wrapper } from './wrapper';
-import { open } from '../integrations/open';
 
 /**
  * Wrapper for AST code trees
@@ -25,18 +22,6 @@ export class Ast extends Wrapper<babelTypes.Node> {
 
   get node(): babel.Node {
     return this.value;
-  }
-
-  get code(): Text {
-    return astToCode(this);
-  }
-
-  explore(): this {
-    this.code.copy();
-
-    open('https://astexplorer.net/');
-
-    return this;
   }
 
   traverseNodes(

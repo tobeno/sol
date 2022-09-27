@@ -6,7 +6,7 @@ import type { Data } from '../data/data';
 import type { Text } from '../data/text';
 import { Markdown } from '../data/markdown';
 
-// Hepler functions with dynamic imports to avoid circular dependencies
+// Helper functions with dynamic imports to avoid circular dependencies
 function getDataClass() {
   return require('../data/data').Data;
 }

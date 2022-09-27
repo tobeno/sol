@@ -2,18 +2,17 @@ import { Directory } from '../storage/directory';
 import { File } from '../storage/file';
 import { getLoadedSolExtensions } from './sol-extension';
 import { logDebug, logError } from '../../utils/log';
-import { getSol } from './sol';
 import { getCwd } from '../../utils/env';
 import dotenv from 'dotenv';
+import { homedir } from 'os';
+import { getSolPackage } from './sol-package';
 
 export class SolWorkspace {
   readonly dir: Directory;
-  readonly packageDir: Directory;
   loaded = false;
 
-  constructor(workspacePath: string, packagePath: string) {
+  constructor(workspacePath: string) {
     this.dir = Directory.create(workspacePath);
-    this.packageDir = Directory.create(packagePath);
   }
 
   get generatedDir(): Directory {
@@ -48,13 +47,14 @@ export class SolWorkspace {
   updateContextFile(): void {
     const contextFile = this.contextFile;
     const extensions = getLoadedSolExtensions();
+    const solPackage = getSolPackage();
 
     contextFile.create();
     contextFile.text = `
 /* eslint-disable */
 // @ts-nocheck
     
-import '${this.packageDir.relativePathFrom(this.generatedDir)}/src/setup';
+import '${solPackage.dir.relativePathFrom(this.generatedDir)}/src/setup';
 ${extensions
   .map((extension, index) =>
     `
@@ -79,12 +79,14 @@ import '${extension.setupFile.dir.relativePathFrom(this.generatedDir)}/${
 
     const setupFile = this.setupFile;
     if (!setupFile.exists || force) {
+      const solPackage = getSolPackage();
+
       setupFile.create();
       setupFile.text = `
 /* eslint-disable */
 // @ts-nocheck
 
-import { solExtension } from '${this.packageDir.relativePathFrom(
+import { solExtension } from '${solPackage.dir.relativePathFrom(
         this.dir,
       )}/src/modules/sol/sol-extension';
       
@@ -126,35 +128,21 @@ import { solExtension } from '${this.packageDir.relativePathFrom(
   }
 }
 
-export function getCurrentSolWorkspaceDir(): Directory {
-  return Directory.create(`${getCwd()}/.sol`);
-}
-
 let currentSolWorkspace: SolWorkspace | null = null;
 
 export function getCurrentSolWorkspace(): SolWorkspace {
   if (!currentSolWorkspace) {
-    currentSolWorkspace = new SolWorkspace(
-      getCurrentSolWorkspaceDir().path,
-      getSol().packageDir.path,
-    );
+    currentSolWorkspace = new SolWorkspace(`${getCwd()}/.sol`);
   }
 
   return currentSolWorkspace;
-}
-
-export function getSolUserWorkspaceDir(): Directory {
-  return getSol().userDir;
 }
 
 let userWorkspace: SolWorkspace | null = null;
 
 export function getSolUserWorkspace(): SolWorkspace {
   if (!userWorkspace) {
-    userWorkspace = new SolWorkspace(
-      getSolUserWorkspaceDir().path,
-      getSol().packageDir.path,
-    );
+    userWorkspace = new SolWorkspace(`${homedir()}/.sol`);
   }
 
   return userWorkspace;

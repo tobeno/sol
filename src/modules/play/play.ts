@@ -3,10 +3,7 @@ import { rerequire } from '../../utils/module';
 import { Directory } from '../storage/directory';
 import { getSolReplServer } from '../sol/sol-repl';
 import { log } from '../../utils/log';
-import {
-  getCurrentSolWorkspace,
-  getCurrentSolWorkspaceDir,
-} from '../sol/sol-workspace';
+import { getCurrentSolWorkspace } from '../sol/sol-workspace';
 import { Data } from '../data/data';
 
 export class PlayFile {
@@ -163,7 +160,7 @@ export default null;
 }
 
 export function getPlayDir(): Directory {
-  return getCurrentSolWorkspaceDir().dir('play');
+  return getCurrentSolWorkspace().dir.dir('play');
 }
 
 export function playFile(pathOrFile: string | File | null = null): PlayFile {

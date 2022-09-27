@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import type { AsyncCompleter, CompleterResult } from 'readline';
 import { log } from '../../utils/log';
 import { getSolMetadata } from '../../utils/metadata';
-import { getCurrentSolWorkspaceDir } from './sol-workspace';
+import { getCurrentSolWorkspace } from './sol-workspace';
 import {
   DefinePropertiesMutation,
   getAppliedMutations,
@@ -30,7 +30,7 @@ async function solCompleter(line: string): Promise<CompleterResult | void> {
 function setupSolReplHistory(server: REPLServer): void {
   let historyReady = false;
   server.setupHistory(
-    getCurrentSolWorkspaceDir().file('history').create().path,
+    getCurrentSolWorkspace().dir.file('history').create().path,
     () => {
       historyReady = true;
     },
