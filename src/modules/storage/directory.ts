@@ -13,7 +13,6 @@ import {
   StorageItemCollection,
 } from './storage-item-collection';
 import { exec, spawn } from '../shell/sh';
-import { logError } from '../../utils/log';
 
 export class Directory extends StorageItem {
   get cmd(): Text {
