@@ -8,7 +8,7 @@ declare module '../../data/ast' {
   interface Ast {
     edit(): File;
 
-    explore(): Ast;
+    explore(): this;
   }
 }
 
@@ -22,7 +22,7 @@ mutateClass(
     },
 
     explore: {
-      value(): Ast {
+      value(): any {
         this.code.copy();
 
         open('https://astexplorer.net/');

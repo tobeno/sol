@@ -16,29 +16,25 @@ import { DataFormat } from '../../global/classes';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {
-    get text(): Text;
-
-    set text(value: Text | string);
-
     get json(): Data;
 
-    set json(value: Data | Record<string, any>);
+    set json(value: Data | any);
 
     get yaml(): Data;
 
-    set yaml(value: Data | Record<string, any>);
+    set yaml(value: Data | any);
 
     get csv(): Data;
 
-    set csv(value: Data | Record<string, any>);
+    set csv(value: Data | any);
 
     get ast(): Ast;
 
-    set ast(value: Ast);
+    set ast(value: Ast | any);
 
     get url(): Url;
 
-    set url(value: Url | string);
+    set url(value: Url | Text | string);
 
     get html(): Text;
 
@@ -46,29 +42,19 @@ declare module '../../clipboard/clipboard' {
 
     get md(): Markdown;
 
-    set md(value: Markdown);
+    set md(value: Markdown | Text | string);
   }
 }
 
 mutateClass(
   Clipboard,
   definePropertiesMutation({
-    text: {
-      get(): any {
-        return Text.create(this.value);
-      },
-
-      set(value: any) {
-        this.value = String(value);
-      },
-    },
-
     json: {
       get(): Data {
         return jsonToData(this.text);
       },
 
-      set(value: Data) {
+      set(value: Data | any) {
         this.text = Data.create(value).json;
       },
     },
@@ -78,7 +64,7 @@ mutateClass(
         return yamlToData(this.text);
       },
 
-      set(value: Data) {
+      set(value: Data | any) {
         this.text = Data.create(value).yaml;
       },
     },
@@ -88,7 +74,7 @@ mutateClass(
         return csvToData(this.text);
       },
 
-      set(value: Data) {
+      set(value: Data | any) {
         this.text = Data.create(value).csv;
       },
     },
@@ -98,7 +84,7 @@ mutateClass(
         return codeToAst(this.text);
       },
 
-      set(value: Ast) {
+      set(value: Ast | any) {
         this.text = astToCode(value);
       },
     },
@@ -108,17 +94,17 @@ mutateClass(
         return Url.create(this.text);
       },
 
-      set(value: Url) {
-        this.text = value.text;
+      set(value: Url | Text | string) {
+        this.text = Url.create(value).text;
       },
     },
 
     html: {
-      get(): any {
+      get(): Text {
         return Text.create(this.value, DataFormat.Html);
       },
 
-      set(value: any) {
+      set(value: Text | string) {
         this.value = String(value);
       },
     },
@@ -128,8 +114,8 @@ mutateClass(
         return Markdown.create(this.text);
       },
 
-      set(value: Markdown) {
-        this.text = value.text;
+      set(value: Markdown | Text | string) {
+        this.text = Markdown.create(value).text;
       },
     },
   }),

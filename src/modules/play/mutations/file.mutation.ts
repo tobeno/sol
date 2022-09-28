@@ -3,10 +3,10 @@ import { File } from '../../storage/file';
 import { play, PlayFile, replay, unplay } from '../play';
 
 declare module '../../storage/file' {
-  interface File<ContentType = any> {
-    play(): File;
+  interface File {
+    play(): PlayFile;
 
-    replay(): any;
+    replay<ReturnType = any>(): ReturnType;
 
     unplay(): void;
   }

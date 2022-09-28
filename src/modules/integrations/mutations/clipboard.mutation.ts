@@ -2,16 +2,15 @@ import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { Clipboard } from '../../clipboard/clipboard';
 import { edit } from '../editor';
 import { File } from '../../storage/file';
-import { StorageItem } from '../../storage/storage-item';
 import { tmp } from '../../storage/tmp';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {
     edit(): File;
 
-    browse(): StorageItem;
+    browse(): File;
 
-    open(app?: string): StorageItem;
+    open(app?: string): File;
   }
 }
 
@@ -25,7 +24,7 @@ mutateClass(
     },
 
     browse: {
-      value(): StorageItem {
+      value(): File {
         const tmpFile = tmp(this.text.ext);
         tmpFile.text = this.text;
 
@@ -34,7 +33,7 @@ mutateClass(
     },
 
     open: {
-      value(app?: string): StorageItem {
+      value(app?: string): File {
         const tmpFile = tmp(this.text.ext);
         tmpFile.text = this.text;
 

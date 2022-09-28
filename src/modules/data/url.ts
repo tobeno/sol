@@ -42,7 +42,7 @@ export class Url extends Wrapper<string> {
     return this.parsed.hash;
   }
 
-  static create(value: string | String | Text | any): Url {
+  static create(value: Text | String | string | any): Url {
     if (value instanceof Url) {
       return value;
     }

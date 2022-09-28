@@ -5,11 +5,11 @@ import { open } from '../open';
 
 declare module '../../storage/storage-item' {
   interface StorageItem {
-    edit(): StorageItem;
+    edit(): this;
 
-    browse(): StorageItem;
+    browse(): this;
 
-    open(app?: string): StorageItem;
+    open(app?: string): this;
   }
 }
 
@@ -17,21 +17,21 @@ mutateClass(
   StorageItem,
   definePropertiesMutation({
     edit: {
-      value(): StorageItem {
+      value(): any {
         open(this.uri, process.env.SOL_EDITOR || 'code');
 
         return this;
       },
     },
     browse: {
-      value(): StorageItem {
+      value(): any {
         browse(this.uri);
 
         return this;
       },
     },
     open: {
-      value(app?: string): StorageItem {
+      value(app?: string): any {
         open(this.uri, app);
 
         return this;

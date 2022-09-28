@@ -2,7 +2,7 @@ import { fileSync as tmpFileSync } from 'tmp';
 import { File } from './file';
 
 export function tmp(ext?: string): File {
-  return new File(
+  return File.create(
     tmpFileSync({
       ...(ext ? { postfix: `.${ext}` } : {}),
     }).name,

@@ -55,7 +55,7 @@ export class GenericStorageItemCollection<
       }
     });
 
-    return new FileCollection(result);
+    return FileCollection.create(result);
   }
 
   dirs(): DirectoryCollection {
@@ -67,7 +67,7 @@ export class GenericStorageItemCollection<
       }
     });
 
-    return new DirectoryCollection(result);
+    return DirectoryCollection.create(result);
   }
 
   items(): StorageItemCollection {
@@ -93,7 +93,7 @@ export class GenericStorageItemCollection<
       }
     });
 
-    return new StorageItemCollection(result);
+    return StorageItemCollection.create(result);
   }
 
   grep(pattern: string | RegExp): FileCollection {
@@ -109,7 +109,7 @@ export class GenericStorageItemCollection<
       }
     });
 
-    return new FileCollection(result);
+    return FileCollection.create(result);
   }
 
   updateName(cb: (name: string) => string): this {
@@ -201,7 +201,7 @@ export type AnyStorageItemCollection =
   | StorageItemCollection;
 
 export function files(exp?: string, options: fg.Options = {}): FileCollection {
-  return new FileCollection(
+  return FileCollection.create(
     require('fast-glob')
       .sync(exp || '*', {
         dot: true,
@@ -210,7 +210,7 @@ export function files(exp?: string, options: fg.Options = {}): FileCollection {
         onlyFiles: true,
       })
       .map((file: fg.Entry) => {
-        return new File(file.path);
+        return File.create(file.path);
       }),
   );
 }
@@ -219,7 +219,7 @@ export function dirs(
   exp?: string,
   options: fg.Options = {},
 ): DirectoryCollection {
-  return new DirectoryCollection(
+  return DirectoryCollection.create(
     require('fast-glob')
       .sync(exp || '*', {
         dot: true,
@@ -228,7 +228,7 @@ export function dirs(
         onlyDirectories: true,
       })
       .map((file: fg.Entry) => {
-        return new Directory(file.path);
+        return Directory.create(file.path);
       }),
   );
 }
@@ -237,7 +237,7 @@ export function glob(
   exp?: string,
   options: fg.Options = {},
 ): StorageItemCollection {
-  return new StorageItemCollection([
+  return StorageItemCollection.create([
     ...files(exp, options).value,
     ...dirs(exp, options).value,
   ]);

@@ -4,26 +4,27 @@ import { DataFormat } from '../data/data-format';
 import type { Ast } from '../data/ast';
 import type { Data } from '../data/data';
 import type { Text } from '../data/text';
-import { Markdown } from '../data/markdown';
+import type { Markdown } from '../data/markdown';
+import type { DataTransformer } from './transformers/data.transformer';
 
 // Helper functions with dynamic imports to avoid circular dependencies
-function getDataClass() {
+function getDataClass(): typeof Data {
   return require('../data/data').Data;
 }
 
-function getAstClass() {
+function getAstClass(): typeof Ast {
   return require('../data/ast').Ast;
 }
 
-function getTextClass() {
+function getTextClass(): typeof Text {
   return require('../data/text').Text;
 }
 
-function getMarkdownClass() {
+function getMarkdownClass(): typeof Markdown {
   return require('../data/markdown').Markdown;
 }
 
-function getRootTransformer() {
+function getRootTransformer(): DataTransformer<any, any> {
   // Import dynamically to avoid circular imports
   const { getRootTransformer } = require('./transformers/root.transformer');
 
@@ -42,7 +43,7 @@ export function transform<InputType = any, OutputType = any>(
 }
 
 export function jsonToData<ValueType = any>(
-  value: string | Text | any,
+  value: Text | string | any,
 ): Data<ValueType> {
   const Text = getTextClass();
   if (value && typeof value === 'object' && !(value instanceof Text)) {
@@ -51,8 +52,10 @@ export function jsonToData<ValueType = any>(
     return Data.create(value) as any;
   }
 
+  value = Text.create(value, DataFormat.Json);
+
   return transform(
-    Text.create(value, DataFormat.Json),
+    value,
     new DataTransformation(
       DataType.Text.withFormat(DataFormat.Json),
       DataType.Data,
@@ -60,17 +63,12 @@ export function jsonToData<ValueType = any>(
   );
 }
 
-export function dataToJson<ValueType = any>(
-  value: Data<ValueType> | ValueType,
-): Text<ValueType> {
+export function dataToJson(value: Data | any): Text {
   const Data = getDataClass();
-
-  if (!(value instanceof Data)) {
-    value = new Data(value) as Data<ValueType>;
-  }
+  value = Data.create(value);
 
   return transform(
-    Data.create(value),
+    value,
     new DataTransformation(
       DataType.Data,
       DataType.Text.withFormat(DataFormat.Json),
@@ -79,12 +77,13 @@ export function dataToJson<ValueType = any>(
 }
 
 export function yamlToData<ValueType = any>(
-  value: string | String | Text,
+  value: Text | String | string,
 ): Data<ValueType> {
   const Text = getTextClass();
+  value = Text.create(value, DataFormat.Yaml);
 
   return transform(
-    Text.create(value, DataFormat.Yaml),
+    value,
     new DataTransformation(
       DataType.Text.withFormat(DataFormat.Yaml),
       DataType.Data,
@@ -92,14 +91,9 @@ export function yamlToData<ValueType = any>(
   );
 }
 
-export function dataToYaml<ValueType = any>(
-  value: Data<ValueType> | ValueType,
-): Text<ValueType> {
+export function dataToYaml(value: Data | any): Text {
   const Data = getDataClass();
-
-  if (!(value instanceof Data)) {
-    value = new Data(value) as Data<ValueType>;
-  }
+  value = Data.create(value);
 
   return transform(
     value,
@@ -111,12 +105,13 @@ export function dataToYaml<ValueType = any>(
 }
 
 export function csvToData<ValueType = any>(
-  value: string | String | Text,
+  value: Text | String | string,
 ): Data<ValueType> {
   const Text = getTextClass();
+  value = Text.create(value, DataFormat.Csv);
 
   return transform(
-    Text.create(value, DataFormat.Csv),
+    value,
     new DataTransformation(
       DataType.Text.withFormat(DataFormat.Csv),
       DataType.Data,
@@ -124,14 +119,9 @@ export function csvToData<ValueType = any>(
   );
 }
 
-export function dataToCsv<ValueType = any>(
-  value: Data<ValueType> | ValueType,
-): Text<ValueType> {
+export function dataToCsv(value: Data | any): Text {
   const Data = getDataClass();
-
-  if (!(value instanceof Data)) {
-    value = new Data(value) as Data<ValueType>;
-  }
+  value = Data.create(value);
 
   return transform(
     value,
@@ -142,29 +132,23 @@ export function dataToCsv<ValueType = any>(
   );
 }
 
-export function codeToAst(value: string | String | Text): Ast {
+export function codeToAst(value: Text | String | string): Ast {
   const Text = getTextClass();
+  value = Text.create(value, null);
 
-  return transform(
-    Text.create(value, null),
-    new DataTransformation(DataType.Text, DataType.Ast),
-  );
+  return transform(value, new DataTransformation(DataType.Text, DataType.Ast));
 }
 
 export function astToCode(value: Ast | any): Text {
   const Ast = getAstClass();
-  if (!(value instanceof Ast)) {
-    value = new Ast(value);
-  }
+  value = Ast.create(value);
 
   return transform(value, new DataTransformation(DataType.Ast, DataType.Text));
 }
 
-export function markdownToHtml(value: Markdown | any): Text {
+export function markdownToHtml(value: Markdown | Text | string): Text {
   const Markdown = getMarkdownClass();
-  if (!(value instanceof Markdown)) {
-    value = Markdown.create(value);
-  }
+  value = Markdown.create(value);
 
   return transform(
     value,

@@ -1,7 +1,6 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Directory } from '../../storage/directory';
-import { StorageItem } from '../../storage/storage-item';
 import { open } from '../open';
 import { SolPackage } from '../../sol/sol-package';
 
@@ -24,7 +23,7 @@ mutateClass(
       },
     },
     open: {
-      value(app?: string): StorageItem {
+      value(app?: string): Directory {
         open(this.dir.uri, app);
 
         return this.dir;

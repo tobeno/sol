@@ -18,10 +18,10 @@ export class PlayFile {
   }
 
   constructor(path: string) {
-    this.file = new File(path);
+    this.file = File.create(path);
   }
 
-  prepare(): void {
+  private prepare(): void {
     const workspace = getCurrentSolWorkspace();
 
     const file = this.file;
@@ -47,7 +47,7 @@ export default null;
     return this.file.edit() as File;
   }
 
-  play(): void {
+  play(): this {
     const file = this.file;
     const playId = file.path;
 
@@ -98,6 +98,8 @@ export default null;
         log(`Watching ${playId}...`);
       }, 1000);
     }
+
+    return this;
   }
 
   unplay(): void {

@@ -4,7 +4,7 @@ import { Response } from '../../web/response';
 
 declare module '../../web/response' {
   interface Response {
-    copy(): void;
+    copy(): this;
   }
 }
 
@@ -12,8 +12,10 @@ mutateClass(
   Response,
   definePropertiesMutation({
     copy: {
-      value(): void {
+      value(): any {
         getClipboard().text = this.serializable.json;
+
+        return this;
       },
     },
   }),

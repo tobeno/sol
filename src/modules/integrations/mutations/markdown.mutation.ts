@@ -3,15 +3,14 @@ import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Markdown } from '../../data/markdown';
 import { tmp } from '../../storage/tmp';
-import { StorageItem } from '../../storage/storage-item';
 
 declare module '../../data/markdown' {
   interface Markdown {
     edit(): File;
 
-    browse(): StorageItem;
+    browse(): File;
 
-    open(app?: string): StorageItem;
+    open(app?: string): File;
   }
 }
 
@@ -25,7 +24,7 @@ mutateClass(
     },
 
     browse: {
-      value(): StorageItem {
+      value(): File {
         const tmpFile = tmp(this.text.ext);
         tmpFile.text = this.text;
 
@@ -34,7 +33,7 @@ mutateClass(
     },
 
     open: {
-      value(app?: string): StorageItem {
+      value(app?: string): File {
         const tmpFile = tmp(this.text.ext);
         tmpFile.text = this.text;
 

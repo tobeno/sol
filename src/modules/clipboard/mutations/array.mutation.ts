@@ -2,7 +2,7 @@ import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 
 declare global {
   interface Array<T> {
-    copy(): void;
+    copy(): this;
   }
 }
 
@@ -10,8 +10,10 @@ mutateClass(
   Array,
   definePropertiesMutation({
     copy: {
-      value(): void {
+      value(): any {
         this.json.copy();
+
+        return this;
       },
     },
   }),

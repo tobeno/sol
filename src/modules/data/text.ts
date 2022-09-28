@@ -24,7 +24,7 @@ import { Data } from './data';
 /**
  * Wrapper for strings
  */
-export class Text<ContentType = any> extends String {
+export class Text extends String {
   constructor(value: string | String, public format: string | null = null) {
     super(value.toString());
   }
@@ -41,40 +41,40 @@ export class Text<ContentType = any> extends String {
     return this;
   }
 
-  get camelcased(): Text<ContentType> {
-    return new Text<ContentType>(camelcaseText(this.value), this.format);
+  get camelcased(): Text {
+    return Text.create(camelcaseText(this.value), this.format);
   }
 
-  get pascalcased(): Text<ContentType> {
-    return new Text<ContentType>(pascalcaseText(this.value), this.format);
+  get pascalcased(): Text {
+    return Text.create(pascalcaseText(this.value), this.format);
   }
 
-  get constantcased(): Text<ContentType> {
-    return new Text<ContentType>(constantcaseText(this.value), this.format);
+  get constantcased(): Text {
+    return Text.create(constantcaseText(this.value), this.format);
   }
 
-  get titlecased(): Text<ContentType> {
-    return new Text<ContentType>(titlecaseText(this.value), this.format);
+  get titlecased(): Text {
+    return Text.create(titlecaseText(this.value), this.format);
   }
 
-  get kebabcased(): Text<ContentType> {
-    return new Text<ContentType>(kebabcaseText(this.value), this.format);
+  get kebabcased(): Text {
+    return Text.create(kebabcaseText(this.value), this.format);
   }
 
-  get uppercased(): Text<ContentType> {
-    return new Text<ContentType>(this.value.toUpperCase());
+  get uppercased(): Text {
+    return Text.create(this.value.toUpperCase());
   }
 
-  get lowercased(): Text<ContentType> {
-    return new Text<ContentType>(this.value.toLowerCase());
+  get lowercased(): Text {
+    return Text.create(this.value.toLowerCase());
   }
 
-  get capitalized(): Text<ContentType> {
-    return new Text<ContentType>(capitalizeText(this.value));
+  get capitalized(): Text {
+    return Text.create(capitalizeText(this.value));
   }
 
-  get decapitalized(): Text<ContentType> {
-    return new Text<ContentType>(decapitalizeText(this.value));
+  get decapitalized(): Text {
+    return Text.create(decapitalizeText(this.value));
   }
 
   get lines(): Data<Text[]> {
@@ -149,10 +149,10 @@ export class Text<ContentType = any> extends String {
     return this.toString();
   }
 
-  static create<ContentType = any>(
-    value: string | String | Text,
+  static create(
+    value: Text | String | string,
     format: string | null = null,
-  ): Text<ContentType> {
+  ): Text {
     if (value instanceof Text) {
       let text = value;
 

@@ -5,7 +5,7 @@ import { StorageItem } from '../../storage/storage-item';
 
 declare module '../../storage/storage-item-collection' {
   interface GenericItemCollection<ItemType extends StorageItem> {
-    copy(): void;
+    copy(): this;
   }
 }
 
@@ -13,8 +13,10 @@ mutateClass(
   GenericStorageItemCollection,
   definePropertiesMutation({
     copy: {
-      value(): void {
+      value(): any {
         getClipboard().text = this.toString();
+
+        return this;
       },
     },
   }),

@@ -17,18 +17,18 @@ import { Text } from '../../data/text';
 import { DataFormat } from '../../data/data-format';
 
 declare module '../../storage/file' {
-  interface File<ContentType = any> {
-    get json(): Data<ContentType>;
+  interface File {
+    get json(): Data;
 
-    set json(value: Data<ContentType> | any);
+    set json(value: Data | any);
 
-    get yaml(): Data<ContentType>;
+    get yaml(): Data;
 
-    set yaml(value: Data<ContentType> | any);
+    set yaml(value: Data | any);
 
-    get csv(): Data<ContentType>;
+    get csv(): Data;
 
-    set csv(value: Data<ContentType> | any);
+    set csv(value: Data | any);
 
     get ast(): Ast;
 
@@ -36,7 +36,7 @@ declare module '../../storage/file' {
 
     get md(): Markdown;
 
-    set md(value: Markdown | any);
+    set md(value: Markdown | Text | string);
   }
 }
 
@@ -44,28 +44,28 @@ mutateClass(
   File,
   definePropertiesMutation({
     json: {
-      get(): Data<any> {
+      get(): Data {
         return jsonToData(this.text);
       },
-      set(value: Data<any>): void {
+      set(value: Data | any) {
         this.text = dataToJson(value);
       },
     },
 
     yaml: {
-      get(): Data<any> {
+      get(): Data {
         return yamlToData(this.text);
       },
-      set(value: Data<any>) {
+      set(value: Data | any) {
         this.text = dataToYaml(value);
       },
     },
 
     csv: {
-      get(): Data<any> {
+      get(): Data {
         return csvToData(this.text);
       },
-      set(value: Data<any>) {
+      set(value: Data | any) {
         this.text = dataToCsv(value);
       },
     },
@@ -74,17 +74,17 @@ mutateClass(
       get(): Ast {
         return codeToAst(this.text);
       },
-      set(value: Ast) {
+      set(value: Ast | any) {
         this.text = astToCode(value);
       },
     },
 
     html: {
-      get(): any {
+      get(): Text {
         return Text.create(this.text, DataFormat.Html);
       },
 
-      set(value: any) {
+      set(value: Text | string) {
         this.text = String(value);
       },
     },
@@ -93,8 +93,8 @@ mutateClass(
       get(): Markdown {
         return Markdown.create(this.text);
       },
-      set(value: Markdown) {
-        this.text = value.text;
+      set(value: Markdown | Text | string) {
+        this.text = Markdown.create(value).text;
       },
     },
   }),

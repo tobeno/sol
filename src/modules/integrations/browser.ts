@@ -13,5 +13,5 @@ export function browse(url?: any): Url {
     open(url || 'https://www.google.com');
   }
 
-  return new Url(url);
+  return Url.create(url);
 }

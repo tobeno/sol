@@ -6,11 +6,11 @@ import { open } from '../open';
 
 declare module '../../data/url' {
   interface Url {
-    edit(): Url;
+    edit(): this;
 
-    browse(): Url;
+    browse(): this;
 
-    open(app?: string): Url;
+    open(app?: string): this;
   }
 }
 

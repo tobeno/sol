@@ -66,7 +66,7 @@ import '${extension.setupFile.dir.relativePathFrom(this.generatedDir)}/${
 `.trimStart();
   }
 
-  prepare(force = false): void {
+  private prepare(force = false): void {
     const workspaceDir = this.dir;
     workspaceDir.create();
 
@@ -96,7 +96,7 @@ import { solExtension } from '${solPackage.dir.relativePathFrom(
     }
   }
 
-  load(): void {
+  private load(): void {
     if (this.loaded) {
       return;
     }

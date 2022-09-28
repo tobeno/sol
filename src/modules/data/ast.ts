@@ -52,7 +52,7 @@ export class Ast extends Wrapper<babelTypes.Node> {
     const matches: Ast[] = [];
     this.traverseNodes({
       [type]: (path: NodePath) => {
-        matches.push(new Ast(path.node, path.scope, path));
+        matches.push(Ast.create(path.node, path.scope, path));
       },
     });
 

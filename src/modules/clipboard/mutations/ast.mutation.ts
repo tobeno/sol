@@ -4,7 +4,7 @@ import { Ast } from '../../data/ast';
 
 declare module '../../data/ast' {
   interface Ast {
-    copy(): void;
+    copy(): this;
   }
 }
 
@@ -12,8 +12,10 @@ mutateClass(
   Ast,
   definePropertiesMutation({
     copy: {
-      value(): void {
+      value(): any {
         getClipboard().text = String(this.json);
+
+        return this;
       },
     },
   }),

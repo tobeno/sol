@@ -4,7 +4,7 @@ import { getClipboard } from '../clipboard';
 
 declare module '../../storage/storage-item' {
   interface StorageItem {
-    copy(): void;
+    copy(): this;
   }
 }
 
@@ -12,8 +12,10 @@ mutateClass(
   StorageItem,
   definePropertiesMutation({
     copy: {
-      value(): void {
+      value(): any {
         getClipboard().text = String(this);
+
+        return this;
       },
     },
   }),

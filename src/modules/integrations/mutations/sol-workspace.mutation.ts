@@ -2,11 +2,10 @@ import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Directory } from '../../storage/directory';
 import { SolWorkspace } from '../../sol/sol-workspace';
-import { StorageItem } from '../../storage/storage-item';
 import { open } from '../open';
 
 declare module '../../sol/sol-workspace' {
-  interface Workspace {
+  interface SolWorkspace {
     edit(): Directory;
 
     open(app?: string): Directory;
@@ -26,7 +25,7 @@ mutateClass(
       },
     },
     open: {
-      value(app?: string): StorageItem {
+      value(app?: string): Directory {
         this.prepare();
 
         open(this.dir.uri, app);

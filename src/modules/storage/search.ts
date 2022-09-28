@@ -3,7 +3,7 @@ import { File } from './file';
 import { FileCollection } from './storage-item-collection';
 
 export function grep(pattern: string | RegExp, path?: string): FileCollection {
-  return new FileCollection(
+  return FileCollection.create(
     exec(
       `egrep -rl '${(pattern instanceof RegExp ? pattern.source : pattern)
         .replace(/'/g, "\\'")
@@ -14,7 +14,7 @@ export function grep(pattern: string | RegExp, path?: string): FileCollection {
     )
       .split('\n')
       .filter((file) => !!file)
-      .map((file) => new File(file)),
+      .map((file) => File.create(file)),
   );
 }
 

@@ -19,7 +19,7 @@ mutateClass(
   Data,
   definePropertiesMutation({
     text: {
-      get(): any {
+      get(): Text {
         let value = this.value as any;
         if (!(value instanceof Text) && typeof value !== 'string') {
           value = this.json;

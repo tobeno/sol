@@ -17,7 +17,7 @@ export class AstTransformer extends StringTransformer<any> {
   }
 
   parse(input: string): Ast {
-    return new Ast(
+    return Ast.create(
       recastParse(input, {
         parser: {
           parse(code: string) {

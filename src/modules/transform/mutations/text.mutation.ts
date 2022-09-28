@@ -8,18 +8,18 @@ import { Markdown } from '../../data/markdown';
 import { DataFormat } from '../../data/data-format';
 
 declare module '../../data/text' {
-  interface Text<ContentType> {
-    get json(): Data<ContentType>;
+  interface Text {
+    get json(): Data;
 
-    get yaml(): Data<ContentType>;
+    get yaml(): Data;
 
-    get csv(): Data<ContentType>;
+    get csv(): Data;
 
     get ast(): Ast;
 
     get url(): Url;
 
-    get html(): Text<any>;
+    get html(): Text;
 
     get md(): Markdown;
   }
@@ -29,19 +29,19 @@ mutateClass(
   Text,
   definePropertiesMutation({
     json: {
-      get(): Data<any> {
+      get(): Data {
         return jsonToData(this);
       },
     },
 
     yaml: {
-      get(): Data<any> {
+      get(): Data {
         return yamlToData(this);
       },
     },
 
     csv: {
-      get(): Data<any> {
+      get(): Data {
         return csvToData(this);
       },
     },

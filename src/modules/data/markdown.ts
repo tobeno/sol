@@ -7,7 +7,7 @@ export class Markdown extends Wrapper<string> {
     return Text.create(this.value, DataFormat.Markdown);
   }
 
-  static create(value: string | String | Text | any): Markdown {
+  static create(value: Text | String | string | any): Markdown {
     if (value instanceof Markdown) {
       return value;
     }

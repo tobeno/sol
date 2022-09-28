@@ -1,13 +1,12 @@
-import { Data } from '../../data/data';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { Text } from '../../data/text';
 import { Response } from '../../web/response';
 
 declare module '../../web/response' {
   interface Response {
-    get json(): Data;
+    get json(): Text;
 
-    get yaml(): Data;
+    get yaml(): Text;
   }
 }
 

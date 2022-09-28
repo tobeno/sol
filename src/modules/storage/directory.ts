@@ -20,7 +20,7 @@ export class Directory extends StorageItem {
   }
 
   get parent(): Directory {
-    return new Directory(path.dirname(this.path));
+    return Directory.create(path.dirname(this.path));
   }
 
   set parent(value: Directory) {
@@ -116,7 +116,7 @@ export class Directory extends StorageItem {
       exec(`cp -r '${this.path}/' '${newPath}/'`);
     }
 
-    return new Directory(newPath);
+    return Directory.create(newPath);
   }
 
   serve(): this {

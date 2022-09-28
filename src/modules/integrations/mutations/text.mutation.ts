@@ -2,7 +2,6 @@ import { File } from '../../storage/file';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Text } from '../../data/text';
-import { StorageItem } from '../../storage/storage-item';
 import { tmp } from '../../storage/tmp';
 import { DataFormat } from '../../data/data-format';
 
@@ -10,9 +9,9 @@ declare module '../../data/text' {
   interface Text {
     edit(): File;
 
-    browse(): StorageItem;
+    browse(): File;
 
-    open(app?: string): StorageItem;
+    open(app?: string): File;
   }
 }
 
@@ -26,7 +25,7 @@ mutateClass(
     },
 
     browse: {
-      value(): StorageItem {
+      value(): File {
         const tmpFile = tmp(this.ext);
 
         let content = String(this);
@@ -42,7 +41,7 @@ mutateClass(
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
   
-    <style type="text/css">
+    <style>
      body {
        margin: 5px
      }
@@ -62,7 +61,7 @@ mutateClass(
     },
 
     open: {
-      value(app?: string): StorageItem {
+      value(app?: string): File {
         const tmpFile = tmp(this.ext);
         tmpFile.text = this;
 

@@ -6,7 +6,7 @@ import { StorageItemCollection } from './storage-item-collection';
 import { Text } from '../data/text';
 import { log } from '../../utils/log';
 
-export class File<ContentType = any> extends StorageItem {
+export class File extends StorageItem {
   constructor(path: string) {
     super(path);
   }
@@ -85,7 +85,7 @@ export class File<ContentType = any> extends StorageItem {
   }
 
   get dir(): Directory {
-    return new Directory(path.dirname(this.path));
+    return Directory.create(path.dirname(this.path));
   }
 
   set dir(value: Directory) {
@@ -140,7 +140,7 @@ export class File<ContentType = any> extends StorageItem {
   }
 
   items(): StorageItemCollection {
-    return new StorageItemCollection(this as any);
+    return StorageItemCollection.create(this as any);
   }
 
   delete(): void {
@@ -176,7 +176,7 @@ export class File<ContentType = any> extends StorageItem {
   copyTo(newPath: string): File {
     fs.copyFileSync(this.path, newPath);
 
-    return new File(newPath);
+    return File.create(newPath);
   }
 
   eval<ResultType = any>(): ResultType {
@@ -219,13 +219,11 @@ export class File<ContentType = any> extends StorageItem {
     log(String(this));
   }
 
-  static create<ContentType = any>(
-    pathOrFile: string | File,
-  ): File<ContentType> {
+  static create(pathOrFile: string | File): File {
     if (pathOrFile instanceof File) {
       return pathOrFile;
     }
 
-    return new File<ContentType>(pathOrFile);
+    return new File(pathOrFile);
   }
 }

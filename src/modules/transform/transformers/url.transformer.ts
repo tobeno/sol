@@ -16,6 +16,6 @@ export class UrlTransformer extends StringTransformer<any> {
   }
 
   parse(input: string): Url {
-    return new Url(input);
+    return Url.create(input);
   }
 }
