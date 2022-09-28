@@ -12,7 +12,7 @@ import { Url } from '../../data/url';
 import { Text } from '../../data/text';
 import { Ast } from '../../data/ast';
 import { Markdown } from '../../data/markdown';
-import { DataFormat } from '../../global/classes';
+import { DataFormat } from '../../global/globals/classes.global';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {

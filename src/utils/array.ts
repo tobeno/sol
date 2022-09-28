@@ -2,7 +2,7 @@ export function intersectArray<ItemType = any>(
   arr1: ItemType[],
   arr2: ItemType[],
 ): ItemType[] {
-  return arr1.filter(arr2.includes);
+  return arr1.filter((item) => arr2.includes(item));
 }
 
 export function diffArray<ItemType = any>(

@@ -63,7 +63,7 @@ Symlink the _bin/sol_ (or _bin/sol.js_) file to a location in your path.
 
 ## Usage
 
-**Start** the sol shell using `sol` (best to use a dark terminal for it).
+**Start** the Sol shell using `sol` (best to use a dark terminal for it).
 
 Most features of Sol are available as **global variables** (e.g. `play(...)` or `web.get(...)`).
 You can use `.globals [filter]` to list and filter the available global functions.

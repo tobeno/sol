@@ -2,7 +2,6 @@ import {
   definePropertiesMutation,
   mutateGlobals,
 } from '../../../utils/mutation';
-import * as metadataUtils from '../../../utils/metadata';
 import { withHelp } from '../../../utils/metadata';
 import {
   codeToAst,
@@ -11,7 +10,6 @@ import {
   transform,
   yamlToData,
 } from '../../transform/transformer';
-import * as asyncUtils from '../../../utils/async';
 import { awaitSync } from '../../../utils/async';
 import { browse } from '../../integrations/browser';
 import chalk from 'chalk';
@@ -27,7 +25,7 @@ import jsonata from 'jsonata';
 import { log } from '../../../utils/log';
 import { open, openApp } from '../../integrations/open';
 import { listPlays, play, playFile, replay } from '../../play/play';
-import * as shell from '../../shell/sh';
+import type * as shell from '../../shell/sh';
 import {
   getSolExtensions,
   solExtension,
@@ -40,12 +38,11 @@ import {
 } from '../../sol/sol-workspace';
 import { Text } from '../../data/text';
 import { Url } from '../../data/url';
-import * as classes from '../classes';
-import * as arrayUtils from '../../../utils/array';
-import * as objectUtils from '../../../utils/object';
+import type * as classes from '../globals/classes.global';
+import type * as utils from '../globals/utils.global';
 import { sortObjectKeys } from '../../../utils/object';
-import * as textUtils from '../../../utils/text';
 import { web } from '../../web/web';
+import { tmp } from '../../storage/tmp';
 import { FromPropertyDescriptorMap } from '../../../interfaces/object';
 import { Markdown } from '../../data/markdown';
 import { getSolPackage } from '../../sol/sol-package';
@@ -237,7 +234,9 @@ export const globals = {
   ),
   sh: withHelp(
     {
-      value: shell,
+      get(): typeof shell {
+        return require('../../shell/sh');
+      },
     },
     'Shell utilities',
   ),
@@ -261,7 +260,7 @@ export const globals = {
         return getSolPackage();
       },
     },
-    'Returns the sol package',
+    'Returns the Sol package',
   ),
   solUserExtension: withHelp(
     {
@@ -297,6 +296,12 @@ export const globals = {
     },
     'Wraps a string as Text',
   ),
+  tmp: withHelp(
+    {
+      value: tmp,
+    },
+    'Temporary file',
+  ),
   transform: withHelp(
     {
       value: transform,
@@ -311,18 +316,16 @@ export const globals = {
   ),
   classes: withHelp(
     {
-      value: sortObjectKeys(classes),
+      get(): typeof classes {
+        return sortObjectKeys(require('../globals/classes.global'));
+      },
     },
     'Classes',
   ),
   utils: withHelp(
     {
-      value: {
-        ...asyncUtils,
-        ...metadataUtils,
-        ...arrayUtils,
-        ...objectUtils,
-        ...textUtils,
+      get(): typeof utils {
+        return require('../globals/utils.global');
       },
     },
     'Basic utility functions',
@@ -383,6 +386,7 @@ declare global {
   const solWorkspace: Globals['solWorkspace'];
   const solWorkspaceExtension: Globals['solWorkspaceExtension'];
   const text: Globals['text'];
+  const tmp: Globals['tmp'];
   const transform: Globals['transform'];
   const url: Globals['url'];
   const classes: Globals['classes'];
