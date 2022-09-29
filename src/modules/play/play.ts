@@ -21,7 +21,7 @@ export class PlayFile {
     this.file = File.create(path);
   }
 
-  private prepare(): void {
+  prepare(): void {
     const workspace = getCurrentSolWorkspace();
 
     const file = this.file;

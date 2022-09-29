@@ -21,7 +21,7 @@ export class SolExtension {
     return this.dir.file('setup.ts');
   }
 
-  private prepare(force = false): void {
+  prepare(force = false): void {
     this.dir.create();
 
     const solPackage = getSolPackage();

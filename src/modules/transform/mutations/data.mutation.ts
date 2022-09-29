@@ -31,19 +31,19 @@ mutateClass(
 
     json: {
       get(): Text {
-        return dataToJson<any>(this);
+        return dataToJson(this);
       },
     },
 
     yaml: {
       get(): Text {
-        return dataToYaml<any>(this);
+        return dataToYaml(this);
       },
     },
 
     csv: {
       get(): Text {
-        return dataToCsv<any>(this);
+        return dataToCsv(this);
       },
     },
   }),
