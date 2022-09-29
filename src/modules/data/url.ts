@@ -1,9 +1,6 @@
 import { Wrapper } from './wrapper';
 import { URL, URLSearchParams } from 'url';
 import { Text } from './text';
-import { transform } from '../transform/transformer';
-import { DataTransformation } from '../transform/data-transformation';
-import { DataType } from './data-type';
 
 export class Url extends Wrapper<string> {
   constructor(value: string | URL) {
@@ -47,9 +44,6 @@ export class Url extends Wrapper<string> {
       return value;
     }
 
-    return transform(
-      Text.create(value),
-      new DataTransformation(DataType.Text, DataType.Url),
-    );
+    return new Url(String(value));
   }
 }
