@@ -1,6 +1,6 @@
 import { DataType } from '../../data/data-type';
 import { StringTransformer } from './string.transformer';
-import { Url } from '../../data/url';
+import { Url } from '../../web/url';
 
 export class UrlTransformer extends StringTransformer<any> {
   constructor() {

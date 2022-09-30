@@ -1,10 +1,10 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
-import { Url } from '../../data/url';
+import { Url } from '../../web/url';
 import { browse } from '../browser';
 import { open } from '../open';
 
-declare module '../../data/url' {
+declare module '../../web/url' {
   interface Url {
     edit(): this;
 

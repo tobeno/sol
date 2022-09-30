@@ -5,7 +5,7 @@ export { Data } from '../../data/data';
 export { DataFormat } from '../../data/data-format';
 export { DataType } from '../../data/data-type';
 export { Text } from '../../data/text';
-export { Url } from '../../data/url';
+export { Url } from '../../web/url';
 export { Wrapper } from '../../data/wrapper';
 export { PlayFile } from '../../play/play';
 export { SolExtension } from '../../sol/sol-extension';

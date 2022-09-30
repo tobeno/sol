@@ -37,7 +37,7 @@ import {
   getSolUserWorkspace,
 } from '../../sol/sol-workspace';
 import { Text } from '../../data/text';
-import { Url } from '../../data/url';
+import { Url } from '../../web/url';
 import type * as classes from '../globals/classes.global';
 import type * as utils from '../globals/utils.global';
 import { sortObjectKeys } from '../../../utils/object';

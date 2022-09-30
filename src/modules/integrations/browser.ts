@@ -1,4 +1,4 @@
-import { Url } from '../data/url';
+import { Url } from '../web/url';
 import { Wrapper } from '../data/wrapper';
 import { open } from './open';
 

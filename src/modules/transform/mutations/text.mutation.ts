@@ -2,7 +2,7 @@ import { Data } from '../../data/data';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { codeToAst, csvToData, jsonToData, yamlToData } from '../transformer';
 import { Text } from '../../data/text';
-import { Url } from '../../data/url';
+import { Url } from '../../web/url';
 import { Ast } from '../../data/ast';
 import { Markdown } from '../../data/markdown';
 import { DataFormat } from '../../data/data-format';

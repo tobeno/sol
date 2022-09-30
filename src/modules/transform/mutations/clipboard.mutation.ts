@@ -8,11 +8,11 @@ import {
   jsonToData,
   yamlToData,
 } from '../transformer';
-import { Url } from '../../data/url';
+import { Url } from '../../web/url';
 import { Text } from '../../data/text';
 import { Ast } from '../../data/ast';
 import { Markdown } from '../../data/markdown';
-import { DataFormat } from '../../global/globals/classes.global';
+import { DataFormat } from '../../data/data-format';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {
