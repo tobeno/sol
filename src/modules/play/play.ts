@@ -44,6 +44,8 @@ export default null;
   }
 
   edit(): File {
+    this.prepare();
+
     return this.file.edit() as File;
   }
 

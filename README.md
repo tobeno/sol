@@ -19,7 +19,7 @@ You can do this:
 
 ```
 // Get all TypeScript files in current directory (recursively)
-> files('**/*.ts')
+> files('src/**/*.ts')
 
 // Gather all import statements
 > let imports = _.map(f => f.text.match(/(?<=^|\n)import[^;]+;/g) || []).flattened
@@ -31,7 +31,7 @@ You can do this:
 > _.text.trim().split('\n')
 
 // Get import source using abstract syntax tree
-> _.map(i => ast(i).node.body[0].source.value)
+> _.map(i => ast(i).node.program.body[0].source.value)
 ```
 
 Or this:
@@ -44,10 +44,10 @@ Or this:
 > const open = j.filter(todo => !todo.completed)
 
 // Show all IDs of users with open ToDos using jsonata expression
-> open.extract('userId').sort().uniqu
+> open.get('userId').sort().unique
 
 // Save open ToDos in CSV
-> open.csv.saveAs('todos.csv'
+> open.csv.saveAs('todos.csv')
 
 // Open CSV file in editor
 > _.edit()
@@ -73,7 +73,7 @@ This is similar to what you know of pipes on many shells (e.g. `ls | grep '.json
 easy as possible to write processing **pipelines**.
 
 So to open a file, interpret as JSON and then extract something, you would use
-e.g. `file('package.json').json.transform('dependencies').keys`.
+e.g. `file('package.json').json.get('dependencies').keys`.
 
 You can always **interrupt a pipeline** and execute the command. To resume start with `_` (e.g. `_.join(',')`).
 
@@ -121,7 +121,7 @@ In this file you can use the same globals you also use on the sell itself.
 Whenever you **save** this file, Sol will **automatically execute** it.
 Keep this in mind when using an editor with auto-save. Best to disable that feature for Sol.
 
-Besides that you can also open a file for editing using the `edit('somefile')` command.
+Besides that you can also open a file for editing using the `playFile('somefile').edit()` command.
 With that command the file will only be opened but not watched.
 
 Edit is also often avaiable in wrappers (e.g. `file('somefile').edit()`).
@@ -144,10 +144,7 @@ be careful when using third-party extensions not provided by you or Sol.
 So only load extensions which you fully trust. Treat them as you would NPM packages.
 
 Every extension must contain a root **setup file** (e.g. _extensions/some-extension/setup.ts_),
-which is called when the extension is loaded. In addition it also contains a **globals file**
-(_extensions/some-extension/globals.ts_) that includes globals added by this extension.
-
-To avoid integration / reload issues you should **not** add globals directly.
+which is called when the extension is loaded.
 
 The **directory name** of the extension is also used as **extension name**.
 It must be unique in the lookup chain, but you can reuse the same name in different workspaces.
