@@ -62,9 +62,7 @@ export function startSol(): void {
 
       log('✅ Sol updated successfully');
 
-      setTimeout(() => {
-        startSol();
-      }, 0);
+      process.exit(0);
     },
   });
 
