@@ -1,5 +1,6 @@
 import { withHelp } from './metadata';
 import * as changeCase from 'change-case';
+import { uniqueArray } from './array';
 
 export function lines(str: string): string[] {
   return str.replace(/\r/g, '').trimEnd().split('\n');
@@ -79,7 +80,7 @@ export function extractText(str: string, pattern: RegExp | string): string[] {
     pattern = new RegExp(pattern.source, pattern.flags + 'g');
   }
 
-  return [...new Set(str.match(pattern) || [])].sort();
+  return uniqueArray(str.match(pattern) || []).sort();
 }
 
 export function capitalizeText(str: string): string {

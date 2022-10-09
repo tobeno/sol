@@ -21,6 +21,7 @@ import {
   titlecaseText,
 } from '../../utils/text';
 import { log } from '../../utils/log';
+import { uniqueArray } from '../../utils/array';
 
 /**
  * Generic wrapper for runtime objects
@@ -89,7 +90,7 @@ export class Data<
 
   get unique(): Data<AnyPartial<ValueType>> {
     if (Array.isArray(this.value)) {
-      return Data.create([...new Set(this.value)]) as any;
+      return Data.create(uniqueArray(this.value)) as any;
     }
 
     const knownValues: any[] = [];

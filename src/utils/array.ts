@@ -1,3 +1,7 @@
+export function uniqueArray<ItemType = any>(arr: ItemType[]): ItemType[] {
+  return [...new Set(arr)];
+}
+
 export function intersectArray<ItemType = any>(
   arr1: ItemType[],
   arr2: ItemType[],
@@ -16,7 +20,7 @@ export function unionArray<ItemType = any>(
   arr1: ItemType[],
   arr2: ItemType[],
 ): ItemType[] {
-  return [...new Set([...arr1, ...arr2])];
+  return uniqueArray([...arr1, ...arr2]);
 }
 
 export function filterArray<ItemType = any>(
