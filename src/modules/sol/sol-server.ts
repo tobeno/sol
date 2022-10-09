@@ -1,16 +1,13 @@
 import { spawnSync } from 'child_process';
 import chalk from 'chalk';
-import { clearRequireCache } from '../../utils/module';
+import { getLoadedSolExtensions } from './sol-extension';
+import { getCurrentSolWorkspace, getSolUserWorkspace } from './sol-workspace';
+import { solReplColor, startSolReplServer } from './sol-repl';
+import { getSolPackage } from './sol-package';
+import { log, logDebug } from '../../utils/log';
 
 export function loadSol(): void {
-  const { logDebug } = require('../../utils/log');
-
   logDebug('Loading Sol...');
-
-  const {
-    getCurrentSolWorkspace,
-    getSolUserWorkspace,
-  } = require('./sol-workspace');
 
   const workspace = getCurrentSolWorkspace();
   const userWorkspace = getSolUserWorkspace();
@@ -29,10 +26,7 @@ export function loadSol(): void {
  * Update Sol from git remote
  */
 export function updateSol(): void {
-  const { logDebug } = require('../../utils/log');
-  const { getSolPackage } = require('./sol-package');
-
-  const packageDir = getSolPackage();
+  const packageDir = getSolPackage().dir;
 
   logDebug('Updating Sol...');
   logDebug('Fetching latest version from GitHub...');
@@ -53,63 +47,12 @@ export function updateSol(): void {
 }
 
 /**
- * Unloads Sol modules
- */
-export function unloadSol(): void {
-  const { logDebug } = require('../../utils/log');
-  const { unmutateClass, unmutateGlobals } = require('../../utils/mutation');
-  const { unplay } = require('../play/play');
-  logDebug('Unloading Sol...');
-
-  unplay();
-
-  unmutateGlobals();
-  unmutateClass(Array);
-  unmutateClass(String);
-  unmutateClass(Number);
-  unmutateClass(Date);
-  unmutateClass(Error);
-  unmutateClass(Object);
-  unmutateClass(Promise);
-
-  clearRequireCache();
-
-  logDebug('Unloaded Sol');
-}
-
-/**
- * Unloads Sol and reload it again afterwards
- */
-export function reloadSol(): void {
-  unloadSol();
-
-  // Load setup again
-  require('../../setup');
-
-  loadSol();
-}
-
-/**
  * Start Sol REPL server
  */
 export function startSol(): void {
   loadSol();
 
-  const { startSolReplServer, solReplColor } = require('./sol-repl');
-
   const server = startSolReplServer();
-
-  server.defineCommand('reload', {
-    help: 'Reloads Sol files to reflect latest build',
-    action(): void {
-      reloadSol();
-      server.close();
-
-      setTimeout(() => {
-        startSol();
-      }, 0);
-    },
-  });
 
   server.defineCommand('update', {
     help: 'Update Sol to latest version',
@@ -124,11 +67,6 @@ export function startSol(): void {
       }, 0);
     },
   });
-
-  const { getSolPackage } = require('./sol-package');
-  const { getLoadedSolExtensions } = require('./sol-extension');
-  const { log } = require('../../utils/log');
-  const { getCurrentSolWorkspace } = require('./sol-workspace');
 
   const loadedExtensions = getLoadedSolExtensions();
   const solPackage = getSolPackage();

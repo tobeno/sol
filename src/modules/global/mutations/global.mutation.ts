@@ -49,6 +49,14 @@ import { getSolPackage } from '../../sol/sol-package';
 import { fileCached, runtimeCached } from '../../cache/cache';
 
 export const globals = {
+  args: withHelp(
+    {
+      get() {
+        return Data.create(process.argv.slice(2));
+      },
+    },
+    'Returns the arguments passed to Sol',
+  ),
   ast: withHelp(
     {
       value: codeToAst,
@@ -371,6 +379,7 @@ export const globals = {
 export type Globals = FromPropertyDescriptorMap<typeof globals>;
 
 declare global {
+  const args: Globals['args'];
   const ast: Globals['ast'];
   const astTypes: Globals['astTypes'];
   const awaitSync: Globals['awaitSync'];

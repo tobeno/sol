@@ -150,7 +150,8 @@ Besides that you can also open a file for editing using the `playFile('somefile'
 With that command the file will only be opened but not watched.
 
 By default play tries the _visual studio code_ app on the command line,
-but you can also set the _SOL_EDITOR_ environment variable to another editor of your choice (e.g. `export SOL_EDITOR=webstorm`).
+but you can also set the _SOL_EDITOR_ environment variable to another editor of your choice (
+e.g. `export SOL_EDITOR=webstorm`).
 
 ![Teaser Image](docs/assets/play.png)
 
@@ -184,6 +185,29 @@ extension
 or `solUserExtension('your-extension').edit()` to create a new user level extension.
 
 After the creation you still need to load the extension as described above.
+
+### Combinations
+
+Sol can also be used with other CLI tools.
+
+#### Use Command Output
+
+Option 1: You can pass in results of other commands as arguments:
+
+```
+// In your shell pass the result of a command as argument
+> sol $(echo 'test')
+
+// In Sol access the output via the `args` global
+> args.get(0).uppercased
+```
+
+Option 2: Run the command inside Sol:
+
+```
+// Run the command and work with the result
+> sh.exec('echo "test"').uppercased
+```
 
 ## Development
 

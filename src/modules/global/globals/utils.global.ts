@@ -7,4 +7,5 @@ export * from '../../../utils/metadata';
 export * from '../../../utils/module';
 export * from '../../../utils/mutation';
 export * from '../../../utils/object';
+export * from '../../../utils/stream';
 export * from '../../../utils/text';
