@@ -28,7 +28,9 @@ export function definePropertiesMutation<TargetType>(
   properties: PropertyDescriptorMap & ThisType<TargetType>,
 ): DefinePropertiesMutation<TargetType> {
   return new DefinePropertiesMutation<TargetType>(
-    Object.entries(properties).reduce((result, [name, config]) => {
+    Reflect.ownKeys(properties).reduce((result, key) => {
+      const config = properties[key];
+
       Object.assign(
         config,
         {
@@ -38,7 +40,7 @@ export function definePropertiesMutation<TargetType>(
         config,
       );
 
-      result[name] = config;
+      result[key] = config;
 
       return result;
     }, {} as PropertyDescriptorMap & ThisType<TargetType>),

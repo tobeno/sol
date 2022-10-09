@@ -2,20 +2,19 @@
 
 ![Teaser Image](docs/assets/hero.png)
 
-**⚠️ Highly experimental, do not use on important files**
-
-A set of tools rotating around a common goal:
+A set of tools orbiting around a common goal:
 To make those boring daily routines a breeze.
 
-And most importantly: It is based on JavaScript.
+And most importantly: It is based on JavaScript / TypeScript.
 So you don't need to learn a real shell™ or any fancy syntax.
 
-It is quick and dirty, just like JS. But it also gets stuff done, just like JS.
+It is quick and dirty, just like JS.
+But it also gets stuff done, just like JS.
 
 In short:
-It is a small, interactive **JavaScript shell**.
+A small, interactive **JavaScript shell** for everybody focusing on simplicity & productivity.
 
-You can do this:
+You can do:
 
 ```
 // Get all TypeScript files in current directory (recursively)
@@ -53,17 +52,29 @@ Or this:
 > _.edit()
 ```
 
+Or this:
+
+```
+// Fetch Sol README.md file as markdown and save it as `readme` variable
+> web.get('https://raw.githubusercontent.com/tobeno/sol/main/README.md').md.as('readme')
+
+// Render as HTML and open in browser
+> readme.html.saveAs('README.html').browse()
+```
+
 ## Install
 
-To use Sol, you need to have NodeJS >= 12 installed globally.
+To use Sol, you need to have NodeJS >= 14 installed globally.
 
-To setup the shell, you need to run `npm install` once.
+To setup:
 
-Symlink the _bin/sol_ (or _bin/sol.js_) file to a location in your path.
+1. Clone the project `git clone git@github.com:tobeno/sol.git`
+2. Symlink or alias the _bin/sol_ file to allow you to run it from anywhere
+3. Optional: Define environment variables for Sol (like `SOL_EDITOR`) in a `~/.sol/.env` file
 
 ## Usage
 
-**Start** the Sol shell using `sol` (best to use a dark terminal for it).
+**Start** the Sol shell using `sol`.
 
 Most features of Sol are available as **global variables** (e.g. `play(...)` or `web.get(...)`).
 You can use `.globals [filter]` to list and filter the available global functions.
@@ -77,15 +88,29 @@ e.g. `file('package.json').json.get('dependencies').keys`.
 
 You can always **interrupt a pipeline** and execute the command. To resume start with `_` (e.g. `_.join(',')`).
 
+For longer pipelines it is best to also use **variables**.
+This ensures you wont loose a result when switching between pipelines.
+
+So you can use all of those:
+
+```
+// Assign before writing the pipeline
+> let someVariable = text('abc')
+> someVariable.value
+
+// Assign after writing the pipeline (most wrappers support .as() out of the box)
+> text('abc').as('someVariable')
+> someVariable.value
+
+// Interrupt pipeline without assignment
+> text('abc')
+> _.value
+```
+
 The **final result** of a command / pipeline is printed on the shell (e.g. `['a', 'b'].join(', ')` will show `a, b`).
 
-For longer pipelines it is best to also use **variables** like `let f = files('**/*.ts')` or `let f = _`. This ensures
-you wont loose a result when switching between pipelines.
-
-Sol also **extends some core types** (like String) for convenience.
-
 Other than NodeJS, Sol is mostly **synchronous**.
-So even commands like `fetch(...)` are executed synchrously.
+So even commands like `fetch(...)` are executed synchronously.
 
 If you want to use a **Promise-based method**, you can make it synchronous by either using `awaitSync(someAsyncFn())` or
 by using the await helper method `someAsyncFn().await` available on Promises.
@@ -113,7 +138,7 @@ is intended for global things which are shared across workspaces.
 
 ### Play / Edit
 
-To also allow the use of an **IDE** for composing Sol scripts, you can use the `play('somename')` command.
+To use your favorite _IDE_ for scripting, use the `play('somename')` command.
 
 This opens a new or existing play file (located in your workspace directory) in your IDE.
 In this file you can use the same globals you also use on the sell itself.
@@ -124,11 +149,8 @@ Keep this in mind when using an editor with auto-save. Best to disable that feat
 Besides that you can also open a file for editing using the `playFile('somefile').edit()` command.
 With that command the file will only be opened but not watched.
 
-Edit is also often avaiable in wrappers (e.g. `file('somefile').edit()`).
-
 By default play tries the _visual studio code_ app on the command line,
-but you can also set the _SOL_EDITOR_ environment variable to another editor of your choice (
-e.g. `export SOL_EDITOR=webstorm`).
+but you can also set the _SOL_EDITOR_ environment variable to another editor of your choice (e.g. `export SOL_EDITOR=webstorm`).
 
 ![Teaser Image](docs/assets/play.png)
 
@@ -157,7 +179,8 @@ Sol looks for extensions in the following locations:
 To load an extension, just add a `solExtension('your-extension', __dirname).load()` call to your setup file.
 To quickly open the right setup file, you can use `solWorkspace.setupFile.edit()`.
 
-To create a new extension, you can use `solWorkspaceExtension('your-extension').edit()` to create a new workspace extension
+To create a new extension, you can use `solWorkspaceExtension('your-extension').edit()` to create a new workspace
+extension
 or `solUserExtension('your-extension').edit()` to create a new user level extension.
 
 After the creation you still need to load the extension as described above.

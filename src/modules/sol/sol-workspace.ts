@@ -19,6 +19,10 @@ export class SolWorkspace {
     return this.dir.dir('generated');
   }
 
+  get cachedDir(): Directory {
+    return this.dir.dir('cached');
+  }
+
   get contextFile(): File {
     return this.generatedDir.file('workspace-context.ts');
   }
@@ -69,6 +73,8 @@ import '${extension.setupFile.dir.relativePathFrom(this.generatedDir)}/${
   prepare(force = false): void {
     const workspaceDir = this.dir;
     workspaceDir.create();
+    this.cachedDir.create();
+    this.generatedDir.create();
 
     const gitignoreFile = workspaceDir.file('.gitignore');
     if (!gitignoreFile.exists) {

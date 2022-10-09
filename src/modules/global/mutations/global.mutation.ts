@@ -46,6 +46,7 @@ import { tmp } from '../../storage/tmp';
 import { FromPropertyDescriptorMap } from '../../../interfaces/object';
 import { Markdown } from '../../data/markdown';
 import { getSolPackage } from '../../sol/sol-package';
+import { fileCached, runtimeCached } from '../../cache/cache';
 
 export const globals = {
   ast: withHelp(
@@ -108,6 +109,14 @@ export const globals = {
     },
     'Wraps the given object as Data',
   ),
+  day: withHelp(
+    {
+      get() {
+        return require('../../date/day').day;
+      },
+    },
+    'See https://day.js.org/docs/en/installation/installation',
+  ),
   dir: withHelp(
     {
       value: Directory.create,
@@ -151,6 +160,12 @@ export const globals = {
       value: files,
     },
     'Glob search for files',
+  ),
+  fileCached: withHelp(
+    {
+      value: fileCached,
+    },
+    'Cache the return value of the given function in a file',
   ),
   glob: withHelp(
     {
@@ -225,6 +240,12 @@ export const globals = {
       value: replay,
     },
     'Replays the given play file',
+  ),
+  runtimeCached: withHelp(
+    {
+      value: runtimeCached,
+    },
+    'Cache the return value of the given function in a runtime variable',
   ),
   shared: withHelp(
     {
@@ -359,12 +380,14 @@ declare global {
   const csv: Globals['csv'];
   const cwd: Globals['cwd'];
   const data: Globals['data'];
+  const day: Globals['day'];
   const dir: Globals['dir'];
   const dirs: Globals['dirs'];
   const edit: Globals['edit'];
   const env: Globals['env'];
   const file: Globals['file'];
   const files: Globals['files'];
+  const fileCached: Globals['fileCached'];
   const glob: Globals['glob'];
   const grep: Globals['grep'];
   const json: Globals['json'];
@@ -376,6 +399,7 @@ declare global {
   const playFile: Globals['playFile'];
   const plays: Globals['plays'];
   const replay: Globals['replay'];
+  const runtimeCached: Globals['runtimeCached'];
   const shared: Globals['shared'];
   const sh: Globals['sh'];
   const solExtension: Globals['solExtension'];

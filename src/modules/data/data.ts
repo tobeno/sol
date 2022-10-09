@@ -89,7 +89,7 @@ export class Data<
 
   get unique(): Data<AnyPartial<ValueType>> {
     if (Array.isArray(this.value)) {
-      return Data.create(this.value.unique) as any;
+      return Data.create([...new Set(this.value)]) as any;
     }
 
     const knownValues: any[] = [];

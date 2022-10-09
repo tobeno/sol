@@ -145,6 +145,12 @@ export class Text extends String {
     return [...this.value.matchAll(pattern)].length;
   }
 
+  as(name: string): this {
+    (global as any)[name] = this;
+
+    return this;
+  }
+
   [inspect.custom](): string {
     return this.toString();
   }
