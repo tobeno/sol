@@ -74,6 +74,10 @@ export class GenericStorageItemCollection<
     return this as any;
   }
 
+  get(index: number): StorageItem {
+    return this.value[index];
+  }
+
   forEach(cb: (item: ItemType) => void): void {
     this.value.forEach(cb);
   }
