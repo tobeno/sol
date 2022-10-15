@@ -14,7 +14,7 @@ mutateClass(
   definePropertiesMutation({
     edit: {
       value(): File {
-        return edit(this);
+        return edit(this.value);
       },
     },
   }),

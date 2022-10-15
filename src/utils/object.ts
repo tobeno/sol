@@ -255,6 +255,10 @@ export function cloneObject<T extends Record<string, any>>(obj: T): T {
   return Object.assign(Object.create(Object.getPrototypeOf(obj)), obj);
 }
 
+export function cloneObjectDeep<T extends Record<string, any>>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 export function camelcaseObject(
   obj: any,
   {

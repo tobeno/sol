@@ -8,6 +8,7 @@ import type {
   AnyPartial,
 } from '../../interfaces/util';
 import {
+  cloneObjectDeep,
   flattenObject,
   mapObjectKeys,
   traverseObject,
@@ -22,6 +23,7 @@ import {
 } from '../../utils/text';
 import { log } from '../../utils/log';
 import { uniqueArray } from '../../utils/array';
+import { dereferenceJsonSchema } from '../../utils/json-schema';
 
 /**
  * Generic wrapper for runtime objects
@@ -154,6 +156,12 @@ export class Data<
     return this;
   }
 
+  get dereferenced(): Data {
+    return Data.create(
+      dereferenceJsonSchema(cloneObjectDeep(this.value as any)),
+    );
+  }
+
   get keys(): Data<KeyType[]> {
     if (Array.isArray(this.value)) {
       return Data.create(
@@ -267,7 +275,7 @@ export class Data<
     }
 
     const entries = this.entries.value;
-    entries.sort(([aIndex, a], [bIndex, b]) => {
+    entries.sort(([, a], [, b]) => {
       if (compareFn) {
         return compareFn(a, b);
       }

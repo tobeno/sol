@@ -1,0 +1,64 @@
+import type $RefParser from '@apidevtools/json-schema-ref-parser';
+
+function dereferenceJsonSchemaUsingRefs(schema: any, $refs: $RefParser.$Refs) {
+  if (!schema || typeof schema !== 'object') {
+    return;
+  }
+
+  const resolveRef = (refSchema: any) => {
+    let dereferencedSchema = $refs.get(refSchema.$ref);
+
+    if (dereferencedSchema && typeof dereferencedSchema === 'object') {
+      // Store original reference
+      dereferencedSchema = {
+        'x-ref': refSchema.$ref,
+        ...dereferencedSchema,
+      } as any;
+    }
+
+    return dereferencedSchema;
+  };
+
+  if (Array.isArray(schema)) {
+    schema.forEach((value, index) => {
+      if (value && typeof value === 'object') {
+        if (value.$ref) {
+          schema[index] = resolveRef(value);
+        } else {
+          dereferenceJsonSchemaUsingRefs(value, $refs);
+        }
+      }
+    });
+
+    return;
+  }
+
+  Object.entries(schema).forEach(([key, value]: [string, any]) => {
+    if (value && typeof value === 'object') {
+      if (value.$ref) {
+        schema[key] = resolveRef(value);
+      } else {
+        dereferenceJsonSchemaUsingRefs(value, $refs);
+      }
+    }
+  }, {} as any);
+}
+
+/**
+ * Inlines all $ref references in a JSON schema
+ *
+ * Note: The original ref is preserved as x-ref field
+ */
+export function dereferenceJsonSchema<SchemaType = any>(
+  schema: SchemaType,
+): SchemaType {
+  // Lazy load for performance
+  // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+  const $RefParser = require('@apidevtools/json-schema-ref-parser');
+
+  const $refs = awaitSync($RefParser.resolve(schema));
+
+  dereferenceJsonSchemaUsingRefs(schema, $refs);
+
+  return schema;
+}
