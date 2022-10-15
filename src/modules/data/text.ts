@@ -77,6 +77,22 @@ export class Text extends String {
     return Text.create(decapitalizeText(this.value));
   }
 
+  get urlencoded(): Text {
+    return Text.create(encodeURIComponent(this.value));
+  }
+
+  get urldecoded(): Text {
+    return Text.create(decodeURIComponent(this.value));
+  }
+
+  get base64encoded(): Text {
+    return Text.create(Buffer.from(this.value).toString('base64'));
+  }
+
+  get base64decoded(): Text {
+    return Text.create(Buffer.from(this.value, 'base64').toString('utf8'));
+  }
+
   get lines(): Data<Text[]> {
     return Data.create(lines(this.toString()).map((line) => Text.create(line)));
   }

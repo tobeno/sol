@@ -63,6 +63,12 @@ export abstract class StorageItem {
     return this.stats.mtime;
   }
 
+  as(name: string): this {
+    (global as any)[name] = this;
+
+    return this;
+  }
+
   toString(): string {
     return this.path;
   }
