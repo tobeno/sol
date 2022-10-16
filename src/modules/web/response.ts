@@ -8,6 +8,7 @@ import { web } from './web';
 import { Text } from '../data/text';
 import { Wrapper } from '../data/wrapper';
 import { Data } from '../data/data';
+import { RawAxiosResponseHeaders } from 'axios';
 
 export class Response extends Wrapper<AxiosResponse> {
   get request(): AxiosRequestConfig {
@@ -29,7 +30,7 @@ export class Response extends Wrapper<AxiosResponse> {
     return contentType ? contentType.split(';')[0] : '';
   }
 
-  get headers(): AxiosResponseHeaders {
+  get headers(): RawAxiosResponseHeaders | AxiosResponseHeaders {
     return this.value.headers;
   }
 
