@@ -20,8 +20,14 @@ export class Ast extends Wrapper<babelTypes.Node> {
     return Data.create(this.value);
   }
 
-  get node(): babel.Node {
-    return this.value;
+  get program(): Ast {
+    if (!('program' in this.value)) {
+      throw new Error('Node does not contain a program.');
+    }
+
+    const file = this.value as babelTypes.File;
+
+    return Ast.create(file.program);
   }
 
   traverseNodes(
@@ -44,7 +50,7 @@ export class Ast extends Wrapper<babelTypes.Node> {
   }
 
   extractNodes(type: string | Function): Data<Ast[]> {
-    // Allow also builder functions as type (e.g. ast.Identifier)
+    // Allow also builder functions as type (e.g. astTypes.Identifier)
     if (typeof type === 'function') {
       type = type.name.slice(0, 1).toUpperCase() + type.name.slice(1);
     }
