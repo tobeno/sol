@@ -20,6 +20,7 @@ import {
   titlecaseText,
 } from '../../utils/text';
 import { Data } from './data';
+import { log } from '../../utils/log';
 
 /**
  * Wrapper for strings
@@ -91,6 +92,12 @@ export class Text extends String {
 
   get base64decoded(): Text {
     return Text.create(Buffer.from(this.value, 'base64').toString('utf8'));
+  }
+
+  get logged(): this {
+    log(this.toString());
+
+    return this;
   }
 
   get lines(): Data<Text[]> {
