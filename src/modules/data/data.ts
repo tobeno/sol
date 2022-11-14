@@ -112,6 +112,10 @@ export class Data<
     return this.sortKeys();
   }
 
+  get joined(): Text {
+    return this.join('\n');
+  }
+
   get reversed(): Data<ValueType extends Array<any> ? ValueType : any> {
     if (Array.isArray(this.value)) {
       return Data.create(this.value.reverse()) as any;
