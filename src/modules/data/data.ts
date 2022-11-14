@@ -160,6 +160,14 @@ export class Data<
     return this;
   }
 
+  get objects(): Data<any[]> {
+    const result: any[] = [];
+
+    this.traverse((obj) => result.push(obj));
+
+    return data(result);
+  }
+
   get each(): {
     [key in keyof ItemType]: (
       ...args: Parameters<
