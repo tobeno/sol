@@ -39,7 +39,7 @@
     "jsonata": "^1.8.6",
     "lodash": "^4.17.21",
     "marked": "^4.2.2",
-    "node-fetch": "^3.2.10",
+    "node-fetch": "^3.3.0",
     "open": "^8.4.0",
     "papaparse": "^5.3.2",
     "recast": "^0.21.5",
