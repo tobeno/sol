@@ -156,7 +156,13 @@ export class Data<
     return this;
   }
 
-  get each(): ItemType {
+  get each(): {
+    [key in keyof ItemType]: (
+      ...args: Parameters<
+        ItemType[key] extends (...args: any) => any ? ItemType[key] : never
+      >
+    ) => Data<ValueType>;
+  } {
     const items = this.value;
     if (!Array.isArray(items)) {
       throw new Error('Not an array.');
