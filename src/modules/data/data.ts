@@ -156,6 +156,32 @@ export class Data<
     return this;
   }
 
+  get each(): ItemType {
+    const items = this.value;
+    if (!Array.isArray(items)) {
+      throw new Error('Not an array.');
+    }
+
+    return new Proxy(
+      {},
+      {
+        has: (_: any, key: string): boolean => {
+          return items.length > 0 ? key in items[0] : false;
+        },
+        ownKeys: (_: any): (string | symbol)[] => {
+          return items.length > 0 ? Reflect.ownKeys(items[0]) : [];
+        },
+        get: (target: any, key: string): any => {
+          return new Proxy(() => {}, {
+            apply: (_: any, thisArg: any, args: any[]): any => {
+              return data(items.map((item) => item[key].apply(item, args)));
+            },
+          });
+        },
+      },
+    );
+  }
+
   get dereferenced(): Data {
     return Data.create(
       dereferenceJsonSchema(cloneObjectDeep(this.value as any)),
