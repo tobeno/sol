@@ -58,7 +58,7 @@
     "@types/babel__traverse": "^7.18.2",
     "@types/clipboardy": "^2.0.1",
     "@types/deasync": "^0.1.2",
-    "@types/jest": "^29.2.2",
+    "@types/jest": "^29.2.3",
     "@types/jsonata": "^1.5.1",
     "@types/marked": "^4.0.7",
     "@types/node": "^18.11.9",
