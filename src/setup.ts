@@ -5,4 +5,5 @@ import './modules/play/setup';
 import './modules/sol/setup';
 import './modules/storage/setup';
 import './modules/transform/setup';
+import './modules/visualize/setup';
 import './modules/web/setup';

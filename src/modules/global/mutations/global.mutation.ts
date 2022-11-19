@@ -49,6 +49,7 @@ import { getSolPackage } from '../../sol/sol-package';
 import { fileCached, runtimeCached } from '../../cache/cache';
 import { Html } from '../../data/html';
 import { Xml } from '../../data/xml';
+import { Chart } from '../../visualize/chart';
 
 export const globals = {
   args: withHelp(
@@ -90,6 +91,12 @@ export const globals = {
       value: chalk,
     },
     'See https://github.com/chalk/chalk#readme',
+  ),
+  chart: withHelp(
+    {
+      value: Chart.create,
+    },
+    'See https://apexcharts.com/docs/series/',
   ),
   clipboard: withHelp(
     {
