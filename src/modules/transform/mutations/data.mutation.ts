@@ -1,7 +1,9 @@
 import { Data } from '../../data/data';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { dataToCsv, dataToJson, dataToYaml } from '../transformer';
+import { dataToCsv, dataToJson, dataToYaml, transform } from '../transformer';
 import { Text } from '../../data/text';
+import { DataType } from '../../data/data-type';
+import { DataTransformation } from '../data-transformation';
 
 declare module '../../data/data' {
   interface Data {
@@ -12,6 +14,8 @@ declare module '../../data/data' {
     get yaml(): Text;
 
     get csv(): Text;
+
+    to(type: DataType | string): any;
   }
 }
 
@@ -44,6 +48,19 @@ mutateClass(
     csv: {
       get(): Text {
         return dataToCsv(this);
+      },
+    },
+
+    to: {
+      value(targetType: DataType | string): any {
+        if (typeof targetType === 'string') {
+          targetType = DataType.fromString(targetType);
+        }
+
+        return transform(
+          this,
+          new DataTransformation(new DataType('Data'), targetType),
+        );
       },
     },
   }),

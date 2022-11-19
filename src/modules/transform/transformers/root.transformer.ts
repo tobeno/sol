@@ -16,6 +16,8 @@ import { Wrapper } from '../../data/wrapper';
 import { JoinTransformer } from './join.transformer';
 import { DataFormat } from '../../data/data-format';
 import { MarkdownTransformer } from './markdown.transformer';
+import { HtmlTransformer } from './html.transformer';
+import { XmlTransformer } from './xml.transformer';
 
 let rootTransformer: DataTransformer<any, any>;
 
@@ -26,6 +28,8 @@ export function getRootTransformer(): DataTransformer<any, any> {
       new CsvTransformer(),
       new JsonTransformer(),
       new YamlTransformer(),
+      new HtmlTransformer(),
+      new XmlTransformer(),
       new MarkdownTransformer(),
       new TextDateTransformer(),
       new JoinTransformer(',', DataFormat.TextCommaSeparated),

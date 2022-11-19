@@ -1,11 +1,20 @@
 import { Data } from '../../data/data';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { codeToAst, csvToData, jsonToData, yamlToData } from '../transformer';
+import {
+  codeToAst,
+  csvToData,
+  jsonToData,
+  transform,
+  yamlToData,
+} from '../transformer';
 import { Text } from '../../data/text';
 import { Url } from '../../web/url';
 import { Ast } from '../../data/ast';
 import { Markdown } from '../../data/markdown';
-import { DataFormat } from '../../data/data-format';
+import { Html } from '../../data/html';
+import { Xml } from '../../data/xml';
+import { DataType } from '../../data/data-type';
+import { DataTransformation } from '../data-transformation';
 
 declare module '../../data/text' {
   interface Text {
@@ -19,9 +28,13 @@ declare module '../../data/text' {
 
     get url(): Url;
 
-    get html(): Text;
+    get html(): Html;
+
+    get xml(): Xml;
 
     get md(): Markdown;
+
+    to(type: DataType | string): any;
   }
 }
 
@@ -59,14 +72,27 @@ mutateClass(
     },
 
     html: {
-      get(): Text {
-        return Text.create(this, DataFormat.Html);
+      get(): Html {
+        return Html.create(this);
       },
     },
 
     md: {
       get(): Markdown {
         return Markdown.create(this);
+      },
+    },
+
+    to: {
+      value(targetType: DataType | string): any {
+        if (typeof targetType === 'string') {
+          targetType = DataType.fromString(targetType);
+        }
+
+        return transform(
+          this,
+          new DataTransformation(new DataType('Text', this.format), targetType),
+        );
       },
     },
   }),

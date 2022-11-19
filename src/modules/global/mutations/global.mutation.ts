@@ -47,6 +47,8 @@ import { FromPropertyDescriptorMap } from '../../../interfaces/object';
 import { Markdown } from '../../data/markdown';
 import { getSolPackage } from '../../sol/sol-package';
 import { fileCached, runtimeCached } from '../../cache/cache';
+import { Html } from '../../data/html';
+import { Xml } from '../../data/xml';
 
 export const globals = {
   args: withHelp(
@@ -186,6 +188,12 @@ export const globals = {
       value: grep,
     },
     'Finds files using the given RegExp pattern',
+  ),
+  html: withHelp(
+    {
+      value: Html.create,
+    },
+    'Wraps the given string as Html',
   ),
   json: withHelp(
     {
@@ -368,6 +376,12 @@ export const globals = {
   withHelp: {
     value: withHelp,
   },
+  xml: withHelp(
+    {
+      value: Xml.create,
+    },
+    'Wraps the given string as Xml',
+  ),
   yaml: withHelp(
     {
       value: yamlToData,

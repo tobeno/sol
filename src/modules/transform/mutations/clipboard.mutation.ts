@@ -12,7 +12,8 @@ import { Url } from '../../web/url';
 import { Text } from '../../data/text';
 import { Ast } from '../../data/ast';
 import { Markdown } from '../../data/markdown';
-import { DataFormat } from '../../data/data-format';
+import { Html } from '../../data/html';
+import { Xml } from '../../data/xml';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {
@@ -36,9 +37,13 @@ declare module '../../clipboard/clipboard' {
 
     set url(value: Url | Text | string);
 
-    get html(): Text;
+    get html(): Html;
 
-    set html(value: Text | string);
+    set html(value: Html | Text | string);
+
+    get xml(): Xml;
+
+    set xml(value: Xml | Text | string);
 
     get md(): Markdown;
 
@@ -100,11 +105,21 @@ mutateClass(
     },
 
     html: {
-      get(): Text {
-        return Text.create(this.value, DataFormat.Html);
+      get(): Html {
+        return Html.create(this.text);
       },
 
-      set(value: Text | string) {
+      set(value: Html | Text | string) {
+        this.value = String(value);
+      },
+    },
+
+    xml: {
+      get(): Xml {
+        return Xml.create(this.text);
+      },
+
+      set(value: Xml | Text | string) {
         this.value = String(value);
       },
     },

@@ -14,7 +14,8 @@ import { File } from '../../storage/file';
 import { Ast } from '../../data/ast';
 import { Markdown } from '../../data/markdown';
 import { Text } from '../../data/text';
-import { DataFormat } from '../../data/data-format';
+import { Html } from '../../data/html';
+import { Xml } from '../../data/xml';
 
 declare module '../../storage/file' {
   interface File {
@@ -33,6 +34,14 @@ declare module '../../storage/file' {
     get ast(): Ast;
 
     set ast(value: Ast | any);
+
+    get html(): Html;
+
+    set html(value: Html | Text | string);
+
+    get xml(): Xml;
+
+    set xml(value: Xml | Text | string);
 
     get md(): Markdown;
 
@@ -80,11 +89,21 @@ mutateClass(
     },
 
     html: {
-      get(): Text {
-        return Text.create(this.text, DataFormat.Html);
+      get(): Html {
+        return Html.create(this.text);
       },
 
-      set(value: Text | string) {
+      set(value: Html | Text | string) {
+        this.text = String(value);
+      },
+    },
+
+    xml: {
+      get(): Xml {
+        return Xml.create(this.text);
+      },
+
+      set(value: Xml | Text | string) {
         this.text = String(value);
       },
     },
