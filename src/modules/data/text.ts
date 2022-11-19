@@ -21,17 +21,14 @@ import {
 } from '../../utils/text';
 import { Data } from './data';
 import { log } from '../../utils/log';
+import { Wrapper } from './wrapper';
 
 /**
  * Wrapper for strings
  */
-export class Text extends String {
+export class Text extends Wrapper<string> {
   constructor(value: string | String, public format: string | null = null) {
     super(value.toString());
-  }
-
-  get value(): string {
-    return this.toString();
   }
 
   get ext(): string {
@@ -94,6 +91,10 @@ export class Text extends String {
     return Text.create(Buffer.from(this.value, 'base64').toString('utf8'));
   }
 
+  get trimmed(): Text {
+    return Text.create(this.value.trim());
+  }
+
   get logged(): this {
     log(this.toString());
 
@@ -102,6 +103,10 @@ export class Text extends String {
 
   get lines(): Data<Text[]> {
     return Data.create(lines(this.toString()).map((line) => Text.create(line)));
+  }
+
+  get length(): number {
+    return this.value.length;
   }
 
   grepLines(search: string | RegExp): Text {
@@ -140,6 +145,48 @@ export class Text extends String {
     );
   }
 
+  replace(...args: Parameters<String['replace']>): Text {
+    return Text.create(this.value.replace(...args));
+  }
+
+  repeat(...args: Parameters<String['repeat']>): Text {
+    return Text.create(this.value.repeat(...args));
+  }
+
+  match(...args: Parameters<String['match']>): ReturnType<String['match']> {
+    return this.value.match(...args);
+  }
+
+  matchAll(
+    ...args: Parameters<String['matchAll']>
+  ): ReturnType<String['matchAll']> {
+    return this.value.matchAll(...args);
+  }
+
+  slice(...args: Parameters<String['slice']>): Text {
+    return Text.create(this.value.slice(...args));
+  }
+
+  padStart(...args: Parameters<String['padStart']>): Text {
+    return Text.create(this.value.padStart(...args));
+  }
+
+  padEnd(...args: Parameters<String['padEnd']>): Text {
+    return Text.create(this.value.padEnd(...args));
+  }
+
+  includes(...args: Parameters<String['includes']>): boolean {
+    return this.value.includes(...args);
+  }
+
+  indexOf(...args: Parameters<String['indexOf']>): number {
+    return this.value.indexOf(...args);
+  }
+
+  lastIndexOf(...args: Parameters<String['lastIndexOf']>): number {
+    return this.value.lastIndexOf(...args);
+  }
+
   mapLines(cb: (line: string) => any): Text {
     return Text.create(mapLines(String(this), cb), this.format);
   }
@@ -176,6 +223,10 @@ export class Text extends String {
 
   [inspect.custom](): string {
     return this.toString();
+  }
+
+  toString(): string {
+    return this.value;
   }
 
   static create(
