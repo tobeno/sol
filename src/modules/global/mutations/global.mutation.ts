@@ -207,6 +207,14 @@ export const globals = {
     },
     'See https://jsonata.org/',
   ),
+  jwt: withHelp(
+    {
+      get() {
+        return require('../../security/jwt').jwt;
+      },
+    },
+    'See https://github.com/auth0/node-jsonwebtoken#readme',
+  ),
   log: withHelp(
     {
       value: log,
