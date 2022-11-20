@@ -27,7 +27,7 @@ import { Wrapper } from './wrapper';
  * Wrapper for strings
  */
 export class Text extends Wrapper<string> {
-  constructor(value: string | String, public format: string | null = null) {
+  constructor(value: string, public format: string | null = null) {
     super(value.toString());
   }
 
@@ -233,10 +233,7 @@ export class Text extends Wrapper<string> {
     return this.value;
   }
 
-  static create(
-    value: Text | String | string,
-    format: string | null = null,
-  ): Text {
+  static create(value: Text | string, format: string | null = null): Text {
     if (value instanceof Text) {
       let text = value;
 

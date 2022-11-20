@@ -54,6 +54,15 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
     return this.filter(cb).value[0] || null;
   }
 
+  traverse(cb: (n: AnyNode) => void): this {
+    this.filter((n) => {
+      cb(n);
+      return false;
+    });
+
+    return this;
+  }
+
   select(selector: Parameters<typeof selectOne>[0]): Xml | null {
     const CSSselect = require('css-select') as typeof import('css-select');
     const element = CSSselect.selectOne(selector, this.value);
@@ -80,7 +89,7 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
     return this.text.value;
   }
 
-  static create(value: Text | String | AnyNode | string | any): Xml {
+  static create(value: Text | AnyNode | string | any): Xml {
     if (value instanceof Xml) {
       return value;
     }

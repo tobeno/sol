@@ -132,7 +132,7 @@ export class Url extends Wrapper<string> {
     });
   }
 
-  static create(value: Text | String | string | any): Url {
+  static create(value: Text | string | any): Url {
     if (value instanceof Url) {
       return value;
     }

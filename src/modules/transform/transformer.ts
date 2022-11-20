@@ -77,7 +77,7 @@ export function dataToJson(value: Data | any): Text {
 }
 
 export function yamlToData<ValueType = any>(
-  value: Text | String | string,
+  value: Text | string,
 ): Data<ValueType> {
   const Text = getTextClass();
   value = Text.create(value, DataFormat.Yaml);
@@ -105,7 +105,7 @@ export function dataToYaml(value: Data | any): Text {
 }
 
 export function csvToData<ValueType = any>(
-  value: Text | String | string,
+  value: Text | string,
 ): Data<ValueType> {
   const Text = getTextClass();
   value = Text.create(value, DataFormat.Csv);
@@ -132,7 +132,7 @@ export function dataToCsv(value: Data | any): Text {
   );
 }
 
-export function codeToAst(value: Text | String | string): Ast {
+export function codeToAst(value: Text | string): Ast {
   const Text = getTextClass();
   value = Text.create(value, null);
 
