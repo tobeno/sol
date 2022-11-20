@@ -4,6 +4,9 @@ import { inspect } from 'util';
 
 declare global {
   interface Promise<T> {
+    /**
+     * Awaits the promise synchronously.
+     */
     get await(): T;
   }
 }

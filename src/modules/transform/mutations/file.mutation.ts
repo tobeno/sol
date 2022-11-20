@@ -19,32 +19,74 @@ import { Xml } from '../../data/xml';
 
 declare module '../../storage/file' {
   interface File {
+    /**
+     * Loads the file contents as JSON.
+     */
     get json(): Data;
 
+    /**
+     * Sets the data as JSON in the file.
+     */
     set json(value: Data | any);
 
+    /**
+     * Loads the file contents as YAML.
+     */
     get yaml(): Data;
 
+    /**
+     * Sets the data as YAML in the file.
+     */
     set yaml(value: Data | any);
 
+    /**
+     * Loads the file contents as CSV.
+     */
     get csv(): Data;
 
+    /**
+     * Sets the data as CSV in the file.
+     */
     set csv(value: Data | any);
 
+    /**
+     * Parses the file contents to an AST.
+     */
     get ast(): Ast;
 
+    /**
+     * Sets the AST code in the file.
+     */
     set ast(value: Ast | any);
 
+    /**
+     * Loads the file contents as HTML.
+     */
     get html(): Html;
 
+    /**
+     * Sets the HTML in the file.
+     */
     set html(value: Html | Text | string);
 
+    /**
+     * Loads the file contents as XML.
+     */
     get xml(): Xml;
 
+    /**
+     * Sets the XML in the file.
+     */
     set xml(value: Xml | Text | string);
 
+    /**
+     * Loads the file contents as Markdown.
+     */
     get md(): Markdown;
 
+    /**
+     * Sets the Markdown in the file.
+     */
     set md(value: Markdown | Text | string);
   }
 }

@@ -5,10 +5,19 @@ import { open } from '../open';
 
 declare module '../../storage/storage-item' {
   interface StorageItem {
+    /**
+     * Opens the item in the default editor.
+     */
     edit(): this;
 
+    /**
+     * Opens the item in the default browser.
+     */
     browse(): this;
 
+    /**
+     * Opens the item in the default or given app.
+     */
     open(app?: string): this;
   }
 }

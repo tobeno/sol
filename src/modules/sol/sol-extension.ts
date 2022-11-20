@@ -5,6 +5,9 @@ import { getCurrentSolWorkspace, getSolUserWorkspace } from './sol-workspace';
 import { camelcaseText } from '../../utils/text';
 import { getSolPackage } from './sol-package';
 
+/**
+ * Class for loading a Sol extension.
+ */
 export class SolExtension {
   readonly dir: Directory;
   loaded = false;
@@ -13,10 +16,16 @@ export class SolExtension {
     this.dir = Directory.create(path);
   }
 
+  /**
+   * Returns the name of the Sol extension.
+   */
   get name(): string {
     return this.dir.basename;
   }
 
+  /**
+   * Returns the setup file of the Sol extension.
+   */
   get setupFile(): File {
     return this.dir.file('setup.ts');
   }
@@ -82,6 +91,9 @@ mutateGlobals(definePropertiesMutation(globals));
     }
   }
 
+  /**
+   * Loads the Sol extension using its setup file.
+   */
   load(): void {
     if (this.loaded) {
       return;
@@ -106,6 +118,9 @@ mutateGlobals(definePropertiesMutation(globals));
 
 let solExtensions: SolExtension[] | null = null;
 
+/**
+ * Returns all registered Sol extensions.
+ */
 export function getSolExtensions(): SolExtension[] {
   if (!solExtensions) {
     solExtensions = [];
@@ -114,10 +129,16 @@ export function getSolExtensions(): SolExtension[] {
   return solExtensions;
 }
 
+/**
+ * Returns all loaded Sol extensions.
+ */
 export function getLoadedSolExtensions(): SolExtension[] {
   return getSolExtensions().filter((e) => e.loaded);
 }
 
+/**
+ * Returns a Sol extension for the given path.
+ */
 export function solExtension(
   pathOrExtension: string | SolExtension,
   extensionsPath: string | Directory | null = null,
@@ -151,10 +172,16 @@ export function solExtension(
   return foundExtension;
 }
 
+/**
+ * Returns the Sol extension for the given name in the workspace.
+ */
 export function solWorkspaceExtension(name: string): SolExtension {
   return solExtension(name, getCurrentSolWorkspace().dir);
 }
 
+/**
+ * Returns the Sol extension for the given name for the current user.
+ */
 export function solUserExtension(name: string): SolExtension {
   return solExtension(name, getSolUserWorkspace().dir);
 }

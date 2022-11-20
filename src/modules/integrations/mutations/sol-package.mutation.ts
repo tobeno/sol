@@ -6,8 +6,14 @@ import { SolPackage } from '../../sol/sol-package';
 
 declare module '../../sol/sol-package' {
   interface SolPackage {
+    /**
+     * Opens the Sol package in the default editor.
+     */
     edit(): Directory;
 
+    /**
+     * Opens the Sol package in the default or given app.
+     */
     open(app?: string): Directory;
   }
 }

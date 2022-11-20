@@ -1,9 +1,14 @@
+/**
+ * Mutation for the global scope.
+ */
+
 import {
   definePropertiesMutation,
   mutateGlobals,
 } from '../../../utils/mutation';
 import { withHelp } from '../../../utils/metadata';
 import {
+  codeToAst,
   csvToData,
   jsonToData,
   transform,
@@ -49,7 +54,6 @@ import { fileCached, runtimeCached } from '../../cache/cache';
 import { Html } from '../../data/html';
 import { Xml } from '../../data/xml';
 import { Chart } from '../../visualize/chart';
-import { Ast } from '../globals/classes.global';
 
 export const globals = {
   args: withHelp(
@@ -62,7 +66,7 @@ export const globals = {
   ),
   ast: withHelp(
     {
-      value: Ast.create,
+      value: codeToAst,
     },
     'Converts code to its AST to Data',
   ),

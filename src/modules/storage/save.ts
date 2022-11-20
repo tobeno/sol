@@ -2,6 +2,9 @@ import { File } from './file';
 import { tmp } from './tmp';
 import { Text } from '../data/text';
 
+/**
+ * Saves the given content to a file.
+ */
 export function save(content: any): File {
   let file = null;
   let text: Text | null = null;
@@ -32,6 +35,9 @@ export function save(content: any): File {
   return file;
 }
 
+/**
+ * Saves the given content to a file with the given path.
+ */
 export function saveAs(content: any, path: string): File {
   const f = File.create(path);
   f.text = content;

@@ -2,6 +2,9 @@ import { DataType } from '../../data/data-type';
 import { StringTransformer } from './string.transformer';
 import { Url } from '../../web/url';
 
+/**
+ * Transformer for converting URLs from and to strings.
+ */
 export class UrlTransformer extends StringTransformer<any> {
   constructor() {
     super(DataType.Url);

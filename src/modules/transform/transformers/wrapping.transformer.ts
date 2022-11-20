@@ -6,7 +6,7 @@ import { Text } from '../../data/text';
 import { Constructor } from '../../../interfaces/util';
 
 /**
- * A transformer, which adds / removes a wrapper class, before passing the transformation on to another mapper
+ * A transformer, which adds / removes a wrapper class, before passing the transformation on to another mapper.
  */
 export class WrappingTransformer implements DataTransformer<any, any> {
   constructor(

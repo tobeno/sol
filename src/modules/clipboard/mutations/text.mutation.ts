@@ -4,6 +4,9 @@ import { getClipboard } from '../clipboard';
 
 declare module '../../data/text' {
   interface Text {
+    /**
+     * Copies the text to the clipboard.
+     */
     copy(): this;
   }
 }

@@ -1,3 +1,7 @@
+/**
+ * Classes to be exposed globally.
+ */
+
 export { DefinePropertiesMutation, Mutation } from '../../../utils/mutation';
 export { Clipboard } from '../../clipboard/clipboard';
 export { Ast } from '../../data/ast';

@@ -5,10 +5,19 @@ import { Html } from '../../data/html';
 
 declare module '../../web/response' {
   interface Response {
+    /**
+     * Returns the response as JSON.
+     */
     get json(): Text;
 
+    /**
+     * Returns the response as YAML.
+     */
     get yaml(): Text;
 
+    /**
+     * Returns the response as HTML.
+     */
     get html(): Html;
   }
 }

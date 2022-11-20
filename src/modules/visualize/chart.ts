@@ -19,6 +19,9 @@ export interface ChartOptions extends ApexOptions {
       };
 }
 
+/**
+ * Class for generating charts.
+ */
 export class Chart {
   private readonly options: ApexOptions;
 
@@ -67,6 +70,9 @@ export class Chart {
     };
   }
 
+  /**
+   * Returns the HTML of the chart.
+   */
   get html(): Text {
     return Text.create(
       `<!DOCTYPE html>

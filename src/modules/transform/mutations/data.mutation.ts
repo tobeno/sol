@@ -7,14 +7,29 @@ import { DataTransformation } from '../data-transformation';
 
 declare module '../../data/data' {
   interface Data {
+    /**
+     * Returns the data as text.
+     */
     get text(): Text;
 
+    /**
+     * Returns the data as a JSON string.
+     */
     get json(): Text;
 
+    /**
+     * Returns the data as a YAML string.
+     */
     get yaml(): Text;
 
+    /**
+     * Returns the data as a CSV string.
+     */
     get csv(): Text;
 
+    /**
+     * Returns the data as the given data type.
+     */
     to(type: DataType | string): any;
   }
 }

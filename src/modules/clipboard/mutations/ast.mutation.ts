@@ -4,6 +4,9 @@ import { Ast } from '../../data/ast';
 
 declare module '../../data/ast' {
   interface Ast {
+    /**
+     * Copies the AST JSON to the clipboard.
+     */
     copy(): this;
   }
 }

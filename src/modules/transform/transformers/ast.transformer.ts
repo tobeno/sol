@@ -3,6 +3,9 @@ import { DataType } from '../../data/data-type';
 import { StringTransformer } from './string.transformer';
 import { Ast } from '../../data/ast';
 
+/**
+ * Transformer for converting ASTs from and to strings.
+ */
 export class AstTransformer extends StringTransformer<any> {
   constructor() {
     super(DataType.Ast);

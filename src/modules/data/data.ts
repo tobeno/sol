@@ -26,7 +26,7 @@ import { uniqueArray } from '../../utils/array';
 import { dereferenceJsonSchema } from '../../utils/json-schema';
 
 /**
- * Generic wrapper for runtime objects
+ * Generic wrapper for runtime objects.
  */
 export class Data<
   ValueType = any,
@@ -37,10 +37,20 @@ export class Data<
     super(value);
   }
 
+  /**
+   * Clones the data.
+   */
   get clone(): Data<ValueType> {
     return Data.create(JSON.parse(JSON.stringify(this.value))) as any;
   }
 
+  /**
+   * Returns the data flattened.
+   *
+   * Two behaviours:
+   * - For arrays: Flattens the array by one level.
+   * - For objects: Flattens all nested objects while ignoring arrays.
+   */
   get flattened(): Data<
     ValueType extends Array<any> ? FlatArray<ValueType, 1> : ValueType
   > {
@@ -51,6 +61,9 @@ export class Data<
     return Data.create(flattenObject(this.value)) as any;
   }
 
+  /**
+   * Returns the first item.
+   */
   get first(): Data<ItemType> | null {
     if (Array.isArray(this.value)) {
       return this.value.length ? (Data.create(this.value[0]) as any) : null;
@@ -61,6 +74,9 @@ export class Data<
     return values.length ? (Data.create(values[0]) as any) : null;
   }
 
+  /**
+   * Returns the last item.
+   */
   get last(): Data<ItemType> | null {
     if (Array.isArray(this.value)) {
       return this.value.length
@@ -75,21 +91,34 @@ export class Data<
       : null;
   }
 
-  get sum(): Data<number> {
+  /**
+   * Returns the sum of all values.
+   */
+  get sum(): number {
     const values = this.values;
 
     return values.reduce(
       (result, value) => result + (parseFloat(value as any) || 0),
       0,
-    );
+    ).value;
   }
 
-  get avg(): Data<number> {
+  /**
+   * Returns the average of all values.
+   */
+  get avg(): number {
     const values = this.values;
 
-    return Data.create(values.sum.value / values.length) as any;
+    return Data.create(values.sum / values.length).value as any;
   }
 
+  /**
+   * Returns the data with all values unique.
+   *
+   * Two behaviours:
+   * - For arrays: Returns the array with all duplicates removed.
+   * - For objects: Returns the object with all duplicate values removed.
+   */
   get unique(): Data<AnyPartial<ValueType>> {
     if (Array.isArray(this.value)) {
       return Data.create(uniqueArray(this.value)) as any;
@@ -104,18 +133,30 @@ export class Data<
     });
   }
 
+  /**
+   * Returns the data sorted by its values.
+   */
   get sorted(): Data<ValueType extends Array<any> ? ValueType : any> {
     return this.sort();
   }
 
+  /**
+   * Returns the data sorted by its keys.
+   */
   get sortedKeys(): Data<ValueType extends Array<any> ? ValueType : any> {
     return this.sortKeys();
   }
 
+  /**
+   * Returns the data as joined string.
+   */
   get joined(): Text {
     return this.join('\n');
   }
 
+  /**
+   * Returns the data in reversed order.
+   */
   get reversed(): Data<ValueType extends Array<any> ? ValueType : any> {
     if (Array.isArray(this.value)) {
       return Data.create(this.value.reverse()) as any;
@@ -126,44 +167,74 @@ export class Data<
     ) as any;
   }
 
+  /**
+   * Returns the data with falsy values removed.
+   */
   get filtered(): Data<AnyPartial<ValueType>> {
     return this.filter((value: any) => !!value);
   }
 
+  /**
+   * Returns the data in camelCase.
+   */
   get camelcased(): Data {
     return this.changeCase(camelcaseText);
   }
 
+  /**
+   * Returns the data in snake_case.
+   */
   get snakecased(): Data {
     return this.changeCase(snakecaseText);
   }
 
+  /**
+   * Returns the data in CONSTANT_CASE.
+   */
   get constantcased(): Data {
     return this.changeCase(constantcaseText);
   }
 
+  /**
+   * Returns the data in Title Case.
+   */
   get titlecased(): Data {
     return this.changeCase(titlecaseText);
   }
 
+  /**
+   * Returns the data in PascalCase.
+   */
   get pascalcased(): Data {
     return this.changeCase(pascalcaseText);
   }
 
+  /**
+   * Returns the data in kebab-case.
+   */
   get kebabcased(): Data {
     return this.changeCase(kebabcaseText);
   }
 
+  /**
+   * Merges all sub-objects of the array into one object.
+   */
   get merged(): Data {
     return Data.create(Object.assign({}, ...(this.value as any)));
   }
 
+  /**
+   * Logs the data to the console.
+   */
   get logged(): this {
     log(String(this.json));
 
     return this;
   }
 
+  /**
+   * Returns all objects in the data (deeply traversed).
+   */
   get objects(): Data<any[]> {
     const result: any[] = [];
 
@@ -172,6 +243,9 @@ export class Data<
     return data(result);
   }
 
+  /**
+   * Executes a function to map each item of the data.
+   */
   get each(): {
     [key in keyof ItemType]: (
       ...args: Parameters<
@@ -204,12 +278,18 @@ export class Data<
     );
   }
 
+  /**
+   * Returns the data with all $ref references resolved.
+   */
   get dereferenced(): Data {
     return Data.create(
       dereferenceJsonSchema(cloneObjectDeep(this.value as any)),
     );
   }
 
+  /**
+   * Returns the keys.
+   */
   get keys(): Data<KeyType[]> {
     if (Array.isArray(this.value)) {
       return Data.create(
@@ -220,6 +300,9 @@ export class Data<
     return Data.create(Object.keys(this.value as any)) as any;
   }
 
+  /**
+   * Returns the values.
+   */
   get values(): Data<ItemType[]> {
     if (Array.isArray(this.value)) {
       return Data.create(this.value) as any;
@@ -228,10 +311,20 @@ export class Data<
     return Data.create(Object.values(this.value as any)) as any;
   }
 
+  /**
+   * Returns the length of the data.
+   */
   get length(): number {
-    return (this.value as any).length;
+    if (Array.isArray(this.value)) {
+      return this.value.length;
+    }
+
+    return Object.keys(this.value as any).length;
   }
 
+  /**
+   * Returns all entries.
+   */
   get entries(): Data<[KeyType, ItemType][]> {
     if (Array.isArray(this.value)) {
       return Data.create(this.value.entries()) as any;
@@ -240,6 +333,9 @@ export class Data<
     return Data.create(Object.entries(this.value as any)) as any;
   }
 
+  /**
+   * Converts an array of entries into an object.
+   */
   get unentries(): Data<Record<string, any>> {
     if (Array.isArray(this.value)) {
       return Data.create(Object.fromEntries(this.value)) as any;
@@ -248,6 +344,9 @@ export class Data<
     throw new Error('Not an array.');
   }
 
+  /**
+   * Returns the data at the given path, index or jsonata expression.
+   */
   get(path: string | number | Expression): Data | Text | null {
     let result: any;
     if (typeof path === 'string') {
@@ -270,6 +369,9 @@ export class Data<
     return Data.create(result);
   }
 
+  /**
+   * Returns the data with the casing changed.
+   */
   changeCase(cb: (text: string) => string): Data {
     if (Array.isArray(this.value)) {
       return Data.create(
@@ -282,6 +384,9 @@ export class Data<
     return Data.create(mapObjectKeys(this.value, cb));
   }
 
+  /**
+   * Groups the data using the given key callback.
+   */
   group<KeyType extends string | number | symbol, GroupType = ItemType[]>(
     keyFn: (item: ItemType) => KeyType,
     reduceFn: (group: GroupType, item: ItemType, key: KeyType) => GroupType = (
@@ -305,6 +410,9 @@ export class Data<
     }, {} as Record<KeyType, GroupType>);
   }
 
+  /**
+   * Groups and counts the data using the given key callback.
+   */
   groupCount<KeyType extends string | number | symbol>(
     keyFn: (item: ItemType) => KeyType,
   ): Data<Record<KeyType, number>> {
@@ -315,6 +423,9 @@ export class Data<
     );
   }
 
+  /**
+   * Returns the data sorted.
+   */
   sort(
     compareFn?: (a: ItemType, b: ItemType) => number,
   ): Data<ValueType extends Array<any> ? ValueType : any> {
@@ -342,6 +453,9 @@ export class Data<
     return Data.create(Object.fromEntries(entries)) as any;
   }
 
+  /**
+   * Returns the data sorted keys.
+   */
   sortKeys(
     compareFn?: (a: KeyType, b: KeyType) => number,
   ): Data<ValueType extends Array<any> ? ValueType : any> {
@@ -369,6 +483,9 @@ export class Data<
     return Data.create(Object.fromEntries(entries)) as any;
   }
 
+  /**
+   * Returns the data filtered by the given callback.
+   */
   filter(
     cb: (value: ItemType, key: KeyType) => boolean,
   ): Data<AnyPartial<ValueType>> {
@@ -387,6 +504,9 @@ export class Data<
     return Data.create(newValue) as any;
   }
 
+  /**
+   * Returns the value matching the given callback.
+   */
   find(
     cb: (value: ItemType, key: KeyType) => boolean,
   ): Data<ItemType> | undefined {
@@ -409,6 +529,9 @@ export class Data<
     return result ? (Data.create(result) as any) : undefined;
   }
 
+  /**
+   * Returns the index of the item matching the given callback.
+   */
   findIndex(cb: (value: ItemType, key: KeyType) => boolean): KeyType {
     if (Array.isArray(this.value)) {
       return this.value.findIndex(cb as any) as any;
@@ -427,12 +550,18 @@ export class Data<
     return result;
   }
 
+  /**
+   * Traverses the data deeply.
+   */
   traverse(cb: (obj: Record<string | number | symbol, any>) => void): this {
     traverseObject(this.value, cb);
 
     return this;
   }
 
+  /**
+   * Returns true if at least one item matches the given callback.
+   */
   some(cb: (value: ItemType, key: KeyType) => boolean): boolean {
     if (Array.isArray(this.value)) {
       return this.value.some(cb as any);
@@ -451,6 +580,9 @@ export class Data<
     return result;
   }
 
+  /**
+   * Returns true if all items match the given callback.
+   */
   every(cb: (value: ItemType, key: KeyType) => boolean): boolean {
     if (Array.isArray(this.value)) {
       return this.value.every(cb as any);
@@ -507,6 +639,9 @@ export class Data<
     ) as any;
   }
 
+  /**
+   * Maps all items of the data.
+   */
   map<MappedItemType = any>(
     cb: (value: ItemType, key: KeyType) => MappedItemType,
   ): Data<
@@ -529,6 +664,9 @@ export class Data<
     return Data.create(newValue) as any;
   }
 
+  /**
+   * Maps all keys of the data.
+   */
   mapKeys(cb: (key: KeyType, item: ItemType) => KeyType): this {
     if (Array.isArray(this.value)) {
       return Data.create(
@@ -551,6 +689,9 @@ export class Data<
     return Data.create(newValue) as any;
   }
 
+  /**
+   * Joins the data using the given separator.
+   */
   join(separator: string): Text {
     if (Array.isArray(this.value)) {
       return Text.create(this.value.join(separator));

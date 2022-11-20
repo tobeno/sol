@@ -1,3 +1,7 @@
+/**
+ * Utils to be exposed globally.
+ */
+
 export * from '../../../utils/array';
 export * from '../../../utils/async';
 export * from '../../../utils/env';

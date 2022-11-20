@@ -6,6 +6,9 @@ import type { selectAll, selectOne } from 'css-select';
 import { inspect } from 'util';
 import { Data } from './data';
 
+/**
+ * Wrapper for HTML documents or snippets.
+ */
 export class Html<
   NodeType extends AnyNode = AnyNode,
 > extends Wrapper<NodeType> {
@@ -16,14 +19,23 @@ export class Html<
     return Text.create(render(this.value), DataFormat.Html);
   }
 
+  /**
+   * Returns the type of the HTML node.
+   */
   get type() {
     return this.value.type;
   }
 
+  /**
+   * Returns the attributes of the HTML node.
+   */
   get attributes(): Data<Record<string, string>> {
     return Data.create((this.value as Element).attribs || {});
   }
 
+  /**
+   * Returns the text content of the HTML node.
+   */
   get content(): Text {
     if (this.value.type === 'text') {
       const node = this.value as TextNode;
@@ -38,12 +50,18 @@ export class Html<
     );
   }
 
+  /**
+   * Returns the value of the given attribute.
+   */
   attribute(name: string): Text | null {
     const value = (this.value as Element).attribs?.[name];
 
     return value ? Text.create(value) : null;
   }
 
+  /**
+   * Returns all HTML nodes matching the given callback.
+   */
   filter(cb: (n: AnyNode) => boolean): Data<Html[]> {
     const DomUtils = require('domutils') as typeof import('domutils');
 
@@ -52,10 +70,16 @@ export class Html<
     );
   }
 
+  /**
+   * Returns the first HTML node matching the given callback.
+   */
   find(cb: (n: AnyNode) => boolean): Html | null {
     return this.filter(cb).value[0] || null;
   }
 
+  /**
+   * Traverses all nodes.
+   */
   traverse(cb: (n: AnyNode) => void): this {
     this.filter((n) => {
       cb(n);
@@ -65,6 +89,9 @@ export class Html<
     return this;
   }
 
+  /**
+   * Returns the first HTML node matching the given selector.
+   */
   select(selector: Parameters<typeof selectOne>[0]): Html | null {
     const CSSselect = require('css-select') as typeof import('css-select');
     const element = CSSselect.selectOne(selector, this.value);
@@ -72,6 +99,9 @@ export class Html<
     return element ? Html.create(element) : null;
   }
 
+  /**
+   * Returns all HTML nodes matching the given selector.
+   */
   selectAll(selector: Parameters<typeof selectAll>[0]): Data<Html[]> {
     const CSSselect = require('css-select') as typeof import('css-select');
 
@@ -81,7 +111,7 @@ export class Html<
   }
 
   /**
-   * Prints just the data when inspecting (e.g. for console.log)
+   * Prints just the data when inspecting (e.g. for console.log).
    */
   [inspect.custom](): string {
     return `Html { ${this.text} }`;

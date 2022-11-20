@@ -10,11 +10,20 @@ import { Wrapper } from '../data/wrapper';
 import { Data } from '../data/data';
 import { RawAxiosResponseHeaders } from 'axios';
 
+/**
+ * Wrapper for a HTTP response.
+ */
 export class Response extends Wrapper<AxiosResponse> {
+  /**
+   * Returns the request that was used to create this response.
+   */
   get request(): AxiosRequestConfig {
     return this.value.config;
   }
 
+  /**
+   * Returns the content of the response.
+   */
   get content(): Text {
     let content = this.value.data;
     if (content && typeof content === 'object') {
@@ -24,32 +33,53 @@ export class Response extends Wrapper<AxiosResponse> {
     return Text.create(content, this.contentFormat);
   }
 
+  /**
+   * Returns the format of the content.
+   */
   get contentFormat(): string {
     const contentType = this.value.headers['content-type'];
 
     return contentType ? contentType.split(';')[0] : '';
   }
 
+  /**
+   * Returns the headers of the response.
+   */
   get headers(): RawAxiosResponseHeaders | AxiosResponseHeaders {
     return this.value.headers;
   }
 
+  /**
+   * Returns the status code of the response.
+   */
   get status(): number {
     return this.value.status;
   }
 
+  /**
+   * Returns the status text of the response.
+   */
   get statusText(): string {
     return this.value.statusText;
   }
 
+  /**
+   * Returns the command that lead to this response.
+   */
   get cmd(): Text {
     return Text.create(`web.request(${JSON.stringify(this.request)})`);
   }
 
+  /**
+   * Refetches the response.
+   */
   refresh(): Response {
     return web.request(this.value.config);
   }
 
+  /**
+   * Returns a seriolizable version of this response (without circular references).
+   */
   get serializable(): Data {
     return Data.create({
       status: this.value.status,
@@ -66,7 +96,7 @@ export class Response extends Wrapper<AxiosResponse> {
   }
 
   /**
-   * Prints just the data when inspecting (e.g. for console.log)
+   * Prints just the data when inspecting (e.g. for console.log).
    */
   [inspect.custom](): string {
     return `Response ${inspect(this.serializable.value)}`;

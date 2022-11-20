@@ -6,6 +6,9 @@ import { log } from '../../utils/log';
 import { getCurrentSolWorkspace } from '../sol/sol-workspace';
 import { Data } from '../data/data';
 
+/**
+ * Class for interacting with playground files.
+ */
 export class PlayFile {
   static instances: Record<string, PlayFile> = {};
 
@@ -13,6 +16,9 @@ export class PlayFile {
 
   file: File;
 
+  /**
+   * Returns the unique ID of the playground file.
+   */
   get id(): string {
     return this.file.path;
   }
@@ -43,12 +49,18 @@ export default null;
     }
   }
 
+  /**
+   * Opens the playground file in the default editor.
+   */
   edit(): File {
     this.prepare();
 
     return this.file.edit() as File;
   }
 
+  /**
+   * Opens the playground file in the default editor and starts watching for changes.
+   */
   play(): this {
     const file = this.file;
     const playId = file.path;
@@ -104,6 +116,9 @@ export default null;
     return this;
   }
 
+  /**
+   * Stops watching for changes in the playground file.
+   */
   unplay(): void {
     const playId = this.id;
 
@@ -115,6 +130,9 @@ export default null;
     }
   }
 
+  /**
+   * Runs the playground file.
+   */
   replay<ResultType = any>(): ResultType {
     const file = this.file;
     if (!file.exists) {
@@ -167,10 +185,16 @@ export function getPlayDir(): Directory {
   return getCurrentSolWorkspace().dir.dir('play');
 }
 
+/**
+ * Loads the given file as playground file.
+ */
 export function playFile(pathOrFile: string | File | null = null): PlayFile {
   return PlayFile.create(pathOrFile);
 }
 
+/**
+ * Opens the file in the default editor and watches for changes.
+ */
 export function play(pathOrFile: string | File | null = null): PlayFile {
   const f = playFile(pathOrFile);
 
@@ -179,6 +203,9 @@ export function play(pathOrFile: string | File | null = null): PlayFile {
   return f;
 }
 
+/**
+ * Returns available playground files.
+ */
 export function listPlays(): Record<string, PlayFile> {
   return [...getPlayDir().files()].reduce(
     (result: Record<string, PlayFile>, file) => {
@@ -190,6 +217,9 @@ export function listPlays(): Record<string, PlayFile> {
   );
 }
 
+/**
+ * Stops watching for changes in the given playground file.
+ */
 export function unplay(pathOrFile: string | File | null = null): void {
   if (pathOrFile) {
     const f = playFile(pathOrFile);
@@ -203,6 +233,9 @@ export function unplay(pathOrFile: string | File | null = null): void {
   }
 }
 
+/**
+ * Runs the given playground file.
+ */
 export function replay<ResultType = any>(
   pathOrFile: string | File,
 ): ResultType {

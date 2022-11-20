@@ -2,6 +2,9 @@ import { DataType } from '../../data/data-type';
 import { DataTransformer } from './data.transformer';
 import { DataTransformation } from '../data-transformation';
 
+/**
+ * Base class for transformers for converting from and to strings.
+ */
 export abstract class StringTransformer<TargetType>
   implements DataTransformer<any, any>
 {

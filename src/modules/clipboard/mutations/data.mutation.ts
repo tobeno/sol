@@ -4,6 +4,9 @@ import { getClipboard } from '../clipboard';
 
 declare module '../../data/data' {
   interface Data {
+    /**
+     * Copies the data as text to the clipboard.
+     */
     copy(): this;
   }
 }

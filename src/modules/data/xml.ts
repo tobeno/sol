@@ -6,7 +6,13 @@ import type { AnyNode, Element, Text as TextNode } from 'domhandler';
 import type { selectAll, selectOne } from 'css-select';
 import { Wrapper } from './wrapper';
 
+/**
+ * Wrapper for XML documents or snippets.
+ */
 export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
+  /**
+   * Returns the XML as text.
+   */
   get text(): Text {
     const { default: render } =
       require('dom-serializer') as typeof import('dom-serializer');
@@ -14,14 +20,23 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
     return Text.create(render(this.value), DataFormat.Html);
   }
 
+  /**
+   * Returns the type of the XML node.
+   */
   get type() {
     return this.value.type;
   }
 
+  /**
+   * Returns the attributes of the XML node.
+   */
   get attributes(): Data<Record<string, string>> {
     return Data.create((this.value as Element).attribs || {});
   }
 
+  /**
+   * Returns the text content of the XML node.
+   */
   get content(): Text {
     if (this.value.type === 'text') {
       const node = this.value as TextNode;
@@ -36,12 +51,18 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
     );
   }
 
+  /**
+   * Returns the value of the given attribute.
+   */
   attribute(name: string): Text | null {
     const value = (this.value as Element).attribs?.[name];
 
     return value ? Text.create(value) : null;
   }
 
+  /**
+   * Returns all XML nodes matching the given callback.
+   */
   filter(cb: (n: AnyNode) => boolean): Data<Xml[]> {
     const DomUtils = require('domutils') as typeof import('domutils');
 
@@ -50,10 +71,16 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
     );
   }
 
+  /**
+   * Returns the first XML node matching the given callback.
+   */
   find(cb: (n: AnyNode) => boolean): Xml | null {
     return this.filter(cb).value[0] || null;
   }
 
+  /**
+   * Traverses all nodes in the XML document.
+   */
   traverse(cb: (n: AnyNode) => void): this {
     this.filter((n) => {
       cb(n);
@@ -63,6 +90,9 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
     return this;
   }
 
+  /**
+   * Returns the first XML node matching the given selector.
+   */
   select(selector: Parameters<typeof selectOne>[0]): Xml | null {
     const CSSselect = require('css-select') as typeof import('css-select');
     const element = CSSselect.selectOne(selector, this.value);
@@ -70,6 +100,9 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
     return element ? Xml.create(element) : null;
   }
 
+  /**
+   * Returns all XML nodes matching the given selector.
+   */
   selectAll(selector: Parameters<typeof selectAll>[0]): Data<Xml[]> {
     const CSSselect = require('css-select') as typeof import('css-select');
 
@@ -79,7 +112,7 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
   }
 
   /**
-   * Prints just the data when inspecting (e.g. for console.log)
+   * Prints just the data when inspecting (e.g. for console.log).
    */
   [inspect.custom](): string {
     return `Xml { ${this.text} }`;

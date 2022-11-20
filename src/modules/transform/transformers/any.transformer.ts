@@ -1,6 +1,9 @@
 import { DataTransformer } from './data.transformer';
 import { DataTransformation } from '../data-transformation';
 
+/**
+ * Transformer using nested transformers for transformation.
+ */
 export class AnyTransformer implements DataTransformer<any, any> {
   constructor(readonly transformers: DataTransformer<any, any>[]) {}
 

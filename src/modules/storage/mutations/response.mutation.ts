@@ -5,8 +5,14 @@ import { Response } from '../../web/response';
 
 declare module '../../web/response' {
   interface Response {
+    /**
+     * Saves the response as the given file.
+     */
     saveAs(path: string): File;
 
+    /**
+     * Saves the response in a file.
+     */
     save(): File;
   }
 }

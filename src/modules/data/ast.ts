@@ -3,11 +3,9 @@ import { inspect } from 'util';
 import { Data } from './data';
 import type { NodePath, Scope, TraverseOptions } from '@babel/traverse';
 import { Wrapper } from './wrapper';
-import { Text } from './text';
-import { codeToAst } from '../transform/transformer';
 
 /**
- * Wrapper for AST code trees
+ * Wrapper for a JavaScript / TypeScript AST (Abstract Syntax Tree) node.
  */
 export class Ast extends Wrapper<babelTypes.Node> {
   constructor(
@@ -18,14 +16,23 @@ export class Ast extends Wrapper<babelTypes.Node> {
     super(value);
   }
 
+  /**
+   * Returns the AST as wrapped data.
+   */
   get data(): Data<babelTypes.Node> {
     return Data.create(this.value);
   }
 
+  /**
+   * Returns the node of this AST.
+   */
   get node(): babelTypes.Node {
     return this.value;
   }
 
+  /**
+   * Returns an AST of the program of this AST.
+   */
   get program(): Ast {
     if (!('program' in this.value)) {
       throw new Error('Node does not contain a program.');
@@ -36,12 +43,18 @@ export class Ast extends Wrapper<babelTypes.Node> {
     return Ast.create(file.program);
   }
 
+  /**
+   * Traverses the nodes of the AST.
+   */
   traverse(
     opts: TraverseOptions,
     scope?: Scope,
     state?: any,
     parentPath?: NodePath,
   ): this;
+  /**
+   * Traverses the nodes of the AST.
+   */
   traverse(opts: (node: babelTypes.Node) => void): this;
   traverse(
     opts: TraverseOptions | ((node: babelTypes.Node) => void),
@@ -72,6 +85,9 @@ export class Ast extends Wrapper<babelTypes.Node> {
     return this;
   }
 
+  /**
+   * Returns all nodes filtered by the given callback.
+   */
   filter(cb: (n: babelTypes.Node) => boolean): Data<Ast[]> {
     const matches: Ast[] = [];
     this.traverse({
@@ -85,14 +101,23 @@ export class Ast extends Wrapper<babelTypes.Node> {
     return Data.create(matches);
   }
 
+  /**
+   * Returns the first node filtered by the given callback.
+   */
   find(cb: (n: babelTypes.Node) => boolean): Ast | null {
     return this.filter(cb).value[0] || null;
   }
 
+  /**
+   * Returns the first node matching the given type.
+   */
   select(type: string | Function): Ast | null {
     return this.selectAll(type).value[0] || null;
   }
 
+  /**
+   * Returns all nodes matching the given type.
+   */
   selectAll(type: string | Function): Data<Ast[]> {
     // Allow also builder functions as type (e.g. astTypes.Identifier)
     if (typeof type === 'function') {
@@ -121,16 +146,12 @@ export class Ast extends Wrapper<babelTypes.Node> {
   }
 
   static create(
-    value: string | Text | babelTypes.Node | Ast,
+    value: babelTypes.Node | Ast,
     scope: Scope | null = null,
     parentPath: NodePath | null = null,
   ): Ast {
     if (value instanceof Ast) {
       return value;
-    }
-
-    if (typeof value === 'string' || value instanceof Text) {
-      return codeToAst(value);
     }
 
     return new Ast(value, scope, parentPath);

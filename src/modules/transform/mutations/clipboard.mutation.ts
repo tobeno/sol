@@ -17,36 +17,84 @@ import { Xml } from '../../data/xml';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {
+    /**
+     * Loads the clipboard contents as JSON.
+     */
     get json(): Data;
 
+    /**
+     * Sets the data as JSON in the clipboard.
+     */
     set json(value: Data | any);
 
+    /**
+     * Loads the clipboard contents as YAML.
+     */
     get yaml(): Data;
 
+    /**
+     * Sets the data as YAML in the clipboard.
+     */
     set yaml(value: Data | any);
 
+    /**
+     * Loads the clipboard contents as CSV.
+     */
     get csv(): Data;
 
+    /**
+     * Sets the data as CSV in the clipboard.
+     */
     set csv(value: Data | any);
 
+    /**
+     * Loads the clipboard contents as AST.
+     */
     get ast(): Ast;
 
+    /**
+     * Sets the AST code in the clipboard.
+     */
     set ast(value: Ast | any);
 
+    /**
+     * Loads the clipboard contents as URL.
+     */
     get url(): Url;
 
+    /**
+     * Sets the URL in the clipboard.
+     */
     set url(value: Url | Text | string);
 
+    /**
+     * Loads the clipboard contents as HTML.
+     */
     get html(): Html;
 
+    /**
+     * Sets the HTML in the clipboard.
+     */
     set html(value: Html | Text | string);
 
+    /**
+     * Loads the clipboard contents as XML.
+     */
     get xml(): Xml;
 
+    /**
+     * Sets the XML in the clipboard.
+     */
     set xml(value: Xml | Text | string);
 
+    /**
+     * Loads the clipboard contents as Markdown.
+     */
     get md(): Markdown;
 
+    /**
+     * Sets the Markdown in the clipboard.
+     */
     set md(value: Markdown | Text | string);
   }
 }

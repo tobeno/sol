@@ -1,3 +1,6 @@
+/**
+ * Runs the given CLI command using the given arguments.
+ */
 export function runCommand(command: string, args: string[]): void {
   switch (command) {
     case 'play':

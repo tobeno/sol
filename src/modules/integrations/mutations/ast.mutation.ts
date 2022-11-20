@@ -6,8 +6,14 @@ import { open } from '../open';
 
 declare module '../../data/ast' {
   interface Ast {
+    /**
+     * Opens the AST in the default editor.
+     */
     edit(): File;
 
+    /**
+     * Copies the AST to the clipboard and opens the AST explorer for pasting.
+     */
     explore(): this;
   }
 }

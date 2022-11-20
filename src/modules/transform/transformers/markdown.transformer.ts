@@ -4,6 +4,9 @@ import { Markdown } from '../../data/markdown';
 import { DataTransformation } from '../data-transformation';
 import { DataFormat } from '../../data/data-format';
 
+/**
+ * Transformer for converting Markdowns from and to strings.
+ */
 export class MarkdownTransformer extends StringTransformer<any> {
   constructor() {
     super(DataType.Markdown, DataFormat.Html);

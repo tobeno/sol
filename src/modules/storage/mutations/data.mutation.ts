@@ -5,8 +5,14 @@ import { save, saveAs } from '../save';
 
 declare module '../../data/data' {
   interface Data {
+    /**
+     * Saves the data as the given file.
+     */
     saveAs(path: string): File;
 
+    /**
+     * Saves the data in a file.
+     */
     save(): File;
   }
 }

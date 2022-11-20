@@ -6,8 +6,14 @@ import { open } from '../open';
 
 declare module '../../sol/sol-workspace' {
   interface SolWorkspace {
+    /**
+     * Opens the Sol workspace in the default editor.
+     */
     edit(): Directory;
 
+    /**
+     * Opens the Sol workspace in the default or given app.
+     */
     open(app?: string): Directory;
   }
 }

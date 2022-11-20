@@ -18,22 +18,49 @@ import { DataTransformation } from '../data-transformation';
 
 declare module '../../data/text' {
   interface Text {
+    /**
+     * Parses the text as JSON.
+     */
     get json(): Data;
 
+    /**
+     * Parses the text as YAML.
+     */
     get yaml(): Data;
 
+    /**
+     * Parses the text as CSV.
+     */
     get csv(): Data;
 
+    /**
+     * Parses the code as AST.
+     */
     get ast(): Ast;
 
+    /**
+     * Loads the text as URL.
+     */
     get url(): Url;
 
+    /**
+     * Loads the text as HTML.
+     */
     get html(): Html;
 
+    /**
+     * Loads the text as XML.
+     */
     get xml(): Xml;
 
+    /**
+     * Loads the text as Markdown.
+     */
     get md(): Markdown;
 
+    /**
+     * Converts the text to the specified data type.
+     */
     to(type: DataType | string): any;
   }
 }

@@ -6,10 +6,19 @@ import { open } from '../open';
 
 declare module '../../web/url' {
   interface Url {
+    /**
+     * Opens the URL in the default browser.
+     */
     edit(): this;
 
+    /**
+     * Opens the URL in the default browser.
+     */
     browse(): this;
 
+    /**
+     * Opens the URL in the default or given app.
+     */
     open(app?: string): this;
   }
 }

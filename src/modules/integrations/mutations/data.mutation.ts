@@ -5,6 +5,9 @@ import { Data } from '../../data/data';
 
 declare module '../../data/data' {
   interface Data {
+    /**
+     * Opens the data in the default editor.
+     */
     edit(): File;
   }
 }

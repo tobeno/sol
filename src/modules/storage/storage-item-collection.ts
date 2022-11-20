@@ -9,6 +9,9 @@ import { log } from '../../utils/log';
 import { Wrapper } from '../data/wrapper';
 import { inspect } from 'util';
 
+/**
+ * Base class for storage item collections.
+ */
 export class GenericStorageItemCollection<
   ItemType extends StorageItem,
 > extends Wrapper<ItemType[]> {
@@ -24,26 +27,44 @@ export class GenericStorageItemCollection<
     return result;
   }
 
-  get exts(): Data<string[]> {
-    return this.files().map((f) => f.exts.join('.')).unique.sorted;
+  /**
+   * Returns all extensions of files in the collection.
+   */
+  get exts(): string[] {
+    return this.files().map((f) => f.exts.join('.')).unique.sorted.value;
   }
 
-  get names(): Data<string[]> {
-    return this.map((i) => i.name).sorted;
+  /**
+   * Returns all names of files in the collection.
+   */
+  get names(): string[] {
+    return this.map((i) => i.name).sorted.value;
   }
 
-  get basenames(): Data<string[]> {
-    return this.map((i) => i.basename).sorted;
+  /**
+   * Returns all basenames of files in the collection.
+   */
+  get basenames(): string[] {
+    return this.map((i) => i.basename).sorted.value;
   }
 
-  get paths(): Data<string[]> {
-    return this.map((i) => i.path).sorted;
+  /**
+   * Returns all paths of files in the collection.
+   */
+  get paths(): string[] {
+    return this.map((i) => i.path).sorted.value;
   }
 
+  /**
+   * Returns the text content of all files in the collection.
+   */
   get text(): Text {
     return Text.create(this.toString());
   }
 
+  /**
+   * Returns all files in the collection.
+   */
   files(exp?: string): FileCollection {
     let result: File[] = [];
 
@@ -58,6 +79,9 @@ export class GenericStorageItemCollection<
     return FileCollection.create(result);
   }
 
+  /**
+   * Returns all directories in the collection.
+   */
   dirs(): DirectoryCollection {
     let result: Directory[] = [];
 
@@ -70,10 +94,16 @@ export class GenericStorageItemCollection<
     return DirectoryCollection.create(result);
   }
 
+  /**
+   * Returns all items in the collection.
+   */
   items(): StorageItemCollection {
     return this as any;
   }
 
+  /**
+   * Returns the item at the specified index.
+   */
   get(index: number): StorageItem {
     return this.value[index];
   }
@@ -88,6 +118,9 @@ export class GenericStorageItemCollection<
     return Data.create(this.value.map(cb));
   }
 
+  /**
+   * Returns all items matching the given glob pattern.
+   */
   glob(exp: string): StorageItemCollection {
     let result: (File | Directory)[] = [];
 
@@ -100,6 +133,9 @@ export class GenericStorageItemCollection<
     return StorageItemCollection.create(result);
   }
 
+  /**
+   * Returns all items matching the given (RegExp) pattern.
+   */
   grep(pattern: string | RegExp): FileCollection {
     const result: File[] = [];
 
@@ -116,18 +152,9 @@ export class GenericStorageItemCollection<
     return FileCollection.create(result);
   }
 
-  updateName(cb: (name: string) => string): this {
-    this.forEach((f) => (f.name = cb(f.name)));
-
-    return this;
-  }
-
-  updateBasename(cb: (basename: string) => string): this {
-    this.forEach((f) => (f.basename = cb(f.basename)));
-
-    return this;
-  }
-
+  /**
+   * Replaces the given pattern with the replacer in all files in the collection.
+   */
   replaceText(pattern: string | RegExp, replacer: any): this {
     this.forEach(async (item) => {
       if (item instanceof Directory) {
@@ -161,21 +188,12 @@ export class GenericStorageItemCollection<
   }
 }
 
+/**
+ * Wrapper for a collection of files.
+ */
 export class FileCollection extends GenericStorageItemCollection<File> {
   delete(): StorageItemCollection {
     this.forEach((f) => f.delete());
-
-    return this;
-  }
-
-  updateExt(cb: (ext: string) => string): StorageItemCollection {
-    this.forEach((f) => (f.ext = cb(f.ext)));
-
-    return this;
-  }
-
-  updateExts(cb: (exts: string[]) => string[]): StorageItemCollection {
-    this.forEach((f) => (f.exts = cb(f.exts)));
 
     return this;
   }
@@ -185,12 +203,18 @@ export class FileCollection extends GenericStorageItemCollection<File> {
   }
 }
 
+/**
+ * Wrapper for a collection of directories.
+ */
 export class DirectoryCollection extends GenericStorageItemCollection<Directory> {
   static create(items: Directory[]): DirectoryCollection {
     return new DirectoryCollection(items);
   }
 }
 
+/**
+ * Wrapper for a collection of mixed storage items.
+ */
 export class StorageItemCollection extends GenericStorageItemCollection<
   File | Directory
 > {
@@ -204,6 +228,9 @@ export type AnyStorageItemCollection =
   | DirectoryCollection
   | StorageItemCollection;
 
+/**
+ * Returns all files matching the given glob pattern.
+ */
 export function files(exp?: string, options: fg.Options = {}): FileCollection {
   return FileCollection.create(
     require('fast-glob')
@@ -219,6 +246,9 @@ export function files(exp?: string, options: fg.Options = {}): FileCollection {
   );
 }
 
+/**
+ * Returns all directories matching the given glob pattern.
+ */
 export function dirs(
   exp?: string,
   options: fg.Options = {},
@@ -237,6 +267,9 @@ export function dirs(
   );
 }
 
+/**
+ * Returns all files and directories matching the given glob pattern.
+ */
 export function glob(
   exp?: string,
   options: fg.Options = {},

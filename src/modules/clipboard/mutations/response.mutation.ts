@@ -4,6 +4,9 @@ import { Response } from '../../web/response';
 
 declare module '../../web/response' {
   interface Response {
+    /**
+     * Copies the response to the clipboard.
+     */
     copy(): this;
   }
 }

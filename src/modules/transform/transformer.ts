@@ -132,7 +132,12 @@ export function dataToCsv(value: Data | any): Text {
   );
 }
 
-export function codeToAst(value: Text | string): Ast {
+export function codeToAst(value: Text | string | Ast): Ast {
+  const Ast = getAstClass();
+  if (value instanceof Ast) {
+    return value;
+  }
+
   const Text = getTextClass();
   value = Text.create(value, null);
 

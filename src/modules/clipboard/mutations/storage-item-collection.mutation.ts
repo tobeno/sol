@@ -5,6 +5,9 @@ import { StorageItem } from '../../storage/storage-item';
 
 declare module '../../storage/storage-item-collection' {
   interface GenericItemCollection<ItemType extends StorageItem> {
+    /**
+     * Copies the paths of the collection to the clipboard.
+     */
     copy(): this;
   }
 }

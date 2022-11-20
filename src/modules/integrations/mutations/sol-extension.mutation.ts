@@ -6,8 +6,14 @@ import { open } from '../open';
 
 declare module '../../sol/sol-extension' {
   interface SolExtension {
+    /**
+     * Opens the extension in the default editor.
+     */
     edit(): Directory;
 
+    /**
+     * Opens the extension in the default or given app.
+     */
     open(app?: string): Directory;
   }
 }

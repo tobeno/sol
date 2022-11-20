@@ -6,6 +6,9 @@ import { solReplColor, startSolReplServer } from './sol-repl';
 import { getSolPackage } from './sol-package';
 import { log, logDebug } from '../../utils/log';
 
+/**
+ * Initializes Sol globals and extensions.
+ */
 export function loadSol(): void {
   logDebug('Loading Sol...');
 
@@ -23,7 +26,7 @@ export function loadSol(): void {
 }
 
 /**
- * Update Sol from git remote
+ * Update Sol from git remote.
  */
 export function updateSol(): void {
   const packageDir = getSolPackage().dir;
@@ -47,7 +50,7 @@ export function updateSol(): void {
 }
 
 /**
- * Start Sol REPL server
+ * Start the full Sol interactive shell (REPL).
  */
 export function startSol(): void {
   loadSol();

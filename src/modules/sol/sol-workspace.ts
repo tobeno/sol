@@ -7,6 +7,9 @@ import dotenv from 'dotenv';
 import { homedir } from 'os';
 import { getSolPackage } from './sol-package';
 
+/**
+ * Class for interacting with a Sol workspace directors.
+ */
 export class SolWorkspace {
   readonly dir: Directory;
   loaded = false;
@@ -15,39 +18,44 @@ export class SolWorkspace {
     this.dir = Directory.create(workspacePath);
   }
 
+  /**
+   * Generated directory of the workspace.
+   */
   get generatedDir(): Directory {
     return this.dir.dir('generated');
   }
 
-  get cachedDir(): Directory {
-    return this.dir.dir('cached');
+  /**
+   * Cache directory of the workspace.
+   */
+  get cacheDir(): Directory {
+    return this.dir.dir('cache');
   }
 
+  /**
+   * Context file of the workspace.
+   */
   get contextFile(): File {
     return this.generatedDir.file('workspace-context.ts');
   }
 
+  /**
+   * Setup file of the workspace.
+   */
   get setupFile(): File {
     return this.dir.file('setup.ts');
   }
 
+  /**
+   * .env file of the workspace.
+   */
   get envFile(): File {
     return this.dir.file('.env');
   }
 
-  reload(): void {
-    const workspaceDir = this.dir;
-
-    const modules = workspaceDir
-      .files('**/*.{js,ts}')
-      .map((f) => f.pathWithoutExt);
-    modules.forEach((module) => {
-      delete require.cache[require.resolve(module)];
-    });
-
-    this.load();
-  }
-
+  /**
+   * Updates the context file of the workspace.
+   */
   updateContextFile(): void {
     const contextFile = this.contextFile;
     const extensions = getLoadedSolExtensions();
@@ -73,7 +81,7 @@ import '${extension.setupFile.dir.relativePathFrom(this.generatedDir)}/${
   prepare(force = false): void {
     const workspaceDir = this.dir;
     workspaceDir.create();
-    this.cachedDir.create();
+    this.cacheDir.create();
     this.generatedDir.create();
 
     const gitignoreFile = workspaceDir.file('.gitignore');
@@ -102,6 +110,9 @@ import { solExtension } from '${solPackage.dir.relativePathFrom(
     }
   }
 
+  /**
+   * Loads the workspace as well as its setup.ts and .env file.
+   */
   load(): void {
     if (this.loaded) {
       return;
@@ -136,6 +147,9 @@ import { solExtension } from '${solPackage.dir.relativePathFrom(
 
 let currentSolWorkspace: SolWorkspace | null = null;
 
+/**
+ * Returns the Sol workspace for the current working directory.
+ */
 export function getCurrentSolWorkspace(): SolWorkspace {
   if (!currentSolWorkspace) {
     currentSolWorkspace = new SolWorkspace(`${getCwd()}/.sol`);
@@ -146,6 +160,9 @@ export function getCurrentSolWorkspace(): SolWorkspace {
 
 let userWorkspace: SolWorkspace | null = null;
 
+/**
+ * Returns the Sol workspace for the current user (home directory).
+ */
 export function getSolUserWorkspace(): SolWorkspace {
   if (!userWorkspace) {
     userWorkspace = new SolWorkspace(`${homedir()}/.sol`);

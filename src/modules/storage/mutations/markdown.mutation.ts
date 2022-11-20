@@ -5,8 +5,14 @@ import { Markdown } from '../../data/markdown';
 
 declare module '../../data/markdown' {
   interface Markdown {
+    /**
+     * Saves the Markdown as the given file.
+     */
     saveAs(path: string): File;
 
+    /**
+     * Saves the Markdown in a file.
+     */
     save(): File;
   }
 }

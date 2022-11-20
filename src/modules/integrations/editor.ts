@@ -2,6 +2,9 @@ import { File } from '../storage/file';
 import { tmp } from '../storage/tmp';
 import { Text } from '../data/text';
 
+/**
+ * Opens the given path or value in the default editor.
+ */
 export function edit(pathOrValue?: any): File {
   let f: File;
 

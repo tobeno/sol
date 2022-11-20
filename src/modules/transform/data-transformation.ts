@@ -7,6 +7,9 @@ export enum DataTransformationMatchType {
   Partial,
 }
 
+/**
+ * Class for describing a transformation between two data types.
+ */
 export class DataTransformation {
   constructor(readonly baseType: DataType, readonly targetType: DataType) {}
 

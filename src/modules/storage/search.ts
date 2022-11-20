@@ -2,6 +2,9 @@ import { exec } from '../shell/sh';
 import { File } from './file';
 import { FileCollection } from './storage-item-collection';
 
+/**
+ * Returns all files matching the given (RegExp) pattern.
+ */
 export function grep(pattern: string | RegExp, path?: string): FileCollection {
   return FileCollection.create(
     exec(
@@ -18,6 +21,9 @@ export function grep(pattern: string | RegExp, path?: string): FileCollection {
   );
 }
 
+/**
+ * Replaces the given pattern with the replacement in all files.
+ */
 export function replaceText(
   pattern: string | RegExp,
   replacer: any,

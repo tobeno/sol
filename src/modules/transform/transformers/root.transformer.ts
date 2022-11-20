@@ -21,6 +21,9 @@ import { XmlTransformer } from './xml.transformer';
 
 let rootTransformer: DataTransformer<any, any>;
 
+/**
+ * Returns the root transformer of the transformation stack.
+ */
 export function getRootTransformer(): DataTransformer<any, any> {
   if (!rootTransformer) {
     rootTransformer = new AnyTransformer([

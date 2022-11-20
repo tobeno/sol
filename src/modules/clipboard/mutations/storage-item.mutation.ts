@@ -4,6 +4,9 @@ import { getClipboard } from '../clipboard';
 
 declare module '../../storage/storage-item' {
   interface StorageItem {
+    /**
+     * Copies the storage item path to the clipboard.
+     */
     copy(): this;
   }
 }

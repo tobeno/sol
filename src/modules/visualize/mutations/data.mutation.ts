@@ -4,6 +4,9 @@ import { Chart, ChartOptions } from '../chart';
 
 declare module '../../data/data' {
   interface Data {
+    /**
+     * Creates a new chart from this data.
+     */
     chart(options: ChartOptions): Chart;
   }
 }

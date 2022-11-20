@@ -7,10 +7,19 @@ import { DataFormat } from '../../data/data-format';
 
 declare module '../../data/text' {
   interface Text {
+    /**
+     * Opens the text in the default editor.
+     */
     edit(): File;
 
+    /**
+     * Opens the text in the default browser.
+     */
     browse(): File;
 
+    /**
+     * Opens the text in the default or given app.
+     */
     open(app?: string): File;
   }
 }

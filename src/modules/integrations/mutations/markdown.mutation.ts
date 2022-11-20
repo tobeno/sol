@@ -6,10 +6,19 @@ import { tmp } from '../../storage/tmp';
 
 declare module '../../data/markdown' {
   interface Markdown {
+    /**
+     * Opens the Markdown in the default editor.
+     */
     edit(): File;
 
+    /**
+     * Opens the Markdown in the default browser.
+     */
     browse(): File;
 
+    /**
+     * Opens the Markdown in the default or given app.
+     */
     open(app?: string): File;
   }
 }

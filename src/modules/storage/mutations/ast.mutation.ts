@@ -5,8 +5,14 @@ import { Ast } from '../../data/ast';
 
 declare module '../../data/ast' {
   interface Ast {
+    /**
+     * Saves the AST as the given file.
+     */
     saveAs(path: string): File;
 
+    /**
+     * Saves the AST in a file.
+     */
     save(): File;
   }
 }

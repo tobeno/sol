@@ -4,10 +4,19 @@ import { Text } from '../../data/text';
 
 declare global {
   interface Array<T> {
+    /**
+     * Returns the array as a JSON string.
+     */
     get json(): Text;
 
+    /**
+     * Returns the array as a YAML string.
+     */
     get yaml(): Text;
 
+    /**
+     * Returns the array as a CSV string.
+     */
     get csv(): Text;
   }
 }

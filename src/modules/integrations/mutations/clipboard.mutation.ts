@@ -6,10 +6,19 @@ import { tmp } from '../../storage/tmp';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {
+    /**
+     * Opens the clipboard contents in the default editor.
+     */
     edit(): File;
 
+    /**
+     * Opens the clipboard contents in the default browser.
+     */
     browse(): File;
 
+    /**
+     * Opens the clipboard contents in the default or given app.
+     */
     open(app?: string): File;
   }
 }

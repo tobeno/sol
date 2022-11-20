@@ -22,6 +22,9 @@ function mapApp(app: string): string {
   }
 }
 
+/**
+ * Opens the given app.
+ */
 export function openApp(
   app: string,
   options?: openInternal.OpenAppOptions,
@@ -29,6 +32,9 @@ export function openApp(
   catchAsyncErrors(openInternal.openApp(mapApp(app), options));
 }
 
+/**
+ * Opens the given value in either the default or a given app.
+ */
 export function open(
   value: any,
   app?: string,

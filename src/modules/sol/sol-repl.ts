@@ -19,14 +19,23 @@ export const solReplColor = {
   dim: chalk.dim,
 };
 
+/**
+ * Default Sol REPL writer / output.
+ */
 function solWriter(output: any): string {
   return chalk.bold(require('../../utils/inspect').inspect(output));
 }
 
+/**
+ * Default Sol REPL completion handling.
+ */
 async function solCompleter(line: string): Promise<CompleterResult | void> {
   // ToDo: Add custom completion logic
 }
 
+/**
+ * Enables the file based REPL history for the given server.
+ */
 function setupSolReplHistory(server: REPLServer): void {
   let historyReady = false;
   server.setupHistory(
@@ -38,6 +47,9 @@ function setupSolReplHistory(server: REPLServer): void {
   loopWhile(() => !historyReady);
 }
 
+/**
+ * Adds the default REPL completion to the given server.
+ */
 function setupSolReplCompleter(server: REPLServer): void {
   const originalCompleter = server.completer.bind(repl);
   (server as any).completer = (async (line, cb) => {
@@ -50,6 +62,9 @@ function setupSolReplCompleter(server: REPLServer): void {
   }) as AsyncCompleter;
 }
 
+/**
+ * Adds the default Sol REPL commands to the given server.
+ */
 function setupSolReplCommands(server: REPLServer): void {
   server.defineCommand('globals', {
     help: 'Shows available globals',
@@ -96,6 +111,9 @@ ${
 
 let currentServer: REPLServer | null = null;
 
+/**
+ * Returns the currently running REPL server.
+ */
 export function getSolReplServer(): REPLServer {
   if (!currentServer) {
     throw new Error('REPL server not started.');
@@ -104,6 +122,9 @@ export function getSolReplServer(): REPLServer {
   return currentServer;
 }
 
+/**
+ * Starts the Sol REPL server (interactive shell).
+ */
 export function startSolReplServer(options: ReplOptions = {}): REPLServer {
   const server = repl.start({
     prompt: solReplColor.dim('> '),

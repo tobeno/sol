@@ -5,8 +5,14 @@ import { Clipboard } from '../../clipboard/clipboard';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {
+    /**
+     * Saves the clipboard contents as the given file.
+     */
     saveAs(path: string): File;
 
+    /**
+     * Saves the clipboard contents in a file.
+     */
     save(): File;
   }
 }

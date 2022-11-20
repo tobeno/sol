@@ -3,6 +3,9 @@ import { DataType } from '../../data/data-type';
 import { DataFormat } from '../../data/data-format';
 import stripJsonComments from 'strip-json-comments';
 
+/**
+ * Transformer for converting JSONs from and to strings.
+ */
 export class JsonTransformer extends StringTransformer<any> {
   constructor() {
     super(DataType.Object, DataFormat.Json);

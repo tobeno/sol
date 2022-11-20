@@ -5,10 +5,19 @@ import { Ast } from '../../data/ast';
 
 declare module '../../data/ast' {
   interface Ast {
+    /**
+     * Returns the code that the AST represents.
+     */
     get code(): Text;
 
+    /**
+     * Returns the AST as a JSON string.
+     */
     get json(): Text;
 
+    /**
+     * Returns the AST as a YAML string.
+     */
     get yaml(): Text;
   }
 }

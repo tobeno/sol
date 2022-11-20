@@ -5,6 +5,9 @@ import { Markdown } from '../../data/markdown';
 
 declare module '../../data/markdown' {
   interface Markdown {
+    /**
+     * Returns the Markdown as HTML.
+     */
     get html(): Text;
   }
 }

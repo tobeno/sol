@@ -3,6 +3,9 @@ export enum DataTypeMatchType {
   Partial,
 }
 
+/**
+ * Data types as used in Sol.
+ */
 export class DataType {
   static Array = DataType.fromString('Array');
   static Ast = DataType.fromString('Ast');
@@ -18,6 +21,9 @@ export class DataType {
 
   constructor(readonly type: string, readonly format: string | null = null) {}
 
+  /**
+   * Returns true if the given data type matches this one.
+   */
   matches(
     other: DataType,
     matchType: DataTypeMatchType = DataTypeMatchType.Exact,
@@ -33,10 +39,16 @@ export class DataType {
     return this.format === other.format;
   }
 
+  /**
+   * Returns the data type with the format removed.
+   */
   withoutFormat(): DataType {
     return new DataType(this.type);
   }
 
+  /**
+   * Returns the data type with the given format set.
+   */
   withFormat(newFormat: string | null): DataType {
     return new DataType(this.type, newFormat);
   }
@@ -46,6 +58,8 @@ export class DataType {
   }
 
   /**
+   * Creates the data type from the given string.
+   *
    * @param fullType Data type with format "[Type](<[format]>)" (e.g. "Text<application/json>")
    */
   static fromString(fullType: string): DataType {

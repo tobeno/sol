@@ -1,3 +1,6 @@
+/**
+ * String data formats (Mime types) as used in Sol.
+ */
 export class DataFormat {
   static Csv = 'text/csv';
   static Html = 'text/html';
@@ -10,6 +13,9 @@ export class DataFormat {
   static TextCommaSeparated = 'text/x-comma-separated';
   static TextSemicolonSeparated = 'text/x-semicolon-separated';
 
+  /**
+   * Returns the extension for the given data format.
+   */
   static toExt(format: string | null): string {
     switch (format) {
       case DataFormat.Json:
