@@ -160,6 +160,14 @@ export const globals = {
     },
     'Returns the environment variables',
   ),
+  fake: withHelp(
+    {
+      get() {
+        return require('@ngneat/falso') as typeof import('@ngneat/falso');
+      },
+    },
+    'See https://ngneat.github.io/falso/docs/getting-started',
+  ),
   fetch: withHelp(
     {
       value: web.fetch,
