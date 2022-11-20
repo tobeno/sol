@@ -154,6 +154,10 @@ export class Data<
     return this.changeCase(kebabcaseText);
   }
 
+  get merged(): Data {
+    return Data.create(Object.assign({}, ...(this.value as any)));
+  }
+
   get logged(): this {
     log(String(this.json));
 
