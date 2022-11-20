@@ -95,6 +95,10 @@ export class Text extends Wrapper<string> {
     return Text.create(this.value.trim());
   }
 
+  get number(): number {
+    return Number(this.value);
+  }
+
   get logged(): this {
     log(this.toString());
 
