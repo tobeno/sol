@@ -138,6 +138,16 @@ export const globals = {
     },
     'See https://day.js.org/docs/en/installation/installation',
   ),
+  debug: withHelp(
+    {
+      get() {
+        return {
+          ...require('../../debug/module'),
+        };
+      },
+    },
+    'Debug utils',
+  ),
   dir: withHelp(
     {
       value: Directory.create,
@@ -431,6 +441,7 @@ declare global {
   const cwd: Globals['cwd'];
   const data: Globals['data'];
   const day: Globals['day'];
+  const debug: Globals['debug'];
   const dir: Globals['dir'];
   const dirs: Globals['dirs'];
   const edit: Globals['edit'];
