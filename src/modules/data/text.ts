@@ -289,6 +289,20 @@ export class Text extends Wrapper<string> {
   }
 
   /**
+   * Returns true if the text starts with the given string.
+   */
+  startsWith(...args: Parameters<String['startsWith']>): boolean {
+    return this.value.startsWith(...args);
+  }
+
+  /**
+   * Returns true if the text ends with the given string.
+   */
+  endsWith(...args: Parameters<String['startsWith']>): boolean {
+    return this.value.startsWith(...args);
+  }
+
+  /**
    * Returns the index of the given string or a negative value if not found.
    */
   indexOf(...args: Parameters<String['indexOf']>): number {
@@ -300,6 +314,15 @@ export class Text extends Wrapper<string> {
    */
   lastIndexOf(...args: Parameters<String['lastIndexOf']>): number {
     return this.value.lastIndexOf(...args);
+  }
+
+  /**
+   * Splits the string by the given separator.
+   */
+  split(...args: Parameters<String['split']>): Data<Text[]> {
+    return Data.create(
+      this.value.split(...args).map((value) => Text.create(value)),
+    );
   }
 
   /**
@@ -332,13 +355,6 @@ export class Text extends Wrapper<string> {
     this.format = format;
 
     return this;
-  }
-
-  /**
-   * Executes the text as JavaScript.
-   */
-  eval<ReturnType = any>(): ReturnType {
-    return eval(this.toString());
   }
 
   /**

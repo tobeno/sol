@@ -1,3 +1,4 @@
+import { isNotEmpty } from '../../utils/data';
 import { exec } from '../shell/sh';
 import { File } from './file';
 import { FileCollection } from './storage-item-collection';
@@ -16,7 +17,7 @@ export function grep(pattern: string | RegExp, path?: string): FileCollection {
       },
     )
       .split('\n')
-      .filter((file) => !!file)
+      .filter((file) => isNotEmpty(file))
       .map((file) => File.create(file)),
   );
 }

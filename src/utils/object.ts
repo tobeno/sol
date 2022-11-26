@@ -1,4 +1,5 @@
 import { RecordItemType } from '../interfaces/util';
+import { isNotEmpty } from './data';
 import { camelcaseText, constantcaseText, snakecaseText } from './text';
 
 export function sortObjectKeys<T extends Record<string, any>>(obj: T): T {
@@ -132,9 +133,7 @@ export function unionObjectKeys<
 
 export function filterObject<T extends Record<string, any>>(
   obj: T,
-  cb: (value: RecordItemType<T>, key: string) => boolean = (
-    value: RecordItemType<T>,
-  ) => !!value,
+  cb: (value: RecordItemType<T>, key: string) => boolean = isNotEmpty,
 ): Partial<T> {
   const result: any = {};
 

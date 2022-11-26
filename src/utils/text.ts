@@ -1,6 +1,7 @@
 import { withHelp } from './metadata';
 import * as changeCase from 'change-case';
 import { uniqueArray } from './array';
+import { isNotEmpty } from './data';
 
 export function lines(str: string): string[] {
   return str.replace(/\r/g, '').trimEnd().split('\n');
@@ -19,10 +20,7 @@ export function rsortLines(str: string): string {
 }
 
 export const filterLines = withHelp(
-  (
-    str: string,
-    cb: (line: string) => boolean = (line: string) => !!line,
-  ): string => {
+  (str: string, cb: (line: string) => boolean = isNotEmpty): string => {
     return str.replace(/(.*)(\r?\n|$)/g, (...matches: string[]) => {
       if (!cb(matches[1])) {
         return '';

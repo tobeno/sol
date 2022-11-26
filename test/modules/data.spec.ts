@@ -122,8 +122,7 @@ describe('data module', () => {
 
             return { id: match[0], name: match[1] };
           })
-          .filter((item) => !!item)
-          .map((item) => JSON.stringify(item));
+          .filtered.map((item) => JSON.stringify(item));
 
         text = data.join('.');
 

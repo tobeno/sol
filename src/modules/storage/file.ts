@@ -10,7 +10,7 @@ import { log } from '../../utils/log';
  * Wrapper for a file.
  */
 export class File extends StorageItem {
-  constructor(path: string) {
+  constructor(path: string | Text) {
     super(path);
   }
 
@@ -258,13 +258,6 @@ export class File extends StorageItem {
     fs.copyFileSync(this.path, newPath);
 
     return File.create(newPath);
-  }
-
-  /**
-   * Executes the content of the file.
-   */
-  eval<ResultType = any>(): ResultType {
-    return eval(this.text.toString());
   }
 
   /**

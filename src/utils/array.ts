@@ -1,3 +1,5 @@
+import { isNotEmpty } from './data';
+
 export function uniqueArray<ItemType = any>(arr: ItemType[]): ItemType[] {
   return [...new Set(arr)];
 }
@@ -25,7 +27,7 @@ export function unionArray<ItemType = any>(
 
 export function filterArray<ItemType = any>(
   arr: ItemType[],
-  cb: (item: ItemType) => boolean = (item: ItemType) => !!item,
+  cb: (item: ItemType) => boolean = isNotEmpty,
 ): ItemType[] {
   return arr.filter(cb);
 }

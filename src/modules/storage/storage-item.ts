@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { inspect } from 'util';
 import * as os from 'os';
+import { Text } from '../data/text';
 
 /**
  * Base class for all storage items.
@@ -9,7 +10,9 @@ import * as os from 'os';
 export abstract class StorageItem {
   absolutePath: string;
 
-  constructor(relativePath: string, public basePath?: string) {
+  constructor(relativePath: string | Text, public basePath?: string) {
+    relativePath = String(relativePath);
+
     // Resolve home directory references
     if (relativePath.startsWith('~/')) {
       relativePath = path.join(os.homedir(), relativePath.substr(2));

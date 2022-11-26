@@ -24,6 +24,7 @@ import {
 import { log } from '../../utils/log';
 import { uniqueArray } from '../../utils/array';
 import { dereferenceJsonSchema } from '../../utils/json-schema';
+import { isNotEmpty } from '../../utils/data';
 
 /**
  * Generic wrapper for runtime objects.
@@ -171,7 +172,7 @@ export class Data<
    * Returns the data with falsy values removed.
    */
   get filtered(): Data<AnyPartial<ValueType>> {
-    return this.filter((value: any) => !!value);
+    return this.filter(isNotEmpty);
   }
 
   /**
