@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+const path = require('path');
+const fs = require('fs');
 
 const rootPath = path.resolve(__dirname, '..');
 if (!fs.existsSync(path.join(rootPath, 'node_modules'))) {
