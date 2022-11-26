@@ -206,15 +206,8 @@ export function play(pathOrFile: string | File | null = null): PlayFile {
 /**
  * Returns available playground files.
  */
-export function listPlays(): Record<string, PlayFile> {
-  return [...getPlayDir().files()].reduce(
-    (result: Record<string, PlayFile>, file) => {
-      result[file.basenameWithoutExt] = playFile(file.path);
-
-      return result;
-    },
-    {},
-  );
+export function getPlays(): PlayFile[] {
+  return [...getPlayDir().files()].map((file) => playFile(file.path));
 }
 
 /**

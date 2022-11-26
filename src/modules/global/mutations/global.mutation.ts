@@ -28,7 +28,7 @@ import { grep } from '../../storage/search';
 import jsonata from 'jsonata';
 import { log } from '../../../utils/log';
 import { open, openApp } from '../../integrations/open';
-import { listPlays, play, playFile, replay } from '../../play/play';
+import { getPlays, play, playFile, replay } from '../../play/play';
 import type * as shell from '../../shell/sh';
 import {
   getSolExtensions,
@@ -283,10 +283,10 @@ export const globals = {
   plays: withHelp(
     {
       get() {
-        return listPlays();
+        return getPlays();
       },
     },
-    'List available play files',
+    'Returns available play files',
   ),
   replay: withHelp(
     {
