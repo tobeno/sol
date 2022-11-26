@@ -1,26 +1,13 @@
 #!/usr/bin/env node
-const path = require('path');
-const fs = require('fs');
-const { spawnSync } = require('child_process');
 
-const rootPath = path.join(__dirname, '..');
+const rootPath = path.resolve(__dirname, '..');
 if (!fs.existsSync(path.join(rootPath, 'node_modules'))) {
   spawnSync('npm i', {
     cwd: rootPath,
   });
 }
 
-const { register } = require('@swc-node/register/register');
-
-const tsconfig = JSON.parse(
-  fs
-    .readFileSync(path.join(rootPath, 'tsconfig.json'), 'utf8')
-    .replace(/(\s\/\*[^/]+?\*\/|\n *\/\/.+)/g, ''),
-);
-
-register(tsconfig.compilerOptions);
-
-require('../src/setup');
+require('../lib/setup');
 
 const args = process.argv.slice(2);
 if (args.length > 0) {
