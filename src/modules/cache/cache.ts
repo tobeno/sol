@@ -1,4 +1,5 @@
 import { File } from '../storage/file';
+import { getCurrentSolWorkspace } from '../sol/sol-workspace';
 
 const cache = new Map<string | symbol, any>();
 
@@ -26,12 +27,11 @@ export function fileCached<ResultType = any>(
   fn: () => ResultType,
 ): ResultType {
   if (typeof pathOrFile === 'string' && !pathOrFile.match(/[/\\]/)) {
-    pathOrFile = solWorkspace.cacheDir.file(pathOrFile);
+    pathOrFile = getCurrentSolWorkspace().cacheDir.file(pathOrFile);
   }
 
   const file = File.create(pathOrFile);
-
-  if (!file.exists) {
+  if (!file.length) {
     const result = fn();
     file.json = {
       data: result,

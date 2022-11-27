@@ -27,17 +27,12 @@ describe('data module', () => {
   describe('transformation', () => {
     describe('file', () => {
       it('should transform a JSON file', async () => {
-        const data = File.create<ProductsFile>(
-          `${__dirname}/../assets/products.json`,
-        ).json;
+        const data = File.create(`${__dirname}/../assets/products.json`)
+          .json as Data<ProductsFile>;
 
-        const obj = data.value;
+        expect(data.value).toHaveProperty('products');
 
-        expect(obj).toHaveProperty('products');
-
-        (obj as any).variants = Array.from(
-          Data.create(obj.products).get('variants')?.value,
-        );
+        data.set('variants', data.get('products.variants'));
 
         const tmpFile = tmp.fileSync();
         data.json.saveAs(tmpFile.name);
@@ -51,12 +46,10 @@ describe('data module', () => {
       });
 
       it('should transform a YAML file', async () => {
-        const data = File.create<ProductsFile>(
-          `${__dirname}/../assets/products.yaml`,
-        ).yaml;
-        const obj = data.value;
+        const data = File.create(`${__dirname}/../assets/products.yaml`)
+          .yaml as Data<ProductsFile>;
 
-        expect(obj).toHaveProperty('products');
+        expect(data.value).toHaveProperty('products');
 
         const tmpFile = tmp.fileSync();
         data.yaml.saveAs(tmpFile.name);
@@ -65,9 +58,8 @@ describe('data module', () => {
       });
 
       it('should transform a CSV file', async () => {
-        let data = File.create<ProductVariant[]>(
-          `${__dirname}/../assets/variants.csv`,
-        ).csv;
+        let data = File.create(`${__dirname}/../assets/variants.csv`)
+          .csv as Data<ProductVariant[]>;
 
         data = data.sort((a, b) => a.quantity - b.quantity);
 

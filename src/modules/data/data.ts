@@ -371,6 +371,23 @@ export class Data<
   }
 
   /**
+   * Sets the value at the given path or index.
+   */
+  set(path: string | number, value: any): this {
+    if (value instanceof Data) {
+      value = value.value;
+    }
+
+    if (typeof path === 'string' && path.includes('.')) {
+      throw new Error('Does not support nested path expressions.');
+    }
+
+    (this.value as any)[path] = value;
+
+    return this;
+  }
+
+  /**
    * Returns the data with the casing changed.
    */
   changeCase(cb: (text: string) => string): Data {
