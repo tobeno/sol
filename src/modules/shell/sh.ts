@@ -48,7 +48,7 @@ function wrapShelljsFn<FnNameType extends keyof Shelljs>(
     if (['ls', 'find'].includes(fnName)) {
       result = Data.create(result.map((item: string) => item));
     } else if (result instanceof String) {
-      result = Text.create(result);
+      result = Text.create(String(result));
     } else {
       console.log('Unknown result', result);
     }
