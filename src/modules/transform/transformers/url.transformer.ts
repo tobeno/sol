@@ -11,11 +11,7 @@ export class UrlTransformer extends StringTransformer<any> {
   }
 
   stringify(input: any): string {
-    if (input instanceof Url) {
-      input = input.value;
-    }
-
-    return input;
+    return String(input);
   }
 
   parse(input: string): Url {
