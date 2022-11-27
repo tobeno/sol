@@ -8,6 +8,8 @@ import { Text } from '../data/text';
 import { log } from '../../utils/log';
 import { Wrapper } from '../data/wrapper';
 import { inspect } from 'util';
+import { unwrap } from '../../utils/data';
+import { MaybeWrapped } from '../../interfaces/data';
 
 /**
  * Base class for storage item collections.
@@ -198,8 +200,8 @@ export class FileCollection extends GenericStorageItemCollection<File> {
     return this;
   }
 
-  static create(items: File[]): FileCollection {
-    return new FileCollection(items);
+  static create(items: MaybeWrapped<File[]>): FileCollection {
+    return new FileCollection(unwrap(items));
   }
 }
 
@@ -207,8 +209,8 @@ export class FileCollection extends GenericStorageItemCollection<File> {
  * Wrapper for a collection of directories.
  */
 export class DirectoryCollection extends GenericStorageItemCollection<Directory> {
-  static create(items: Directory[]): DirectoryCollection {
-    return new DirectoryCollection(items);
+  static create(items: MaybeWrapped<Directory[]>): DirectoryCollection {
+    return new DirectoryCollection(unwrap(items));
   }
 }
 
@@ -218,8 +220,10 @@ export class DirectoryCollection extends GenericStorageItemCollection<Directory>
 export class StorageItemCollection extends GenericStorageItemCollection<
   File | Directory
 > {
-  static create(items: (File | Directory)[]): StorageItemCollection {
-    return new StorageItemCollection(items);
+  static create(
+    items: MaybeWrapped<(File | Directory)[]>,
+  ): StorageItemCollection {
+    return new StorageItemCollection(unwrap(items));
   }
 }
 

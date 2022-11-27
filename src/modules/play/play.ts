@@ -5,6 +5,7 @@ import { getSolReplServer } from '../sol/sol-repl';
 import { log } from '../../utils/log';
 import { getCurrentSolWorkspace } from '../sol/sol-workspace';
 import { Data } from '../data/data';
+import { MaybeWrapped } from '../../interfaces/data';
 
 /**
  * Class for interacting with playground files.
@@ -156,9 +157,11 @@ export default null;
     return result;
   }
 
-  static create(pathOrFile: string | File | null): PlayFile {
+  static create(pathOrFile: MaybeWrapped<string> | File | null): PlayFile {
     let path: string;
     if (!(pathOrFile instanceof File)) {
+      pathOrFile = pathOrFile ? String(pathOrFile) : null;
+
       path =
         pathOrFile || `play-${new Date().toISOString().replace(/[^0-9]/g, '')}`;
 

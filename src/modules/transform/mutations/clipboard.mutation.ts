@@ -9,11 +9,11 @@ import {
   yamlToData,
 } from '../transformer';
 import { Url } from '../../web/url';
-import { Text } from '../../data/text';
 import { Ast } from '../../data/ast';
 import { Markdown } from '../../data/markdown';
 import { Html } from '../../data/html';
 import { Xml } from '../../data/xml';
+import { MaybeWrapped } from '../../../interfaces/data';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {
@@ -65,7 +65,7 @@ declare module '../../clipboard/clipboard' {
     /**
      * Sets the URL in the clipboard.
      */
-    set url(value: Url | Text | string);
+    set url(value: Url | MaybeWrapped<string>);
 
     /**
      * Loads the clipboard contents as HTML.
@@ -75,7 +75,7 @@ declare module '../../clipboard/clipboard' {
     /**
      * Sets the HTML in the clipboard.
      */
-    set html(value: Html | Text | string);
+    set html(value: Html | MaybeWrapped<string>);
 
     /**
      * Loads the clipboard contents as XML.
@@ -85,7 +85,7 @@ declare module '../../clipboard/clipboard' {
     /**
      * Sets the XML in the clipboard.
      */
-    set xml(value: Xml | Text | string);
+    set xml(value: Xml | MaybeWrapped<string>);
 
     /**
      * Loads the clipboard contents as Markdown.
@@ -95,7 +95,7 @@ declare module '../../clipboard/clipboard' {
     /**
      * Sets the Markdown in the clipboard.
      */
-    set md(value: Markdown | Text | string);
+    set md(value: Markdown | MaybeWrapped<string>);
   }
 }
 
@@ -147,7 +147,7 @@ mutateClass(
         return Url.create(this.text);
       },
 
-      set(value: Url | Text | string) {
+      set(value: Url | MaybeWrapped<string>) {
         this.text = Url.create(value).text;
       },
     },
@@ -157,7 +157,7 @@ mutateClass(
         return Html.create(this.text);
       },
 
-      set(value: Html | Text | string) {
+      set(value: Html | MaybeWrapped<string>) {
         this.value = String(value);
       },
     },
@@ -167,7 +167,7 @@ mutateClass(
         return Xml.create(this.text);
       },
 
-      set(value: Xml | Text | string) {
+      set(value: Xml | MaybeWrapped<string>) {
         this.value = String(value);
       },
     },
@@ -177,7 +177,7 @@ mutateClass(
         return Markdown.create(this.text);
       },
 
-      set(value: Markdown | Text | string) {
+      set(value: Markdown | MaybeWrapped<string>) {
         this.text = Markdown.create(value).text;
       },
     },

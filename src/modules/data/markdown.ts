@@ -1,6 +1,7 @@
 import { Wrapper } from './wrapper';
 import { Text } from './text';
 import { DataFormat } from './data-format';
+import { MaybeWrapped } from '../../interfaces/data';
 
 /**
  * Wrapper for Markdown documents.
@@ -13,7 +14,7 @@ export class Markdown extends Wrapper<string> {
     return Text.create(this.value, DataFormat.Markdown);
   }
 
-  static create(value: Text | string | any): Markdown {
+  static create(value: MaybeWrapped<string> | any): Markdown {
     if (value instanceof Markdown) {
       return value;
     }

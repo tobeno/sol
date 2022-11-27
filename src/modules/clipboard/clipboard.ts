@@ -1,3 +1,4 @@
+import { MaybeWrapped } from '../../interfaces/data';
 import { Text } from '../data/text';
 
 /**
@@ -14,8 +15,8 @@ export class Clipboard {
   /**
    * Sets the clipboard contents.
    */
-  set value(value: any) {
-    require('clipboardy').writeSync(value);
+  set value(value: MaybeWrapped<string>) {
+    require('clipboardy').writeSync(String(value));
   }
 
   /**
@@ -28,7 +29,7 @@ export class Clipboard {
   /**
    * Sets the clipboard contents.
    */
-  set text(value: Text | string) {
+  set text(value: MaybeWrapped<string>) {
     this.value = String(value);
   }
 }

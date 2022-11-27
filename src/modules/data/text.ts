@@ -22,6 +22,7 @@ import {
 import { Data } from './data';
 import { log } from '../../utils/log';
 import { Wrapper } from './wrapper';
+import { MaybeWrapped } from '../../interfaces/data';
 
 /**
  * Wrapper for strings.
@@ -319,9 +320,9 @@ export class Text extends Wrapper<string> {
   /**
    * Splits the string by the given separator.
    */
-  split(...args: Parameters<String['split']>): Data<Text[]> {
+  split(separator: string | RegExp, limit?: number): Data<Text[]> {
     return Data.create(
-      this.value.split(...args).map((value) => Text.create(value)),
+      this.value.split(separator, limit).map((value) => Text.create(value)),
     );
   }
 
@@ -376,7 +377,10 @@ export class Text extends Wrapper<string> {
     return this.value;
   }
 
-  static create(value: Text | string, format: string | null = null): Text {
+  static create(
+    value: MaybeWrapped<string>,
+    format: string | null = null,
+  ): Text {
     if (value instanceof Text) {
       let text = value;
 
@@ -385,6 +389,8 @@ export class Text extends Wrapper<string> {
       }
 
       return text;
+    } else {
+      value = String(value);
     }
 
     return new Text(value, format);

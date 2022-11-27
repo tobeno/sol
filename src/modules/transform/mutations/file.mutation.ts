@@ -13,9 +13,9 @@ import {
 import { File } from '../../storage/file';
 import { Ast } from '../../data/ast';
 import { Markdown } from '../../data/markdown';
-import { Text } from '../../data/text';
 import { Html } from '../../data/html';
 import { Xml } from '../../data/xml';
+import { MaybeWrapped } from '../../../interfaces/data';
 
 declare module '../../storage/file' {
   interface File {
@@ -67,7 +67,7 @@ declare module '../../storage/file' {
     /**
      * Sets the HTML in the file.
      */
-    set html(value: Html | Text | string);
+    set html(value: Html | MaybeWrapped<string>);
 
     /**
      * Loads the file contents as XML.
@@ -77,7 +77,7 @@ declare module '../../storage/file' {
     /**
      * Sets the XML in the file.
      */
-    set xml(value: Xml | Text | string);
+    set xml(value: Xml | MaybeWrapped<string>);
 
     /**
      * Loads the file contents as Markdown.
@@ -87,7 +87,7 @@ declare module '../../storage/file' {
     /**
      * Sets the Markdown in the file.
      */
-    set md(value: Markdown | Text | string);
+    set md(value: Markdown | MaybeWrapped<string>);
   }
 }
 
@@ -135,7 +135,7 @@ mutateClass(
         return Html.create(this.text);
       },
 
-      set(value: Html | Text | string) {
+      set(value: Html | MaybeWrapped<string>) {
         this.text = String(value);
       },
     },
@@ -145,7 +145,7 @@ mutateClass(
         return Xml.create(this.text);
       },
 
-      set(value: Xml | Text | string) {
+      set(value: Xml | MaybeWrapped<string>) {
         this.text = String(value);
       },
     },
@@ -154,7 +154,7 @@ mutateClass(
       get(): Markdown {
         return Markdown.create(this.text);
       },
-      set(value: Markdown | Text | string) {
+      set(value: Markdown | MaybeWrapped<string>) {
         this.text = Markdown.create(value).text;
       },
     },

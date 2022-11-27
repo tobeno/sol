@@ -5,12 +5,13 @@ import { Directory } from './directory';
 import { StorageItemCollection } from './storage-item-collection';
 import { Text } from '../data/text';
 import { log } from '../../utils/log';
+import { MaybeWrapped } from '../../interfaces/data';
 
 /**
  * Wrapper for a file.
  */
 export class File extends StorageItem {
-  constructor(path: string | Text) {
+  constructor(path: string) {
     super(path);
   }
 
@@ -162,8 +163,8 @@ export class File extends StorageItem {
   /**
    * Sets the text contents of the file.
    */
-  set text(value: Text | string) {
-    fs.writeFileSync(this.path, value.toString(), 'utf8');
+  set text(value: MaybeWrapped<string>) {
+    fs.writeFileSync(this.path, String(value), 'utf8');
   }
 
   /**
@@ -308,11 +309,11 @@ export class File extends StorageItem {
     log(String(this));
   }
 
-  static create(pathOrFile: string | File): File {
+  static create(pathOrFile: MaybeWrapped<string> | File): File {
     if (pathOrFile instanceof File) {
       return pathOrFile;
     }
 
-    return new File(pathOrFile);
+    return new File(String(pathOrFile));
   }
 }

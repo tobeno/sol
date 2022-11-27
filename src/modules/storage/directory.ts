@@ -13,6 +13,8 @@ import {
   StorageItemCollection,
 } from './storage-item-collection';
 import { exec, spawn } from '../shell/sh';
+import { unwrap } from '../../utils/data';
+import { MaybeWrapped } from '../../interfaces/data';
 
 /**
  * Wrapper for a directory.
@@ -43,7 +45,7 @@ export class Directory extends StorageItem {
    * Returns the size of the directory in bytes.
    */
   get size(): number {
-    const output = exec(`du -sL '${this.path}'`);
+    const output = unwrap(exec(`du -sL '${this.path}'`));
 
     return parseInt(output.split(' ')[0], 10);
   }
@@ -225,11 +227,11 @@ export class Directory extends StorageItem {
     this.files('**').forEach((f) => f.pretty());
   }
 
-  static create(pathOrDirectory: string | Directory): Directory {
+  static create(pathOrDirectory: MaybeWrapped<string> | Directory): Directory {
     if (pathOrDirectory instanceof Directory) {
       return pathOrDirectory;
     }
 
-    return new Directory(pathOrDirectory);
+    return new Directory(String(pathOrDirectory));
   }
 }

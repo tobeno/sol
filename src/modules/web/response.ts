@@ -4,11 +4,11 @@ import type {
   AxiosResponse,
   AxiosResponseHeaders,
 } from 'axios';
+import { RawAxiosResponseHeaders } from 'axios';
 import { web } from './web';
 import { Text } from '../data/text';
 import { Wrapper } from '../data/wrapper';
 import { Data } from '../data/data';
-import { RawAxiosResponseHeaders } from 'axios';
 
 /**
  * Wrapper for a HTTP response.

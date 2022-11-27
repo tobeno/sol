@@ -5,6 +5,8 @@ import type { AnyNode, Element, Text as TextNode } from 'domhandler';
 import type { selectAll, selectOne } from 'css-select';
 import { inspect } from 'util';
 import { Data } from './data';
+import { MaybeWrapped } from '../../interfaces/data';
+import { unwrap } from '../../utils/data';
 
 /**
  * Wrapper for HTML documents or snippets.
@@ -121,14 +123,12 @@ export class Html<
     return this.text.value;
   }
 
-  static create(value: Text | AnyNode | string | any): Html {
+  static create(value: AnyNode | MaybeWrapped<string> | any): Html {
     if (value instanceof Html) {
       return value;
     }
 
-    if (value instanceof Text || value instanceof String) {
-      value = value.toString();
-    }
+    value = unwrap(value);
 
     if (value && typeof value === 'object') {
       return new Html(value);

@@ -5,6 +5,8 @@ import { Data } from './data';
 import type { AnyNode, Element, Text as TextNode } from 'domhandler';
 import type { selectAll, selectOne } from 'css-select';
 import { Wrapper } from './wrapper';
+import { MaybeWrapped } from '../../interfaces/data';
+import { unwrap } from '../../utils/data';
 
 /**
  * Wrapper for XML documents or snippets.
@@ -122,14 +124,12 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
     return this.text.value;
   }
 
-  static create(value: Text | AnyNode | string | any): Xml {
+  static create(value: AnyNode | MaybeWrapped<string> | any): Xml {
     if (value instanceof Xml) {
       return value;
     }
 
-    if (value instanceof Text || value instanceof String) {
-      value = value.toString();
-    }
+    value = unwrap(value);
 
     if (value && typeof value === 'object') {
       return new Xml(value);

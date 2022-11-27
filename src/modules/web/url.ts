@@ -2,6 +2,7 @@ import { Wrapper } from '../data/wrapper';
 import { URL, URLSearchParams } from 'url';
 import { Text } from '../data/text';
 import { Response } from './response';
+import { MaybeWrapped } from '../../interfaces/data';
 
 /**
  * Wrapper for an URL.
@@ -25,7 +26,7 @@ export class Url extends Wrapper<string> {
   /**
    * Sets the URL from a string.
    */
-  set text(text: Text) {
+  set text(text: MaybeWrapped<string>) {
     this.value = String(text);
   }
 
@@ -204,7 +205,7 @@ export class Url extends Wrapper<string> {
     });
   }
 
-  static create(value: Text | string | any): Url {
+  static create(value: MaybeWrapped<string> | any): Url {
     if (value instanceof Url) {
       return value;
     }

@@ -57,15 +57,10 @@ function wrapShelljsFn<FnNameType extends keyof Shelljs>(
   }) as any;
 }
 
-const execInternal = wrapShelljsFn('exec') as any as (
-  command: string,
-  options?: shelljs.ExecOptions & { async?: false | undefined },
-) => shelljs.ShellString;
+const execInternal = wrapShelljsFn('exec') as any;
 
 export const cd = wrapShelljsFn('cd');
-export const exec = (
-  ...args: Parameters<typeof execInternal>
-): ReturnType<typeof execInternal> => {
+export const exec = (...args: Parameters<typeof execInternal>): Text => {
   return execInternal(args[0], {
     silent: true,
     ...(args[1] || {}),

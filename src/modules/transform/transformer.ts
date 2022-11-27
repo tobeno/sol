@@ -6,6 +6,7 @@ import type { Data } from '../data/data';
 import type { Text } from '../data/text';
 import type { Markdown } from '../data/markdown';
 import type { DataTransformer } from './transformers/data.transformer';
+import { MaybeWrapped } from '../../interfaces/data';
 
 // Helper functions with dynamic imports to avoid circular dependencies
 function getDataClass(): typeof Data {
@@ -43,7 +44,7 @@ export function transform<InputType = any, OutputType = any>(
 }
 
 export function jsonToData<ValueType = any>(
-  value: Text | string | any,
+  value: MaybeWrapped<string> | any,
 ): Data<ValueType> {
   const Text = getTextClass();
   if (value && typeof value === 'object' && !(value instanceof Text)) {
@@ -77,7 +78,7 @@ export function dataToJson(value: Data | any): Text {
 }
 
 export function yamlToData<ValueType = any>(
-  value: Text | string,
+  value: MaybeWrapped<string>,
 ): Data<ValueType> {
   const Text = getTextClass();
   value = Text.create(value, DataFormat.Yaml);
@@ -105,7 +106,7 @@ export function dataToYaml(value: Data | any): Text {
 }
 
 export function csvToData<ValueType = any>(
-  value: Text | string,
+  value: MaybeWrapped<string>,
 ): Data<ValueType> {
   const Text = getTextClass();
   value = Text.create(value, DataFormat.Csv);
@@ -132,7 +133,7 @@ export function dataToCsv(value: Data | any): Text {
   );
 }
 
-export function codeToAst(value: Text | string | Ast): Ast {
+export function codeToAst(value: MaybeWrapped<string> | Ast): Ast {
   const Ast = getAstClass();
   if (value instanceof Ast) {
     return value;
@@ -151,7 +152,7 @@ export function astToCode(value: Ast | any): Text {
   return transform(value, new DataTransformation(DataType.Ast, DataType.Text));
 }
 
-export function markdownToHtml(value: Markdown | Text | string): Text {
+export function markdownToHtml(value: Markdown | MaybeWrapped<string>): Text {
   const Markdown = getMarkdownClass();
   value = Markdown.create(value);
 
