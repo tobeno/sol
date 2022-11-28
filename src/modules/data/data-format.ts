@@ -30,8 +30,6 @@ export class DataFormat {
         return 'xml';
       case DataFormat.Markdown:
         return 'md';
-      case DataFormat.TextNewlineSeparated:
-        return 'json';
       case DataFormat.TextDate:
         return 'date';
       default:

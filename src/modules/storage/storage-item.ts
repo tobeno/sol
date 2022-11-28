@@ -96,7 +96,7 @@ export abstract class StorageItem {
   /**
    * Stores the item in a variable with the given name.
    */
-  as(name: string): this {
+  var(name: string): this {
     (global as any)[name] = this;
 
     return this;

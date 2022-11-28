@@ -7,9 +7,11 @@ import { Wrapper } from './wrapper';
 /**
  * Wrapper for a JavaScript / TypeScript AST (Abstract Syntax Tree) node.
  */
-export class Ast extends Wrapper<babelTypes.Node> {
+export class Ast<
+  NodeType extends babelTypes.Node = babelTypes.Node,
+> extends Wrapper<NodeType> {
   constructor(
-    public value: babelTypes.Node,
+    public value: NodeType,
     public scope: Scope | null = null,
     public parentPath: NodePath | null = null,
   ) {
@@ -19,14 +21,14 @@ export class Ast extends Wrapper<babelTypes.Node> {
   /**
    * Returns the AST as wrapped data.
    */
-  get data(): Data<babelTypes.Node> {
+  get data(): Data<NodeType> {
     return Data.create(this.value);
   }
 
   /**
    * Returns the node of this AST.
    */
-  get node(): babelTypes.Node {
+  get node(): NodeType {
     return this.value;
   }
 

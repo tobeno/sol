@@ -24,7 +24,7 @@ import {
 import { log } from '../../utils/log';
 import { uniqueArray } from '../../utils/array';
 import { dereferenceJsonSchema } from '../../utils/json-schema';
-import { isNotEmpty } from '../../utils/data';
+import { isEmpty, isNotEmpty } from '../../utils/data';
 
 /**
  * Generic wrapper for runtime objects.
@@ -39,9 +39,9 @@ export class Data<
   }
 
   /**
-   * Clones the data.
+   * Returns a clone of this data
    */
-  get clone(): Data<ValueType> {
+  get cloned(): Data<ValueType> {
     return Data.create(JSON.parse(JSON.stringify(this.value))) as any;
   }
 
@@ -111,6 +111,24 @@ export class Data<
     const values = this.values;
 
     return Data.create(values.sum / values.length).value as any;
+  }
+
+  /**
+   * Returns the minimum of all values.
+   */
+  get min(): number {
+    const values = this.values.value;
+
+    return Math.min(...values.map((value) => Number(value)));
+  }
+
+  /**
+   * Returns the maximum of all values.
+   */
+  get max(): number {
+    const values = this.values.value;
+
+    return Math.max(...values.map((value) => Number(value)));
   }
 
   /**
@@ -221,7 +239,7 @@ export class Data<
    * Merges all sub-objects of the array into one object.
    */
   get merged(): Data {
-    return Data.create(Object.assign({}, ...(this.value as any)));
+    return Data.create(Object.assign({}, ...this.values.value));
   }
 
   /**
@@ -231,6 +249,20 @@ export class Data<
     log(String(this.json));
 
     return this;
+  }
+
+  /**
+   * Returns true if the value is empty.
+   */
+  get empty(): boolean {
+    return isEmpty(this.value);
+  }
+
+  /**
+   * Returns true if the value is not empty.
+   */
+  get notEmpty(): boolean {
+    return isNotEmpty(this.value);
   }
 
   /**
@@ -254,24 +286,23 @@ export class Data<
       >
     ) => Data<ValueType>;
   } {
-    const items = this.value;
-    if (!Array.isArray(items)) {
-      throw new Error('Not an array.');
-    }
-
     return new Proxy(
       {},
       {
         has: (_: any, key: string): boolean => {
-          return items.length > 0 ? key in items[0] : false;
+          const firstItem = this.first?.value as any;
+
+          return firstItem ? key in firstItem : false;
         },
         ownKeys: (_: any): (string | symbol)[] => {
-          return items.length > 0 ? Reflect.ownKeys(items[0]) : [];
+          const firstItem = this.first?.value as any;
+
+          return firstItem ? Reflect.ownKeys(firstItem) : [];
         },
         get: (target: any, key: string): any => {
           return new Proxy(() => {}, {
             apply: (_: any, thisArg: any, args: any[]): any => {
-              return data(items.map((item) => item[key].apply(item, args)));
+              return this.map((item) => (item as any)[key](...args));
             },
           });
         },
@@ -328,7 +359,7 @@ export class Data<
    */
   get entries(): Data<[KeyType, ItemType][]> {
     if (Array.isArray(this.value)) {
-      return Data.create(this.value.entries()) as any;
+      return Data.create([...this.value.entries()]) as any;
     }
 
     return Data.create(Object.entries(this.value as any)) as any;
@@ -337,8 +368,22 @@ export class Data<
   /**
    * Converts an array of entries into an object.
    */
-  get unentries(): Data<Record<string, any>> {
+  get unentries(): Data<
+    ValueType extends number[][] | [number, number][]
+      ? any[]
+      : Record<string, any>
+  > {
     if (Array.isArray(this.value)) {
+      const toArray = typeof this.value[0]?.[0] === 'number';
+      if (toArray) {
+        const result: any[] = [];
+        this.value.forEach(([index, item]) => {
+          result[index] = item;
+        });
+
+        return Data.create(result) as any;
+      }
+
       return Data.create(Object.fromEntries(this.value)) as any;
     }
 
@@ -475,10 +520,10 @@ export class Data<
    * Returns the data sorted keys.
    */
   sortKeys(
-    compareFn?: (a: KeyType, b: KeyType) => number,
+    compareFn: ((a: KeyType, b: KeyType) => number) | null = null,
   ): Data<ValueType extends Array<any> ? ValueType : any> {
     if (Array.isArray(this.value)) {
-      return Data.create([...this.value].sort(compareFn)) as any;
+      throw new Error('Cannot sort keys of an array.');
     }
 
     const entries = this.entries.value;
@@ -525,13 +570,11 @@ export class Data<
   /**
    * Returns the value matching the given callback.
    */
-  find(
-    cb: (value: ItemType, key: KeyType) => boolean,
-  ): Data<ItemType> | undefined {
+  find(cb: (value: ItemType, key: KeyType) => boolean): Data<ItemType> | null {
     if (Array.isArray(this.value)) {
       const result = this.value.find(cb as any) as any;
 
-      return result ? (Data.create(result) as any) : undefined;
+      return result ? (Data.create(result) as any) : null;
     }
 
     let result: any = null;
@@ -544,15 +587,17 @@ export class Data<
       }
     }
 
-    return result ? (Data.create(result) as any) : undefined;
+    return result ? (Data.create(result) as any) : null;
   }
 
   /**
    * Returns the index of the item matching the given callback.
    */
-  findIndex(cb: (value: ItemType, key: KeyType) => boolean): KeyType {
+  findKey(cb: (value: ItemType, key: KeyType) => boolean): KeyType | null {
     if (Array.isArray(this.value)) {
-      return this.value.findIndex(cb as any) as any;
+      const result = this.value.findIndex(cb as any) as any;
+
+      return result >= 0 ? result : null;
     }
 
     let result: any = null;
@@ -687,15 +732,7 @@ export class Data<
    */
   mapKeys(cb: (key: KeyType, item: ItemType) => KeyType): this {
     if (Array.isArray(this.value)) {
-      return Data.create(
-        (this.value as any).reduce(
-          (result: any, item: ItemType, key: KeyType) => {
-            result[cb(key, item)] = item;
-            return result;
-          },
-          [] as any,
-        ) as any,
-      ) as any;
+      throw new Error('Cannot map keys of an array.');
     }
 
     const newValue: any = {};

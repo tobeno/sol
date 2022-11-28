@@ -218,7 +218,7 @@ export class Text extends Wrapper<string> {
    */
   replaceLines(pattern: string | RegExp, replacement: string): Text;
   /**
-   * Returns all lines with the pattern replaced by the replaces.
+   * Returns all lines with the pattern replaced by the replacer.
    */
   replaceLines(
     pattern: string | RegExp,
@@ -234,8 +234,16 @@ export class Text extends Wrapper<string> {
   /**
    * Returns the text with the pattern replaced by the replacement.
    */
-  replace(...args: Parameters<String['replace']>): Text {
-    return Text.create(this.value.replace(...args));
+  replace(pattern: string | RegExp, replacement: string): Text;
+  /**
+   * Returns the text with the pattern replaced by the replacer.
+   */
+  replace(
+    pattern: string | RegExp,
+    replacer: (...match: string[]) => string,
+  ): Text;
+  replace(...args: any): Text {
+    return Text.create(this.value.replace.apply(this.value, args));
   }
 
   /**
@@ -255,10 +263,8 @@ export class Text extends Wrapper<string> {
   /**
    * Matches the text against the given (RegExp) pattern returning all results.
    */
-  matchAll(
-    ...args: Parameters<String['matchAll']>
-  ): ReturnType<String['matchAll']> {
-    return this.value.matchAll(...args);
+  matchAll(...args: Parameters<String['matchAll']>): Data<RegExpMatchArray> {
+    return Data.create([...this.value.matchAll(...args)]) as any;
   }
 
   /**
@@ -300,7 +306,7 @@ export class Text extends Wrapper<string> {
    * Returns true if the text ends with the given string.
    */
   endsWith(...args: Parameters<String['startsWith']>): boolean {
-    return this.value.startsWith(...args);
+    return this.value.endsWith(...args);
   }
 
   /**

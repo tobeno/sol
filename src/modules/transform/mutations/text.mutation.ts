@@ -104,6 +104,12 @@ mutateClass(
       },
     },
 
+    xml: {
+      get(): Html {
+        return Xml.create(this);
+      },
+    },
+
     md: {
       get(): Markdown {
         return Markdown.create(this);

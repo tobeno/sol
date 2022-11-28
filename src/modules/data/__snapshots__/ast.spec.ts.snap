@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Ast traverse should traverse the nodes of the AST 1`] = `
+[
+  "ExpressionStatement",
+  "CallExpression",
+  "MemberExpression",
+  "Identifier",
+  "Identifier",
+  "StringLiteral",
+]
+`;

@@ -7,19 +7,28 @@ import type { selectAll, selectOne } from 'css-select';
 import { Wrapper } from './wrapper';
 import { MaybeWrapped } from '../../interfaces/data';
 import { unwrap } from '../../utils/data';
+import { ElementType } from 'domelementtype';
 
 /**
  * Wrapper for XML documents or snippets.
  */
 export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
   /**
-   * Returns the XML as text.
+   * Returns the node of the current HTML.
    */
-  get text(): Text {
-    const { default: render } =
-      require('dom-serializer') as typeof import('dom-serializer');
+  get node(): NodeType {
+    return this.value;
+  }
 
-    return Text.create(render(this.value), DataFormat.Html);
+  /**
+   * Returns the first element in the HTML (or the current if it is already an element).
+   */
+  get element(): Xml<Element> | null {
+    if (this.value.type !== ElementType.Tag) {
+      return (this.find((n) => n.type === ElementType.Tag) as any) || null;
+    }
+
+    return this as any;
   }
 
   /**
@@ -111,6 +120,16 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
     return Data.create(
       CSSselect.selectAll(selector, this.value).map((e) => Xml.create(e)),
     );
+  }
+
+  /**
+   * Returns the XML as text.
+   */
+  get text(): Text {
+    const { default: render } =
+      require('dom-serializer') as typeof import('dom-serializer');
+
+    return Text.create(render(this.value), DataFormat.Html);
   }
 
   /**

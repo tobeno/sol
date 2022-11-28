@@ -24,10 +24,12 @@ interface ProductsFile {
 }
 
 describe('data module', () => {
+  const testAssetsPath = `${__dirname}/../assets`;
+
   describe('transformation', () => {
     describe('file', () => {
       it('should transform a JSON file', async () => {
-        const data = File.create(`${__dirname}/../assets/products.json`)
+        const data = File.create(`${testAssetsPath}/products.json`)
           .json as Data<ProductsFile>;
 
         expect(data.value).toHaveProperty('products');
@@ -46,7 +48,7 @@ describe('data module', () => {
       });
 
       it('should transform a YAML file', async () => {
-        const data = File.create(`${__dirname}/../assets/products.yaml`)
+        const data = File.create(`${testAssetsPath}/products.yaml`)
           .yaml as Data<ProductsFile>;
 
         expect(data.value).toHaveProperty('products');
@@ -58,8 +60,9 @@ describe('data module', () => {
       });
 
       it('should transform a CSV file', async () => {
-        let data = File.create(`${__dirname}/../assets/variants.csv`)
-          .csv as Data<ProductVariant[]>;
+        let data = File.create(`${testAssetsPath}/variants.csv`).csv as Data<
+          ProductVariant[]
+        >;
 
         data = data.sort((a, b) => a.quantity - b.quantity);
 

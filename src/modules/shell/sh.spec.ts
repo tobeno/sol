@@ -1,10 +1,19 @@
-import '../../src/setup';
-import * as sh from '../../src/modules/shell/sh';
+import { exec } from './sh';
+import * as sh from './sh';
 
-describe('shell module', () => {
+describe('sh', () => {
+  const testAssetsPath = `${__dirname}/../../../test/assets`;
+
+  describe('exec', () => {
+    it('should exec the shell command', async () => {
+      const result = exec('echo "hello"');
+      expect(result.value).toBe('hello');
+    });
+  });
+
   describe('ls', () => {
     it('should list files', async () => {
-      const files = sh.ls(`${__dirname}/../assets/search`).value;
+      const files = sh.ls(`${testAssetsPath}/search`).value;
 
       expect(files[0]).toBe('children.json');
       expect(files[1]).toBe('men.json');
@@ -15,7 +24,7 @@ describe('shell module', () => {
   describe('find', () => {
     it('should list files', async () => {
       const files = sh
-        .find(`${__dirname}/../assets/search`)
+        .find(`${testAssetsPath}/search`)
         .value.filter((file) => file.endsWith('.json'));
 
       expect(files[0]).toMatch(/[/\\]children\.json$/);
@@ -26,19 +35,16 @@ describe('shell module', () => {
 
   describe('grep', () => {
     it('should find file names by string', async () => {
-      const files = sh.grep(
-        '-l',
-        'shoe',
-        `${__dirname}/../assets/search/*.json`,
-      ).lines.value;
+      const files = sh.grep('-l', 'shoe', `${testAssetsPath}/search/*.json`)
+        .lines.value;
 
       expect(files[0].value).toMatch(/men\.json$/);
       expect(files[1].value).toMatch(/women\.json$/);
     });
 
     it('should find matches by string', async () => {
-      const matches = sh.grep('shoe', `${__dirname}/../assets/search/*.json`)
-        .lines.value;
+      const matches = sh.grep('shoe', `${testAssetsPath}/search/*.json`).lines
+        .value;
 
       expect(matches[0].value).toBe(`      "name": "Leather shoe",`);
     });

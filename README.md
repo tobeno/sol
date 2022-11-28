@@ -56,7 +56,7 @@ Or this:
 
 ```
 // Fetch Sol README.md file as markdown and save it as `readme` variable
-> web.get('https://raw.githubusercontent.com/tobeno/sol/main/README.md').md.as('readme')
+> web.get('https://raw.githubusercontent.com/tobeno/sol/main/README.md').md.var('readme')
 
 // Render as HTML and open in browser
 > readme.html.saveAs('README.html').browse()
@@ -98,8 +98,8 @@ So you can use all of those:
 > let someVariable = text('abc')
 > someVariable.value
 
-// Assign after writing the pipeline (most wrappers support .as() out of the box)
-> text('abc').as('someVariable')
+// Assign after writing the pipeline (most wrappers support .var() out of the box)
+> text('abc').var('someVariable')
 > someVariable.value
 
 // Interrupt pipeline without assignment

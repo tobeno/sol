@@ -1,5 +1,4 @@
 import { File } from '../storage/file';
-import { rerequire } from '../../utils/module';
 import { Directory } from '../storage/directory';
 import { getSolReplServer } from '../sol/sol-repl';
 import { log } from '../../utils/log';
@@ -140,7 +139,7 @@ export default null;
       throw new Error(`No play found for '${file.path}'`);
     }
 
-    let result = rerequire(file.path);
+    let result = file.rerequire();
 
     if (typeof result.default !== 'undefined') {
       result = result.default;

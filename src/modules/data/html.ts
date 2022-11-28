@@ -7,6 +7,7 @@ import { inspect } from 'util';
 import { Data } from './data';
 import { MaybeWrapped } from '../../interfaces/data';
 import { unwrap } from '../../utils/data';
+import { ElementType } from 'domelementtype';
 
 /**
  * Wrapper for HTML documents or snippets.
@@ -14,11 +15,22 @@ import { unwrap } from '../../utils/data';
 export class Html<
   NodeType extends AnyNode = AnyNode,
 > extends Wrapper<NodeType> {
-  get text(): Text {
-    const { default: render } =
-      require('dom-serializer') as typeof import('dom-serializer');
+  /**
+   * Returns the node of the current HTML.
+   */
+  get node(): NodeType {
+    return this.value;
+  }
 
-    return Text.create(render(this.value), DataFormat.Html);
+  /**
+   * Returns the first element in the HTML (or the current if it is already an element).
+   */
+  get element(): Html<Element> | null {
+    if (this.value.type !== ElementType.Tag) {
+      return (this.find((n) => n.type === ElementType.Tag) as any) || null;
+    }
+
+    return this as any;
   }
 
   /**
@@ -110,6 +122,13 @@ export class Html<
     return Data.create(
       CSSselect.selectAll(selector, this.value).map((e) => Html.create(e)),
     );
+  }
+
+  get text(): Text {
+    const { default: render } =
+      require('dom-serializer') as typeof import('dom-serializer');
+
+    return Text.create(render(this.value), DataFormat.Html);
   }
 
   /**

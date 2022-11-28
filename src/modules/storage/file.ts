@@ -6,6 +6,7 @@ import { StorageItemCollection } from './storage-item-collection';
 import { Text } from '../data/text';
 import { log } from '../../utils/log';
 import { MaybeWrapped } from '../../interfaces/data';
+import { rerequire } from '../../utils/module';
 
 /**
  * Wrapper for a file.
@@ -208,6 +209,20 @@ export class File extends StorageItem {
 
   items(): StorageItemCollection {
     return StorageItemCollection.create(this as any);
+  }
+
+  /**
+   * Requires the file (cached if already required before).
+   */
+  require<ModuleType = any>(): ModuleType {
+    return require(this.path);
+  }
+
+  /**
+   * Requires the file from the file system again.
+   */
+  rerequire<ModuleType = any>(): ModuleType {
+    return rerequire(this.path);
   }
 
   /**

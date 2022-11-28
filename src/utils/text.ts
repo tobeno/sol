@@ -1,6 +1,5 @@
 import { withHelp } from './metadata';
 import * as changeCase from 'change-case';
-import { uniqueArray } from './array';
 import { isNotEmpty } from './data';
 
 export function lines(str: string): string[] {
@@ -8,26 +7,38 @@ export function lines(str: string): string[] {
 }
 
 export function mapLines(str: string, cb: (line: string) => any): string {
-  return lines(str).map(cb).join('\n') + '\n';
+  return lines(str).map(cb).join('\n') + (str.endsWith('\n') ? '\n' : '');
 }
 
 export function sortLines(str: string): string {
-  return lines(str).sort().join('\n') + '\n';
+  return lines(str).sort().join('\n') + (str.endsWith('\n') ? '\n' : '');
 }
 
 export function rsortLines(str: string): string {
-  return lines(str).sort().reverse().join('\n') + '\n';
+  return (
+    lines(str).sort().reverse().join('\n') + (str.endsWith('\n') ? '\n' : '')
+  );
 }
 
 export const filterLines = withHelp(
   (str: string, cb: (line: string) => boolean = isNotEmpty): string => {
-    return str.replace(/(.*)(\r?\n|$)/g, (...matches: string[]) => {
+    let result = str.replace(/(.*)(\r?\n|$)/g, (...matches: string[]) => {
       if (!cb(matches[1])) {
         return '';
       }
 
       return matches[0];
     });
+
+    if (!str.endsWith('\n') && result.endsWith('\n')) {
+      result = result.slice(0, -1);
+    }
+
+    if (result.endsWith('\r')) {
+      result = result.slice(0, -1);
+    }
+
+    return result;
   },
   'Removes lines using a filter function',
 );
@@ -67,7 +78,7 @@ export function replaceLines(
   return (
     lines(str)
       .map((line) => line.replace(pattern, replacer))
-      .join('\n') + '\n'
+      .join('\n') + (str.endsWith('\n') ? '\n' : '')
   );
 }
 
@@ -78,7 +89,7 @@ export function extractText(str: string, pattern: RegExp | string): string[] {
     pattern = new RegExp(pattern.source, pattern.flags + 'g');
   }
 
-  return uniqueArray(str.match(pattern) || []).sort();
+  return [...str.matchAll(pattern)].map((match) => match[0]);
 }
 
 export function capitalizeText(str: string): string {
