@@ -4,7 +4,7 @@ import { loopWhile } from 'deasync';
 import chalk from 'chalk';
 import type { AsyncCompleter, CompleterResult } from 'readline';
 import { log } from '../../utils/log';
-import { getSolMetadata } from '../../utils/metadata';
+import { getHelp } from '../../utils/metadata';
 import { getCurrentSolWorkspace } from './sol-workspace';
 import {
   DefinePropertiesMutation,
@@ -94,7 +94,7 @@ ${
   globalEntries.length
     ? globalEntries
         .map(([key, value]) => {
-          const help = getSolMetadata(value)?.help;
+          const help = getHelp(value);
 
           return `- ${solReplColor.primary(key)}${help ? `: ${help}` : ''}`;
         })

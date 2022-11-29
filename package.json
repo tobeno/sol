@@ -19,7 +19,8 @@
     "sol": "node --experimental-repl-await bin/sol",
     "format": "prettier --write \"src/**/*.ts\" \"*.{js,ts,json,yml,yaml}\"",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^9.0.9",

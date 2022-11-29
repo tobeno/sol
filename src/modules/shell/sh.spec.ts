@@ -1,5 +1,5 @@
-import { exec } from './sh';
 import * as sh from './sh';
+import { cat, exec, head, tail } from './sh';
 
 describe('sh', () => {
   const testAssetsPath = `${__dirname}/../../../test/assets`;
@@ -11,13 +11,45 @@ describe('sh', () => {
     });
   });
 
+  describe('cat', () => {
+    it('should return file contents', async () => {
+      const result = cat(`${testAssetsPath}/search/children.json`).json;
+      expect(result.value).toHaveProperty('products');
+    });
+  });
+
+  describe('tail', () => {
+    it('should tail the given file', async () => {
+      const result = tail(
+        {
+          '-n': 10,
+        } as any,
+        `${testAssetsPath}/search/children.json`,
+      );
+      expect(result.count('\n')).toBe(9);
+    });
+  });
+
+  describe('head', () => {
+    it('should head the given file', async () => {
+      const result = head(
+        {
+          '-n': 10,
+        } as any,
+        `${testAssetsPath}/search/children.json`,
+      );
+      expect(result.count('\n')).toBe(9);
+    });
+  });
+
   describe('ls', () => {
     it('should list files', async () => {
       const files = sh.ls(`${testAssetsPath}/search`).value;
 
       expect(files[0]).toBe('children.json');
-      expect(files[1]).toBe('men.json');
-      expect(files[2]).toBe('women.json');
+      expect(files[1]).toBe('directory');
+      expect(files[2]).toBe('men.json');
+      expect(files[3]).toBe('women.json');
     });
   });
 

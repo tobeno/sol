@@ -1,6 +1,6 @@
 import { File } from './file';
-import { tmp } from './tmp';
 import { Text } from '../data/text';
+import { TmpFile } from './tmp-file';
 
 /**
  * Saves the given content to a file.
@@ -27,7 +27,7 @@ export function save(content: any): File {
   }
 
   if (!file) {
-    file = tmp(text.ext);
+    file = TmpFile.create(text.ext);
   }
 
   file.text = text;

@@ -9,9 +9,12 @@ import type {
 } from '../../interfaces/util';
 import {
   cloneObjectDeep,
+  diffObjectKeys,
   flattenObject,
+  intersectObjectKeys,
   mapObjectKeys,
   traverseObject,
+  unionObjectKeys,
 } from '../../utils/object';
 import {
   camelcaseText,
@@ -22,9 +25,14 @@ import {
   titlecaseText,
 } from '../../utils/text';
 import { log } from '../../utils/log';
-import { uniqueArray } from '../../utils/array';
+import {
+  diffArray,
+  intersectArray,
+  unionArray,
+  uniqueArray,
+} from '../../utils/array';
 import { dereferenceJsonSchema } from '../../utils/json-schema';
-import { isEmpty, isNotEmpty } from '../../utils/data';
+import { isEmpty, isNotEmpty, unwrap } from '../../utils/data';
 
 /**
  * Generic wrapper for runtime objects.
@@ -620,6 +628,71 @@ export class Data<
     traverseObject(this.value, cb);
 
     return this;
+  }
+
+  /**
+   * Returns the diff of the two objects or arrays.
+   */
+  diff(other: Data | Record<string, any> | any[]): Data {
+    const otherValue = unwrap(other);
+    const value = this.value;
+    const isArray = Array.isArray(value);
+    const isOtherArray = Array.isArray(otherValue);
+    if (isArray !== isOtherArray) {
+      throw new Error('Can only diff if both are arrays or both are objects.');
+    }
+
+    if (isArray && isOtherArray) {
+      return Data.create(diffArray(value, otherValue));
+    }
+
+    const diff = diffObjectKeys(value as any, otherValue);
+
+    return Data.create(diff);
+  }
+
+  /**
+   * Returns the intersection of the two objects or arrays.
+   */
+  intersect(other: Data | Record<string, any> | any[]): Data {
+    const otherValue = unwrap(other);
+    const value = this.value;
+    const isArray = Array.isArray(value);
+    const isOtherArray = Array.isArray(otherValue);
+    if (isArray !== isOtherArray) {
+      throw new Error(
+        'Can only intersect if both are arrays or both are objects.',
+      );
+    }
+
+    if (isArray && isOtherArray) {
+      return Data.create(intersectArray(value, otherValue));
+    }
+
+    const intersection = intersectObjectKeys(value as any, otherValue);
+
+    return Data.create(intersection);
+  }
+
+  /**
+   * Returns the union of the two objects or arrays.
+   */
+  union(other: Data | Record<string, any> | any[]): Data {
+    const otherValue = unwrap(other);
+    const value = this.value;
+    const isArray = Array.isArray(value);
+    const isOtherArray = Array.isArray(otherValue);
+    if (isArray !== isOtherArray) {
+      throw new Error('Can only diff if both are arrays or both are objects.');
+    }
+
+    if (isArray && isOtherArray) {
+      return Data.create(unionArray(value, otherValue));
+    }
+
+    const union = unionObjectKeys(value as any, otherValue);
+
+    return Data.create(union);
   }
 
   /**

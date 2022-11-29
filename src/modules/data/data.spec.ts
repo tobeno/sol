@@ -608,6 +608,48 @@ describe('Data', () => {
     });
   });
 
+  describe('union', () => {
+    it('should return the union of two arrays', async () => {
+      const data = Data.create([1, 2, 3]);
+      const otherData = Data.create([3, 4]);
+      expect(data.union(otherData).value).toEqual([1, 2, 3, 4]);
+    });
+
+    it('should return the union of two objects', async () => {
+      const data = Data.create({ a: 1, b: 2, c: 3 });
+      const otherData = Data.create({ c: 3, d: 4 });
+      expect(data.union(otherData).value).toEqual({ a: 1, b: 2, c: 3, d: 4 });
+    });
+  });
+
+  describe('diff', () => {
+    it('should return the diff of two arrays', async () => {
+      const data = Data.create([1, 2, 3]);
+      const otherData = Data.create([3, 4]);
+      expect(data.diff(otherData).value).toEqual([1, 2]);
+    });
+
+    it('should return the diff of two objects', async () => {
+      const data = Data.create({ a: 1, b: 2, c: 3 });
+      const otherData = Data.create({ c: 3, d: 4 });
+      expect(data.diff(otherData).value).toEqual({ a: 1, b: 2 });
+    });
+  });
+
+  describe('intersect', () => {
+    it('should return the intersection of two arrays', async () => {
+      const data = Data.create([1, 2, 3]);
+      const otherData = Data.create([3, 4]);
+      expect(data.intersect(otherData).value).toEqual([3]);
+    });
+
+    it('should return the intersection of two objects', async () => {
+      const data = Data.create({ a: 1, b: 2, c: 3 });
+      const otherData = Data.create({ c: 3, d: 4 });
+      expect(data.intersect(otherData).value).toEqual({ c: 3 });
+    });
+  });
+
   describe('group', () => {
     it('should group array values', async () => {
       const data = Data.create([1, 2, 3, 4, 5]);

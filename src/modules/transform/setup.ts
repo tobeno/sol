@@ -5,4 +5,5 @@ import './mutations/data.mutation';
 import './mutations/file.mutation';
 import './mutations/markdown.mutation';
 import './mutations/response.mutation';
+import './mutations/string.mutation';
 import './mutations/text.mutation';

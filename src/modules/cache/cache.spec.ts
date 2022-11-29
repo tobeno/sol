@@ -1,5 +1,5 @@
-import { runtimeCached, fileCached } from './cache';
-import { tmp } from '../storage/tmp';
+import { fileCached, runtimeCached } from './cache';
+import { TmpFile } from '../storage/tmp-file';
 
 describe('cache', () => {
   describe('runtimeCached', () => {
@@ -17,7 +17,7 @@ describe('cache', () => {
     it('should cache the value', async () => {
       const fn = jest.fn().mockReturnValue('value');
 
-      const tmpFile = tmp();
+      const tmpFile = TmpFile.create();
 
       expect(fileCached(tmpFile, fn)).toBe('value');
       expect(fn).toHaveBeenCalledTimes(1);

@@ -1,5 +1,3 @@
-import { isNotEmpty } from './data';
-
 export function uniqueArray<ItemType = any>(arr: ItemType[]): ItemType[] {
   return [...new Set(arr)];
 }
@@ -23,56 +21,4 @@ export function unionArray<ItemType = any>(
   arr2: ItemType[],
 ): ItemType[] {
   return uniqueArray([...arr1, ...arr2]);
-}
-
-export function filterArray<ItemType = any>(
-  arr: ItemType[],
-  cb: (item: ItemType) => boolean = isNotEmpty,
-): ItemType[] {
-  return arr.filter(cb);
-}
-
-export function rfilterArray<ItemType = any>(
-  arr: ItemType[],
-  cb: (item: ItemType) => boolean,
-): ItemType[] {
-  return arr.filter((item: any) => !cb(item));
-}
-
-export function grepArray<ItemType = any>(
-  arr: ItemType[],
-  search: string | RegExp,
-): ItemType[] {
-  return arr.filter((item: ItemType) => {
-    const value = String(item);
-
-    if (search instanceof RegExp) {
-      return search.test(value);
-    }
-
-    return value.includes(search);
-  });
-}
-
-export function rgrepArray<ItemType = any>(
-  arr: ItemType[],
-  search: string | RegExp,
-): ItemType[] {
-  return arr.filter((item: ItemType) => {
-    const value = String(item);
-
-    if (search instanceof RegExp) {
-      return !search.test(value);
-    }
-
-    return !value.includes(search);
-  });
-}
-
-export function sortArray<ItemType = any>(arr: ItemType[]): ItemType[] {
-  return arr.sort();
-}
-
-export function rsortArray<ItemType = any>(arr: ItemType[]): ItemType[] {
-  return arr.sort().reverse();
 }

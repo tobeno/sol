@@ -44,9 +44,7 @@ import { Text } from '../../data/text';
 import { Url } from '../../web/url';
 import type * as classes from '../globals/classes.global';
 import type * as utils from '../globals/utils.global';
-import { sortObjectKeys } from '../../../utils/object';
 import { web } from '../../web/web';
-import { tmp } from '../../storage/tmp';
 import { FromPropertyDescriptorMap } from '../../../interfaces/object';
 import { Markdown } from '../../data/markdown';
 import { getSolPackage } from '../../sol/sol-package';
@@ -54,6 +52,8 @@ import { fileCached, runtimeCached } from '../../cache/cache';
 import { Html } from '../../data/html';
 import { Xml } from '../../data/xml';
 import { Chart } from '../../visualize/chart';
+import { TmpFile } from '../../storage/tmp-file';
+import { TmpDirectory } from '../../storage/tmp-directory';
 
 export const globals = {
   args: withHelp(
@@ -370,9 +370,15 @@ export const globals = {
     },
     'Wraps a string as Text',
   ),
-  tmp: withHelp(
+  tmpDir: withHelp(
     {
-      value: tmp,
+      value: TmpDirectory.create,
+    },
+    'Temporary directory',
+  ),
+  tmpFile: withHelp(
+    {
+      value: TmpFile.create,
     },
     'Temporary file',
   ),
@@ -391,7 +397,7 @@ export const globals = {
   classes: withHelp(
     {
       get(): typeof classes {
-        return sortObjectKeys(require('../globals/classes.global'));
+        return Data.create(require('../globals/classes.global')).sorted.value;
       },
     },
     'Classes',
@@ -471,7 +477,8 @@ declare global {
   const solWorkspace: Globals['solWorkspace'];
   const solWorkspaceExtension: Globals['solWorkspaceExtension'];
   const text: Globals['text'];
-  const tmp: Globals['tmp'];
+  const tmpDir: Globals['tmpDir'];
+  const tmpFile: Globals['tmpFile'];
   const transform: Globals['transform'];
   const url: Globals['url'];
   const classes: Globals['classes'];

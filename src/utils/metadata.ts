@@ -28,6 +28,10 @@ export function withHelp<T>(target: T, help: string): T {
   });
 }
 
+export function getHelp(target: any): string | null {
+  return getSolMetadata(target)?.help || null;
+}
+
 export function getSolMetadata(target: any): SolMetadata {
   if (target && typeof target[SOL_METADATA_SYMBOL] !== 'undefined') {
     return target[SOL_METADATA_SYMBOL];

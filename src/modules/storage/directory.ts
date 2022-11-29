@@ -109,8 +109,8 @@ export class Directory extends StorageItem {
   /**
    * Returns all items in the directory.
    */
-  items(): StorageItemCollection {
-    return this.glob();
+  items(exp?: string): StorageItemCollection {
+    return glob(path.join(this.path, exp || '*'));
   }
 
   /**
@@ -146,13 +146,6 @@ export class Directory extends StorageItem {
    */
   grep(pattern: string | RegExp): FileCollection {
     return grep(pattern, this.path);
-  }
-
-  /**
-   * Returns all files matching the given glob pattern in the directory.
-   */
-  glob(exp?: string): StorageItemCollection {
-    return glob(path.join(this.path, exp || '*'));
   }
 
   /**

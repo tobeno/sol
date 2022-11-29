@@ -1,6 +1,6 @@
 import { File } from '../storage/file';
-import { tmp } from '../storage/tmp';
 import { Text } from '../data/text';
+import { TmpFile } from '../storage/tmp-file';
 
 /**
  * Opens the given path or value in the default editor.
@@ -9,15 +9,15 @@ export function edit(pathOrValue?: any): File {
   let f: File;
 
   if (!pathOrValue) {
-    f = tmp('ts');
+    f = TmpFile.create('ts');
   } else if (
     typeof pathOrValue === 'string' &&
     /(^\s|\n|\s$)/.test(pathOrValue)
   ) {
-    f = tmp('txt');
+    f = TmpFile.create('txt');
     f.text = pathOrValue;
   } else if (pathOrValue instanceof Text) {
-    f = tmp(pathOrValue.ext);
+    f = TmpFile.create(pathOrValue.ext);
     f.text = pathOrValue;
   } else if (typeof pathOrValue === 'object') {
     let ext = 'json';
@@ -33,7 +33,7 @@ export function edit(pathOrValue?: any): File {
       }
     }
 
-    f = tmp(ext);
+    f = TmpFile.create(ext);
     if (typeof pathOrValue === 'string') {
       f.text = pathOrValue;
     } else {

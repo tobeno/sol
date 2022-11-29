@@ -2,7 +2,7 @@ import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { Clipboard } from '../../clipboard/clipboard';
 import { edit } from '../editor';
 import { File } from '../../storage/file';
-import { tmp } from '../../storage/tmp';
+import { TmpFile } from '../../storage/tmp-file';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {
@@ -34,7 +34,7 @@ mutateClass(
 
     browse: {
       value(): File {
-        const tmpFile = tmp(this.text.ext);
+        const tmpFile = TmpFile.create(this.text.ext);
         tmpFile.text = this.text;
 
         return tmpFile.browse();
@@ -43,7 +43,7 @@ mutateClass(
 
     open: {
       value(app?: string): File {
-        const tmpFile = tmp(this.text.ext);
+        const tmpFile = TmpFile.create(this.text.ext);
         tmpFile.text = this.text;
 
         return tmpFile.open(app);

@@ -176,6 +176,20 @@ export class File extends StorageItem {
   }
 
   /**
+   * Returns true if the file is empty.
+   */
+  get empty(): boolean {
+    return !this.length;
+  }
+
+  /**
+   * Returns true if the file is not empty.
+   */
+  get notEmpty(): boolean {
+    return !!this.length;
+  }
+
+  /**
    * Returns the size of the file in bytes.
    */
   get size(): number {

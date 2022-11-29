@@ -2,8 +2,8 @@ import { File } from '../../storage/file';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Text } from '../../data/text';
-import { tmp } from '../../storage/tmp';
 import { DataFormat } from '../../data/data-format';
+import { TmpFile } from '../../storage/tmp-file';
 
 declare module '../../data/text' {
   interface Text {
@@ -35,7 +35,7 @@ mutateClass(
 
     browse: {
       value(): File {
-        const tmpFile = tmp(this.ext);
+        const tmpFile = TmpFile.create(this.ext);
 
         let content = String(this);
         if (
@@ -71,7 +71,7 @@ mutateClass(
 
     open: {
       value(app?: string): File {
-        const tmpFile = tmp(this.ext);
+        const tmpFile = TmpFile.create(this.ext);
         tmpFile.text = this;
 
         return tmpFile.open(app);

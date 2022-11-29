@@ -2,7 +2,7 @@ import { File } from '../../storage/file';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Markdown } from '../../data/markdown';
-import { tmp } from '../../storage/tmp';
+import { TmpFile } from '../../storage/tmp-file';
 
 declare module '../../data/markdown' {
   interface Markdown {
@@ -34,7 +34,7 @@ mutateClass(
 
     browse: {
       value(): File {
-        const tmpFile = tmp(this.text.ext);
+        const tmpFile = TmpFile.create(this.text.ext);
         tmpFile.text = this.text;
 
         return tmpFile.browse();
@@ -43,7 +43,7 @@ mutateClass(
 
     open: {
       value(app?: string): File {
-        const tmpFile = tmp(this.text.ext);
+        const tmpFile = TmpFile.create(this.text.ext);
         tmpFile.text = this.text;
 
         return tmpFile.open(app);
