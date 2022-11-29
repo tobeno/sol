@@ -19,13 +19,6 @@ describe('Directory', () => {
     });
   });
 
-  describe('size', () => {
-    it('should return the size of a directory', async () => {
-      const dir = Directory.create(`${testAssetsPath}/search`);
-      expect(dir.size).toBe(24);
-    });
-  });
-
   describe('name', () => {
     it('should return the name of a directory', async () => {
       const dir = Directory.create('/tmp');
