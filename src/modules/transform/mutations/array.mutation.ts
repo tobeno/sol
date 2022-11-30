@@ -1,9 +1,15 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { dataToCsv, dataToJson, dataToYaml } from '../transformer';
 import { Text } from '../../data/text';
+import { Data } from '../../data/data';
 
 declare global {
   interface Array<T> {
+    /**
+     * Returns the array wrapped as Data.
+     */
+    get data(): Data<Array<T>>;
+
     /**
      * Returns the array as a JSON string.
      */
@@ -24,6 +30,11 @@ declare global {
 mutateClass(
   Array,
   definePropertiesMutation({
+    data: {
+      get() {
+        return Data.create(this);
+      },
+    },
     csv: {
       get() {
         return dataToCsv(this);
