@@ -54,6 +54,7 @@ import { Xml } from '../../data/xml';
 import { Chart } from '../../visualize/chart';
 import { TmpFile } from '../../storage/tmp-file';
 import { TmpDirectory } from '../../storage/tmp-directory';
+import { Image } from '../../image/image';
 
 export const globals = {
   args: withHelp(
@@ -223,6 +224,18 @@ export const globals = {
       value: Html.create,
     },
     'Wraps the given string as Html',
+  ),
+  image: withHelp(
+    {
+      value(imageOrFile: Image | Buffer | File | string): Image {
+        if (imageOrFile instanceof Buffer || imageOrFile instanceof Image) {
+          return Image.create(imageOrFile);
+        }
+
+        return File.create(imageOrFile).image;
+      },
+    },
+    'Wraps the given image file as Image',
   ),
   json: withHelp(
     {

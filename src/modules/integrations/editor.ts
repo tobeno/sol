@@ -16,6 +16,9 @@ export function edit(pathOrValue?: any): File {
   ) {
     f = TmpFile.create('txt');
     f.text = pathOrValue;
+  } else if (pathOrValue instanceof Buffer) {
+    f = TmpFile.create();
+    f.buffer = pathOrValue;
   } else if (pathOrValue instanceof Text) {
     f = TmpFile.create(pathOrValue.ext);
     f.text = pathOrValue;

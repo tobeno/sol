@@ -148,6 +148,10 @@ export class Text extends Wrapper<string> {
     return Number(this.value);
   }
 
+  get buffer(): Buffer {
+    return Buffer.from(this.value);
+  }
+
   /**
    * Logs the text to the console.
    */

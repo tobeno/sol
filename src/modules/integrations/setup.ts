@@ -1,6 +1,7 @@
 import './mutations/ast.mutation';
 import './mutations/clipboard.mutation';
 import './mutations/data.mutation';
+import './mutations/image.mutation';
 import './mutations/markdown.mutation';
 import './mutations/sol-extension.mutation';
 import './mutations/sol-workspace.mutation';

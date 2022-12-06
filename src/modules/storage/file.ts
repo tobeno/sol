@@ -7,6 +7,7 @@ import { Text } from '../data/text';
 import { log } from '../../utils/log';
 import { MaybeWrapped } from '../../interfaces/data';
 import { rerequire } from '../../utils/module';
+import { unwrap } from '../../utils/data';
 
 /**
  * Wrapper for a file.
@@ -166,6 +167,20 @@ export class File extends StorageItem {
    */
   set text(value: MaybeWrapped<string>) {
     fs.writeFileSync(this.path, String(value), 'utf8');
+  }
+
+  /**
+   * Returns the contents of the file as buffer.
+   */
+  get buffer(): Buffer {
+    return fs.readFileSync(this.path);
+  }
+
+  /**
+   * Sets the buffer contents in the file.
+   */
+  set buffer(value: MaybeWrapped<Buffer>) {
+    fs.writeFileSync(this.path, unwrap(value));
   }
 
   /**
