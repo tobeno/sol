@@ -2,6 +2,7 @@ import type { ApexOptions } from 'apexcharts';
 import { Text } from '../data/text';
 import { DataFormat } from '../data/data-format';
 import { ArrayItemType } from '../../interfaces/util';
+import { Data } from '../data/data';
 
 type ChartSeries = Exclude<
   ArrayItemType<NonNullable<ApexOptions['series']>>,
@@ -11,7 +12,6 @@ type ChartSeries = Exclude<
 export interface ChartOptions extends ApexOptions {
   name?: string;
   type?: NonNullable<ApexOptions['chart']>['type'];
-  color?: string;
   data?:
     | ChartSeries['data']
     | {
@@ -26,9 +26,9 @@ export class Chart {
   private readonly options: ApexOptions;
 
   constructor(options: ChartOptions) {
-    const { data, type, color, name, ...otherOptions } = options;
+    const { data, type, name, ...otherOptions } = options;
 
-    this.options = {
+    const preparedOptions: ApexOptions = {
       ...otherOptions,
       chart: {
         type: type || 'bar',
@@ -40,34 +40,74 @@ export class Chart {
         },
         ...(otherOptions.plotOptions || {}),
       },
-      ...(data
-        ? {
-            series: [
-              {
-                name,
-                color,
-                data: !Array.isArray(data)
-                  ? Object.entries(data).map(([category, value]) => ({
-                      x: category,
-                      y: value,
-                    }))
-                  : data,
-              },
-            ],
-            xaxis: {
-              type: 'category',
-              ...(name
-                ? {
-                    title: {
-                      text: name,
-                    },
-                  }
-                : {}),
-              ...(otherOptions.xaxis || {}),
-            },
-          }
-        : {}),
     };
+
+    if (data) {
+      preparedOptions.xaxis = {
+        type: 'category',
+        ...(name
+          ? {
+              title: {
+                text: name,
+              },
+            }
+          : {}),
+        ...(otherOptions.xaxis || {}),
+      };
+
+      let series: ApexAxisChartSeries;
+      if (Array.isArray(data)) {
+        series = [
+          {
+            name,
+            data,
+          },
+        ];
+      } else {
+        series = [];
+
+        const dataEntries = Object.entries(data);
+        const objectValues =
+          dataEntries[0][1] && typeof dataEntries[0][1] === 'object';
+        if (!objectValues) {
+          series.push({
+            name,
+            data: [],
+          });
+        }
+
+        Object.entries(data).forEach(([category, value]) => {
+          if (objectValues) {
+            Object.entries(value).forEach(([currentName, currentValue]) => {
+              let currentSerie = series.find(
+                (serie) => serie.name === currentName,
+              );
+              if (!currentSerie) {
+                currentSerie = {
+                  name: currentName,
+                  data: [],
+                };
+                series.push(currentSerie);
+              }
+
+              currentSerie.data.push({
+                x: category,
+                y: currentValue,
+              } as any);
+            });
+          } else {
+            series[0].data.push({
+              x: category,
+              y: value,
+            } as any);
+          }
+        });
+      }
+
+      preparedOptions.series = series;
+    }
+
+    this.options = preparedOptions;
   }
 
   /**
