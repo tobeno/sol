@@ -269,6 +269,14 @@ export const globals = {
     },
     'Wraps the given string as Markdown',
   ),
+  omit: withHelp(
+    {
+      get(...args: any[]) {
+        return require('lodash/omit');
+      },
+    },
+    'See: https://lodash.com/docs/latest#omit',
+  ),
   open: withHelp(
     {
       value: open,
@@ -280,6 +288,14 @@ export const globals = {
       value: openApp,
     },
     'Opens the given app',
+  ),
+  pick: withHelp(
+    {
+      get(...args: any[]) {
+        return require('lodash/pick');
+      },
+    },
+    'See: https://lodash.com/docs/latest#pick',
   ),
   play: withHelp(
     {
@@ -473,6 +489,7 @@ declare global {
   const json: Globals['json'];
   const jsonata: Globals['jsonata'];
   const log: Globals['log'];
+  const omit: Globals['omit'];
   const open: Globals['open'];
   const openApp: Globals['openApp'];
   const play: Globals['play'];
