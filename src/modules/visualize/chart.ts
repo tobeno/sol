@@ -2,7 +2,6 @@ import type { ApexOptions } from 'apexcharts';
 import { Text } from '../data/text';
 import { DataFormat } from '../data/data-format';
 import { ArrayItemType } from '../../interfaces/util';
-import { Data } from '../data/data';
 
 type ChartSeries = Exclude<
   ArrayItemType<NonNullable<ApexOptions['series']>>,
