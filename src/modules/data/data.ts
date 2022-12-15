@@ -405,6 +405,7 @@ export class Data<
     let result: any;
     if (typeof path === 'string') {
       const expression = jsonata(path);
+
       result = expression.evaluate(this.value);
     } else if (path && typeof path === 'object') {
       result = path.evaluate(this.value);
