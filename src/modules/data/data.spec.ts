@@ -965,6 +965,20 @@ describe('Data', () => {
     });
   });
 
+  describe('slice', () => {
+    it('should slice an array', async () => {
+      const data = Data.create([1, 2, 3]);
+
+      expect(data.slice(1).value).toEqual([2, 3]);
+    });
+
+    it('should slice an object', async () => {
+      const data = Data.create({ a: 1, b: 2, c: 3 });
+
+      expect(data.slice(1).value).toEqual({ b: 2, c: 3 });
+    });
+  });
+
   describe('join', () => {
     it('should join an array', async () => {
       const data = Data.create([1, 2, 3]);

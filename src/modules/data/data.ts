@@ -829,6 +829,22 @@ export class Data<
     return Text.create(Object.values(this.value as any).join(separator));
   }
 
+  /**
+   * Slices the given range of the array.
+   */
+  slice(
+    start?: number,
+    end?: number,
+  ): Data<ValueType extends Array<any> ? ValueType : any> {
+    if (Array.isArray(this.value)) {
+      return Data.create(this.value.slice(start, end)) as any;
+    }
+
+    return Data.create(
+      Object.fromEntries(Object.entries(this.value as any).slice(start, end)),
+    ) as any;
+  }
+
   valueOf(): ValueType {
     return this.value;
   }
