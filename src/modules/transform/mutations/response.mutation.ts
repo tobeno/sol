@@ -1,7 +1,6 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { Text } from '../../data/text';
 import { Response } from '../../web/response';
-import { Html } from '../../data/html';
 
 declare module '../../web/response' {
   interface Response {
@@ -14,11 +13,6 @@ declare module '../../web/response' {
      * Returns the response as YAML.
      */
     get yaml(): Text;
-
-    /**
-     * Returns the response as HTML.
-     */
-    get html(): Html;
   }
 }
 
@@ -34,12 +28,6 @@ mutateClass(
     yaml: {
       get(): Text {
         return this.serializable.yaml;
-      },
-    },
-
-    html: {
-      get(): Html {
-        return this.content.html;
       },
     },
   }),
