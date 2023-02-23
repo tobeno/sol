@@ -6,6 +6,7 @@ import type { Data } from '../data/data';
 import type { Text } from '../data/text';
 import type { Markdown } from '../data/markdown';
 import type { DataTransformer } from './transformers/data.transformer';
+import type babelTypes from '@babel/types';
 import { MaybeWrapped } from '../../interfaces/data';
 
 // Helper functions with dynamic imports to avoid circular dependencies
@@ -133,10 +134,16 @@ export function dataToCsv(value: Data | any): Text {
   );
 }
 
-export function codeToAst(value: MaybeWrapped<string> | Ast): Ast {
+export function codeToAst(
+  value: MaybeWrapped<string> | Ast | babelTypes.Node,
+): Ast {
   const Ast = getAstClass();
   if (value instanceof Ast) {
     return value;
+  }
+
+  if (value && typeof value === 'object' && 'type' in value) {
+    return new Ast(value);
   }
 
   const Text = getTextClass();
