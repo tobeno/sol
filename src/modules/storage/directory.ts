@@ -15,6 +15,7 @@ import {
 import { exec, spawn } from '../shell/sh';
 import { unwrap } from '../../utils/data';
 import { MaybeWrapped } from '../../interfaces/data';
+import type { Options as PrettierOptions } from 'prettier';
 
 /**
  * Wrapper for a directory.
@@ -216,8 +217,8 @@ export class Directory extends StorageItem {
   /**
    * Prettifies all files in the directory.
    */
-  pretty(): void {
-    this.files('**').forEach((f) => f.pretty());
+  pretty(options: PrettierOptions = {}): void {
+    this.files('**').forEach((f) => f.pretty(options));
   }
 
   static create(pathOrDirectory: MaybeWrapped<string> | Directory): Directory {

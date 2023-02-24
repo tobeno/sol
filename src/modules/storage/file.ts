@@ -8,6 +8,7 @@ import { log } from '../../utils/log';
 import { MaybeWrapped } from '../../interfaces/data';
 import { rerequire } from '../../utils/module';
 import { unwrap } from '../../utils/data';
+import type { Options as PrettierOptions } from 'prettier';
 
 /**
  * Wrapper for a file.
@@ -334,12 +335,13 @@ export class File extends StorageItem {
   /**
    * Prettifies the file.
    */
-  pretty(): this {
+  pretty(options: PrettierOptions = {}): this {
     const prettier = require('prettier');
 
     this.text = Text.create(
       prettier.format(this.text.value, {
         filepath: this.path,
+        ...options,
       }),
     );
 
