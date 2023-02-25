@@ -21,7 +21,7 @@ import { getClipboard } from '../../clipboard/clipboard';
 import { getCwd, getEnv } from '../../../utils/env';
 import { Data } from '../../data/data';
 import { Directory } from '../../storage/directory';
-import { dirs, files, glob } from '../../storage/storage-item-collection';
+import { dirs, files } from '../../storage/storage-item-collection';
 import { edit } from '../../integrations/editor';
 import { File } from '../../storage/file';
 import { grep } from '../../storage/search';
@@ -102,6 +102,14 @@ export const globals = {
       value: Chart.create,
     },
     'See https://apexcharts.com/docs/series/',
+  ),
+  classes: withHelp(
+    {
+      get(): typeof classes {
+        return Data.create(require('../globals/classes.global')).sorted.value;
+      },
+    },
+    'Classes',
   ),
   clipboard: withHelp(
     {
@@ -195,21 +203,21 @@ export const globals = {
     },
     'Wrapper for files',
   ),
-  files: withHelp(
-    {
-      value: files,
-    },
-    'Glob search for files',
-  ),
   fileCached: withHelp(
     {
       value: fileCached,
     },
     'Cache the return value of the given function in a file',
   ),
+  files: withHelp(
+    {
+      value: files,
+    },
+    'Glob search for files',
+  ),
   glob: withHelp(
     {
-      value: glob,
+      value: globals,
     },
     'Glob search for files or directories',
   ),
@@ -269,9 +277,17 @@ export const globals = {
     },
     'Wraps the given string as Markdown',
   ),
+  morph: withHelp(
+    {
+      get() {
+        return require('ts-morph') as typeof import('ts-morph');
+      },
+    },
+    'See: https://ts-morph.com',
+  ),
   omit: withHelp(
     {
-      get(...args: any[]) {
+      get() {
         return require('lodash/omit');
       },
     },
@@ -291,7 +307,7 @@ export const globals = {
   ),
   pick: withHelp(
     {
-      get(...args: any[]) {
+      get() {
         return require('lodash/pick');
       },
     },
@@ -329,12 +345,6 @@ export const globals = {
     },
     'Cache the return value of the given function in a runtime variable',
   ),
-  shared: withHelp(
-    {
-      value: {},
-    },
-    'Variables shared between play scripts and the shell',
-  ),
   sh: withHelp(
     {
       get(): typeof shell {
@@ -342,6 +352,12 @@ export const globals = {
       },
     },
     'Shell utilities',
+  ),
+  shared: withHelp(
+    {
+      value: {},
+    },
+    'Variables shared between play scripts and the shell',
   ),
   solExtension: withHelp(
     {
@@ -423,14 +439,6 @@ export const globals = {
     },
     'Wraps a text URL as a Url',
   ),
-  classes: withHelp(
-    {
-      get(): typeof classes {
-        return Data.create(require('../globals/classes.global')).sorted.value;
-      },
-    },
-    'Classes',
-  ),
   utils: withHelp(
     {
       get(): typeof utils {
@@ -489,6 +497,7 @@ declare global {
   const json: Globals['json'];
   const jsonata: Globals['jsonata'];
   const log: Globals['log'];
+  const morph: Globals['morph'];
   const omit: Globals['omit'];
   const open: Globals['open'];
   const openApp: Globals['openApp'];
