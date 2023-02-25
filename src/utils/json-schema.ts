@@ -1,6 +1,8 @@
 import type $RefParser from '@apidevtools/json-schema-ref-parser';
 
-function dereferenceJsonSchemaUsingRefs(schema: any, $refs: $RefParser.$Refs) {
+type $Refs = InstanceType<typeof $RefParser>['$refs'];
+
+function dereferenceJsonSchemaUsingRefs(schema: any, $refs: $Refs) {
   if (!schema || typeof schema !== 'object') {
     return;
   }

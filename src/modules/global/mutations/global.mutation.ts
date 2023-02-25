@@ -21,7 +21,7 @@ import { getClipboard } from '../../clipboard/clipboard';
 import { getCwd, getEnv } from '../../../utils/env';
 import { Data } from '../../data/data';
 import { Directory } from '../../storage/directory';
-import { dirs, files } from '../../storage/storage-item-collection';
+import { dirs, files, glob } from '../../storage/storage-item-collection';
 import { edit } from '../../integrations/editor';
 import { File } from '../../storage/file';
 import { grep } from '../../storage/search';
@@ -217,7 +217,7 @@ export const globals = {
   ),
   glob: withHelp(
     {
-      value: globals,
+      value: glob,
     },
     'Glob search for files or directories',
   ),
@@ -468,7 +468,7 @@ export const globals = {
     },
     'Converts YAML to Data',
   ),
-};
+} as const;
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;
 
