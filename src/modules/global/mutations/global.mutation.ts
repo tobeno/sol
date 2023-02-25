@@ -468,7 +468,7 @@ export const globals = {
     },
     'Converts YAML to Data',
   ),
-} as const;
+};
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;
 
