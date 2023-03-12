@@ -8,7 +8,17 @@ function getOpenAi() {
   return require('openai') as typeof import('openai');
 }
 
-function getOpenAiApi(): OpenAIApi {
+export function isOpenAiApiAvailable(): boolean {
+  return !!process.env.OPENAPI_API_KEY;
+}
+
+export function getOpenAiApi(): OpenAIApi {
+  if (!isOpenAiApiAvailable()) {
+    throw new Error(
+      'To use the OpenAI API the OPENAPI_API_KEY needs to be configured.',
+    );
+  }
+
   const openai = getOpenAi();
 
   return new openai.OpenAIApi(

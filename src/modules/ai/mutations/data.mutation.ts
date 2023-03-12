@@ -8,6 +8,11 @@ declare module '../../data/data' {
      * Asks the AI a question about this data (as JSON).
      */
     ask(question: string): AiConversation;
+
+    /**
+     * Asks the AI a question about this data (as JSON).
+     */
+    askCode(question: string): AiConversation;
   }
 }
 
@@ -16,12 +21,13 @@ mutateClass(
   definePropertiesMutation({
     ask: {
       value(question: string): AiConversation {
-        const conversation = new AiConversation();
-        conversation.ask(
-          `${question}\n\`\`\`\n${this.json.toString()}\n\`\`\``,
-        );
+        return this.json.ask(question);
+      },
+    },
 
-        return conversation;
+    askCode: {
+      value(question: string): AiConversation {
+        return this.json.askCode(question);
       },
     },
   }),

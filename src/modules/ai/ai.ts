@@ -7,6 +7,10 @@ export class Ai {
   ask(question: string): AiConversation {
     return new AiConversation().ask(question);
   }
+
+  askCode(question: string): AiConversation {
+    return new AiConversation().askCode(question);
+  }
 }
 
 let ai: Ai | null = null;

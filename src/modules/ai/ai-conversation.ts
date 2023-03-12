@@ -3,11 +3,13 @@ import {
   CreateChatCompletionResponse,
 } from 'openai';
 import { inspect } from 'util';
-import { createOpenAiChatCompletion } from './open-ai';
+import { createOpenAiChatCompletion, isOpenAiApiAvailable } from './open-ai';
 import { createHash } from 'crypto';
 import { Data } from '../data/data';
 import { Text } from '../data/text';
 import { DataFormat } from '../data/data-format';
+import { open } from '../integrations/open';
+import { getClipboard } from '../clipboard/clipboard';
 
 export class AiConversation {
   readonly messages: ChatCompletionRequestMessage[] = [];
@@ -74,6 +76,12 @@ export class AiConversation {
   }
 
   ask(question: string): this {
+    if (!isOpenAiApiAvailable()) {
+      getClipboard().text = question;
+      open('http://chat.openai.com');
+      return this;
+    }
+
     this.messages.push({
       role: 'user',
       content: question,
@@ -113,6 +121,10 @@ Response: ${JSON.stringify(response, null, 2)}`);
     return this;
   }
 
+  askCode(question: string): this {
+    return this.ask(`${question}\nONLY CODE, NOTHING ELSE`);
+  }
+
   [inspect.custom](): string {
     return this.toString();
   }
@@ -136,16 +148,34 @@ Response: ${JSON.stringify(response, null, 2)}`);
   }
 
   private static extractCode(text: Text | null): Text | null {
-    const code =
-      text?.select(/```.*\n([\s\S]+?)\n```/s)?.slice(3, -3).trimmed || null;
+    if (!text) {
+      return null;
+    }
+
+    let code: Text | null;
+    if (!text.includes('```')) {
+      code = text;
+    } else {
+      code =
+        text
+          ?.select(/```.*\n([\s\S]+?)\n```/s)
+          ?.split('\n')
+          .slice(1, -1)
+          .join('\n').trimmed || null;
+    }
+
     if (!code) {
       return null;
     }
 
-    if (code.match(/^[{[]/)) {
+    if (AiConversation.isJson(code)) {
       code.setFormat(DataFormat.Json);
     }
 
     return code;
+  }
+
+  private static isJson(text: Text): boolean {
+    return !!text.match(/^[{[][\s\S]*[\]}]$/);
   }
 }
