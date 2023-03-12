@@ -1,3 +1,4 @@
+import './modules/ai/setup';
 import './modules/clipboard/setup';
 import './modules/global/setup';
 import './modules/image/setup';

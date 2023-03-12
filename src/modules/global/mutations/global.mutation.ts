@@ -55,8 +55,17 @@ import { Chart } from '../../visualize/chart';
 import { TmpFile } from '../../storage/tmp-file';
 import { TmpDirectory } from '../../storage/tmp-directory';
 import { Image } from '../../image/image';
+import { getAi } from '../../ai/ai';
 
 export const globals = {
+  ai: withHelp(
+    {
+      get() {
+        return getAi();
+      },
+    },
+    'AI integration',
+  ),
   args: withHelp(
     {
       get() {
@@ -473,6 +482,7 @@ export const globals = {
 export type Globals = FromPropertyDescriptorMap<typeof globals>;
 
 declare global {
+  const ai: Globals['ai'];
   const args: Globals['args'];
   const ast: Globals['ast'];
   const astTypes: Globals['astTypes'];
