@@ -410,7 +410,11 @@ export class Data<
     } else if (path && typeof path === 'object') {
       result = path.evaluate(this.value);
     } else {
-      result = (this.value as any)[path] || null;
+      if (this.value && typeof this.value === 'object' && 'at' in this.value) {
+        result = (this.value as any).at(path) || null;
+      } else {
+        result = (this.value as any)[path] || null;
+      }
     }
 
     if (result === null || result === undefined) {
