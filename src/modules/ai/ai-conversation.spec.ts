@@ -1,5 +1,4 @@
 import { unwrapDeep } from '../../utils/data';
-import { Text } from '../data/text';
 import { AiConversation } from './ai-conversation';
 
 describe('AiConversation', () => {
