@@ -13,11 +13,12 @@ import { getClipboard } from '../clipboard/clipboard';
 
 export class AiConversation {
   private readonly messagesInternal: ChatCompletionRequestMessage[] = [];
-  usage = {
+
+  usage = Data.create({
     promptTokens: 0,
     completionTokens: 0,
     totalTokens: 0,
-  };
+  });
 
   constructor(
     private options: {
@@ -42,7 +43,7 @@ export class AiConversation {
   /**
    * Returns a MD5 has of the conversation.
    */
-  get hash(): string {
+  private get hash(): string {
     const content = JSON.stringify(this.messagesInternal);
 
     return createHash('md5').update(content).digest('hex');
@@ -65,7 +66,7 @@ export class AiConversation {
   }
 
   get answerCode(): Text | null {
-    return AiConversation.extractCode(this.answer);
+    return this.answer?.selectCode() || null;
   }
 
   get questions(): Data<Text[]> {
@@ -81,7 +82,21 @@ export class AiConversation {
   }
 
   get questionCode(): Text | null {
-    return AiConversation.extractCode(this.question);
+    return this.question?.selectCode() || null;
+  }
+
+  get questionAndAnswer(): Text | null {
+    return Text.create(
+      (
+        (this.question?.value || null) +
+        '\n' +
+        (this.answer?.value || null)
+      ).trim(),
+    );
+  }
+
+  get questionAndAnswerCode(): Text | null {
+    return this.questionAndAnswer?.selectCode() || null;
   }
 
   ask(question: string): this {
@@ -121,9 +136,10 @@ export class AiConversation {
 Response: ${JSON.stringify(response, null, 2)}`);
       }
 
-      this.usage.promptTokens += response.usage?.prompt_tokens || 0;
-      this.usage.completionTokens += response.usage?.completion_tokens || 0;
-      this.usage.totalTokens += response.usage?.total_tokens || 0;
+      const usage = this.usage.value;
+      usage.promptTokens += response.usage?.prompt_tokens || 0;
+      usage.completionTokens += response.usage?.completion_tokens || 0;
+      usage.totalTokens += response.usage?.total_tokens || 0;
     } else {
       answer = 'This is a dry run';
     }

@@ -382,6 +382,18 @@ describe('Text', () => {
     });
   });
 
+  describe('selectCode', () => {
+    it.each([
+      ['Some text', 'Some text'], // If no markings found, assume just code
+      ['Some text\n```\nSome code\n```\nOther text', 'Some code'],
+      ['Some text\n```markdown\nSome code\n```\nOther text', 'Some code'],
+      ['{ "a": 1 }', '{ "a": 1 }'],
+      ['[1, 2, 3]', '[1, 2, 3]'],
+    ])(`should for '%s' return '%s'`, (text, expected) => {
+      expect(Text.create(text).selectCode()?.value || null).toBe(expected);
+    });
+  });
+
   describe('selectAll', () => {
     it('should return all matches of the given string', async () => {
       const text = Text.create('Hello');

@@ -351,6 +351,32 @@ export class Text extends Wrapper<string> {
   }
 
   /**
+   * Returns the first match that is a code block (just the content) or the full text if it is a JSON.
+   */
+  selectCode(): Text | null {
+    let code: Text | null;
+    if (!this.includes('```')) {
+      code = this;
+    } else {
+      code =
+        this?.select(/```.*\n([\s\S]+?)\n```/s)
+          ?.split('\n')
+          .slice(1, -1)
+          .join('\n').trimmed || null;
+    }
+
+    if (!code) {
+      return null;
+    }
+
+    if (!!code.match(/^[{[][\s\S]*[\]}]$/)) {
+      code.setFormat(DataFormat.Json);
+    }
+
+    return code;
+  }
+
+  /**
    * Returns the first match of the given (RegExp) pattern.
    */
   selectAll(pattern: string | RegExp): Data<Text[]> {
