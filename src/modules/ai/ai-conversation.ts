@@ -12,14 +12,19 @@ import { open } from '../integrations/open';
 import { getClipboard } from '../clipboard/clipboard';
 
 export class AiConversation {
-  readonly messages: ChatCompletionRequestMessage[] = [];
+  private readonly messagesInternal: ChatCompletionRequestMessage[] = [];
   usage = {
     promptTokens: 0,
     completionTokens: 0,
     totalTokens: 0,
   };
 
-  constructor(options: { messages?: ChatCompletionRequestMessage[] } = {}) {
+  constructor(
+    private options: {
+      messages?: ChatCompletionRequestMessage[];
+      dryRun?: boolean;
+    } = {},
+  ) {
     let { messages = [] } = options;
     if (!messages.some((message) => message.role === 'system')) {
       messages = [
@@ -31,21 +36,25 @@ export class AiConversation {
       ];
     }
 
-    this.messages = messages;
+    this.messagesInternal = messages;
   }
 
   /**
    * Returns a MD5 has of the conversation.
    */
   get hash(): string {
-    const content = JSON.stringify(this.messages);
+    const content = JSON.stringify(this.messagesInternal);
 
     return createHash('md5').update(content).digest('hex');
   }
 
+  get messages(): Data<ChatCompletionRequestMessage[]> {
+    return Data.create(this.messagesInternal);
+  }
+
   get answers(): Data<Text[]> {
     return Data.create(
-      this.messages
+      this.messagesInternal
         .filter((message) => message.role === 'assistant')
         .map((message) => Text.create(message.content)),
     );
@@ -61,7 +70,7 @@ export class AiConversation {
 
   get questions(): Data<Text[]> {
     return Data.create(
-      this.messages
+      this.messagesInternal
         .filter((message) => message.role === 'user')
         .map((message) => Text.create(message.content)),
     );
@@ -76,44 +85,50 @@ export class AiConversation {
   }
 
   ask(question: string): this {
-    if (!isOpenAiApiAvailable()) {
+    const { dryRun } = this.options;
+    if (!isOpenAiApiAvailable() && !dryRun) {
       getClipboard().text = question;
       open('http://chat.openai.com');
       return this;
     }
 
-    this.messages.push({
+    this.messagesInternal.push({
       role: 'user',
       content: question,
     });
 
-    const cacheFile = solUserWorkspace.cacheDir.file(
-      `ai-conversation-response-${this.hash}.json`,
-    );
+    let answer: string | null = null;
+    if (!dryRun) {
+      const cacheFile = solUserWorkspace.cacheDir.file(
+        `ai-conversation-response-${this.hash}.json`,
+      );
 
-    let response: CreateChatCompletionResponse;
-    if (!cacheFile.exists) {
-      response = createOpenAiChatCompletion({
-        messages: this.messages,
-      });
+      let response: CreateChatCompletionResponse;
+      if (!cacheFile.exists) {
+        response = createOpenAiChatCompletion({
+          messages: this.messagesInternal,
+        });
 
-      cacheFile.json = response;
-    } else {
-      response = cacheFile.json.value;
-    }
+        cacheFile.json = response;
+      } else {
+        response = cacheFile.json.value;
+      }
 
-    const answer = response.choices[0].message?.content;
-    if (!answer) {
-      throw new Error(`No answer received.
+      answer = response.choices[0].message?.content || null;
+      if (!answer) {
+        throw new Error(`No answer received.
 
 Response: ${JSON.stringify(response, null, 2)}`);
+      }
+
+      this.usage.promptTokens += response.usage?.prompt_tokens || 0;
+      this.usage.completionTokens += response.usage?.completion_tokens || 0;
+      this.usage.totalTokens += response.usage?.total_tokens || 0;
+    } else {
+      answer = 'This is a dry run';
     }
 
-    this.usage.promptTokens += response.usage?.prompt_tokens || 0;
-    this.usage.completionTokens += response.usage?.completion_tokens || 0;
-    this.usage.totalTokens += response.usage?.total_tokens || 0;
-
-    this.messages.push({
+    this.messagesInternal.push({
       role: 'assistant',
       content: answer,
     });
@@ -130,7 +145,7 @@ Response: ${JSON.stringify(response, null, 2)}`);
   }
 
   toString(): string {
-    return this.messages
+    return this.messagesInternal
       .filter((message) => message.role !== 'system')
       .map((message) => {
         let role: string = message.role;
@@ -147,7 +162,7 @@ Response: ${JSON.stringify(response, null, 2)}`);
       .join('\n---\n');
   }
 
-  private static extractCode(text: Text | null): Text | null {
+  static extractCode(text: Text | null): Text | null {
     if (!text) {
       return null;
     }
@@ -175,7 +190,7 @@ Response: ${JSON.stringify(response, null, 2)}`);
     return code;
   }
 
-  private static isJson(text: Text): boolean {
+  static isJson(text: Text): boolean {
     return !!text.match(/^[{[][\s\S]*[\]}]$/);
   }
 }
