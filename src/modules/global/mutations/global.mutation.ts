@@ -294,6 +294,19 @@ export const globals = {
     },
     'See: https://ts-morph.com',
   ),
+  morphProject: withHelp(
+    {
+      get() {
+        const morph = require('ts-morph') as typeof import('ts-morph');
+
+        return new morph.Project({
+          tsConfigFilePath: Directory.create(getCwd()).file('tsconfig.json')
+            .path,
+        });
+      },
+    },
+    'Returns ts-morph project for the current working directory',
+  ),
   omit: withHelp(
     {
       get() {
