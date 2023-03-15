@@ -9,10 +9,9 @@ import { Data } from '../data/data';
 import { Text } from '../data/text';
 import { open } from '../integrations/open';
 import { getClipboard } from '../clipboard/clipboard';
+import { Wrapper } from '../data/wrapper';
 
-export class AiConversation {
-  private readonly messagesInternal: ChatCompletionRequestMessage[] = [];
-
+export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
   usage = Data.create({
     promptTokens: 0,
     completionTokens: 0,
@@ -36,25 +35,33 @@ export class AiConversation {
       ];
     }
 
-    this.messagesInternal = messages;
+    super(messages);
   }
 
   /**
    * Returns a MD5 has of the conversation.
    */
   private get hash(): string {
-    const content = JSON.stringify(this.messagesInternal);
+    const content = JSON.stringify(this.value);
 
     return createHash('md5').update(content).digest('hex');
   }
 
+  get json(): Text {
+    return Text.create(JSON.stringify(this.value, null, 2));
+  }
+
+  set json(value: Text | string) {
+    this.value = JSON.parse(String(value));
+  }
+
   get messages(): Data<ChatCompletionRequestMessage[]> {
-    return Data.create(this.messagesInternal);
+    return Data.create(this.value);
   }
 
   get answers(): Data<Text[]> {
     return Data.create(
-      this.messagesInternal
+      this.value
         .filter((message) => message.role === 'assistant')
         .map((message) => Text.create(message.content)),
     );
@@ -70,7 +77,7 @@ export class AiConversation {
 
   get questions(): Data<Text[]> {
     return Data.create(
-      this.messagesInternal
+      this.value
         .filter((message) => message.role === 'user')
         .map((message) => Text.create(message.content)),
     );
@@ -106,7 +113,7 @@ export class AiConversation {
       return this;
     }
 
-    this.messagesInternal.push({
+    this.value.push({
       role: 'user',
       content: question,
     });
@@ -120,7 +127,7 @@ export class AiConversation {
       let response: CreateChatCompletionResponse;
       if (!cacheFile.exists) {
         response = createOpenAiChatCompletion({
-          messages: this.messagesInternal,
+          messages: this.value,
         });
 
         cacheFile.json = response;
@@ -143,7 +150,7 @@ Response: ${JSON.stringify(response, null, 2)}`);
       answer = 'This is a dry run';
     }
 
-    this.messagesInternal.push({
+    this.value.push({
       role: 'assistant',
       content: answer,
     });
@@ -160,7 +167,7 @@ Response: ${JSON.stringify(response, null, 2)}`);
   }
 
   toString(): string {
-    return this.messagesInternal
+    return this.value
       .filter((message) => message.role !== 'system')
       .map((message) => {
         let role: string = message.role;
