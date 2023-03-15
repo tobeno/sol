@@ -1,20 +1,32 @@
 import type { ApexOptions } from 'apexcharts';
 import { Text } from '../data/text';
 import { DataFormat } from '../data/data-format';
-import { ArrayItemType } from '../../interfaces/util';
-
-type ChartSeries = Exclude<
-  ArrayItemType<NonNullable<ApexOptions['series']>>,
-  number
->;
 
 export interface ChartOptions extends ApexOptions {
   name?: string;
   type?: NonNullable<ApexOptions['chart']>['type'];
+  /**
+   * Data for the chart (shortcut for specifying series)
+   *
+   * Input:
+   * - [1, 4]
+   * - [['category1', 1], ['category2', 4]]
+   * - [{x: 'category1', y: 1}, {x: 'category2', y: 4}]
+   * - { category1: 1, category2: 4 }
+   * - { category1: { series1: 1, series2: 2 }, category2: { series1: 4, series2: 9 } }
+   */
   data?:
-    | ChartSeries['data']
+    | number[]
+    | [number | string, number][]
+    | {
+        x: number | string;
+        y: number;
+      }[]
     | {
         [category: string]: number;
+      }
+    | {
+        [category: string]: { [series: string]: number };
       };
 }
 
@@ -42,24 +54,40 @@ export class Chart {
     };
 
     if (data) {
-      preparedOptions.xaxis = {
-        type: 'category',
-        ...(name
-          ? {
-              title: {
-                text: name,
-              },
-            }
-          : {}),
-        ...(otherOptions.xaxis || {}),
-      };
-
       let series: ApexAxisChartSeries;
       if (Array.isArray(data)) {
+        // data: [1, 4] or [['category1', 1], ['category2', 4]] or [{x: 'category1', y: 1}, {x: 'category2', y: 4}]
+
+        preparedOptions.xaxis = {
+          type: 'category',
+          ...(name
+            ? {
+                title: {
+                  text: name,
+                },
+              }
+            : {}),
+          ...(otherOptions.xaxis || {}),
+        };
+
         series = [
           {
             name,
-            data,
+            data: data.map((value, index): any => {
+              if (Array.isArray(value)) {
+                value = {
+                  x: String(value[0]),
+                  y: value[1] || 0,
+                };
+              } else if (typeof value === 'number') {
+                value = {
+                  x: String(index + 1),
+                  y: value,
+                };
+              }
+
+              return value;
+            }),
           },
         ];
       } else {
@@ -77,6 +105,8 @@ export class Chart {
 
         Object.entries(data).forEach(([category, value]) => {
           if (objectValues) {
+            // data: { category1: { series1: 1, series2: 2 }, category2: { series1: 4, series2: 9 }
+
             Object.entries(value).forEach(([currentName, currentValue]) => {
               let currentSerie = series.find(
                 (serie) => serie.name === currentName,
@@ -95,6 +125,8 @@ export class Chart {
               } as any);
             });
           } else {
+            // data: { category1: 1, category2: 4 }
+
             series[0].data.push({
               x: category,
               y: value,
