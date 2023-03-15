@@ -7,7 +7,6 @@ import { createOpenAiChatCompletion, isOpenAiApiAvailable } from './open-ai';
 import { createHash } from 'crypto';
 import { Data } from '../data/data';
 import { Text } from '../data/text';
-import { DataFormat } from '../data/data-format';
 import { open } from '../integrations/open';
 import { getClipboard } from '../clipboard/clipboard';
 
@@ -176,37 +175,5 @@ Response: ${JSON.stringify(response, null, 2)}`);
         return `${role}: ${message.content}`;
       })
       .join('\n---\n');
-  }
-
-  static extractCode(text: Text | null): Text | null {
-    if (!text) {
-      return null;
-    }
-
-    let code: Text | null;
-    if (!text.includes('```')) {
-      code = text;
-    } else {
-      code =
-        text
-          ?.select(/```.*\n([\s\S]+?)\n```/s)
-          ?.split('\n')
-          .slice(1, -1)
-          .join('\n').trimmed || null;
-    }
-
-    if (!code) {
-      return null;
-    }
-
-    if (AiConversation.isJson(code)) {
-      code.setFormat(DataFormat.Json);
-    }
-
-    return code;
-  }
-
-  static isJson(text: Text): boolean {
-    return !!text.match(/^[{[][\s\S]*[\]}]$/);
   }
 }

@@ -359,7 +359,7 @@ export class Text extends Wrapper<string> {
       code = this;
     } else {
       code =
-        this?.select(/```.*\n([\s\S]+?)\n```/s)
+        this?.select(/```.*\n([\s\S]+?)\n[ \t]*```/)
           ?.split('\n')
           .slice(1, -1)
           .join('\n').trimmed || null;
