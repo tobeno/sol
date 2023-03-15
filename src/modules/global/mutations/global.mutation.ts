@@ -69,7 +69,9 @@ export const globals = {
   args: withHelp(
     {
       get() {
-        return Data.create(process.argv.slice(2));
+        return Data.create(
+          process.argv.slice(2).filter((arg) => !arg.startsWith('-')),
+        );
       },
     },
     'Returns the arguments passed to Sol',

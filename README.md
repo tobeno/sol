@@ -196,7 +196,7 @@ Option 1: You can pass in results of other commands as arguments:
 
 ```
 // In your shell pass the result of a command as argument
-> sol $(echo 'test')
+> sol -- $(echo 'test')
 
 // In Sol access the output via the `args` global
 > args.get(0).uppercased
