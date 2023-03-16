@@ -27,10 +27,10 @@ You can do:
 > imports.map(i => i.replace(/\r?\n/g, ' ')).join('\n').edit()
 
 // Get updated imports (_ is the file opened in editor)
-> _.text.trim().split('\n')
+> _.text.trimmed.split('\n')
 
-// Get import source using abstract syntax tree
-> _.map(i => ast(i).node.program.body[0].source.value)
+// Get import sources using abstract syntax tree
+> _.map(i => ast(i).node.program.body[0].source.value).sorted.unique
 ```
 
 Or this:
@@ -45,6 +45,9 @@ Or this:
 // Show all IDs of users with open ToDos using jsonata expression
 > open.get('userId').sort().unique
 
+// Show the number of open ToDos per user as chart in the browser
+> open.group(todo => todo.userId).map(group => group.length).chart().html.browse()
+
 // Save open ToDos in CSV
 > open.csv.saveAs('todos.csv')
 
@@ -56,10 +59,16 @@ Or this:
 
 ```
 // Fetch Sol README.md file as markdown and save it as `readme` variable
-> web.get('https://raw.githubusercontent.com/tobeno/sol/main/README.md').md.var('readme')
+> web.get('https://raw.githubusercontent.com/tobeno/sol/main/README.md').content.md.var('readme')
 
 // Render as HTML and open in browser
 > readme.html.saveAs('README.html').browse()
+
+// Ask ChatGPT about how to install Sol
+> readme.text.ask('How do I install this?\n---')
+
+// Render answer as HTML and open in browser
+> _.answer.md.html.browse()
 ```
 
 ## Install
