@@ -147,15 +147,12 @@ export class Data<
    * - For objects: Returns the object with all duplicate values removed.
    */
   get unique(): Data<AnyPartial<ValueType>> {
-    if (Array.isArray(this.value)) {
-      return Data.create(uniqueArray(this.value)) as any;
-    }
-
     const knownValues: any[] = [];
 
     return this.filter((value: any) => {
-      const result = !knownValues.includes(value);
-      knownValues.push(value);
+      const unwrappedValue = unwrap(value);
+      const result = !knownValues.includes(unwrappedValue);
+      knownValues.push(unwrappedValue);
       return result;
     });
   }

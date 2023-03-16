@@ -1,5 +1,6 @@
 import { Data } from './data';
 import { snakeCase } from 'change-case';
+import { Text } from './text';
 
 describe('Data', () => {
   describe('cloned', () => {
@@ -152,6 +153,21 @@ describe('Data', () => {
       const data = Data.create([1, 1, 2, 3]);
 
       expect(data.unique.value).toEqual([1, 2, 3]);
+    });
+
+    it('should return unique values of an array of wrapped values', async () => {
+      const data = Data.create([
+        Text.create('a'),
+        Text.create('a'),
+        Text.create('b'),
+        Text.create('c'),
+      ]);
+
+      expect(data.unique.value).toEqual([
+        Text.create('a'),
+        Text.create('b'),
+        Text.create('c'),
+      ]);
     });
 
     it('should return unique values of an object', async () => {
