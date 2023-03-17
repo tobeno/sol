@@ -68,7 +68,7 @@
     "@types/babel__traverse": "^7.18.3",
     "@types/clipboardy": "^2.0.1",
     "@types/deasync": "^0.1.2",
-    "@types/jest": "^29.4.2",
+    "@types/jest": "^29.5.0",
     "@types/jsonata": "^1.5.1",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/marked": "^4.0.8",
