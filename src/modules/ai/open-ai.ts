@@ -9,13 +9,13 @@ function getOpenAi() {
 }
 
 export function isOpenAiApiAvailable(): boolean {
-  return !!process.env.OPENAPI_API_KEY;
+  return !!process.env.OPENAI_API_KEY;
 }
 
 export function getOpenAiApi(): OpenAIApi {
   if (!isOpenAiApiAvailable()) {
     throw new Error(
-      'To use the OpenAI API the OPENAPI_API_KEY needs to be configured.',
+      'To use the OpenAI API the OPENAI_API_KEY needs to be configured.',
     );
   }
 
@@ -23,7 +23,7 @@ export function getOpenAiApi(): OpenAIApi {
 
   return new openai.OpenAIApi(
     new openai.Configuration({
-      apiKey: process.env.OPENAPI_API_KEY,
+      apiKey: process.env.OPENAI_API_KEY,
     }),
   );
 }
