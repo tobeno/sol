@@ -39,7 +39,7 @@ export class Directory extends StorageItem {
    * Sets the parent directory.
    */
   set parent(value: Directory) {
-    this.renameTo(`${value.path}/${this.basename}`);
+    this.renameTo(path.join(value.path, this.basename));
   }
 
   /**
@@ -124,8 +124,8 @@ export class Directory extends StorageItem {
   /**
    * Returns the given file in the directory.
    */
-  file(path: string): File {
-    return File.create(`${this.path}/${path}`);
+  file(filePath: string): File {
+    return File.create(path.join(this.path, filePath));
   }
 
   /**
@@ -138,8 +138,8 @@ export class Directory extends StorageItem {
   /**
    * Returns the given (sub)directory in the directory.
    */
-  dir(path: string): Directory {
-    return Directory.create(`${this.path}/${path}`);
+  dir(dirPath: string): Directory {
+    return Directory.create(path.join(this.path, dirPath));
   }
 
   /**

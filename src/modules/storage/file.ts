@@ -71,7 +71,11 @@ export class File extends StorageItem {
    */
   set exts(exts: string[]) {
     this.renameTo(
-      `${this.dir.path}/${this.name}${exts.length ? `.${exts.join('.')}` : ''}`,
+      path.join(
+        this.dir.path,
+        this.name,
+        exts.length ? `.${exts.join('.')}` : '',
+      ),
     );
   }
 
@@ -120,7 +124,11 @@ export class File extends StorageItem {
     const exts = this.exts;
 
     this.renameTo(
-      `${this.dir.path}/${name}${exts.length ? `.${this.exts.join('.')}` : ''}`,
+      path.join(
+        this.dir.path,
+        name,
+        exts.length ? `.${this.exts.join('.')}` : '',
+      ),
     );
   }
 
@@ -135,7 +143,7 @@ export class File extends StorageItem {
    * Sets the directory of the file (moving it to the new location).
    */
   set dir(value: Directory) {
-    this.renameTo(`${value.path}/${this.basename}`);
+    this.renameTo(path.join(value.path, this.basename));
   }
 
   /**

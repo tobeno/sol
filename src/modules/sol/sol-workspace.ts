@@ -6,6 +6,7 @@ import { getCwd } from '../../utils/env';
 import dotenv from 'dotenv';
 import { homedir } from 'os';
 import { getSolPackage } from './sol-package';
+import path from 'path';
 
 /**
  * Class for interacting with a Sol workspace directors.
@@ -152,7 +153,7 @@ let currentSolWorkspace: SolWorkspace | null = null;
  */
 export function getCurrentSolWorkspace(): SolWorkspace {
   if (!currentSolWorkspace) {
-    currentSolWorkspace = new SolWorkspace(`${getCwd()}/.sol`);
+    currentSolWorkspace = new SolWorkspace(path.join(getCwd(), '.sol'));
   }
 
   return currentSolWorkspace;
@@ -165,7 +166,7 @@ let userWorkspace: SolWorkspace | null = null;
  */
 export function getSolUserWorkspace(): SolWorkspace {
   if (!userWorkspace) {
-    userWorkspace = new SolWorkspace(`${homedir()}/.sol`);
+    userWorkspace = new SolWorkspace(path.join(homedir(), '.sol'));
   }
 
   return userWorkspace;
