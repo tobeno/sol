@@ -76,7 +76,7 @@ export abstract class StorageItem {
    * Sets the basename of the item.
    */
   set basename(value: string) {
-    this.renameTo(value);
+    this.renameTo(path.join(path.dirname(this.path), value));
   }
 
   /**
