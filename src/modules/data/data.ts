@@ -25,12 +25,7 @@ import {
   titlecaseText,
 } from '../../utils/text';
 import { log } from '../../utils/log';
-import {
-  diffArray,
-  intersectArray,
-  unionArray,
-  uniqueArray,
-} from '../../utils/array';
+import { diffArray, intersectArray, unionArray } from '../../utils/array';
 import { dereferenceJsonSchema } from '../../utils/json-schema';
 import { isEmpty, isNotEmpty, unwrap } from '../../utils/data';
 
