@@ -71,17 +71,27 @@ Or this:
 > _.answer.md.html.browse()
 ```
 
-## Install
+## ⚙️ Install
 
 To use Sol, you need to have NodeJS >= 14 installed globally.
 
 To setup:
 
-1. Clone the project `git clone git@github.com:tobeno/sol.git`
-2. Symlink or alias the _bin/sol_ file to allow you to run it from anywhere
-3. Optional: Define environment variables for Sol (like `SOL_EDITOR`) in a `~/.sol/.env` file
+1. Install NodeJS >= 16
+2. Setup the project
+   ```sh
+   git clone git@github.com:tobeno/sol.git
+   cd sol
+   npm i
+   ```
+3. Symlink or alias the _bin/sol_ file to allow you to run it from anywhere
+   ```sh
+   # On MacOS, Linux and WSL from inside the sol folder
+   ln -s $(pwd)/bin/sol /usr/local/bin/sol
+   ```
+4. Optional: Define environment variables for Sol (like `SOL_EDITOR`) in a `~/.sol/.env` file
 
-## Usage
+## 🚀 Usage
 
 **Start** the Sol shell using `sol`.
 
@@ -218,7 +228,7 @@ Option 2: Run the command inside Sol:
 > sh.exec('echo "test"').uppercased
 ```
 
-## Development
+## 💻 Development
 
 ### Install
 
