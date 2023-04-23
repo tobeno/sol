@@ -299,12 +299,7 @@ export const globals = {
   morphProject: withHelp(
     {
       get() {
-        const morph = require('ts-morph') as typeof import('ts-morph');
-
-        return new morph.Project({
-          tsConfigFilePath: Directory.create(getCwd()).file('tsconfig.json')
-            .path,
-        });
+        return require('../../morph/morph').morphProject;
       },
     },
     'Returns ts-morph project for the current working directory',
@@ -523,6 +518,7 @@ declare global {
   const jsonata: Globals['jsonata'];
   const log: Globals['log'];
   const morph: Globals['morph'];
+  const morphProject: Globals['morphProject'];
   const omit: Globals['omit'];
   const open: Globals['open'];
   const openApp: Globals['openApp'];
