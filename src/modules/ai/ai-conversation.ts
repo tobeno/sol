@@ -8,7 +8,6 @@ import { createHash } from 'crypto';
 import { Data } from '../data/data';
 import { Text } from '../data/text';
 import { open } from '../integrations/open';
-import { getClipboard } from '../clipboard/clipboard';
 import { Wrapper } from '../data/wrapper';
 
 export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
@@ -108,8 +107,7 @@ export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
   ask(question: string): this {
     const { dryRun } = this.options;
     if (!isOpenAiApiAvailable() && !dryRun) {
-      getClipboard().text = question;
-      open('http://chat.openai.com');
+      open(`https://chat.openai.com?message=${encodeURIComponent(question)}`);
       return this;
     }
 
