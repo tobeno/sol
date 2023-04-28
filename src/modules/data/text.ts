@@ -16,6 +16,7 @@ import {
   rfilterLines,
   rgrepLines,
   rsortLines,
+  snakecaseText,
   sortLines,
   titlecaseText,
 } from '../../utils/text';
@@ -48,6 +49,13 @@ export class Text extends Wrapper<string> {
    */
   get camelcased(): Text {
     return Text.create(camelcaseText(this.value), this.format);
+  }
+
+  /**
+   * Returns the text converted to snake_case.
+   */
+  get snakecased(): Text {
+    return Text.create(snakecaseText(this.value), this.format);
   }
 
   /**

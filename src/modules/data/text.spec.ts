@@ -34,6 +34,13 @@ describe('Text', () => {
     });
   });
 
+  describe('snakecased', () => {
+    it('should snake_case the value', async () => {
+      const text = Text.create('Hello World');
+      expect(text.snakecased.value).toBe('hello_world');
+    });
+  });
+
   describe('kebabcases', () => {
     it('should kebab-case the value', async () => {
       const text = Text.create('Hello World');
