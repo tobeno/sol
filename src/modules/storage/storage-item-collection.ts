@@ -65,6 +65,13 @@ export class GenericStorageItemCollection<
   }
 
   /**
+   * Returns the items of the collection wrapped as data.
+   */
+  get data(): Data<ItemType[]> {
+    return Data.create(this.value);
+  }
+
+  /**
    * Returns all files in the collection.
    */
   files(exp?: string): FileCollection {
