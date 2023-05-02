@@ -1,6 +1,6 @@
 import { withHelp } from './metadata';
 import * as changeCase from 'change-case';
-import { isNotEmpty } from './data';
+import { isNotEmpty } from './core';
 
 export function lines(str: string): string[] {
   return str.replace(/\r/g, '').trimEnd().split('\n');

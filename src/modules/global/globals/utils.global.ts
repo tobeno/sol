@@ -5,6 +5,7 @@
 export * from '../../../utils/array';
 export * from '../../../utils/async';
 export * from '../../../utils/data';
+export * from '../../../utils/core';
 export * from '../../../utils/env';
 export * from '../../../utils/inspect';
 export * from '../../../utils/json-schema';

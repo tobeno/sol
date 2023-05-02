@@ -2,12 +2,7 @@ import jsonata, { Expression } from 'jsonata';
 import { Wrapper } from './wrapper';
 import { Text } from './text';
 import { inspect } from 'util';
-import deepEqual from 'fast-deep-equal/es6';
-import type {
-  AnyItemType,
-  AnyKeyType,
-  AnyPartial,
-} from '../../interfaces/util';
+import type { AnyItem, AnyKeyType, AnyPartial } from '../../interfaces/util';
 import {
   cloneObjectDeep,
   diffObjectKeys,
@@ -15,7 +10,7 @@ import {
   flattenObject,
   intersectObjectKeys,
   mapObjectKeys,
-  traverseObject,
+  traverseObjectDeep,
   unionObjectKeys,
 } from '../../utils/object';
 import {
@@ -29,14 +24,15 @@ import {
 import { log } from '../../utils/log';
 import { diffArray, intersectArray, unionArray } from '../../utils/array';
 import { dereferenceJsonSchema } from '../../utils/json-schema';
-import { isEmpty, isNotEmpty, unwrap } from '../../utils/data';
+import { unwrap } from '../../utils/data';
+import { isEmpty, isNotEmpty } from '../../utils/core';
 
 /**
  * Generic wrapper for runtime objects.
  */
 export class Data<
   ValueType = any,
-  ItemType = AnyItemType<ValueType>,
+  ItemType = AnyItem<ValueType>,
   KeyType = AnyKeyType<ValueType>,
 > extends Wrapper<ValueType> {
   constructor(value: ValueType) {
@@ -628,7 +624,7 @@ export class Data<
    * Traverses the data deeply.
    */
   traverse(cb: (obj: Record<string | number | symbol, any>) => void): this {
-    traverseObject(this.value, cb);
+    traverseObjectDeep(this.value, cb);
 
     return this;
   }

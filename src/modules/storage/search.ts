@@ -1,4 +1,4 @@
-import { isNotEmpty } from '../../utils/data';
+import { isNotEmpty } from '../../utils/core';
 import { exec } from '../shell/sh';
 import { File } from './file';
 import { FileCollection } from './storage-item-collection';

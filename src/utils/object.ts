@@ -1,5 +1,7 @@
 import fastDeepEqual from 'fast-deep-equal/es6';
 import { unwrapDeep } from './data';
+import { DeepPartial } from '../interfaces/util';
+import { isObject } from './core';
 
 export function intersectObjectKeys<
   T extends Record<string, any>,
@@ -52,30 +54,36 @@ export function unionObjectKeys<
 }
 
 /**
- * Runs callback for all (nested) objects included in obj, including the root object
+ * Traverses an object deeply using the given callback
+ *
+ * The callback will be triggered for all objects found in obj.
  */
-export function traverseObject(
+export function traverseObjectDeep(
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   obj: any,
-  cb: (item: Record<string | number | symbol, any>) => void,
+  callback: (value: any, key: string | null) => void,
+  path: string | null = null,
 ): void {
-  if (!obj || obj instanceof Date) {
-    return;
-  }
+  if (obj && typeof obj === 'object') {
+    if (Array.isArray(obj)) {
+      obj.forEach((item, index) =>
+        traverseObjectDeep(item, callback, `${path || ''}[${index}]`),
+      );
+    } else if (!(obj instanceof Date)) {
+      Object.keys(obj).forEach((key) => {
+        const isStringKey = !!key.match(/[^a-zA-Z0-9_]/);
 
-  if (Array.isArray(obj)) {
-    obj.forEach((item) => {
-      traverseObject(item, cb);
-    });
+        traverseObjectDeep(
+          obj[key],
+          callback,
+          `${path || ''}${
+            isStringKey ? `['${key}']` : `${path ? '.' : ''}${key}`
+          }`,
+        );
+      });
 
-    return;
-  }
-
-  if (typeof obj === 'object') {
-    Object.values(obj).forEach((value) => {
-      traverseObject(value, cb);
-    });
-
-    cb(obj);
+      callback(obj, path);
+    }
   }
 }
 
@@ -140,4 +148,52 @@ export function flattenObject(obj: any, prefix: string = ''): any {
  */
 export function equalsObjectDeep(obj: unknown, otherObj: unknown): boolean {
   return fastDeepEqual(unwrapDeep(obj), unwrapDeep(otherObj));
+}
+
+/**
+ * Returns true if obj is an empty object
+ */
+export function isEmptyObject(obj: any): boolean {
+  return obj && !Object.keys(obj).length;
+}
+
+/**
+ * Find difference between two objects. Deep compare.
+ * @author David Wells- https://davidwells.io/snippets/get-difference-between-two-objects-javascript (Added types)
+ */
+export function diffObjects<T = any>(
+  oldObject: T,
+  newObject: T,
+): DeepPartial<T> {
+  // Lazy load for performance
+  const transform =
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+    require('lodash/transform') as typeof import('lodash/transform');
+  const isEqual =
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+    require('lodash/isEqual') as typeof import('lodash/isEqual');
+
+  if (!oldObject || isEmptyObject(oldObject)) {
+    return newObject;
+  }
+
+  function changes(newObj: any, origObj: any): any {
+    let arrayIndexCounter = 0;
+    return transform(newObj, (result: any, value, key) => {
+      if (!isEqual(value, origObj[key])) {
+        // eslint-disable-next-line no-plusplus
+        const resultKey = Array.isArray(origObj) ? arrayIndexCounter++ : key;
+        // eslint-disable-next-line no-param-reassign
+        result[resultKey] =
+          isObject(value) &&
+          !isNativeObject(value) &&
+          isObject(origObj[key]) &&
+          !isNativeObject(origObj[key])
+            ? changes(value, origObj[key])
+            : value;
+      }
+    });
+  }
+
+  return changes(newObject, oldObject);
 }

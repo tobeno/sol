@@ -6,7 +6,7 @@ import {
   intersectObjectKeys,
   isNativeObject,
   mapObjectKeys,
-  traverseObject,
+  traverseObjectDeep,
   unionObjectKeys,
 } from './object';
 import { Wrapper } from '../modules/data/wrapper';
@@ -72,11 +72,11 @@ describe('object utils', function () {
     });
   });
 
-  describe('traverseObject', () => {
+  describe('traverseObjectDeep', () => {
     it('should traverse an object', async () => {
       const obj = { a: 1, b: 2, c: 3, d: [{ e: 4, f: { g: 5 } }] };
       const results: any[] = [];
-      traverseObject(obj, (value) => {
+      traverseObjectDeep(obj, (value) => {
         results.push(value);
       });
       expect(results).toEqual([
