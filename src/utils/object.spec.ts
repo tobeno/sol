@@ -1,6 +1,7 @@
 import {
   cloneObjectDeep,
   diffObjectKeys,
+  equalsObjectDeep,
   flattenObject,
   intersectObjectKeys,
   isNativeObject,
@@ -9,6 +10,8 @@ import {
   unionObjectKeys,
 } from './object';
 import { Wrapper } from '../modules/data/wrapper';
+
+class DummyWrapper extends Wrapper {}
 
 describe('object utils', function () {
   describe('flattenObject', function () {
@@ -101,6 +104,56 @@ describe('object utils', function () {
         B: 2,
         C: 3,
       });
+    });
+  });
+
+  describe('equals', () => {
+    it('should return true if two arrays are equal', async () => {
+      const data = [1, { b: 2 }, 3];
+      const otherData = [1, { b: 2 }, 3];
+      expect(equalsObjectDeep(data, otherData)).toBe(true);
+    });
+
+    it('should return false if two arrays are not equal', async () => {
+      const data = [1, { b: 2 }, 3];
+      const otherData = [1, { c: 3 }, 3];
+      expect(equalsObjectDeep(data, otherData)).toBe(false);
+    });
+
+    it('should return true if two objects are equal', async () => {
+      const data = { a: 1, b: 2, c: { d: 3 } };
+      const otherData = { a: 1, b: 2, c: { d: 3 } };
+      expect(equalsObjectDeep(data, otherData)).toBe(true);
+    });
+
+    it('should return false if two objects are not equal', async () => {
+      const data = { a: 1, b: 2, c: { d: 3 } };
+      const otherData = { a: 1, b: 2, c: { e: 3 } };
+      expect(equalsObjectDeep(data, otherData)).toBe(false);
+    });
+
+    it('should return true if two objects are equal when first is wrapped', async () => {
+      const data = new DummyWrapper({ a: 1, b: 2, c: { d: 3 } });
+      const otherData = { a: 1, b: 2, c: { d: 3 } };
+      expect(equalsObjectDeep(data, otherData)).toBe(true);
+    });
+
+    it('should return false if two objects are not equal when first is wrapped', async () => {
+      const data = new DummyWrapper({ a: 1, b: 2, c: { d: 3 } });
+      const otherData = { a: 1, b: 2, c: { e: 3 } };
+      expect(equalsObjectDeep(data, otherData)).toBe(false);
+    });
+
+    it('should return true if two objects are equal when second is wrapped', async () => {
+      const data = { a: 1, b: 2, c: { d: 3 } };
+      const otherData = new DummyWrapper({ a: 1, b: 2, c: { d: 3 } });
+      expect(equalsObjectDeep(data, otherData)).toBe(true);
+    });
+
+    it('should return false if two objects are not equal when second is wrapped', async () => {
+      const data = { a: 1, b: 2, c: { d: 3 } };
+      const otherData = new DummyWrapper({ a: 1, b: 2, c: { e: 3 } });
+      expect(equalsObjectDeep(data, otherData)).toBe(false);
     });
   });
 });

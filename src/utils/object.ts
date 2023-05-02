@@ -1,3 +1,6 @@
+import fastDeepEqual from 'fast-deep-equal/es6';
+import { unwrapDeep } from './data';
+
 export function intersectObjectKeys<
   T extends Record<string, any>,
   T2 extends Record<string, any>,
@@ -128,4 +131,13 @@ export function flattenObject(obj: any, prefix: string = ''): any {
   }
 
   return obj;
+}
+
+/**
+ * Returns true if obj and otherObj are equal deeply
+ *
+ * Note: This automatically unwraps them before comparing if e.g. wrapped with Data or Text
+ */
+export function equalsObjectDeep(obj: unknown, otherObj: unknown): boolean {
+  return fastDeepEqual(unwrapDeep(obj), unwrapDeep(otherObj));
 }

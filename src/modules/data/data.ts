@@ -2,6 +2,7 @@ import jsonata, { Expression } from 'jsonata';
 import { Wrapper } from './wrapper';
 import { Text } from './text';
 import { inspect } from 'util';
+import deepEqual from 'fast-deep-equal/es6';
 import type {
   AnyItemType,
   AnyKeyType,
@@ -10,6 +11,7 @@ import type {
 import {
   cloneObjectDeep,
   diffObjectKeys,
+  equalsObjectDeep,
   flattenObject,
   intersectObjectKeys,
   mapObjectKeys,
@@ -489,6 +491,10 @@ export class Data<
       (r) => r + 1,
       () => 0,
     );
+  }
+
+  equals(value: any): boolean {
+    return equalsObjectDeep(this.value, value);
   }
 
   /**
