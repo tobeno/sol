@@ -22,3 +22,18 @@ export function unionArray<ItemType = any>(
 ): ItemType[] {
   return uniqueArray([...arr1, ...arr2]);
 }
+
+/**
+ * Splits an array into chunks of the given size
+ */
+export function chunkArray<ArrayType extends any[]>(
+  array: ArrayType,
+  chunkSize: number,
+): ArrayType[] {
+  const chunks: ArrayType[] = [];
+  for (let index = 0; index < array.length; index += chunkSize) {
+    chunks.push(array.slice(index, index + chunkSize) as any);
+  }
+
+  return chunks;
+}

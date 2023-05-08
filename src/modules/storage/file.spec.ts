@@ -14,6 +14,7 @@ describe('File', () => {
     it('should create a file', async () => {
       const file = File.create('/tmp/sol-test-' + Date.now());
       try {
+        file.delete();
         expect(file.exists).toBe(false);
         file.create();
         expect(file.exists).toBe(true);

@@ -267,7 +267,9 @@ export class File extends StorageItem {
    * Deletes the file.
    */
   delete(): void {
-    fs.unlinkSync(this.path);
+    if (this.exists) {
+      fs.unlinkSync(this.path);
+    }
   }
 
   /**

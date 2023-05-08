@@ -881,6 +881,28 @@ describe('Data', () => {
     });
   });
 
+  describe('chunk', () => {
+    it('should chunk an array', async () => {
+      const data = Data.create([1, 2, 3, 4, 5, 6]);
+
+      expect(data.chunk(2).value).toEqual([
+        [1, 2],
+        [3, 4],
+        [5, 6],
+      ]);
+    });
+
+    it('should chunk an object', async () => {
+      const data = Data.create({ a: 1, b: 2, c: 3, d: 4, e: 5, f: 6 });
+
+      expect(data.chunk(2).value).toEqual([
+        { a: 1, b: 2 },
+        { c: 3, d: 4 },
+        { e: 5, f: 6 },
+      ]);
+    });
+  });
+
   describe('some', () => {
     it('should return true if match in array', async () => {
       const data = Data.create([1, 2, 3]);

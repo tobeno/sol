@@ -22,7 +22,12 @@ import {
   titlecaseText,
 } from '../../utils/text';
 import { log } from '../../utils/log';
-import { diffArray, intersectArray, unionArray } from '../../utils/array';
+import {
+  chunkArray,
+  diffArray,
+  intersectArray,
+  unionArray,
+} from '../../utils/array';
 import { dereferenceJsonSchema } from '../../utils/json-schema';
 import { unwrap } from '../../utils/data';
 import { isEmpty, isNotEmpty } from '../../utils/core';
@@ -627,6 +632,20 @@ export class Data<
     traverseObjectDeep(this.value, cb);
 
     return this;
+  }
+
+  chunk(
+    size: number,
+  ): ValueType extends Array<any> ? Data<ValueType> : Data<any[]> {
+    if (Array.isArray(this.value)) {
+      return Data.create(chunkArray(this.value, size)) as any;
+    }
+
+    return Data.create(
+      chunkArray(Object.entries(this.value as any), size).map((entries) =>
+        Object.fromEntries(entries),
+      ),
+    ) as any;
   }
 
   /**

@@ -1,4 +1,10 @@
-import { diffArray, intersectArray, unionArray, uniqueArray } from './array';
+import {
+  chunkArray,
+  diffArray,
+  intersectArray,
+  unionArray,
+  uniqueArray,
+} from './array';
 
 describe('array utils', () => {
   describe('uniqueArray', () => {
@@ -29,6 +35,17 @@ describe('array utils', () => {
       const array = [1, 2, 3];
       const otherArray = [2, 3, 4];
       expect(intersectArray(array, otherArray)).toEqual([2, 3]);
+    });
+  });
+
+  describe('chunkArray', () => {
+    it('should return the array split up into chunks', async () => {
+      const array = [1, 2, 3, 4, 5, 6];
+      expect(chunkArray(array, 2)).toEqual([
+        [1, 2],
+        [3, 4],
+        [5, 6],
+      ]);
     });
   });
 });
