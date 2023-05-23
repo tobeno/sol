@@ -60,7 +60,7 @@
     "ts-morph": "^18.0.0",
     "tsx": "^3.12.6",
     "typescript": "^5.0.4",
-    "yaml": "^2.2.1"
+    "yaml": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
