@@ -2,7 +2,7 @@ import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Directory } from '../../storage/directory';
 import { SolWorkspace } from '../../sol/sol-workspace';
-import { open } from '../open';
+import { open } from '../../../utils/open';
 
 declare module '../../sol/sol-workspace' {
   interface SolWorkspace {

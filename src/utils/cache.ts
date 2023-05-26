@@ -1,5 +1,5 @@
-import { File } from '../storage/file';
-import { getCurrentSolWorkspace } from '../sol/sol-workspace';
+import { File } from '../modules/storage/file';
+import { getCurrentSolWorkspace } from '../modules/sol/sol-workspace';
 
 const cache = new Map<string | symbol, any>();
 

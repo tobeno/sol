@@ -1,7 +1,7 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { StorageItem } from '../../storage/storage-item';
 import { browse } from '../browser';
-import { open } from '../open';
+import { open } from '../../../utils/open';
 
 declare module '../../storage/storage-item' {
   interface StorageItem {

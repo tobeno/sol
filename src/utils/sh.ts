@@ -1,7 +1,7 @@
 import type shelljs from 'shelljs';
-import { StorageItem } from '../storage/storage-item';
-import { Text } from '../data/text';
-import { Data } from '../data/data';
+import { StorageItem } from '../modules/storage/storage-item';
+import { Text } from '../modules/data/text';
+import { Data } from '../modules/data/data';
 import { spawn as spawnInternal } from 'child_process';
 
 type Shelljs = typeof shelljs;

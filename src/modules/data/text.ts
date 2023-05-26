@@ -24,6 +24,7 @@ import { Data } from './data';
 import { log } from '../../utils/log';
 import { Wrapper } from './wrapper';
 import { MaybeWrapped } from '../../interfaces/data';
+import { compressString, decompressString } from '../../utils/compress';
 
 /**
  * Wrapper for strings.
@@ -132,14 +133,22 @@ export class Text extends Wrapper<string> {
    * Returns the text in base 64 encoding.
    */
   get base64encoded(): Text {
-    return Text.create(Buffer.from(this.value).toString('base64'));
+    return Text.create(Buffer.from(this.value).toString('base64url'));
   }
 
   /**
    * Returns the text converted from base 64 encoding.
    */
   get base64decoded(): Text {
-    return Text.create(Buffer.from(this.value, 'base64').toString('utf8'));
+    return Text.create(Buffer.from(this.value, 'base64url').toString('utf8'));
+  }
+
+  get compressed(): Text {
+    return Text.create(compressString(this.value));
+  }
+
+  get decompressed(): Text {
+    return Text.create(decompressString(this.value));
   }
 
   /**

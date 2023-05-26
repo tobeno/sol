@@ -15,6 +15,7 @@ import { Html } from '../../data/html';
 import { Xml } from '../../data/xml';
 import { DataType } from '../../data/data-type';
 import { DataTransformation } from '../data-transformation';
+import { Graph } from '../../visualize/graph';
 
 declare module '../../data/text' {
   interface Text {
@@ -57,6 +58,11 @@ declare module '../../data/text' {
      * Loads the text as Markdown.
      */
     get md(): Markdown;
+
+    /**
+     * Loads the text as Mermaid graph.
+     */
+    get graph(): Graph;
 
     /**
      * Converts the text to the specified data type.
@@ -113,6 +119,12 @@ mutateClass(
     md: {
       get(): Markdown {
         return Markdown.create(this);
+      },
+    },
+
+    graph: {
+      get(): Graph {
+        return Graph.create(this);
       },
     },
 

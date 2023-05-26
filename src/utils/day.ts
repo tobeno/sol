@@ -1,4 +1,4 @@
-import { definePropertiesMutation, mutateClass } from '../../utils/mutation';
+import { definePropertiesMutation, mutateClass } from './mutation';
 import { inspect } from 'util';
 import dayjs from 'dayjs';
 

@@ -1,6 +1,6 @@
-import { Wrapper } from '../data/wrapper';
 import openInternal from 'open';
-import { catchAsyncErrors } from '../../utils/async';
+import { catchAsyncErrors } from './async';
+import { unwrap } from './data';
 
 function mapApp(app: string): string {
   if (app.startsWith('open ')) {
@@ -44,9 +44,7 @@ export function open(
     value = value.uri;
   }
 
-  if (value instanceof Wrapper) {
-    value = value.value;
-  }
+  value = unwrap(value);
 
   catchAsyncErrors(
     openInternal(value, {

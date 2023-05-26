@@ -1,5 +1,5 @@
 import { fileCached, runtimeCached } from './cache';
-import { TmpFile } from '../storage/tmp-file';
+import { TmpFile } from '../modules/storage/tmp-file';
 
 describe('cache', () => {
   describe('runtimeCached', () => {

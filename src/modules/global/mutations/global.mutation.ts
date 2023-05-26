@@ -27,9 +27,9 @@ import { File } from '../../storage/file';
 import { grep } from '../../storage/search';
 import jsonata from 'jsonata';
 import { log } from '../../../utils/log';
-import { open, openApp } from '../../integrations/open';
+import { open, openApp } from '../../../utils/open';
 import { getPlays, play, playFile, replay } from '../../play/play';
-import type * as shell from '../../shell/sh';
+import type * as shell from '../../../utils/sh';
 import {
   getSolExtensions,
   solExtension,
@@ -48,7 +48,7 @@ import { web } from '../../web/web';
 import { FromPropertyDescriptorMap } from '../../../interfaces/object';
 import { Markdown } from '../../data/markdown';
 import { getSolPackage } from '../../sol/sol-package';
-import { fileCached, runtimeCached } from '../../cache/cache';
+import { fileCached, runtimeCached } from '../../../utils/cache';
 import { Html } from '../../data/html';
 import { Xml } from '../../data/xml';
 import { Chart } from '../../visualize/chart';
@@ -56,6 +56,7 @@ import { TmpFile } from '../../storage/tmp-file';
 import { TmpDirectory } from '../../storage/tmp-directory';
 import { Image } from '../../image/image';
 import { getAi } from '../../ai/ai';
+import { Graph } from '../../visualize/graph';
 
 export const globals = {
   ai: withHelp(
@@ -153,7 +154,7 @@ export const globals = {
   day: withHelp(
     {
       get() {
-        return require('../../date/day').day;
+        return require('../../../utils/day').day;
       },
     },
     'See https://day.js.org/docs/en/installation/installation',
@@ -162,7 +163,7 @@ export const globals = {
     {
       get() {
         return {
-          ...require('../../debug/module'),
+          ...require('../../../utils/debug'),
         };
       },
     },
@@ -232,6 +233,12 @@ export const globals = {
     },
     'Glob search for files or directories',
   ),
+  graph: withHelp(
+    {
+      value: Graph.create,
+    },
+    'Wrapper for Mermaid graphs',
+  ),
   grep: withHelp(
     {
       value: grep,
@@ -271,7 +278,7 @@ export const globals = {
   jwt: withHelp(
     {
       get() {
-        return require('../../security/jwt').jwt;
+        return require('../../../utils/jwt').jwt;
       },
     },
     'See https://github.com/auth0/node-jsonwebtoken#readme',
@@ -299,7 +306,7 @@ export const globals = {
   morphProject: withHelp(
     {
       get() {
-        return require('../../morph/morph').morphProject;
+        return require('../../../utils/morph').morphProject;
       },
     },
     'Returns ts-morph project for the current working directory',
@@ -367,7 +374,7 @@ export const globals = {
   sh: withHelp(
     {
       get(): typeof shell {
-        return require('../../shell/sh');
+        return require('../../../utils/sh');
       },
     },
     'Shell utilities',

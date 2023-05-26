@@ -2,7 +2,7 @@ import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Url } from '../../web/url';
 import { browse } from '../browser';
-import { open } from '../open';
+import { open } from '../../../utils/open';
 
 declare module '../../web/url' {
   interface Url {

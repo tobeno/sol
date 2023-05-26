@@ -7,6 +7,7 @@ export class DataFormat {
   static Json = 'application/json';
   static Yaml = 'text/x-yaml';
   static Xml = 'text/xml';
+  static Mermaid = 'text/mmd';
   static Markdown = 'text/markdown';
   static TextDate = 'text/x-date';
   static TextNewlineSeparated = 'text/x-newline-separated';

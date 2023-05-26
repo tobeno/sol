@@ -18,6 +18,7 @@ import { DataFormat } from '../../data/data-format';
 import { MarkdownTransformer } from './markdown.transformer';
 import { HtmlTransformer } from './html.transformer';
 import { XmlTransformer } from './xml.transformer';
+import { GraphTransformer } from './graph.transformer';
 
 let rootTransformer: DataTransformer<any, any>;
 
@@ -34,6 +35,7 @@ export function getRootTransformer(): DataTransformer<any, any> {
       new HtmlTransformer(),
       new XmlTransformer(),
       new MarkdownTransformer(),
+      new GraphTransformer(),
       new TextDateTransformer(),
       new JoinTransformer(',', DataFormat.TextCommaSeparated),
       new JoinTransformer('\n', DataFormat.TextNewlineSeparated),

@@ -114,7 +114,7 @@ describe('Text', () => {
   describe('base64encoded', () => {
     it('should base64 encode the value', async () => {
       const text = Text.create('Hello World');
-      expect(text.base64encoded.value).toBe('SGVsbG8gV29ybGQ=');
+      expect(text.base64encoded.value).toBe('SGVsbG8gV29ybGQ');
     });
   });
 
@@ -122,6 +122,20 @@ describe('Text', () => {
     it('should base64 decode the value', async () => {
       const text = Text.create('SGVsbG8gV29ybGQ=');
       expect(text.base64decoded.value).toBe('Hello World');
+    });
+  });
+
+  describe('compressed', () => {
+    it('should compress value', async () => {
+      const text = Text.create('Hello World');
+      expect(text.compressed.value).toBe('eJzzSM3JyVcIzy_KSQEAGAsEHQ');
+    });
+  });
+
+  describe('decompressed', () => {
+    it('should decompress value', async () => {
+      const text = Text.create('eJzzSM3JyVcIzy_KSQEAGAsEHQ');
+      expect(text.decompressed.value).toBe('Hello World');
     });
   });
 

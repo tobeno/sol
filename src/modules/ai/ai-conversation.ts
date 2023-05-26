@@ -7,7 +7,7 @@ import { createOpenAiChatCompletion, isOpenAiApiAvailable } from './open-ai';
 import { createHash } from 'crypto';
 import { Data } from '../data/data';
 import { Text } from '../data/text';
-import { open } from '../integrations/open';
+import { open } from '../../utils/open';
 import { Wrapper } from '../data/wrapper';
 
 export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {

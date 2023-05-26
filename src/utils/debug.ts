@@ -1,5 +1,5 @@
-import { Data } from '../data/data';
-import { File } from '../storage/file';
+import { Data } from '../modules/data/data';
+import { File } from '../modules/storage/file';
 
 export interface LoadedModule {
   file: File;

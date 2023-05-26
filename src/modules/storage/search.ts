@@ -1,5 +1,5 @@
 import { isNotEmpty } from '../../utils/core';
-import { exec } from '../shell/sh';
+import { exec } from '../../utils/sh';
 import { File } from './file';
 import { FileCollection } from './storage-item-collection';
 

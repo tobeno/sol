@@ -2,7 +2,7 @@ import { File } from '../../storage/file';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Ast } from '../../data/ast';
-import { open } from '../open';
+import { open } from '../../../utils/open';
 
 declare module '../../data/ast' {
   interface Ast {

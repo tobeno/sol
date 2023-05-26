@@ -2,7 +2,7 @@ import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 import { edit } from '../editor';
 import { Directory } from '../../storage/directory';
 import { SolExtension } from '../../sol/sol-extension';
-import { open } from '../open';
+import { open } from '../../../utils/open';
 
 declare module '../../sol/sol-extension' {
   interface SolExtension {

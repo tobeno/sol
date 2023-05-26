@@ -1,6 +1,6 @@
 import { Url } from '../web/url';
 import { Wrapper } from '../data/wrapper';
-import { open } from './open';
+import { open } from '../../utils/open';
 
 /**
  * Opens the given URL in the default browser.

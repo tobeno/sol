@@ -1,8 +1,8 @@
 import type { Project, SourceFile } from 'ts-morph';
 import path from 'path';
 import { readFileSync } from 'fs';
-import { log } from '../../utils/log';
-import { File } from '../storage/file';
+import { log } from './log';
+import { File } from '../modules/storage/file';
 
 export interface MorphOptions {
   dryRun?: boolean;

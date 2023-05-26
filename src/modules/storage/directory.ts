@@ -12,7 +12,7 @@ import {
   glob,
   StorageItemCollection,
 } from './storage-item-collection';
-import { exec, spawn } from '../shell/sh';
+import { exec, spawn } from '../../utils/sh';
 import { unwrap } from '../../utils/data';
 import { MaybeWrapped } from '../../interfaces/data';
 import type { Options as PrettierOptions } from 'prettier';
