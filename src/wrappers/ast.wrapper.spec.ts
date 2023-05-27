@@ -1,5 +1,5 @@
 import * as babelTypes from '@babel/types';
-import { codeToAst } from '../modules/transform/utils/transformer.utils';
+import { codeToAst } from '../modules/transform';
 import { Ast } from './ast.wrapper';
 import { Data } from './data.wrapper';
 

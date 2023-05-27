@@ -39,8 +39,6 @@ import { TmpFile } from '../../../wrappers/tmp-file.wrapper';
 import { Url } from '../../../wrappers/url.wrapper';
 import { Xml } from '../../../wrappers/xml.wrapper';
 import { Image } from '../../image/wrappers/image.wrapper';
-import type * as classes from '../globals/classes.global';
-import type * as utils from '../globals/utils.global';
 
 export const globals = {
   args: withHelp(
@@ -72,14 +70,6 @@ export const globals = {
       value: chalk,
     },
     'See https://github.com/chalk/chalk#readme',
-  ),
-  classes: withHelp(
-    {
-      get(): typeof classes {
-        return Data.create(require('../globals/classes.global')).sorted.value;
-      },
-    },
-    'Classes',
   ),
   cwd: withHelp(
     {
@@ -287,6 +277,14 @@ export const globals = {
     },
     'Variables shared between play scripts and the shell',
   ),
+  sol: withHelp(
+    {
+      get() {
+        return require('../../..');
+      },
+    },
+    'Returns the extension for the given name or path',
+  ),
   solExtension: withHelp(
     {
       value: solExtension,
@@ -361,14 +359,6 @@ export const globals = {
     },
     'Wraps a text URL as a Url',
   ),
-  utils: withHelp(
-    {
-      get(): typeof utils {
-        return require('../globals/utils.global');
-      },
-    },
-    'Basic utility functions',
-  ),
   web: withHelp(
     {
       value: web,
@@ -426,8 +416,6 @@ declare global {
   const tmpDir: Globals['tmpDir'];
   const tmpFile: Globals['tmpFile'];
   const url: Globals['url'];
-  const classes: Globals['classes'];
-  const utils: Globals['utils'];
   const web: Globals['web'];
   const withHelp: Globals['withHelp'];
 

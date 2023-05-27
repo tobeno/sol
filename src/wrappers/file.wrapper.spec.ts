@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
-import { codeToAst } from '../modules/transform/utils/transformer.utils';
+import { codeToAst } from '../modules/transform';
 import { File } from './file.wrapper';
 import { Html } from './html.wrapper';
 import { Markdown } from './markdown.wrapper';
