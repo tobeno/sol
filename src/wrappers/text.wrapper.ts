@@ -1,5 +1,5 @@
 import { inspect } from 'util';
-import { MaybeWrapped } from '../interfaces/data.interfaces';
+import { MaybeWrapped } from '../interfaces/wrapper.interfaces';
 import { compressString, decompressString } from '../utils/compress.utils';
 import { log } from '../utils/log.utils';
 import {

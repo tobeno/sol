@@ -1,7 +1,7 @@
 import {
   AbstractConstructor,
   Constructor,
-} from '../interfaces/util.interfaces';
+} from '../interfaces/helper.interfaces';
 
 export abstract class Mutation<TargetType> {
   abstract mutate(target: TargetType): void;

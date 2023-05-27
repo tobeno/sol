@@ -1,6 +1,6 @@
 import openInternal from 'open';
 import { catchAsyncErrors } from './async.utils';
-import { unwrap } from './data.utils';
+import { unwrap } from './wrapper.utils';
 
 function mapApp(app: string): string {
   if (app.startsWith('open ')) {

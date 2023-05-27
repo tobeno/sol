@@ -1,4 +1,4 @@
-import { MaybeWrapped } from '../../../interfaces/data.interfaces';
+import { MaybeWrapped } from '../../../interfaces/wrapper.interfaces';
 import { getSolReplServer } from '../../../sol/sol-repl';
 import { getCurrentSolWorkspace } from '../../../sol/sol-workspace';
 import { log } from '../../../utils/log.utils';

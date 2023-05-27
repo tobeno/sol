@@ -1,8 +1,8 @@
 import fs, { mkdirSync } from 'fs';
 import path from 'path';
 import type { Options as PrettierOptions } from 'prettier';
-import { MaybeWrapped } from '../interfaces/data.interfaces';
-import { unwrap } from '../utils/data.utils';
+import { MaybeWrapped } from '../interfaces/wrapper.interfaces';
+import { unwrap } from '../utils/wrapper.utils';
 import { log } from '../utils/log.utils';
 import { rerequire } from '../utils/module.utils';
 import { Directory } from './directory.wrapper';

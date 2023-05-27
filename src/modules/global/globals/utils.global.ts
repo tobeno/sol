@@ -7,7 +7,7 @@ export * from '../../../utils/async.utils';
 export * from '../../../utils/cache.utils';
 export * from '../../../utils/compress.utils';
 export * from '../../../utils/core.utils';
-export * from '../../../utils/data.utils';
+export * from '../../../utils/wrapper.utils';
 export * from '../../../utils/day.utils';
 export * from '../../../utils/debug.utils';
 export * from '../../../utils/env.utils';

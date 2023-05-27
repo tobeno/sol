@@ -1,7 +1,7 @@
 import { Wrapper } from '../wrappers/wrapper.wrapper';
-import { unwrap, unwrapDeep } from './data.utils';
+import { unwrap, unwrapDeep } from './wrapper.utils';
 
-describe('data utils', () => {
+describe('wrapper utils', () => {
   describe('unwrap', () => {
     it('should unwrap a value', () => {
       const value = new Wrapper(1);

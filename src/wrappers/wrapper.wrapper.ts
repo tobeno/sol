@@ -1,4 +1,4 @@
-import { unwrapDeep } from '../utils/data.utils';
+import { unwrapDeep } from '../utils/wrapper.utils';
 
 /**
  * Base class for all object based wrappers.

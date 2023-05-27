@@ -1,4 +1,4 @@
-import { MaybeWrapped } from '../interfaces/data.interfaces';
+import { MaybeWrapped } from '../interfaces/wrapper.interfaces';
 import { Wrapper } from '../wrappers/wrapper.wrapper';
 
 /**

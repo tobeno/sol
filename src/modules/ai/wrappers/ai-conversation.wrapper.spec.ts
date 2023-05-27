@@ -1,4 +1,4 @@
-import { unwrapDeep } from '../../../utils/data.utils';
+import { unwrapDeep } from '../../../utils/wrapper.utils';
 import { AiConversation } from './ai-conversation.wrapper';
 
 describe('AiConversation', () => {

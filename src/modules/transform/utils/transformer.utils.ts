@@ -1,5 +1,5 @@
 import type babelTypes from '@babel/types';
-import { MaybeWrapped } from '../../../interfaces/data.interfaces';
+import { MaybeWrapped } from '../../../interfaces/wrapper.interfaces';
 import type { Ast } from '../../../wrappers/ast.wrapper';
 import type { Data } from '../../../wrappers/data.wrapper';
 import { DataFormat } from '../../../wrappers/data-format.wrapper';

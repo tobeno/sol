@@ -4,7 +4,7 @@ import type {
   AnyItem,
   AnyKeyType,
   AnyPartial,
-} from '../interfaces/util.interfaces';
+} from '../interfaces/helper.interfaces';
 import {
   chunkArray,
   diffArray,
@@ -12,7 +12,7 @@ import {
   unionArray,
 } from '../utils/array.utils';
 import { isEmpty, isNotEmpty } from '../utils/core.utils';
-import { unwrap } from '../utils/data.utils';
+import { unwrap } from '../utils/wrapper.utils';
 import { dereferenceJsonSchema } from '../utils/json-schema.utils';
 import { log } from '../utils/log.utils';
 import {

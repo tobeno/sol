@@ -1,6 +1,6 @@
 import { inspect } from 'util';
-import { MaybeWrapped } from '../interfaces/data.interfaces';
-import { unwrap } from '../utils/data.utils';
+import { MaybeWrapped } from '../interfaces/wrapper.interfaces';
+import { unwrap } from '../utils/wrapper.utils';
 import { log } from '../utils/log.utils';
 import { grep } from '../utils/search.utils';
 import { Data } from './data.wrapper';

@@ -1,4 +1,4 @@
-import { MaybeWrapped } from '../interfaces/data.interfaces';
+import { MaybeWrapped } from '../interfaces/wrapper.interfaces';
 import { DataFormat } from './data-format.wrapper';
 import { Text } from './text.wrapper';
 import { Wrapper } from './wrapper.wrapper';
