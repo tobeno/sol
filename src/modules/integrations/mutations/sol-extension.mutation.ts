@@ -1,10 +1,10 @@
+import { SolExtension } from '../../../sol/sol-extension';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { edit } from '../editor';
-import { Directory } from '../../storage/directory';
-import { SolExtension } from '../../sol/sol-extension';
 import { open } from '../../../utils/open';
+import { Directory } from '../../../wrappers/directory';
+import { edit } from '../utils/editor';
 
-declare module '../../sol/sol-extension' {
+declare module '../../../sol/sol-extension' {
   interface SolExtension {
     /**
      * Opens the extension in the default editor.

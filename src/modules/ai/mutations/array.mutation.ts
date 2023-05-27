@@ -1,6 +1,6 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Data } from '../../data/data';
-import { AiConversation } from '../ai-conversation';
+import { Data } from '../../../wrappers/data';
+import { AiConversation } from '../wrappers/ai-conversation';
 
 declare global {
   interface Array<T> {

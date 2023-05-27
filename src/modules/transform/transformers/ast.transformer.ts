@@ -1,7 +1,7 @@
 import { parse as recastParse, print as recastPrint } from 'recast';
-import { DataType } from '../../data/data-type';
+import { Ast } from '../../../wrappers/ast';
+import { DataType } from '../../../wrappers/data-type';
 import { StringTransformer } from './string.transformer';
-import { Ast } from '../../data/ast';
 
 /**
  * Transformer for converting ASTs from and to strings.

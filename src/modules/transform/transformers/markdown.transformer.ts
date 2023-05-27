@@ -1,8 +1,8 @@
-import { DataType } from '../../data/data-type';
-import { StringTransformer } from './string.transformer';
-import { Markdown } from '../../data/markdown';
+import { DataFormat } from '../../../wrappers/data-format';
+import { DataType } from '../../../wrappers/data-type';
+import { Markdown } from '../../../wrappers/markdown';
 import { DataTransformation } from '../data-transformation';
-import { DataFormat } from '../../data/data-format';
+import { StringTransformer } from './string.transformer';
 
 /**
  * Transformer for converting Markdowns from and to strings.

@@ -1,5 +1,5 @@
+import { DataType } from '../../../wrappers/data-type';
 import { StringTransformer } from './string.transformer';
-import { DataType } from '../../data/data-type';
 
 /**
  * Transformer for joining or splitting strings.

@@ -1,9 +1,9 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { File } from '../file';
-import { save, saveAs } from '../save';
-import { Markdown } from '../../data/markdown';
+import { File } from '../../../wrappers/file';
+import { Markdown } from '../../../wrappers/markdown';
+import { save, saveAs } from '../utils/save';
 
-declare module '../../data/markdown' {
+declare module '../../../wrappers/markdown' {
   interface Markdown {
     /**
      * Saves the Markdown as the given file.

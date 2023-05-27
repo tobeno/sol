@@ -1,8 +1,8 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
+import { Ast } from '../../../wrappers/ast';
 import { getClipboard } from '../clipboard';
-import { Ast } from '../../data/ast';
 
-declare module '../../data/ast' {
+declare module '../../../wrappers/ast' {
   interface Ast {
     /**
      * Copies the AST JSON to the clipboard.

@@ -1,6 +1,6 @@
+import { DataFormat } from '../../../wrappers/data-format';
+import { DataType } from '../../../wrappers/data-type';
 import { StringTransformer } from './string.transformer';
-import { DataType } from '../../data/data-type';
-import { DataFormat } from '../../data/data-format';
 
 /**
  * Transformer for converting YAMLs from and to strings.

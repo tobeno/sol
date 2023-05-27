@@ -1,10 +1,10 @@
+import { SolPackage } from '../../../sol/sol-package';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { edit } from '../editor';
-import { Directory } from '../../storage/directory';
 import { open } from '../../../utils/open';
-import { SolPackage } from '../../sol/sol-package';
+import { Directory } from '../../../wrappers/directory';
+import { edit } from '../utils/editor';
 
-declare module '../../sol/sol-package' {
+declare module '../../../sol/sol-package' {
   interface SolPackage {
     /**
      * Opens the Sol package in the default editor.

@@ -1,10 +1,10 @@
-import { File } from '../../storage/file';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { edit } from '../editor';
-import { Markdown } from '../../data/markdown';
-import { TmpFile } from '../../storage/tmp-file';
+import { File } from '../../../wrappers/file';
+import { Markdown } from '../../../wrappers/markdown';
+import { TmpFile } from '../../../wrappers/tmp-file';
+import { edit } from '../utils/editor';
 
-declare module '../../data/markdown' {
+declare module '../../../wrappers/markdown' {
   interface Markdown {
     /**
      * Opens the Markdown in the default editor.

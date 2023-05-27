@@ -1,7 +1,7 @@
+import { DataFormat } from '../../../wrappers/data-format';
+import { DataType } from '../../../wrappers/data-type';
+import { Xml } from '../../../wrappers/xml';
 import { StringTransformer } from './string.transformer';
-import { DataType } from '../../data/data-type';
-import { DataFormat } from '../../data/data-format';
-import { Xml } from '../../data/xml';
 
 /**
  * Transformer for converting XMLs from and to strings.

@@ -1,7 +1,7 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { dataToCsv, dataToJson, dataToYaml } from '../transformer';
-import { Text } from '../../data/text';
-import { Data } from '../../data/data';
+import { Data } from '../../../wrappers/data';
+import { Text } from '../../../wrappers/text';
+import { dataToCsv, dataToJson, dataToYaml } from '../utils/transformer';
 
 declare global {
   interface Array<T> {

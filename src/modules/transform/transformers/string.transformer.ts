@@ -1,6 +1,6 @@
-import { DataType } from '../../data/data-type';
-import { DataTransformer } from './data.transformer';
+import { DataType } from '../../../wrappers/data-type';
 import { DataTransformation } from '../data-transformation';
+import { DataTransformer } from './data.transformer';
 
 /**
  * Base class for transformers for converting from and to strings.

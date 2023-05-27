@@ -1,9 +1,9 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { File } from '../file';
-import { save, saveAs } from '../save';
-import { Response } from '../../web/response';
+import { File } from '../../../wrappers/file';
+import { Response } from '../../../wrappers/response';
+import { save, saveAs } from '../utils/save';
 
-declare module '../../web/response' {
+declare module '../../../wrappers/response' {
   interface Response {
     /**
      * Saves the response as the given file.

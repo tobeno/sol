@@ -1,9 +1,9 @@
-import { DataTransformer } from './data.transformer';
-import { DataTransformation } from '../data-transformation';
-import { DataType, DataTypeMatchType } from '../../data/data-type';
-import { Wrapper } from '../../data/wrapper';
-import { Text } from '../../data/text';
 import { Constructor } from '../../../interfaces/util';
+import { DataType, DataTypeMatchType } from '../../../wrappers/data-type';
+import { Text } from '../../../wrappers/text';
+import { Wrapper } from '../../../wrappers/wrapper';
+import { DataTransformation } from '../data-transformation';
+import { DataTransformer } from './data.transformer';
 
 /**
  * A transformer, which adds / removes a wrapper class, before passing the transformation on to another mapper.

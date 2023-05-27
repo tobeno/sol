@@ -2,7 +2,7 @@ import * as sh from './sh';
 import { cat, exec, head, tail } from './sh';
 
 describe('sh', () => {
-  const testAssetsPath = `${__dirname}/../../../test/assets`;
+  const testAssetsPath = `${__dirname}/../../test/assets`;
 
   describe('exec', () => {
     it('should exec the shell command', async () => {

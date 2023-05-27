@@ -1,9 +1,9 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { astToCode, dataToJson, dataToYaml } from '../transformer';
-import { Text } from '../../data/text';
-import { Ast } from '../../data/ast';
+import { Ast } from '../../../wrappers/ast';
+import { Text } from '../../../wrappers/text';
+import { astToCode, dataToJson, dataToYaml } from '../utils/transformer';
 
-declare module '../../data/ast' {
+declare module '../../../wrappers/ast' {
   interface Ast {
     /**
      * Returns the code that the AST represents.

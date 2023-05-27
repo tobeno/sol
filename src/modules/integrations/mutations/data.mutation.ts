@@ -1,9 +1,9 @@
-import { File } from '../../storage/file';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { edit } from '../editor';
-import { Data } from '../../data/data';
+import { Data } from '../../../wrappers/data';
+import { File } from '../../../wrappers/file';
+import { edit } from '../utils/editor';
 
-declare module '../../data/data' {
+declare module '../../../wrappers/data' {
   interface Data {
     /**
      * Opens the data in the default editor.

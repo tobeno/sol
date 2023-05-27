@@ -1,7 +1,7 @@
-import { StringTransformer } from './string.transformer';
-import { DataType } from '../../data/data-type';
-import { DataFormat } from '../../data/data-format';
 import stripJsonComments from 'strip-json-comments';
+import { DataFormat } from '../../../wrappers/data-format';
+import { DataType } from '../../../wrappers/data-type';
+import { StringTransformer } from './string.transformer';
 
 /**
  * Transformer for converting JSONs from and to strings.

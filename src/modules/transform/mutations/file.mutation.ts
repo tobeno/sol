@@ -1,5 +1,11 @@
-import { Data } from '../../data/data';
+import { MaybeWrapped } from '../../../interfaces/data';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
+import { Ast } from '../../../wrappers/ast';
+import { Data } from '../../../wrappers/data';
+import { File } from '../../../wrappers/file';
+import { Html } from '../../../wrappers/html';
+import { Markdown } from '../../../wrappers/markdown';
+import { Xml } from '../../../wrappers/xml';
 import {
   astToCode,
   codeToAst,
@@ -9,15 +15,9 @@ import {
   dataToYaml,
   jsonToData,
   yamlToData,
-} from '../transformer';
-import { File } from '../../storage/file';
-import { Ast } from '../../data/ast';
-import { Markdown } from '../../data/markdown';
-import { Html } from '../../data/html';
-import { Xml } from '../../data/xml';
-import { MaybeWrapped } from '../../../interfaces/data';
+} from '../utils/transformer';
 
-declare module '../../storage/file' {
+declare module '../../../wrappers/file' {
   interface File {
     /**
      * Loads the file contents as JSON.

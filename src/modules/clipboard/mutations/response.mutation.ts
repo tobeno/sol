@@ -1,8 +1,8 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
+import { Response } from '../../../wrappers/response';
 import { getClipboard } from '../clipboard';
-import { Response } from '../../web/response';
 
-declare module '../../web/response' {
+declare module '../../../wrappers/response' {
   interface Response {
     /**
      * Copies the response to the clipboard.

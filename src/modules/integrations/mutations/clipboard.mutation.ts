@@ -1,8 +1,8 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
+import { File } from '../../../wrappers/file';
+import { TmpFile } from '../../../wrappers/tmp-file';
 import { Clipboard } from '../../clipboard/clipboard';
-import { edit } from '../editor';
-import { File } from '../../storage/file';
-import { TmpFile } from '../../storage/tmp-file';
+import { edit } from '../utils/editor';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {

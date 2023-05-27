@@ -2,70 +2,47 @@
  * Mutation for the global scope.
  */
 
-import {
-  definePropertiesMutation,
-  mutateGlobals,
-} from '../../../utils/mutation';
-import { withHelp } from '../../../utils/metadata';
-import {
-  codeToAst,
-  csvToData,
-  jsonToData,
-  transform,
-  yamlToData,
-} from '../../transform/transformer';
-import { awaitSync } from '../../../utils/async';
-import { browse } from '../../integrations/browser';
 import chalk from 'chalk';
-import { getClipboard } from '../../clipboard/clipboard';
-import { getCwd, getEnv } from '../../../utils/env';
-import { Data } from '../../data/data';
-import { Directory } from '../../storage/directory';
-import { dirs, files, glob } from '../../storage/storage-item-collection';
-import { edit } from '../../integrations/editor';
-import { File } from '../../storage/file';
-import { grep } from '../../storage/search';
-import { log } from '../../../utils/log';
-import { open, openApp } from '../../../utils/open';
-import { getPlays, play, playFile, replay } from '../../play/play';
-import type * as shell from '../../../utils/sh';
+import { FromPropertyDescriptorMap } from '../../../interfaces/object';
 import {
   getSolExtensions,
   solExtension,
   solUserExtension,
   solWorkspaceExtension,
-} from '../../sol/sol-extension';
+} from '../../../sol/sol-extension';
+import { getSolPackage } from '../../../sol/sol-package';
 import {
   getCurrentSolWorkspace,
   getSolUserWorkspace,
-} from '../../sol/sol-workspace';
-import { Text } from '../../data/text';
-import { Url } from '../../web/url';
+} from '../../../sol/sol-workspace';
+import { awaitSync } from '../../../utils/async';
+import { fileCached, runtimeCached } from '../../../utils/cache';
+import { getCwd, getEnv } from '../../../utils/env';
+import { log } from '../../../utils/log';
+import { withHelp } from '../../../utils/metadata';
+import {
+  definePropertiesMutation,
+  mutateGlobals,
+} from '../../../utils/mutation';
+import { open, openApp } from '../../../utils/open';
+import { dirs, files, glob, grep } from '../../../utils/search';
+import type * as shell from '../../../utils/sh';
+import { web } from '../../../utils/web';
+import { Data } from '../../../wrappers/data';
+import { Directory } from '../../../wrappers/directory';
+import { File } from '../../../wrappers/file';
+import { Html } from '../../../wrappers/html';
+import { Markdown } from '../../../wrappers/markdown';
+import { Text } from '../../../wrappers/text';
+import { TmpDirectory } from '../../../wrappers/tmp-directory';
+import { TmpFile } from '../../../wrappers/tmp-file';
+import { Url } from '../../../wrappers/url';
+import { Xml } from '../../../wrappers/xml';
+import { Image } from '../../image/wrappers/image';
 import type * as classes from '../globals/classes.global';
 import type * as utils from '../globals/utils.global';
-import { web } from '../../web/web';
-import { FromPropertyDescriptorMap } from '../../../interfaces/object';
-import { Markdown } from '../../data/markdown';
-import { getSolPackage } from '../../sol/sol-package';
-import { fileCached, runtimeCached } from '../../../utils/cache';
-import { Html } from '../../data/html';
-import { Xml } from '../../data/xml';
-import { Chart } from '../../visualize/chart';
-import { TmpFile } from '../../storage/tmp-file';
-import { TmpDirectory } from '../../storage/tmp-directory';
-import { Image } from '../../image/image';
-import { getAi } from '../../ai/ai';
-import { Graph } from '../../visualize/graph';
 
 export const globals = {
-  ai: withHelp(
-    {
-      get() {
-        return getAi();
-      },
-    },
-    'AI integration',
-  ),
   args: withHelp(
     {
       get() {
@@ -75,12 +52,6 @@ export const globals = {
       },
     },
     'Returns the arguments passed to Sol',
-  ),
-  ast: withHelp(
-    {
-      value: codeToAst,
-    },
-    'Converts code to its AST to Data',
   ),
   astTypes: withHelp(
     {
@@ -96,23 +67,11 @@ export const globals = {
     },
     'Waits for the given promise before continuing',
   ),
-  browse: withHelp(
-    {
-      value: browse,
-    },
-    'Opens the given URL in the browser',
-  ),
   chalk: withHelp(
     {
       value: chalk,
     },
     'See https://github.com/chalk/chalk#readme',
-  ),
-  chart: withHelp(
-    {
-      value: Chart.create,
-    },
-    'See https://apexcharts.com/docs/series/',
   ),
   classes: withHelp(
     {
@@ -121,20 +80,6 @@ export const globals = {
       },
     },
     'Classes',
-  ),
-  clipboard: withHelp(
-    {
-      get() {
-        return getClipboard();
-      },
-    },
-    'Exposes the system clipboard',
-  ),
-  csv: withHelp(
-    {
-      value: csvToData,
-    },
-    'Converts CSV to Data',
   ),
   cwd: withHelp(
     {
@@ -179,12 +124,6 @@ export const globals = {
       value: dirs,
     },
     'Glob search for directories',
-  ),
-  edit: withHelp(
-    {
-      value: edit,
-    },
-    'Opens a file for editing (defaults to code as editor)',
   ),
   env: withHelp(
     {
@@ -232,12 +171,6 @@ export const globals = {
     },
     'Glob search for files or directories',
   ),
-  graph: withHelp(
-    {
-      value: Graph.create,
-    },
-    'Wrapper for Mermaid graphs',
-  ),
   grep: withHelp(
     {
       value: grep,
@@ -261,12 +194,6 @@ export const globals = {
       },
     },
     'Wraps the given image file as Image',
-  ),
-  json: withHelp(
-    {
-      value: jsonToData,
-    },
-    'Converts JSON to Data',
   ),
   jsonata: withHelp(
     {
@@ -339,32 +266,6 @@ export const globals = {
       },
     },
     'See: https://lodash.com/docs/latest#pick',
-  ),
-  play: withHelp(
-    {
-      value: play,
-    },
-    'Opens a given play file for interactive editing',
-  ),
-  playFile: withHelp(
-    {
-      value: playFile,
-    },
-    'Returns a PlayFile instance for the given path or file',
-  ),
-  plays: withHelp(
-    {
-      get() {
-        return getPlays();
-      },
-    },
-    'Returns available play files',
-  ),
-  replay: withHelp(
-    {
-      value: replay,
-    },
-    'Replays the given play file',
   ),
   runtimeCached: withHelp(
     {
@@ -454,12 +355,6 @@ export const globals = {
     },
     'Temporary file',
   ),
-  transform: withHelp(
-    {
-      value: transform,
-    },
-    'Transforms data between data types using transformations',
-  ),
   url: withHelp(
     {
       value: Url.create,
@@ -489,40 +384,27 @@ export const globals = {
     },
     'Wraps the given string as Xml',
   ),
-  yaml: withHelp(
-    {
-      value: yamlToData,
-    },
-    'Converts YAML to Data',
-  ),
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;
 
 declare global {
-  const ai: Globals['ai'];
   const args: Globals['args'];
-  const ast: Globals['ast'];
   const astTypes: Globals['astTypes'];
   const awaitSync: Globals['awaitSync'];
-  const browse: Globals['browse'];
   const chalk: Globals['chalk'];
-  const clipboard: Globals['clipboard'];
-  const csv: Globals['csv'];
   const cwd: Globals['cwd'];
   const data: Globals['data'];
   const day: Globals['day'];
   const debug: Globals['debug'];
   const dir: Globals['dir'];
   const dirs: Globals['dirs'];
-  const edit: Globals['edit'];
   const env: Globals['env'];
   const file: Globals['file'];
   const files: Globals['files'];
   const fileCached: Globals['fileCached'];
   const glob: Globals['glob'];
   const grep: Globals['grep'];
-  const json: Globals['json'];
   const jsonata: Globals['jsonata'];
   const log: Globals['log'];
   const morph: Globals['morph'];
@@ -530,10 +412,6 @@ declare global {
   const omit: Globals['omit'];
   const open: Globals['open'];
   const openApp: Globals['openApp'];
-  const play: Globals['play'];
-  const playFile: Globals['playFile'];
-  const plays: Globals['plays'];
-  const replay: Globals['replay'];
   const runtimeCached: Globals['runtimeCached'];
   const shared: Globals['shared'];
   const sh: Globals['sh'];
@@ -547,13 +425,11 @@ declare global {
   const text: Globals['text'];
   const tmpDir: Globals['tmpDir'];
   const tmpFile: Globals['tmpFile'];
-  const transform: Globals['transform'];
   const url: Globals['url'];
   const classes: Globals['classes'];
   const utils: Globals['utils'];
   const web: Globals['web'];
   const withHelp: Globals['withHelp'];
-  const yaml: Globals['yaml'];
 
   // DOM globals
   type BufferSource = any;

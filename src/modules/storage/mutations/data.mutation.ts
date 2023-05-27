@@ -1,9 +1,9 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Data } from '../../data/data';
-import { File } from '../file';
-import { save, saveAs } from '../save';
+import { Data } from '../../../wrappers/data';
+import { File } from '../../../wrappers/file';
+import { save, saveAs } from '../utils/save';
 
-declare module '../../data/data' {
+declare module '../../../wrappers/data' {
   interface Data {
     /**
      * Saves the data as the given file.

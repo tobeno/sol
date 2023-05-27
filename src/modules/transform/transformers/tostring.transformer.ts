@@ -1,5 +1,5 @@
-import { DataTransformer } from './data.transformer';
 import { DataTransformation } from '../data-transformation';
+import { DataTransformer } from './data.transformer';
 
 /**
  * Transformer for converting data to strings using toString().

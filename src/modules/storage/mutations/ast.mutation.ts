@@ -1,9 +1,9 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { File } from '../file';
-import { save, saveAs } from '../save';
-import { Ast } from '../../data/ast';
+import { Ast } from '../../../wrappers/ast';
+import { File } from '../../../wrappers/file';
+import { save, saveAs } from '../utils/save';
 
-declare module '../../data/ast' {
+declare module '../../../wrappers/ast' {
   interface Ast {
     /**
      * Saves the AST as the given file.

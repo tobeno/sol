@@ -1,6 +1,6 @@
-import { definePropertiesMutation, mutateClass } from './mutation';
-import { inspect } from 'util';
 import dayjs from 'dayjs';
+import { inspect } from 'util';
+import { definePropertiesMutation, mutateClass } from './mutation';
 
 declare module 'dayjs' {
   interface Dayjs {

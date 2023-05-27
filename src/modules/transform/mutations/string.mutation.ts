@@ -1,5 +1,5 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Text } from '../../data/text';
+import { Text } from '../../../wrappers/text';
 
 declare global {
   interface String {

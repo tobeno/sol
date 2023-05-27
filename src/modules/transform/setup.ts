@@ -3,6 +3,7 @@ import './mutations/ast.mutation';
 import './mutations/clipboard.mutation';
 import './mutations/data.mutation';
 import './mutations/file.mutation';
+import './mutations/global.mutation';
 import './mutations/markdown.mutation';
 import './mutations/response.mutation';
 import './mutations/string.mutation';

@@ -1,23 +1,23 @@
-import { Data } from '../../data/data';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
+import { Ast } from '../../../wrappers/ast';
+import { Data } from '../../../wrappers/data';
+import { DataType } from '../../../wrappers/data-type';
+import { Html } from '../../../wrappers/html';
+import { Markdown } from '../../../wrappers/markdown';
+import { Text } from '../../../wrappers/text';
+import { Url } from '../../../wrappers/url';
+import { Xml } from '../../../wrappers/xml';
+import { Graph } from '../../visualize/wrappers/graph';
+import { DataTransformation } from '../data-transformation';
 import {
   codeToAst,
   csvToData,
   jsonToData,
   transform,
   yamlToData,
-} from '../transformer';
-import { Text } from '../../data/text';
-import { Url } from '../../web/url';
-import { Ast } from '../../data/ast';
-import { Markdown } from '../../data/markdown';
-import { Html } from '../../data/html';
-import { Xml } from '../../data/xml';
-import { DataType } from '../../data/data-type';
-import { DataTransformation } from '../data-transformation';
-import { Graph } from '../../visualize/graph';
+} from '../utils/transformer';
 
-declare module '../../data/text' {
+declare module '../../../wrappers/text' {
   interface Text {
     /**
      * Parses the text as JSON.

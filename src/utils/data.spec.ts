@@ -1,4 +1,4 @@
-import { Wrapper } from '../modules/data/wrapper';
+import { Wrapper } from '../wrappers/wrapper';
 import { unwrap, unwrapDeep } from './data';
 
 describe('data utils', () => {

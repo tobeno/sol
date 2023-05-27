@@ -1,8 +1,8 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { StorageItem } from '../../storage/storage-item';
+import { StorageItem } from '../../../wrappers/storage-item';
 import { getClipboard } from '../clipboard';
 
-declare module '../../storage/storage-item' {
+declare module '../../../wrappers/storage-item' {
   interface StorageItem {
     /**
      * Copies the storage item path to the clipboard.

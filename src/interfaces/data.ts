@@ -1,4 +1,4 @@
-import { Wrapper } from '../modules/data/wrapper';
+import { Wrapper } from '../wrappers/wrapper';
 
 export type MaybeWrapped<ValueType> = ValueType | Wrapper<ValueType>;
 

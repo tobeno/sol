@@ -1,9 +1,9 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { StorageItem } from '../../storage/storage-item';
-import { browse } from '../browser';
 import { open } from '../../../utils/open';
+import { StorageItem } from '../../../wrappers/storage-item';
+import { browse } from '../utils/browser';
 
-declare module '../../storage/storage-item' {
+declare module '../../../wrappers/storage-item' {
   interface StorageItem {
     /**
      * Opens the item in the default editor.

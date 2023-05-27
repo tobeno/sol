@@ -1,5 +1,5 @@
 import { MaybeWrapped } from '../../interfaces/data';
-import { Text } from '../data/text';
+import { Text } from '../../wrappers/text';
 
 /**
  * Class for interacting with the OS clipboard.

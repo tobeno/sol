@@ -1,5 +1,5 @@
 import { MaybeWrapped } from '../interfaces/data';
-import { Wrapper } from '../modules/data/wrapper';
+import { Wrapper } from '../wrappers/wrapper';
 
 /**
  * Removes the wrapper class around the value if present.

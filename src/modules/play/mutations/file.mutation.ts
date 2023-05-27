@@ -1,8 +1,8 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { File } from '../../storage/file';
-import { play, PlayFile, replay, unplay } from '../play';
+import { File } from '../../../wrappers/file';
+import { play, PlayFile, replay, unplay } from '../utils/play';
 
-declare module '../../storage/file' {
+declare module '../../../wrappers/file' {
   interface File {
     /**
      * Opens the file in the default editor and starts watching for changes.

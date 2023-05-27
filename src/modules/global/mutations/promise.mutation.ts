@@ -1,6 +1,6 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { awaitSync } from '../../../utils/async';
 import { inspect } from 'util';
+import { awaitSync } from '../../../utils/async';
+import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
 
 declare global {
   interface Promise<T> {

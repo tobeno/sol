@@ -1,8 +1,8 @@
-import { Data } from '../../data/data';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Chart, ChartOptions } from '../chart';
+import { Data } from '../../../wrappers/data';
+import { Chart, ChartOptions } from '../wrappers/chart';
 
-declare module '../../data/data' {
+declare module '../../../wrappers/data' {
   interface Data {
     /**
      * Creates a new chart from this data.

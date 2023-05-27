@@ -1,3 +1,4 @@
+import { Wrapper } from '../wrappers/wrapper';
 import {
   cloneObjectDeep,
   diffObjectKeys,
@@ -9,7 +10,6 @@ import {
   traverseObjectDeep,
   unionObjectKeys,
 } from './object';
-import { Wrapper } from '../modules/data/wrapper';
 
 class DummyWrapper extends Wrapper {}
 

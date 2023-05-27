@@ -1,5 +1,5 @@
+import { Wrapper } from '../wrappers/wrapper';
 import { isEmpty, isNotEmpty } from './core';
-import { Wrapper } from '../modules/data/wrapper';
 
 describe('core utils', () => {
   describe('isEmpty', () => {

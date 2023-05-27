@@ -1,10 +1,10 @@
-import { File } from '../../storage/file';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { edit } from '../editor';
-import { Ast } from '../../data/ast';
 import { open } from '../../../utils/open';
+import { Ast } from '../../../wrappers/ast';
+import { File } from '../../../wrappers/file';
+import { edit } from '../utils/editor';
 
-declare module '../../data/ast' {
+declare module '../../../wrappers/ast' {
   interface Ast {
     /**
      * Opens the AST in the default editor.

@@ -4,8 +4,6 @@ import './modules/global/setup';
 import './modules/image/setup';
 import './modules/integrations/setup';
 import './modules/play/setup';
-import './modules/sol/setup';
 import './modules/storage/setup';
 import './modules/transform/setup';
 import './modules/visualize/setup';
-import './modules/web/setup';

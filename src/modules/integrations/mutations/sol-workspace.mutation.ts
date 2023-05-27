@@ -1,10 +1,10 @@
+import { SolWorkspace } from '../../../sol/sol-workspace';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { edit } from '../editor';
-import { Directory } from '../../storage/directory';
-import { SolWorkspace } from '../../sol/sol-workspace';
 import { open } from '../../../utils/open';
+import { Directory } from '../../../wrappers/directory';
+import { edit } from '../utils/editor';
 
-declare module '../../sol/sol-workspace' {
+declare module '../../../sol/sol-workspace' {
   interface SolWorkspace {
     /**
      * Opens the Sol workspace in the default editor.

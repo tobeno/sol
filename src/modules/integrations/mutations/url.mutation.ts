@@ -1,10 +1,10 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { edit } from '../editor';
-import { Url } from '../../web/url';
-import { browse } from '../browser';
 import { open } from '../../../utils/open';
+import { Url } from '../../../wrappers/url';
+import { browse } from '../utils/browser';
+import { edit } from '../utils/editor';
 
-declare module '../../web/url' {
+declare module '../../../wrappers/url' {
   interface Url {
     /**
      * Opens the URL in the default browser.

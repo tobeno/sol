@@ -1,4 +1,4 @@
-import { Wrapper } from '../modules/data/wrapper';
+import { Wrapper } from '../wrappers/wrapper';
 
 /**
  * Returns true if the value is empty

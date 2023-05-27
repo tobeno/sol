@@ -1,7 +1,7 @@
+import { DataFormat } from '../../../wrappers/data-format';
+import { DataType } from '../../../wrappers/data-type';
+import { Graph } from '../../visualize/wrappers/graph';
 import { StringTransformer } from './string.transformer';
-import { DataType } from '../../data/data-type';
-import { DataFormat } from '../../data/data-format';
-import { Graph } from '../../visualize/graph';
 
 /**
  * Transformer for converting Graph wrappers from and to strings.

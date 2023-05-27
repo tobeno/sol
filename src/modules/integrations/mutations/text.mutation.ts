@@ -1,11 +1,11 @@
-import { File } from '../../storage/file';
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { edit } from '../editor';
-import { Text } from '../../data/text';
-import { DataFormat } from '../../data/data-format';
-import { TmpFile } from '../../storage/tmp-file';
+import { DataFormat } from '../../../wrappers/data-format';
+import { File } from '../../../wrappers/file';
+import { Text } from '../../../wrappers/text';
+import { TmpFile } from '../../../wrappers/tmp-file';
+import { edit } from '../utils/editor';
 
-declare module '../../data/text' {
+declare module '../../../wrappers/text' {
   interface Text {
     /**
      * Opens the text in the default editor.

@@ -1,9 +1,9 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { DataFormat } from '../../data/data-format';
-import { Text } from '../../data/text';
-import { AiConversation } from '../ai-conversation';
+import { DataFormat } from '../../../wrappers/data-format';
+import { Text } from '../../../wrappers/text';
+import { AiConversation } from '../wrappers/ai-conversation';
 
-declare module '../../data/text' {
+declare module '../../../wrappers/text' {
   interface Text {
     /**
      * Asks the AI about this text (optionally with a question as prefix).

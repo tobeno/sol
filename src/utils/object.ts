@@ -1,7 +1,7 @@
 import fastDeepEqual from 'fast-deep-equal/es6';
-import { unwrapDeep } from './data';
 import { DeepPartial } from '../interfaces/util';
 import { isObject } from './core';
+import { unwrapDeep } from './data';
 
 export function intersectObjectKeys<
   T extends Record<string, any>,

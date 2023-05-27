@@ -1,8 +1,8 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Text } from '../../data/text';
-import { Response } from '../../web/response';
+import { Response } from '../../../wrappers/response';
+import { Text } from '../../../wrappers/text';
 
-declare module '../../web/response' {
+declare module '../../../wrappers/response' {
   interface Response {
     /**
      * Returns the response as JSON.

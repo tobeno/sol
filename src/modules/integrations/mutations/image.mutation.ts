@@ -1,9 +1,9 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { File } from '../../storage/file';
-import { TmpFile } from '../../storage/tmp-file';
-import { Image } from '../../image/image';
+import { File } from '../../../wrappers/file';
+import { TmpFile } from '../../../wrappers/tmp-file';
+import { Image } from '../../image/wrappers/image';
 
-declare module '../../image/image' {
+declare module '../../image/wrappers/image' {
   interface Image {
     /**
      * Opens the Image in the default browser.

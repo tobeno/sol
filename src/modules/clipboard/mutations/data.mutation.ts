@@ -1,8 +1,8 @@
 import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Data } from '../../data/data';
+import { Data } from '../../../wrappers/data';
 import { getClipboard } from '../clipboard';
 
-declare module '../../data/data' {
+declare module '../../../wrappers/data' {
   interface Data {
     /**
      * Copies the data as text to the clipboard.

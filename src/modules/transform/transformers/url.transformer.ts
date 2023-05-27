@@ -1,6 +1,6 @@
-import { DataType } from '../../data/data-type';
+import { DataType } from '../../../wrappers/data-type';
+import { Url } from '../../../wrappers/url';
 import { StringTransformer } from './string.transformer';
-import { Url } from '../../web/url';
 
 /**
  * Transformer for converting URLs from and to strings.
