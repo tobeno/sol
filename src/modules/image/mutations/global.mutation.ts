@@ -2,6 +2,7 @@
  * Mutation for the global scope.
  */
 import type { FromPropertyDescriptorMap } from '../../../interfaces/object.interfaces';
+import { withHelp } from '../../../utils/metadata.utils';
 import {
   definePropertiesMutation,
   mutateGlobals,
