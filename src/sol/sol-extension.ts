@@ -1,7 +1,7 @@
-import { logDebug, logError } from '../utils/log';
-import { camelcaseText } from '../utils/text';
-import { Directory } from '../wrappers/directory';
-import { File } from '../wrappers/file';
+import { logDebug, logError } from '../utils/log.utils';
+import { camelcaseText } from '../utils/text.utils';
+import { Directory } from '../wrappers/directory.wrapper';
+import { File } from '../wrappers/file.wrapper';
 import { getSolPackage } from './sol-package';
 import { getCurrentSolWorkspace, getSolUserWorkspace } from './sol-workspace';
 
@@ -59,13 +59,13 @@ import './${globalMutationFile.dir.relativePathFrom(setupFile.dir)}/${
 
 import { withHelp } from '${solPackage.dir.relativePathFrom(
         globalMutationFile.dir,
-      )}/src/utils/metadata';
+      )}/src/utils/metadata.utils';
 import { definePropertiesMutation, mutateGlobals } from '${solPackage.dir.relativePathFrom(
         globalMutationFile.dir,
-      )}/src/utils/mutation';
+      )}/src/utils/mutation.utils';
 import { FromPropertyDescriptorMap } from '${solPackage.dir.relativePathFrom(
         globalMutationFile.dir,
-      )}/src/interfaces/object';
+      )}/src/interfaces/object.utils';
 
 const globals = {
   ${globalName}: withHelp(

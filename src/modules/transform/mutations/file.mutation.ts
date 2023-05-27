@@ -1,11 +1,14 @@
-import { MaybeWrapped } from '../../../interfaces/data';
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Ast } from '../../../wrappers/ast';
-import { Data } from '../../../wrappers/data';
-import { File } from '../../../wrappers/file';
-import { Html } from '../../../wrappers/html';
-import { Markdown } from '../../../wrappers/markdown';
-import { Xml } from '../../../wrappers/xml';
+import { MaybeWrapped } from '../../../interfaces/data.interfaces';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { Ast } from '../../../wrappers/ast.wrapper';
+import { Data } from '../../../wrappers/data.wrapper';
+import { File } from '../../../wrappers/file.wrapper';
+import { Html } from '../../../wrappers/html.wrapper';
+import { Markdown } from '../../../wrappers/markdown.wrapper';
+import { Xml } from '../../../wrappers/xml.wrapper';
 import {
   astToCode,
   codeToAst,
@@ -15,9 +18,9 @@ import {
   dataToYaml,
   jsonToData,
   yamlToData,
-} from '../utils/transformer';
+} from '../utils/transformer.utils';
 
-declare module '../../../wrappers/file' {
+declare module '../../../wrappers/file.wrapper' {
   interface File {
     /**
      * Loads the file contents as JSON.

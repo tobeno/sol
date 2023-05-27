@@ -1,8 +1,11 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Response } from '../../../wrappers/response';
-import { Text } from '../../../wrappers/text';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { Response } from '../../../wrappers/response.wrapper';
+import { Text } from '../../../wrappers/text.wrapper';
 
-declare module '../../../wrappers/response' {
+declare module '../../../wrappers/response.wrapper' {
   interface Response {
     /**
      * Returns the response as JSON.

@@ -2,13 +2,13 @@
  * Mutation for the global scope.
  */
 
-import { FromPropertyDescriptorMap } from '../../../interfaces/object';
-import { withHelp } from '../../../utils/metadata';
+import { FromPropertyDescriptorMap } from '../../../interfaces/object.interfaces';
+import { withHelp } from '../../../utils/metadata.utils';
 import {
   definePropertiesMutation,
   mutateGlobals,
-} from '../../../utils/mutation';
-import { askAi, askAiCode } from '../utils/ai';
+} from '../../../utils/mutation.utils';
+import { askAi, askAiCode } from '../utils/ai.utils';
 
 export const globals = {
   ask: withHelp(
@@ -28,7 +28,8 @@ export const globals = {
 export type Globals = FromPropertyDescriptorMap<typeof globals>;
 
 declare global {
-  const ai: Globals['ai'];
+  const ask: Globals['ask'];
+  const askCode: Globals['askCode'];
 }
 
 mutateGlobals(definePropertiesMutation(globals));

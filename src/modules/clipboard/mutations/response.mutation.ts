@@ -1,8 +1,11 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Response } from '../../../wrappers/response';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { Response } from '../../../wrappers/response.wrapper';
 import { getClipboard } from '../clipboard';
 
-declare module '../../../wrappers/response' {
+declare module '../../../wrappers/response.wrapper' {
   interface Response {
     /**
      * Copies the response to the clipboard.

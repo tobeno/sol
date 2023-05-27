@@ -2,14 +2,14 @@
  * Mutation for the global scope.
  */
 
-import { FromPropertyDescriptorMap } from '../../../interfaces/object';
-import { withHelp } from '../../../utils/metadata';
+import { FromPropertyDescriptorMap } from '../../../interfaces/object.interfaces';
+import { withHelp } from '../../../utils/metadata.utils';
 import {
   definePropertiesMutation,
   mutateGlobals,
-} from '../../../utils/mutation';
-import { Chart } from '../wrappers/chart';
-import { Graph } from '../wrappers/graph';
+} from '../../../utils/mutation.utils';
+import { Chart } from '../wrappers/chart.wrapper';
+import { Graph } from '../wrappers/graph.wrapper';
 
 export const globals = {
   chart: withHelp(

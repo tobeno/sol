@@ -3,12 +3,12 @@ import { loopWhile } from 'deasync';
 import type { AsyncCompleter, CompleterResult } from 'readline';
 import type { ReplOptions, REPLServer } from 'repl';
 import repl from 'repl';
-import { log } from '../utils/log';
-import { getHelp } from '../utils/metadata';
+import { log } from '../utils/log.utils';
+import { getHelp } from '../utils/metadata.utils';
 import {
   DefinePropertiesMutation,
   getAppliedMutations,
-} from '../utils/mutation';
+} from '../utils/mutation.utils';
 import { getCurrentSolWorkspace } from './sol-workspace';
 
 export const solReplColor = {
@@ -23,7 +23,7 @@ export const solReplColor = {
  * Default Sol REPL writer / output.
  */
 function solWriter(output: any): string {
-  return chalk.bold(require('../utils/inspect').inspect(output));
+  return chalk.bold(require('../utils/inspect.utils').inspect(output));
 }
 
 /**

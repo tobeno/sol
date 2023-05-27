@@ -1,8 +1,11 @@
 import { SolExtension } from '../../../sol/sol-extension';
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { open } from '../../../utils/open';
-import { Directory } from '../../../wrappers/directory';
-import { edit } from '../utils/editor';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { open } from '../../../utils/open.utils';
+import { Directory } from '../../../wrappers/directory.wrapper';
+import { edit } from '../utils/editor.utils';
 
 declare module '../../../sol/sol-extension' {
   interface SolExtension {

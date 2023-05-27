@@ -1,7 +1,10 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { File } from '../../../wrappers/file';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { File } from '../../../wrappers/file.wrapper';
 import { Clipboard } from '../../clipboard/clipboard';
-import { saveAs } from '../utils/save';
+import { saveAs } from '../utils/save.utils';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {

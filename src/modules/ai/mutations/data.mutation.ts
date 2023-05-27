@@ -1,8 +1,11 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Data } from '../../../wrappers/data';
-import { AiConversation } from '../wrappers/ai-conversation';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { Data } from '../../../wrappers/data.wrapper';
+import { AiConversation } from '../wrappers/ai-conversation.wrapper';
 
-declare module '../../../wrappers/data' {
+declare module '../../../wrappers/data.wrapper' {
   interface Data {
     /**
      * Asks the AI a question about this data (as JSON).

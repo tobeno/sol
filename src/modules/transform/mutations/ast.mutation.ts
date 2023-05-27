@@ -1,9 +1,12 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Ast } from '../../../wrappers/ast';
-import { Text } from '../../../wrappers/text';
-import { astToCode, dataToJson, dataToYaml } from '../utils/transformer';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { Ast } from '../../../wrappers/ast.wrapper';
+import { Text } from '../../../wrappers/text.wrapper';
+import { astToCode, dataToJson, dataToYaml } from '../utils/transformer.utils';
 
-declare module '../../../wrappers/ast' {
+declare module '../../../wrappers/ast.wrapper' {
   interface Ast {
     /**
      * Returns the code that the AST represents.

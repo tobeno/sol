@@ -1,9 +1,12 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { DataFormat } from '../../../wrappers/data-format';
-import { Text } from '../../../wrappers/text';
-import { AiConversation } from '../wrappers/ai-conversation';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { DataFormat } from '../../../wrappers/data-format.wrapper';
+import { Text } from '../../../wrappers/text.wrapper';
+import { AiConversation } from '../wrappers/ai-conversation.wrapper';
 
-declare module '../../../wrappers/text' {
+declare module '../../../wrappers/text.wrapper' {
   interface Text {
     /**
      * Asks the AI about this text (optionally with a question as prefix).

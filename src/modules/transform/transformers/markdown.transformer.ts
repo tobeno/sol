@@ -1,6 +1,6 @@
-import { DataFormat } from '../../../wrappers/data-format';
-import { DataType } from '../../../wrappers/data-type';
-import { Markdown } from '../../../wrappers/markdown';
+import { DataFormat } from '../../../wrappers/data-format.wrapper';
+import { DataType } from '../../../wrappers/data-type.wrapper';
+import { Markdown } from '../../../wrappers/markdown.wrapper';
 import { DataTransformation } from '../data-transformation';
 import { StringTransformer } from './string.transformer';
 

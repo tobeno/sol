@@ -1,11 +1,9 @@
-import '../../src/setup';
-import * as tmp from 'tmp';
-
-import { File } from '../../src/wrappers/file';
-
 import { readFileSync } from 'fs';
-import { Data } from '../../src/wrappers/data';
-import { Text } from '../../src/wrappers/text';
+import * as tmp from 'tmp';
+import '../../src/setup';
+import { Data } from '../../src/wrappers/data.wrapper';
+import { File } from '../../src/wrappers/file.wrapper';
+import { Text } from '../../src/wrappers/text.wrapper';
 
 interface ProductVariant {
   id: string;
@@ -23,7 +21,7 @@ interface ProductsFile {
   products: Product[];
 }
 
-describe('data module', () => {
+describe('data module.wrapper', () => {
   const testAssetsPath = `${__dirname}/../assets`;
 
   describe('transformation', () => {

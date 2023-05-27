@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
 import { homedir } from 'os';
 import path from 'path';
-import { getCwd } from '../utils/env';
-import { logDebug, logError } from '../utils/log';
-import { Directory } from '../wrappers/directory';
-import { File } from '../wrappers/file';
+import { getCwd } from '../utils/env.utils';
+import { logDebug, logError } from '../utils/log.utils';
+import { Directory } from '../wrappers/directory.wrapper';
+import { File } from '../wrappers/file.wrapper';
 import { getLoadedSolExtensions } from './sol-extension';
 import { getSolPackage } from './sol-package';
 

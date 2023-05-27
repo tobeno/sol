@@ -1,9 +1,12 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { File } from '../../../wrappers/file';
-import { Text } from '../../../wrappers/text';
-import { save, saveAs } from '../utils/save';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { File } from '../../../wrappers/file.wrapper';
+import { Text } from '../../../wrappers/text.wrapper';
+import { save, saveAs } from '../utils/save.utils';
 
-declare module '../../../wrappers/text' {
+declare module '../../../wrappers/text.wrapper' {
   interface Text {
     /**
      * Saves the text as the given file.

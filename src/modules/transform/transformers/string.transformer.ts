@@ -1,4 +1,4 @@
-import { DataType } from '../../../wrappers/data-type';
+import { DataType } from '../../../wrappers/data-type.wrapper';
 import { DataTransformation } from '../data-transformation';
 import { DataTransformer } from './data.transformer';
 

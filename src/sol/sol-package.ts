@@ -1,5 +1,5 @@
 import path from 'path';
-import { Directory } from '../wrappers/directory';
+import { Directory } from '../wrappers/directory.wrapper';
 
 /**
  * Class for working with the Sol package / library.

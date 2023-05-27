@@ -2,12 +2,12 @@
  * Mutation for the global scope.
  */
 
-import { FromPropertyDescriptorMap } from '../../../interfaces/object';
-import { withHelp } from '../../../utils/metadata';
+import { FromPropertyDescriptorMap } from '../../../interfaces/object.interfaces';
+import { withHelp } from '../../../utils/metadata.utils';
 import {
   definePropertiesMutation,
   mutateGlobals,
-} from '../../../utils/mutation';
+} from '../../../utils/mutation.utils';
 import { getClipboard } from '../../clipboard/clipboard';
 
 export const globals = {

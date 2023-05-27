@@ -1,6 +1,6 @@
 import stripJsonComments from 'strip-json-comments';
-import { DataFormat } from '../../../wrappers/data-format';
-import { DataType } from '../../../wrappers/data-type';
+import { DataFormat } from '../../../wrappers/data-format.wrapper';
+import { DataType } from '../../../wrappers/data-type.wrapper';
 import { StringTransformer } from './string.transformer';
 
 /**

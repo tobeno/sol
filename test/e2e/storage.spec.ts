@@ -1,5 +1,5 @@
 import '../../src/setup';
-import { grep } from '../../src/utils/search';
+import { grep } from '../../src/utils/search.utils';
 
 describe('storage module', () => {
   const testAssetsPath = `${__dirname}/../assets`;

@@ -1,7 +1,10 @@
-import { Constructor } from '../../../interfaces/util';
-import { DataType, DataTypeMatchType } from '../../../wrappers/data-type';
-import { Text } from '../../../wrappers/text';
-import { Wrapper } from '../../../wrappers/wrapper';
+import { Constructor } from '../../../interfaces/util.interfaces';
+import {
+  DataType,
+  DataTypeMatchType,
+} from '../../../wrappers/data-type.wrapper';
+import { Text } from '../../../wrappers/text.wrapper';
+import { Wrapper } from '../../../wrappers/wrapper.wrapper';
 import { DataTransformation } from '../data-transformation';
 import { DataTransformer } from './data.transformer';
 

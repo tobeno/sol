@@ -1,9 +1,9 @@
-import { Constructor } from '../../../interfaces/util';
-import { Data } from '../../../wrappers/data';
-import { DataFormat } from '../../../wrappers/data-format';
-import { DataType } from '../../../wrappers/data-type';
-import { Text } from '../../../wrappers/text';
-import { Wrapper } from '../../../wrappers/wrapper';
+import { Constructor } from '../../../interfaces/util.interfaces';
+import { Data } from '../../../wrappers/data.wrapper';
+import { DataFormat } from '../../../wrappers/data-format.wrapper';
+import { DataType } from '../../../wrappers/data-type.wrapper';
+import { Text } from '../../../wrappers/text.wrapper';
+import { Wrapper } from '../../../wrappers/wrapper.wrapper';
 import { AnyTransformer } from './any.transformer';
 import { AstTransformer } from './ast.transformer';
 import { CsvTransformer } from './csv.transformer';

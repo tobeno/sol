@@ -1,6 +1,6 @@
-import { DataFormat } from '../../../wrappers/data-format';
-import { DataType } from '../../../wrappers/data-type';
-import { Xml } from '../../../wrappers/xml';
+import { DataFormat } from '../../../wrappers/data-format.wrapper';
+import { DataType } from '../../../wrappers/data-type.wrapper';
+import { Xml } from '../../../wrappers/xml.wrapper';
 import { StringTransformer } from './string.transformer';
 
 /**

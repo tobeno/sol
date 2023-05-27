@@ -1,16 +1,19 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Data } from '../../../wrappers/data';
-import { DataType } from '../../../wrappers/data-type';
-import { Text } from '../../../wrappers/text';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { Data } from '../../../wrappers/data.wrapper';
+import { DataType } from '../../../wrappers/data-type.wrapper';
+import { Text } from '../../../wrappers/text.wrapper';
 import { DataTransformation } from '../data-transformation';
 import {
   dataToCsv,
   dataToJson,
   dataToYaml,
   transform,
-} from '../utils/transformer';
+} from '../utils/transformer.utils';
 
-declare module '../../../wrappers/data' {
+declare module '../../../wrappers/data.wrapper' {
   interface Data {
     /**
      * Returns the data as text.

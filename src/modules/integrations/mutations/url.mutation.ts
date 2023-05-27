@@ -1,10 +1,13 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { open } from '../../../utils/open';
-import { Url } from '../../../wrappers/url';
-import { browse } from '../utils/browser';
-import { edit } from '../utils/editor';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { open } from '../../../utils/open.utils';
+import { Url } from '../../../wrappers/url.wrapper';
+import { browse } from '../utils/browser.utils';
+import { edit } from '../utils/editor.utils';
 
-declare module '../../../wrappers/url' {
+declare module '../../../wrappers/url.wrapper' {
   interface Url {
     /**
      * Opens the URL in the default browser.

@@ -1,11 +1,14 @@
-import { MaybeWrapped } from '../../../interfaces/data';
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Ast } from '../../../wrappers/ast';
-import { Data } from '../../../wrappers/data';
-import { Html } from '../../../wrappers/html';
-import { Markdown } from '../../../wrappers/markdown';
-import { Url } from '../../../wrappers/url';
-import { Xml } from '../../../wrappers/xml';
+import { MaybeWrapped } from '../../../interfaces/data.interfaces';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { Ast } from '../../../wrappers/ast.wrapper';
+import { Data } from '../../../wrappers/data.wrapper';
+import { Html } from '../../../wrappers/html.wrapper';
+import { Markdown } from '../../../wrappers/markdown.wrapper';
+import { Url } from '../../../wrappers/url.wrapper';
+import { Xml } from '../../../wrappers/xml.wrapper';
 import { Clipboard } from '../../clipboard/clipboard';
 import {
   astToCode,
@@ -13,7 +16,7 @@ import {
   csvToData,
   jsonToData,
   yamlToData,
-} from '../utils/transformer';
+} from '../utils/transformer.utils';
 
 declare module '../../clipboard/clipboard' {
   interface Clipboard {

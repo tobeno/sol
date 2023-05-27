@@ -1,8 +1,11 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { File } from '../../../wrappers/file';
-import { Image } from '../wrappers/image';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { File } from '../../../wrappers/file.wrapper';
+import { Image } from '../wrappers/image.wrapper';
 
-declare module '../../../wrappers/file' {
+declare module '../../../wrappers/file.wrapper' {
   interface File {
     /**
      * Loads the file contents as Image.

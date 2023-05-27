@@ -3,7 +3,7 @@
  */
 
 import chalk from 'chalk';
-import { FromPropertyDescriptorMap } from '../../../interfaces/object';
+import { FromPropertyDescriptorMap } from '../../../interfaces/object.interfaces';
 import {
   getSolExtensions,
   solExtension,
@@ -15,30 +15,30 @@ import {
   getCurrentSolWorkspace,
   getSolUserWorkspace,
 } from '../../../sol/sol-workspace';
-import { awaitSync } from '../../../utils/async';
-import { fileCached, runtimeCached } from '../../../utils/cache';
-import { getCwd, getEnv } from '../../../utils/env';
-import { log } from '../../../utils/log';
-import { withHelp } from '../../../utils/metadata';
+import { awaitSync } from '../../../utils/async.utils';
+import { fileCached, runtimeCached } from '../../../utils/cache.utils';
+import { getCwd, getEnv } from '../../../utils/env.utils';
+import { log } from '../../../utils/log.utils';
+import { withHelp } from '../../../utils/metadata.utils';
 import {
   definePropertiesMutation,
   mutateGlobals,
-} from '../../../utils/mutation';
-import { open, openApp } from '../../../utils/open';
-import { dirs, files, glob, grep } from '../../../utils/search';
-import type * as shell from '../../../utils/sh';
-import { web } from '../../../utils/web';
-import { Data } from '../../../wrappers/data';
-import { Directory } from '../../../wrappers/directory';
-import { File } from '../../../wrappers/file';
-import { Html } from '../../../wrappers/html';
-import { Markdown } from '../../../wrappers/markdown';
-import { Text } from '../../../wrappers/text';
-import { TmpDirectory } from '../../../wrappers/tmp-directory';
-import { TmpFile } from '../../../wrappers/tmp-file';
-import { Url } from '../../../wrappers/url';
-import { Xml } from '../../../wrappers/xml';
-import { Image } from '../../image/wrappers/image';
+} from '../../../utils/mutation.utils';
+import { open, openApp } from '../../../utils/open.utils';
+import { dirs, files, glob, grep } from '../../../utils/search.utils';
+import type * as shell from '../../../utils/sh.utils';
+import { web } from '../../../utils/web.utils';
+import { Data } from '../../../wrappers/data.wrapper';
+import { Directory } from '../../../wrappers/directory.wrapper';
+import { File } from '../../../wrappers/file.wrapper';
+import { Html } from '../../../wrappers/html.wrapper';
+import { Markdown } from '../../../wrappers/markdown.wrapper';
+import { Text } from '../../../wrappers/text.wrapper';
+import { TmpDirectory } from '../../../wrappers/tmp-directory.wrapper';
+import { TmpFile } from '../../../wrappers/tmp-file.wrapper';
+import { Url } from '../../../wrappers/url.wrapper';
+import { Xml } from '../../../wrappers/xml.wrapper';
+import { Image } from '../../image/wrappers/image.wrapper';
 import type * as classes from '../globals/classes.global';
 import type * as utils from '../globals/utils.global';
 
@@ -98,7 +98,7 @@ export const globals = {
   day: withHelp(
     {
       get() {
-        return require('../../../utils/day').day;
+        return require('../../../utils/day.utils').day;
       },
     },
     'See https://day.js.org/docs/en/installation/installation',
@@ -107,7 +107,7 @@ export const globals = {
     {
       get() {
         return {
-          ...require('../../../utils/debug'),
+          ...require('../../../utils/debug.utils'),
         };
       },
     },
@@ -206,7 +206,7 @@ export const globals = {
   jwt: withHelp(
     {
       get() {
-        return require('../../../utils/jwt').jwt;
+        return require('../../../utils/jwt.utils').jwt;
       },
     },
     'See https://github.com/auth0/node-jsonwebtoken#readme',
@@ -234,7 +234,7 @@ export const globals = {
   morphProject: withHelp(
     {
       get() {
-        return require('../../../utils/morph').morphProject;
+        return require('../../../utils/morph.utils').morphProject;
       },
     },
     'Returns ts-morph project for the current working directory',
@@ -276,7 +276,7 @@ export const globals = {
   sh: withHelp(
     {
       get(): typeof shell {
-        return require('../../../utils/sh');
+        return require('../../../utils/sh.utils');
       },
     },
     'Shell utilities',

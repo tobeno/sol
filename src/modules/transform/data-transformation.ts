@@ -1,4 +1,4 @@
-import { DataType, DataTypeMatchType } from '../../wrappers/data-type';
+import { DataType, DataTypeMatchType } from '../../wrappers/data-type.wrapper';
 
 export enum DataTransformationMatchType {
   Exact,

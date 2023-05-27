@@ -1,0 +1,17 @@
+import { unwrap } from '../../../utils/data.utils';
+import { openMermaidLive } from '../../../utils/mermaid.utils';
+import { Text } from '../../../wrappers/text.wrapper';
+import { Wrapper } from '../../../wrappers/wrapper.wrapper';
+
+/**
+ * Class for generating graphs.
+ */
+export class Graph extends Wrapper<string> {
+  open() {
+    openMermaidLive(this.value);
+  }
+
+  static create(value: string | Text): Graph {
+    return new Graph(unwrap(value));
+  }
+}

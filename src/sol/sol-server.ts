@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { spawnSync } from 'child_process';
-import { log, logDebug } from '../utils/log';
+import { log, logDebug } from '../utils/log.utils';
 import { getLoadedSolExtensions } from './sol-extension';
 import { getSolPackage } from './sol-package';
 import { solReplColor, startSolReplServer } from './sol-repl';

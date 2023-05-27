@@ -2,14 +2,14 @@
  * Mutation for the global scope.
  */
 
-import { FromPropertyDescriptorMap } from '../../../interfaces/object';
-import { withHelp } from '../../../utils/metadata';
+import { FromPropertyDescriptorMap } from '../../../interfaces/object.interfaces';
+import { withHelp } from '../../../utils/metadata.utils';
 import {
   definePropertiesMutation,
   mutateGlobals,
-} from '../../../utils/mutation';
-import { browse } from '../utils/browser';
-import { edit } from '../utils/editor';
+} from '../../../utils/mutation.utils';
+import { browse } from '../utils/browser.utils';
+import { edit } from '../utils/editor.utils';
 
 export const globals = {
   browse: withHelp(

@@ -1,5 +1,5 @@
-import { DataType } from '../../../wrappers/data-type';
-import { Url } from '../../../wrappers/url';
+import { DataType } from '../../../wrappers/data-type.wrapper';
+import { Url } from '../../../wrappers/url.wrapper';
 import { StringTransformer } from './string.transformer';
 
 /**

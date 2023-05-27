@@ -1,9 +1,12 @@
-import { definePropertiesMutation, mutateClass } from '../../../utils/mutation';
-import { Markdown } from '../../../wrappers/markdown';
-import { Text } from '../../../wrappers/text';
-import { markdownToHtml } from '../utils/transformer';
+import {
+  definePropertiesMutation,
+  mutateClass,
+} from '../../../utils/mutation.utils';
+import { Markdown } from '../../../wrappers/markdown.wrapper';
+import { Text } from '../../../wrappers/text.wrapper';
+import { markdownToHtml } from '../utils/transformer.utils';
 
-declare module '../../../wrappers/markdown' {
+declare module '../../../wrappers/markdown.wrapper' {
   interface Markdown {
     /**
      * Returns the Markdown as HTML.
