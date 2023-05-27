@@ -2,12 +2,12 @@ import fs, { mkdirSync } from 'fs';
 import path from 'path';
 import type { Options as PrettierOptions } from 'prettier';
 import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
-import { unwrap } from '../utils/wrapper.utils';
 import { log } from '../utils/log.utils';
 import { rerequire } from '../utils/module.utils';
+import { unwrap } from '../utils/wrapper.utils';
 import { Directory } from './directory.wrapper';
-import { StorageItem } from './storage-item.wrapper';
 import { StorageItemCollection } from './storage-item-collection.wrapper';
+import { StorageItem } from './storage-item.wrapper';
 import { Text } from './text.wrapper';
 
 /**

@@ -1,7 +1,7 @@
 import type { Constructor } from '../../../interfaces/helper.interfaces';
-import { Data } from '../../../wrappers/data.wrapper';
 import { DataFormat } from '../../../wrappers/data-format.wrapper';
 import { DataType } from '../../../wrappers/data-type.wrapper';
+import { Data } from '../../../wrappers/data.wrapper';
 import { Text } from '../../../wrappers/text.wrapper';
 import { Wrapper } from '../../../wrappers/wrapper.wrapper';
 import { AnyTransformer } from './any.transformer';

@@ -12,7 +12,6 @@ import {
   unionArray,
 } from '../utils/array.utils';
 import { isEmpty, isNotEmpty } from '../utils/core.utils';
-import { unwrap } from '../utils/wrapper.utils';
 import { dereferenceJsonSchema } from '../utils/json-schema.utils';
 import { log } from '../utils/log.utils';
 import {
@@ -33,6 +32,7 @@ import {
   snakecaseText,
   titlecaseText,
 } from '../utils/text.utils';
+import { unwrap } from '../utils/wrapper.utils';
 import { Text } from './text.wrapper';
 import { Wrapper } from './wrapper.wrapper';
 

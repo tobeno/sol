@@ -1,8 +1,8 @@
 import { inspect } from 'util';
 import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
-import { unwrap } from '../utils/wrapper.utils';
 import { log } from '../utils/log.utils';
 import { grep } from '../utils/search.utils';
+import { unwrap } from '../utils/wrapper.utils';
 import { Data } from './data.wrapper';
 import { Directory } from './directory.wrapper';
 import { File } from './file.wrapper';

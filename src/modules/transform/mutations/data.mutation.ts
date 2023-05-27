@@ -2,8 +2,8 @@ import {
   definePropertiesMutation,
   mutateClass,
 } from '../../../utils/mutation.utils';
-import { Data } from '../../../wrappers/data.wrapper';
 import { DataType } from '../../../wrappers/data-type.wrapper';
+import { Data } from '../../../wrappers/data.wrapper';
 import { Text } from '../../../wrappers/text.wrapper';
 import { DataTransformation } from '../data-transformation';
 import {

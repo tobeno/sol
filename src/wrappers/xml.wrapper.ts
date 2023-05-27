@@ -4,8 +4,8 @@ import type { AnyNode, Element, Text as TextNode } from 'domhandler';
 import { inspect } from 'util';
 import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
 import { unwrap } from '../utils/wrapper.utils';
-import { Data } from './data.wrapper';
 import { DataFormat } from './data-format.wrapper';
+import { Data } from './data.wrapper';
 import { Text } from './text.wrapper';
 import { Wrapper } from './wrapper.wrapper';
 

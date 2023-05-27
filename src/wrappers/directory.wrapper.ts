@@ -2,16 +2,16 @@ import fs from 'fs';
 import path from 'path';
 import type { Options as PrettierOptions } from 'prettier';
 import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
-import { unwrap } from '../utils/wrapper.utils';
 import { dirs, files, glob, grep, replaceText } from '../utils/search.utils';
 import { exec, spawn } from '../utils/sh.utils';
+import { unwrap } from '../utils/wrapper.utils';
 import { File } from './file.wrapper';
-import { StorageItem } from './storage-item.wrapper';
 import {
   DirectoryCollection,
   FileCollection,
   StorageItemCollection,
 } from './storage-item-collection.wrapper';
+import { StorageItem } from './storage-item.wrapper';
 import { Text } from './text.wrapper';
 
 /**

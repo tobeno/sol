@@ -3,8 +3,8 @@ import {
   mutateClass,
 } from '../../../utils/mutation.utils';
 import { Ast } from '../../../wrappers/ast.wrapper';
-import { Data } from '../../../wrappers/data.wrapper';
 import { DataType } from '../../../wrappers/data-type.wrapper';
+import { Data } from '../../../wrappers/data.wrapper';
 import { Html } from '../../../wrappers/html.wrapper';
 import { Markdown } from '../../../wrappers/markdown.wrapper';
 import { Text } from '../../../wrappers/text.wrapper';

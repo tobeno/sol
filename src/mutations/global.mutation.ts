@@ -3,42 +3,41 @@
  */
 
 import chalk from 'chalk';
-import type { FromPropertyDescriptorMap } from '../../../interfaces/object.interfaces';
+import type { FromPropertyDescriptorMap } from '../interfaces/object.interfaces';
 import {
   getSolExtensions,
   solExtension,
   solUserExtension,
   solWorkspaceExtension,
-} from '../../../sol/sol-extension';
-import { getSolPackage } from '../../../sol/sol-package';
+} from '../sol/sol-extension';
+import { getSolPackage } from '../sol/sol-package';
 import {
   getCurrentSolWorkspace,
   getSolUserWorkspace,
-} from '../../../sol/sol-workspace';
-import { awaitSync } from '../../../utils/async.utils';
-import { fileCached, runtimeCached } from '../../../utils/cache.utils';
-import { getCwd, getEnv } from '../../../utils/env.utils';
-import { log } from '../../../utils/log.utils';
-import { withHelp } from '../../../utils/metadata.utils';
+} from '../sol/sol-workspace';
+import { awaitSync } from '../utils/async.utils';
+import { fileCached, runtimeCached } from '../utils/cache.utils';
+import { getCwd, getEnv } from '../utils/env.utils';
+import { log } from '../utils/log.utils';
+import { withHelp } from '../utils/metadata.utils';
 import {
   definePropertiesMutation,
   mutateGlobals,
-} from '../../../utils/mutation.utils';
-import { open, openApp } from '../../../utils/open.utils';
-import { dirs, files, glob, grep } from '../../../utils/search.utils';
-import type * as shell from '../../../utils/sh.utils';
-import { web } from '../../../utils/web.utils';
-import { Data } from '../../../wrappers/data.wrapper';
-import { Directory } from '../../../wrappers/directory.wrapper';
-import { File } from '../../../wrappers/file.wrapper';
-import { Html } from '../../../wrappers/html.wrapper';
-import { Markdown } from '../../../wrappers/markdown.wrapper';
-import { Text } from '../../../wrappers/text.wrapper';
-import { TmpDirectory } from '../../../wrappers/tmp-directory.wrapper';
-import { TmpFile } from '../../../wrappers/tmp-file.wrapper';
-import { Url } from '../../../wrappers/url.wrapper';
-import { Xml } from '../../../wrappers/xml.wrapper';
-import { Image } from '../../image/wrappers/image.wrapper';
+} from '../utils/mutation.utils';
+import { open, openApp } from '../utils/open.utils';
+import { dirs, files, glob, grep } from '../utils/search.utils';
+import type * as shell from '../utils/sh.utils';
+import { web } from '../utils/web.utils';
+import { Data } from '../wrappers/data.wrapper';
+import { Directory } from '../wrappers/directory.wrapper';
+import { File } from '../wrappers/file.wrapper';
+import { Html } from '../wrappers/html.wrapper';
+import { Markdown } from '../wrappers/markdown.wrapper';
+import { Text } from '../wrappers/text.wrapper';
+import { TmpDirectory } from '../wrappers/tmp-directory.wrapper';
+import { TmpFile } from '../wrappers/tmp-file.wrapper';
+import { Url } from '../wrappers/url.wrapper';
+import { Xml } from '../wrappers/xml.wrapper';
 
 export const globals = {
   args: withHelp(
@@ -88,7 +87,7 @@ export const globals = {
   day: withHelp(
     {
       get() {
-        return require('../../../utils/day.utils').day;
+        return require('../utils/day.utils').day;
       },
     },
     'See https://day.js.org/docs/en/installation/installation',
@@ -97,7 +96,7 @@ export const globals = {
     {
       get() {
         return {
-          ...require('../../../utils/debug.utils'),
+          ...require('../utils/debug.utils'),
         };
       },
     },
@@ -173,18 +172,6 @@ export const globals = {
     },
     'Wraps the given string as Html',
   ),
-  image: withHelp(
-    {
-      value(imageOrFile: Image | Buffer | File | string): Image {
-        if (imageOrFile instanceof Buffer || imageOrFile instanceof Image) {
-          return Image.create(imageOrFile);
-        }
-
-        return File.create(imageOrFile).image;
-      },
-    },
-    'Wraps the given image file as Image',
-  ),
   jsonata: withHelp(
     {
       get() {
@@ -196,7 +183,7 @@ export const globals = {
   jwt: withHelp(
     {
       get() {
-        return require('../../../utils/jwt.utils').jwt;
+        return require('../utils/jwt.utils').jwt;
       },
     },
     'See https://github.com/auth0/node-jsonwebtoken#readme',
@@ -224,7 +211,7 @@ export const globals = {
   morphProject: withHelp(
     {
       get() {
-        return require('../../../utils/morph.utils').morphProject;
+        return require('../utils/morph.utils').morphProject;
       },
     },
     'Returns ts-morph project for the current working directory',
@@ -266,7 +253,7 @@ export const globals = {
   sh: withHelp(
     {
       get(): typeof shell {
-        return require('../../../utils/sh.utils');
+        return require('../utils/sh.utils');
       },
     },
     'Shell utilities',
@@ -280,7 +267,7 @@ export const globals = {
   sol: withHelp(
     {
       get() {
-        return require('../../..');
+        return require('../index');
       },
     },
     'Returns the extension for the given name or path',

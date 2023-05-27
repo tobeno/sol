@@ -22,8 +22,8 @@ import {
   sortLines,
   titlecaseText,
 } from '../utils/text.utils';
-import { Data } from './data.wrapper';
 import { DataFormat } from './data-format.wrapper';
+import { Data } from './data.wrapper';
 import { Wrapper } from './wrapper.wrapper';
 
 /**

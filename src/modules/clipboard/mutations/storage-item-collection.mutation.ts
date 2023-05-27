@@ -2,8 +2,8 @@ import {
   definePropertiesMutation,
   mutateClass,
 } from '../../../utils/mutation.utils';
-import { StorageItem } from '../../../wrappers/storage-item.wrapper';
 import { GenericStorageItemCollection } from '../../../wrappers/storage-item-collection.wrapper';
+import { StorageItem } from '../../../wrappers/storage-item.wrapper';
 import { getClipboard } from '../clipboard';
 
 declare module '../../../wrappers/storage-item-collection.wrapper' {

@@ -1,9 +1,10 @@
 import './modules/ai/setup';
 import './modules/clipboard/setup';
-import './modules/global/setup';
 import './modules/image/setup';
 import './modules/integrations/setup';
 import './modules/play/setup';
 import './modules/storage/setup';
 import './modules/transform/setup';
 import './modules/visualize/setup';
+import './mutations/global.mutation';
+import './mutations/promise.mutation';

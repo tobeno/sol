@@ -1,9 +1,9 @@
 import type babelTypes from '@babel/types';
 import type { MaybeWrapped } from '../../../interfaces/wrapper.interfaces';
 import type { Ast } from '../../../wrappers/ast.wrapper';
-import type { Data } from '../../../wrappers/data.wrapper';
 import { DataFormat } from '../../../wrappers/data-format.wrapper';
 import { DataType } from '../../../wrappers/data-type.wrapper';
+import type { Data } from '../../../wrappers/data.wrapper';
 import type { Markdown } from '../../../wrappers/markdown.wrapper';
 import type { Text } from '../../../wrappers/text.wrapper';
 import { DataTransformation } from '../data-transformation';
