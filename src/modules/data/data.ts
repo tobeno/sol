@@ -1,4 +1,4 @@
-import jsonata, { Expression } from 'jsonata';
+import type jsonata from 'jsonata';
 import { Wrapper } from './wrapper';
 import { Text } from './text';
 import { inspect } from 'util';
@@ -396,9 +396,11 @@ export class Data<
   /**
    * Returns the data at the given path, index or jsonata expression.
    */
-  get(path: string | number | Expression): Data | Text | null {
+  get(path: string | number | jsonata.Expression): Data | Text | null {
     let result: any;
     if (typeof path === 'string') {
+      const jsonata = require('jsonata') as typeof import('jsonata');
+
       const expression = jsonata(path);
 
       result = expression.evaluate(this.value);

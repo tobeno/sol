@@ -25,7 +25,6 @@ import { dirs, files, glob } from '../../storage/storage-item-collection';
 import { edit } from '../../integrations/editor';
 import { File } from '../../storage/file';
 import { grep } from '../../storage/search';
-import jsonata from 'jsonata';
 import { log } from '../../../utils/log';
 import { open, openApp } from '../../../utils/open';
 import { getPlays, play, playFile, replay } from '../../play/play';
@@ -271,7 +270,9 @@ export const globals = {
   ),
   jsonata: withHelp(
     {
-      value: jsonata,
+      get() {
+        return require('jsonata') as typeof import('jsonata');
+      },
     },
     'See https://jsonata.org/',
   ),
