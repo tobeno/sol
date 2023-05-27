@@ -2,7 +2,7 @@ import type { selectAll, selectOne } from 'css-select';
 import { ElementType } from 'domelementtype';
 import type { AnyNode, Element, Text as TextNode } from 'domhandler';
 import { inspect } from 'util';
-import { MaybeWrapped } from '../interfaces/wrapper.interfaces';
+import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
 import { unwrap } from '../utils/wrapper.utils';
 import { Data } from './data.wrapper';
 import { DataFormat } from './data-format.wrapper';

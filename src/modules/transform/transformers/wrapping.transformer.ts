@@ -1,4 +1,4 @@
-import { Constructor } from '../../../interfaces/helper.interfaces';
+import type { Constructor } from '../../../interfaces/helper.interfaces';
 import {
   DataType,
   DataTypeMatchType,

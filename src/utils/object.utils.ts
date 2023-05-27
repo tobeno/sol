@@ -1,5 +1,5 @@
 import fastDeepEqual from 'fast-deep-equal/es6';
-import { DeepPartial } from '../interfaces/helper.interfaces';
+import type { DeepPartial } from '../interfaces/helper.interfaces';
 import { isObject } from './core.utils';
 import { unwrapDeep } from './wrapper.utils';
 

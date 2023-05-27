@@ -1,4 +1,4 @@
-import { MaybeWrapped } from '../../interfaces/wrapper.interfaces';
+import type { MaybeWrapped } from '../../interfaces/wrapper.interfaces';
 import { Text } from '../../wrappers/text.wrapper';
 
 /**

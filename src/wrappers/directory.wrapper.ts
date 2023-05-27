@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import type { Options as PrettierOptions } from 'prettier';
-import { MaybeWrapped } from '../interfaces/wrapper.interfaces';
+import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
 import { unwrap } from '../utils/wrapper.utils';
 import { dirs, files, glob, grep, replaceText } from '../utils/search.utils';
 import { exec, spawn } from '../utils/sh.utils';

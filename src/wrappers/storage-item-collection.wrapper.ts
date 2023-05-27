@@ -1,5 +1,5 @@
 import { inspect } from 'util';
-import { MaybeWrapped } from '../interfaces/wrapper.interfaces';
+import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
 import { unwrap } from '../utils/wrapper.utils';
 import { log } from '../utils/log.utils';
 import { grep } from '../utils/search.utils';

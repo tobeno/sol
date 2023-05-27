@@ -3,7 +3,7 @@
  */
 
 import chalk from 'chalk';
-import { FromPropertyDescriptorMap } from '../../../interfaces/object.interfaces';
+import type { FromPropertyDescriptorMap } from '../../../interfaces/object.interfaces';
 import {
   getSolExtensions,
   solExtension,

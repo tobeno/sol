@@ -5,7 +5,10 @@ const ModuleGeneric = Module as any;
 // eslint-disable-next-line no-underscore-dangle
 const originalLoad = ModuleGeneric._load.bind(ModuleGeneric);
 
-function createLazyModuleProperty(getActualModuleProperty: () => any) {
+function createLazyModuleProperty(
+  prop: string,
+  getActualModuleProperty: () => any,
+) {
   return new Proxy<Record<string, any>>(() => {}, {
     apply(_, thisArg, argArray) {
       return getActualModuleProperty().apply(thisArg, argArray);
@@ -40,12 +43,12 @@ function createLazyModule(getActualModule: () => any) {
           return (target as any)[prop];
         }
 
-        // Intercept all lowercase string properties (uppercase might be enums, constants or classes)
-        if (typeof prop === 'string' && prop.match(/^[a-z]/)) {
+        // Intercept all
+        if (typeof prop === 'string') {
           const firstLetterCode = prop.charCodeAt(0);
           const isUpperCase = firstLetterCode >= 65 && firstLetterCode <= 90;
-          if (isUpperCase) {
-            return createLazyModuleProperty(() => {
+          if (!isUpperCase) {
+            return createLazyModuleProperty(prop, () => {
               if (prop in target) {
                 return (target as any)[prop];
               }

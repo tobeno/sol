@@ -1,4 +1,4 @@
-import { Constructor } from '../../../interfaces/helper.interfaces';
+import type { Constructor } from '../../../interfaces/helper.interfaces';
 import { Data } from '../../../wrappers/data.wrapper';
 import { DataFormat } from '../../../wrappers/data-format.wrapper';
 import { DataType } from '../../../wrappers/data-type.wrapper';
