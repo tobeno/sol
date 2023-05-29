@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^10.1.0",
-    "@babel/parser": "^7.22.0",
+    "@babel/parser": "^7.22.3",
     "@babel/traverse": "^7.22.1",
     "@babel/types": "^7.22.0",
     "@ngneat/falso": "^6.4.0",
