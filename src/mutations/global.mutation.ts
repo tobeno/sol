@@ -25,8 +25,7 @@ import {
   mutateGlobals,
 } from '../utils/mutation.utils';
 import { open, openApp } from '../utils/open.utils';
-import { dirs, files, glob, grep } from '../utils/search.utils';
-import type * as shell from '../utils/sh.utils';
+import { dirs, files, glob, grepFiles } from '../utils/search.utils';
 import { web } from '../utils/web.utils';
 import { Data } from '../wrappers/data.wrapper';
 import { Directory } from '../wrappers/directory.wrapper';
@@ -38,6 +37,7 @@ import { TmpDirectory } from '../wrappers/tmp-directory.wrapper';
 import { TmpFile } from '../wrappers/tmp-file.wrapper';
 import { Url } from '../wrappers/url.wrapper';
 import { Xml } from '../wrappers/xml.wrapper';
+import { Shell } from '../wrappers/shell.wrapper';
 
 export const globals = {
   args: withHelp(
@@ -162,7 +162,7 @@ export const globals = {
   ),
   grep: withHelp(
     {
-      value: grep,
+      value: grepFiles,
     },
     'Finds files using the given RegExp pattern',
   ),
@@ -250,19 +250,17 @@ export const globals = {
     },
     'Cache the return value of the given function in a runtime variable',
   ),
-  sh: withHelp(
-    {
-      get(): typeof shell {
-        return require('../utils/sh.utils');
-      },
-    },
-    'Shell utilities',
-  ),
   shared: withHelp(
     {
       value: {},
     },
     'Variables shared between play scripts and the shell',
+  ),
+  shell: withHelp(
+    {
+      value: Shell.create,
+    },
+    'Creates a new Shell wrapper for the given directory',
   ),
   sol: withHelp(
     {
@@ -391,7 +389,7 @@ declare global {
   const openApp: Globals['openApp'];
   const runtimeCached: Globals['runtimeCached'];
   const shared: Globals['shared'];
-  const sh: Globals['sh'];
+  const shell: Globals['shell'];
   const solExtension: Globals['solExtension'];
   const solExtensions: Globals['solExtensions'];
   const solPackage: Globals['solPackage'];

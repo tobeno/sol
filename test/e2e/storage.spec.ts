@@ -1,12 +1,12 @@
 import '../../src/setup';
-import { grep } from '../../src/utils/search.utils';
+import { grepFiles } from '../../src/utils/search.utils';
 
 describe('storage module', () => {
   const testAssetsPath = `${__dirname}/../assets`;
 
   describe('search', () => {
     it('should grep by string', async () => {
-      const files = grep('shoe', `${testAssetsPath}/search`);
+      const files = grepFiles('shoe', `${testAssetsPath}/search`);
 
       expect(files.map((file) => file.basename).sorted.value).toEqual([
         'men.json',
@@ -21,7 +21,10 @@ describe('storage module', () => {
     });
 
     it('should grep by regex', async () => {
-      const files = grep(/"name": "[^"]+shoe"/, `${testAssetsPath}/search`);
+      const files = grepFiles(
+        /"name": "[^"]+shoe"/,
+        `${testAssetsPath}/search`,
+      );
 
       expect(files.map((file) => file.basename).sorted.value).toEqual([
         'men.json',

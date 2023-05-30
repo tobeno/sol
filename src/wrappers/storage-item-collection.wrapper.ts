@@ -1,7 +1,7 @@
 import { inspect } from 'util';
 import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
 import { log } from '../utils/log.utils';
-import { grep } from '../utils/search.utils';
+import { grepFiles } from '../utils/search.utils';
 import { unwrap } from '../utils/wrapper.utils';
 import { Data } from './data.wrapper';
 import { Directory } from './directory.wrapper';
@@ -151,7 +151,7 @@ export class GenericStorageItemCollection<
       if (item instanceof Directory) {
         result.splice(result.length, 0, ...item.grep(pattern));
       } else if (item instanceof File) {
-        if (grep(pattern, item.path).length) {
+        if (grepFiles(pattern, item.path).length) {
           result.push(item);
         }
       }

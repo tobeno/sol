@@ -2,8 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import type { Options as PrettierOptions } from 'prettier';
 import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
-import { dirs, files, glob, grep, replaceText } from '../utils/search.utils';
-import { exec, spawn } from '../utils/sh.utils';
+import {
+  dirs,
+  files,
+  glob,
+  grepFiles,
+  replaceTextInFiles,
+} from '../utils/search.utils';
+import { execCommand, spawnCommand } from '../utils/shell.utils';
 import { unwrap } from '../utils/wrapper.utils';
 import { File } from './file.wrapper';
 import {
@@ -13,6 +19,7 @@ import {
 } from './storage-item-collection.wrapper';
 import { StorageItem } from './storage-item.wrapper';
 import { Text } from './text.wrapper';
+import { Shell } from './shell.wrapper';
 
 /**
  * Wrapper for a directory.
@@ -39,11 +46,15 @@ export class Directory extends StorageItem {
     this.renameTo(path.join(value.path, this.basename));
   }
 
+  get shell(): Shell {
+    return Shell.create(this.path);
+  }
+
   /**
    * Returns the size of the directory in bytes.
    */
   get size(): number {
-    const output = unwrap(exec(`du -sL '${this.path}'`));
+    const output = unwrap(execCommand(`du -sL '${this.path}'`));
 
     return parseInt(output.split(' ')[0], 10);
   }
@@ -143,14 +154,14 @@ export class Directory extends StorageItem {
    * Returns all files matching the given (RegExp) pattern in the directory.
    */
   grep(pattern: string | RegExp): FileCollection {
-    return grep(pattern, this.path);
+    return grepFiles(pattern, this.path);
   }
 
   /**
    * Renames / moves the directory to the given path.
    */
   renameTo(newPath: string): this {
-    exec(`mv '${this.path}/' '${newPath}/'`);
+    execCommand(`mv '${this.path}/' '${newPath}/'`);
 
     this.path = newPath;
 
@@ -163,10 +174,10 @@ export class Directory extends StorageItem {
   copyTo(newPath: string): Directory {
     if (newPath.endsWith('/')) {
       // Copy into
-      exec(`cp -r '${this.path}' '${newPath}'`);
+      execCommand(`cp -r '${this.path}' '${newPath}'`);
     } else {
       // Copy to
-      exec(`cp -r '${this.path}/' '${newPath}/'`);
+      execCommand(`cp -r '${this.path}/' '${newPath}/'`);
     }
 
     return Directory.create(newPath);
@@ -176,7 +187,7 @@ export class Directory extends StorageItem {
    * Serves the directory via HTTP.
    */
   serve(): this {
-    spawn(
+    spawnCommand(
       `${path.resolve(__dirname, '../../../node_modules/.bin/serve')}`,
       [this.path],
       {
@@ -191,7 +202,7 @@ export class Directory extends StorageItem {
    * Replaces the given pattern with the replacer in all files in the directory.
    */
   replaceText(pattern: string | RegExp, replacer: any): FileCollection {
-    return replaceText(pattern, replacer, this.path);
+    return replaceTextInFiles(pattern, replacer, this.path);
   }
 
   /**

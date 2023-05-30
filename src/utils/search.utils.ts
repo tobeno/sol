@@ -7,22 +7,20 @@ import {
   StorageItemCollection,
 } from '../wrappers/storage-item-collection.wrapper';
 import { isNotEmpty } from './core.utils';
-import { exec } from './sh.utils';
+import { Shell } from '../wrappers/shell.wrapper';
 
 /**
  * Returns all files matching the given (RegExp) pattern.
  */
-export function grep(pattern: string | RegExp, path?: string): FileCollection {
+export function grepFiles(
+  pattern: string | RegExp,
+  path?: string,
+): FileCollection {
   return FileCollection.create(
-    exec(
-      `egrep -rl '${(pattern instanceof RegExp ? pattern.source : pattern)
-        .replace(/'/g, "\\'")
-        .replace('\n', '\\n')}' '${path || '.'}' || true`,
-      {
-        silent: true,
-      },
-    )
-      .split('\n')
+    Shell.create(path)
+      .grep(pattern, {
+        list: true,
+      })
       .filter((file) => isNotEmpty(file))
       .map((file) => File.create(file)),
   );
@@ -31,12 +29,12 @@ export function grep(pattern: string | RegExp, path?: string): FileCollection {
 /**
  * Replaces the given pattern with the replacement in all files.
  */
-export function replaceText(
+export function replaceTextInFiles(
   pattern: string | RegExp,
   replacer: any,
   path?: string,
 ): FileCollection {
-  const files = grep(pattern, path);
+  const files = grepFiles(pattern, path);
 
   files.map((file) => {
     file.replaceText(pattern, replacer);
