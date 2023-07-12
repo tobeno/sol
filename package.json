@@ -27,6 +27,7 @@
     "@babel/parser": "^7.22.0",
     "@babel/traverse": "^7.22.1",
     "@babel/types": "^7.22.0",
+    "@inquirer/prompts": "^2.3.0",
     "@ngneat/falso": "^6.4.0",
     "apexcharts": "^3.40.0",
     "axios": "^1.4.0",

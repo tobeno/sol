@@ -244,6 +244,14 @@ export const globals = {
     },
     'See: https://lodash.com/docs/latest#pick',
   ),
+  prompts: withHelp(
+    {
+      get() {
+        return require('@inquirer/prompts') as typeof import('@inquirer/prompts');
+      },
+    },
+    'See: https://github.com/SBoudrias/Inquirer.js',
+  ),
   runtimeCached: withHelp(
     {
       value: runtimeCached,
@@ -387,6 +395,8 @@ declare global {
   const omit: Globals['omit'];
   const open: Globals['open'];
   const openApp: Globals['openApp'];
+  const pick: Globals['pick'];
+  const prompts: Globals['prompts'];
   const runtimeCached: Globals['runtimeCached'];
   const shared: Globals['shared'];
   const shell: Globals['shell'];
