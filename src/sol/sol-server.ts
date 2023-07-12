@@ -4,26 +4,7 @@ import { log, logDebug } from '../utils/log.utils';
 import { getLoadedSolExtensions } from './sol-extension';
 import { getSolPackage } from './sol-package';
 import { solReplColor, startSolReplServer } from './sol-repl';
-import { getCurrentSolWorkspace, getSolUserWorkspace } from './sol-workspace';
-
-/**
- * Initializes Sol globals and extensions.
- */
-export function loadSol(): void {
-  logDebug('Loading Sol...');
-
-  const workspace = getCurrentSolWorkspace();
-  const userWorkspace = getSolUserWorkspace();
-
-  userWorkspace.load();
-  workspace.load();
-
-  // Update context files again
-  userWorkspace.updateContextFile();
-  workspace.updateContextFile();
-
-  logDebug('Loaded Sol');
-}
+import { getCurrentSolWorkspace } from './sol-workspace';
 
 /**
  * Update Sol from git remote.
@@ -53,8 +34,6 @@ export function updateSol(): void {
  * Start the full Sol interactive shell (REPL).
  */
 export function startSol(): void {
-  loadSol();
-
   const server = startSolReplServer();
 
   server.defineCommand('update', {
