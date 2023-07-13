@@ -33,8 +33,8 @@ export function updateSol(): void {
 /**
  * Start the full Sol interactive shell (REPL).
  */
-export function startSol(): void {
-  const server = startSolReplServer();
+export async function startSol(): Promise<void> {
+  const server = await startSolReplServer();
 
   server.defineCommand('update', {
     help: 'Update Sol to latest version',

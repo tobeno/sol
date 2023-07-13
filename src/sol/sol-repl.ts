@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import { loopWhile } from 'deasync';
 import type { AsyncCompleter, CompleterResult } from 'readline';
 import type { ReplOptions, REPLServer } from 'repl';
 import repl from 'repl';
@@ -36,15 +35,15 @@ async function solCompleter(line: string): Promise<CompleterResult | void> {
 /**
  * Enables the file based REPL history for the given server.
  */
-function setupSolReplHistory(server: REPLServer): void {
-  let historyReady = false;
-  server.setupHistory(
-    getCurrentSolWorkspace().dir.file('history').create().path,
-    () => {
-      historyReady = true;
-    },
-  );
-  loopWhile(() => !historyReady);
+async function setupSolReplHistory(server: REPLServer): Promise<void> {
+  return new Promise((resolve) => {
+    server.setupHistory(
+      getCurrentSolWorkspace().dir.file('history').create().path,
+      () => {
+        resolve();
+      },
+    );
+  });
 }
 
 /**
@@ -125,7 +124,9 @@ export function getSolReplServer(): REPLServer {
 /**
  * Starts the Sol REPL server (interactive shell).
  */
-export function startSolReplServer(options: ReplOptions = {}): REPLServer {
+export async function startSolReplServer(
+  options: ReplOptions = {},
+): Promise<REPLServer> {
   const server = repl.start({
     prompt: solReplColor.dim('> '),
     writer: solWriter,
@@ -136,7 +137,7 @@ export function startSolReplServer(options: ReplOptions = {}): REPLServer {
 
   currentServer = server;
 
-  setupSolReplHistory(server);
+  await setupSolReplHistory(server);
   setupSolReplCompleter(server);
   setupSolReplCommands(server);
 
