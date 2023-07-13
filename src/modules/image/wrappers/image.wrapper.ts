@@ -14,93 +14,96 @@ export class Image extends Wrapper<Buffer> {
     return sharp(this.value);
   }
 
-  get flipped(): Image {
-    return Image.create(awaitSync(this.sharp.flip().toBuffer()));
+  async flip(): Promise<Image> {
+    return Image.create(await this.sharp.flip().toBuffer());
   }
 
-  get flopped(): Image {
-    return Image.create(awaitSync(this.sharp.flop().toBuffer()));
+  async flop(): Promise<Image> {
+    return Image.create(await this.sharp.flop().toBuffer());
   }
 
-  png(options: sharp.PngOptions = {}): Image {
-    return Image.create(awaitSync(this.sharp.png(options).toBuffer()));
+  async png(options: sharp.PngOptions = {}): Promise<Image> {
+    return Image.create(await this.sharp.png(options).toBuffer());
   }
 
-  jpeg(options: sharp.JpegOptions = {}): Image {
-    return Image.create(awaitSync(this.sharp.jpeg(options).toBuffer()));
+  async jpeg(options: sharp.JpegOptions = {}): Promise<Image> {
+    return Image.create(await this.sharp.jpeg(options).toBuffer());
   }
 
-  gif(options: sharp.GifOptions = {}): Image {
-    return Image.create(awaitSync(this.sharp.gif(options).toBuffer()));
+  async gif(options: sharp.GifOptions = {}): Promise<Image> {
+    return Image.create(await this.sharp.gif(options).toBuffer());
   }
 
-  webp(options: sharp.WebpOptions = {}): Image {
-    return Image.create(awaitSync(this.sharp.webp(options).toBuffer()));
+  async webp(options: sharp.WebpOptions = {}): Promise<Image> {
+    return Image.create(await this.sharp.webp(options).toBuffer());
   }
 
-  avif(options: sharp.AvifOptions = {}): Image {
-    return Image.create(awaitSync(this.sharp.avif(options).toBuffer()));
+  async avif(options: sharp.AvifOptions = {}): Promise<Image> {
+    return Image.create(await this.sharp.avif(options).toBuffer());
   }
 
-  tiff(options: sharp.TiffOptions = {}): Image {
-    return Image.create(awaitSync(this.sharp.tiff(options).toBuffer()));
+  async tiff(options: sharp.TiffOptions = {}): Promise<Image> {
+    return Image.create(await this.sharp.tiff(options).toBuffer());
   }
 
-  raw(options: sharp.RawOptions = {}): Image {
-    return Image.create(awaitSync(this.sharp.raw(options).toBuffer()));
+  async raw(options: sharp.RawOptions = {}): Promise<Image> {
+    return Image.create(await this.sharp.raw(options).toBuffer());
   }
 
-  heif(options: sharp.HeifOptions = {}): Image {
-    return Image.create(awaitSync(this.sharp.heif(options).toBuffer()));
+  async heif(options: sharp.HeifOptions = {}): Promise<Image> {
+    return Image.create(await this.sharp.heif(options).toBuffer());
   }
 
-  composite(
+  async composite(
     others: ({ input: Image } & Omit<sharp.OverlayOptions, 'input'>)[],
-  ): Image {
+  ): Promise<Image> {
     return Image.create(
-      awaitSync(
-        this.sharp
-          .composite(
-            others.map(({ input, ...otherOverlay }) => ({
-              ...(input ? { input: input.value } : {}),
-              ...otherOverlay,
-            })),
-          )
-          .toBuffer(),
-      ),
+      await this.sharp
+        .composite(
+          others.map(({ input, ...otherOverlay }) => ({
+            ...(input ? { input: input.value } : {}),
+            ...otherOverlay,
+          })),
+        )
+        .toBuffer(),
     );
   }
 
-  resize(width: number, height: number, options?: sharp.ResizeOptions): Image {
+  async resize(
+    width: number,
+    height: number,
+    options?: sharp.ResizeOptions,
+  ): Promise<Image> {
     return Image.create(
-      awaitSync(this.sharp.resize(width, height, options).toBuffer()),
+      await this.sharp.resize(width, height, options).toBuffer(),
     );
   }
 
-  extend(options: sharp.ExtendOptions): Image {
-    return Image.create(awaitSync(this.sharp.extend(options).toBuffer()));
+  async extend(options: sharp.ExtendOptions): Promise<Image> {
+    return Image.create(await this.sharp.extend(options).toBuffer());
   }
 
-  trim(options: sharp.TrimOptions): Image {
-    return Image.create(awaitSync(this.sharp.trim(options).toBuffer()));
+  async trim(options: sharp.TrimOptions): Promise<Image> {
+    return Image.create(await this.sharp.trim(options).toBuffer());
   }
 
-  extract(region: sharp.Region): Image {
-    return Image.create(awaitSync(this.sharp.extract(region).toBuffer()));
+  async extract(region: sharp.Region): Promise<Image> {
+    return Image.create(await this.sharp.extract(region).toBuffer());
   }
 
-  rotate(angle: number, options: sharp.RotateOptions = {}): Image {
-    return Image.create(
-      awaitSync(this.sharp.rotate(angle, options).toBuffer()),
-    );
+  async rotate(
+    angle: number,
+    options: sharp.RotateOptions = {},
+  ): Promise<Image> {
+    return Image.create(await this.sharp.rotate(angle, options).toBuffer());
   }
 
-  blur(sigma: number | boolean): Image {
-    return Image.create(awaitSync(this.sharp.blur(sigma).toBuffer()));
+  async blur(sigma: number | boolean): Promise<Image> {
+    return Image.create(await this.sharp.blur(sigma).toBuffer());
   }
 
-  sharpen(options: sharp.SharpenOptions): Image {
-    return Image.create(awaitSync(this.sharp.sharpen(options).toBuffer()));
+  async sharpen(options: sharp.SharpenOptions): Promise<Image> {
+    return Image.create(await this.sharp.sharpen(options).toBuffer());
   }
 
   saveAs(file: File | string): File {
