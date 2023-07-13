@@ -15,7 +15,6 @@ import {
   getCurrentSolWorkspace,
   getSolUserWorkspace,
 } from '../sol/sol-workspace';
-import { awaitSync } from '../utils/async.utils';
 import { fileCached, runtimeCached } from '../utils/cache.utils';
 import { getCwd, getEnv } from '../utils/env.utils';
 import { log } from '../utils/log.utils';
@@ -57,12 +56,6 @@ export const globals = {
       },
     },
     'See https://babeljs.io/docs/en/babel-types',
-  ),
-  awaitSync: withHelp(
-    {
-      value: awaitSync,
-    },
-    'Waits for the given promise before continuing',
   ),
   chalk: withHelp(
     {
@@ -374,7 +367,6 @@ export type Globals = FromPropertyDescriptorMap<typeof globals>;
 declare global {
   const args: Globals['args'];
   const astTypes: Globals['astTypes'];
-  const awaitSync: Globals['awaitSync'];
   const chalk: Globals['chalk'];
   const cwd: Globals['cwd'];
   const data: Globals['data'];
