@@ -73,7 +73,7 @@ export class Response extends Wrapper<AxiosResponse> {
   /**
    * Refetches the response.
    */
-  refresh(): Response {
+  async refresh(): Promise<Response> {
     return web.request(this.value.config);
   }
 

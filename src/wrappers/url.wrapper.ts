@@ -146,58 +146,58 @@ export class Url extends Wrapper<string> {
   /**
    * Fetches the URL using a GET request.
    */
-  get(options?: Parameters<typeof web.get>[1]): Response {
+  async get(options?: Parameters<typeof web.get>[1]): Promise<Response> {
     return web.get(this.value, options);
   }
 
   /**
    * Fetches the URL using a POST request.
    */
-  post(
+  async post(
     data?: Parameters<typeof web.post>[1],
     options?: Parameters<typeof web.post>[2],
-  ): Response {
+  ): Promise<Response> {
     return web.post(this.value, data, options);
   }
 
   /**
    * Fetches the URL using a PATCH request.
    */
-  patch(
+  async patch(
     data?: Parameters<typeof web.patch>[1],
     options?: Parameters<typeof web.patch>[2],
-  ): Response {
+  ): Promise<Response> {
     return web.patch(this.value, data, options);
   }
 
   /**
    * Fetches the URL using a PUT request.
    */
-  put(
+  async put(
     data?: Parameters<typeof web.put>[1],
     options?: Parameters<typeof web.put>[2],
-  ): Response {
+  ): Promise<Response> {
     return web.put(this.value, data, options);
   }
 
   /**
    * Fetches the URL using a DELETE request.
    */
-  delete(options?: Parameters<typeof web.delete>[1]): Response {
+  async delete(options?: Parameters<typeof web.delete>[1]): Promise<Response> {
     return web.delete(this.value, options);
   }
 
   /**
    * Fetches the URL using a HEAD request.
    */
-  head(options?: Parameters<typeof web.head>[1]): Response {
+  async head(options?: Parameters<typeof web.head>[1]): Promise<Response> {
     return web.head(this.value, options);
   }
 
   /**
    * Fetches the URL using the given options.
    */
-  fetch(options?: Parameters<typeof web.fetch>[1]): Response {
+  async fetch(options?: Parameters<typeof web.fetch>[1]): Promise<Response> {
     return web.fetch(this.value, {
       method: 'GET',
       ...options,

@@ -1,25 +1,6 @@
 import { loopWhile } from 'deasync';
 import { logError } from './log.utils';
 
-type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
-
-export function deasync<FnType extends (...args: any[]) => Promise<any>>(
-  fn: FnType,
-): (...args: Parameters<FnType>) => ThenArg<ReturnType<FnType>> {
-  return (...args: Parameters<FnType>) => {
-    return awaitSync(fn(...args));
-  };
-}
-
-export function sleep(seconds: number): void {
-  let done = false;
-  setTimeout(() => {
-    done = true;
-  }, seconds * 1000);
-
-  loopWhile(() => !done);
-}
-
 export function catchAsyncErrors<T>(
   promise: T | PromiseLike<T>,
   onError: ((e: Error | any) => void) | null = null,

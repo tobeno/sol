@@ -37,7 +37,7 @@ Or this:
 
 ```
 // Get todos
-> const j = web.fetch('https://jsonplaceholder.typicode.com/todos').content.json
+> const j = (await web.fetch('https://jsonplaceholder.typicode.com/todos')).content.json
 
 // Get all open ToDos
 > const open = j.filter(todo => !todo.completed)
@@ -59,7 +59,7 @@ Or this:
 
 ```
 // Fetch Sol README.md file as markdown and save it as `readme` variable
-> web.get('https://raw.githubusercontent.com/tobeno/sol/main/README.md').content.md.var('readme')
+> (await web.get('https://raw.githubusercontent.com/tobeno/sol/main/README.md')).content.md.var('readme')
 
 // Render as HTML and open in browser
 > readme.html.saveAs('README.html').browse()

@@ -25,9 +25,11 @@ export function spawnCommand(
   args: string[],
   options: {
     cwd?: string;
-  },
+    stdio?: Parameters<typeof spawnInternal>[2]['stdio'];
+  } = {},
 ) {
   return spawnInternal(command, args, {
     cwd: options.cwd || process.cwd(),
+    stdio: options.stdio,
   });
 }

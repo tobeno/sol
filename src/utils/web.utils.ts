@@ -1,19 +1,17 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Response } from '../wrappers/response.wrapper';
-import { deasync } from './async.utils';
 
 function wrap<FnType extends (...args: any) => Promise<AxiosResponse>>(
   makeFn: () => FnType,
-): (...params: Parameters<FnType>) => Response {
-  let fnSync: ((...args: Parameters<FnType>) => any) | null = null;
+): (...params: Parameters<FnType>) => Promise<Response> {
+  let fn: ((...args: Parameters<FnType>) => Promise<any>) | null = null;
 
-  return (...args: Parameters<FnType>) => {
-    if (!fnSync) {
-      const fn = makeFn();
-      fnSync = deasync(fn);
+  return async (...args: Parameters<FnType>) => {
+    if (!fn) {
+      fn = makeFn();
     }
 
-    return new Response(fnSync(...args));
+    return new Response(await fn(...args));
   };
 }
 
