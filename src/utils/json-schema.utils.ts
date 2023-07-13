@@ -51,14 +51,14 @@ function dereferenceJsonSchemaUsingRefs(schema: any, $refs: $Refs) {
  *
  * Note: The original ref is preserved as x-ref field
  */
-export function dereferenceJsonSchema<SchemaType = any>(
+export async function dereferenceJsonSchema<SchemaType = any>(
   schema: SchemaType,
-): SchemaType {
+): Promise<SchemaType> {
   // Lazy load for performance
   // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
   const $RefParser = require('@apidevtools/json-schema-ref-parser');
 
-  const $refs = awaitSync($RefParser.resolve(schema));
+  const $refs = await $RefParser.resolve(schema);
 
   dereferenceJsonSchemaUsingRefs(schema, $refs);
 

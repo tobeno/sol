@@ -107,7 +107,7 @@ export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
     return this.questionAndAnswer?.selectCode() || null;
   }
 
-  ask(question: string): this {
+  async ask(question: string): Promise<this> {
     const { dryRun } = this.options;
     if (!isOpenAiApiAvailable() && !dryRun) {
       open(`https://chat.openai.com?message=${encodeURIComponent(question)}`);
@@ -127,7 +127,7 @@ export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
 
       let response: CreateChatCompletionResponse;
       if (!cacheFile.exists) {
-        response = createOpenAiChatCompletion({
+        response = await createOpenAiChatCompletion({
           messages: this.value,
         });
 
@@ -159,7 +159,7 @@ Response: ${JSON.stringify(response, null, 2)}`);
     return this;
   }
 
-  askCode(question: string): this {
+  async askCode(question: string): Promise<this> {
     return this.ask(`${question}\nONLY CODE, NOTHING ELSE`);
   }
 

@@ -28,13 +28,13 @@ export function getOpenAiApi(): OpenAIApi {
   );
 }
 
-export function createOpenAiChatCompletion(
+export async function createOpenAiChatCompletion(
   request: Omit<CreateChatCompletionRequest, 'model'>,
-): CreateChatCompletionResponse {
-  return awaitSync(
-    getOpenAiApi().createChatCompletion({
+): Promise<CreateChatCompletionResponse> {
+  return (
+    await getOpenAiApi().createChatCompletion({
       model: 'gpt-3.5-turbo',
       ...request,
-    }),
+    })
   ).data;
 }

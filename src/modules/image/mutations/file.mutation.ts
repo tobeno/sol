@@ -27,7 +27,7 @@ mutateClass(
         return Image.create(this.buffer);
       },
       set(value: Image) {
-        this.buffer = awaitSync(value.buffer);
+        this.buffer = value.buffer;
       },
     },
   }),

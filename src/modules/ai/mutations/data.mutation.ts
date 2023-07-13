@@ -10,12 +10,12 @@ declare module '../../../wrappers/data.wrapper' {
     /**
      * Asks the AI a question about this data (as JSON).
      */
-    ask(question: string): AiConversation;
+    ask(question: string): Promise<AiConversation>;
 
     /**
      * Asks the AI a question about this data (as JSON).
      */
-    askCode(question: string): AiConversation;
+    askCode(question: string): Promise<AiConversation>;
 
     /**
      * Creates a conversation from this data.
@@ -32,13 +32,13 @@ mutateClass(
   Data,
   definePropertiesMutation({
     ask: {
-      value(question: string): AiConversation {
+      async value(question: string): Promise<AiConversation> {
         return this.json.ask(question);
       },
     },
 
     askCode: {
-      value(question: string): AiConversation {
+      async value(question: string): Promise<AiConversation> {
         return this.json.askCode(question);
       },
     },

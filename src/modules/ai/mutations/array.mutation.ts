@@ -10,12 +10,12 @@ declare global {
     /**
      * Asks the AI a question about this array (as JSON).
      */
-    ask(question: string): AiConversation;
+    ask(question: string): Promise<AiConversation>;
 
     /**
      * Asks the AI a question about this array (as JSON).
      */
-    askCode(question: string): AiConversation;
+    askCode(question: string): Promise<AiConversation>;
   }
 }
 
@@ -23,12 +23,12 @@ mutateClass(
   Array,
   definePropertiesMutation({
     ask: {
-      value(question: string): AiConversation {
+      async value(question: string): Promise<AiConversation> {
         return Data.create(this).ask(question);
       },
     },
     askCode: {
-      value(question: string): AiConversation {
+      async value(question: string): Promise<AiConversation> {
         return Data.create(this).askCode(question);
       },
     },

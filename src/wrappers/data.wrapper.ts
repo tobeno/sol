@@ -318,15 +318,6 @@ export class Data<
   }
 
   /**
-   * Returns the data with all $ref references resolved.
-   */
-  get dereferenced(): Data {
-    return Data.create(
-      dereferenceJsonSchema(cloneObjectDeep(this.value as any)),
-    );
-  }
-
-  /**
    * Returns the keys.
    */
   get keys(): Data<KeyType[]> {
@@ -459,6 +450,15 @@ export class Data<
     }
 
     return Data.create(mapObjectKeys(this.value, cb));
+  }
+
+  /**
+   * Returns the data with all $ref references resolved.
+   */
+  async dereference(): Promise<Data> {
+    return Data.create(
+      await dereferenceJsonSchema(cloneObjectDeep(this.value as any)),
+    );
   }
 
   /**

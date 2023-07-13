@@ -1,4 +1,3 @@
-import { loopWhile } from 'deasync';
 import { logError } from './log.utils';
 
 export function catchAsyncErrors<T>(
@@ -12,28 +11,4 @@ export function catchAsyncErrors<T>(
       logError(e);
     }
   });
-}
-
-export function awaitSync<T>(promise: T | PromiseLike<T>): T {
-  let done = false;
-  let data: T | undefined = undefined;
-  let error = undefined;
-
-  Promise.resolve(promise)
-    .then((d: any) => {
-      data = d;
-      done = true;
-    })
-    .catch((e: any) => {
-      error = e;
-      done = true;
-    });
-
-  loopWhile(() => !done);
-
-  if (error) {
-    throw error;
-  }
-
-  return data as any;
 }

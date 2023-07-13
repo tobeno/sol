@@ -128,12 +128,6 @@ So you can use all of those:
 
 The **final result** of a command / pipeline is printed on the shell (e.g. `['a', 'b'].join(', ')` will show `a, b`).
 
-Other than NodeJS, Sol is mostly **synchronous**.
-So even commands like `fetch(...)` are executed synchronously.
-
-If you want to use a **Promise-based method**, you can make it synchronous by either using `awaitSync(someAsyncFn())` or
-by using the await helper method `someAsyncFn().await` available on Promises.
-
 Sol is based on the [NodeJS REPL](https://nodejs.org/api/repl.html),
 so all REPL features are available.
 
