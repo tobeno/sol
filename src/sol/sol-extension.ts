@@ -37,6 +37,13 @@ export class SolExtension {
 
     const globalMutationFile = this.dir.file('mutations/global.mutation.ts');
     const setupFile = this.setupFile;
+
+    // Delete old JS file is exists
+    const setupJsFile = File.create(setupFile.pathWithoutExt + '.js');
+    if (setupJsFile.exists) {
+      setupJsFile.delete();
+    }
+
     if (!setupFile.exists || force) {
       setupFile.create();
       setupFile.text = `
@@ -109,6 +116,8 @@ mutateGlobals(definePropertiesMutation(globals));
       require(this.setupFile.path);
       logDebug(`Loaded setup file at ${this.setupFile.path}`);
     } catch (e) {
+      this.setupFile.delete();
+
       logError(e);
     }
 

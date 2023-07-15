@@ -93,6 +93,13 @@ import '${extension.setupFile.dir.relativePathFrom(this.generatedDir)}/${
     this.updateContextFile();
 
     const setupFile = this.setupFile;
+
+    // Delete old JS file is exists
+    const setupJsFile = File.create(setupFile.pathWithoutExt + '.js');
+    if (setupJsFile.exists) {
+      setupJsFile.delete();
+    }
+
     if (!setupFile.exists || force) {
       const solPackage = getSolPackage();
 
@@ -129,6 +136,8 @@ import { solExtension } from '${solPackage.dir.relativePathFrom(
       require(this.setupFile.pathWithoutExt);
       logDebug(`Loaded setup file at ${this.setupFile.path}`);
     } catch (e) {
+      this.setupFile.delete();
+
       logError(e);
     }
 
