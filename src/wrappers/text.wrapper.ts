@@ -30,7 +30,10 @@ import { Wrapper } from './wrapper.wrapper';
  * Wrapper for strings.
  */
 export class Text extends Wrapper<string> {
-  constructor(value: string, public format: string | null = null) {
+  constructor(
+    value: string,
+    public format: string | null = null,
+  ) {
     super(value.toString());
   }
 

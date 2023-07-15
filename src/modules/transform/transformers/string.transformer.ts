@@ -12,7 +12,10 @@ export abstract class StringTransformer<TargetType>
   stringifyTransformation: DataTransformation;
   parseTransformation: DataTransformation;
 
-  constructor(readonly targetType: DataType, baseFormat: string | null = null) {
+  constructor(
+    readonly targetType: DataType,
+    baseFormat: string | null = null,
+  ) {
     this.baseType = new DataType('string', baseFormat);
     this.stringifyTransformation = new DataTransformation(
       targetType,

@@ -11,7 +11,10 @@ export enum DataTransformationMatchType {
  * Class for describing a transformation between two data types.
  */
 export class DataTransformation {
-  constructor(readonly baseType: DataType, readonly targetType: DataType) {}
+  constructor(
+    readonly baseType: DataType,
+    readonly targetType: DataType,
+  ) {}
 
   reverse(): DataTransformation {
     return new DataTransformation(this.targetType, this.baseType);

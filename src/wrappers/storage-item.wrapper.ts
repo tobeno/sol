@@ -9,7 +9,10 @@ import { inspect } from 'util';
 export abstract class StorageItem {
   absolutePath: string;
 
-  constructor(relativePath: string, public basePath?: string) {
+  constructor(
+    relativePath: string,
+    public basePath?: string,
+  ) {
     // Resolve home directory references
     if (relativePath.startsWith('~/')) {
       relativePath = path.join(os.homedir(), relativePath.substr(2));

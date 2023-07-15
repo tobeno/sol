@@ -474,17 +474,20 @@ export class Data<
   ): Data<Record<KeyType, GroupType>> {
     const values = this.values;
 
-    return values.reduce((result, item) => {
-      const key = keyFn(item);
-      let group = result[key];
-      if (!group) {
-        group = groupFn(key);
-      }
+    return values.reduce(
+      (result, item) => {
+        const key = keyFn(item);
+        let group = result[key];
+        if (!group) {
+          group = groupFn(key);
+        }
 
-      result[key] = reduceFn(group, item, key);
+        result[key] = reduceFn(group, item, key);
 
-      return result;
-    }, {} as Record<KeyType, GroupType>);
+        return result;
+      },
+      {} as Record<KeyType, GroupType>,
+    );
   }
 
   /**

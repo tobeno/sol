@@ -31,22 +31,25 @@ export function definePropertiesMutation<TargetType>(
   properties: PropertyDescriptorMap & ThisType<TargetType>,
 ): DefinePropertiesMutation<TargetType> {
   return new DefinePropertiesMutation<TargetType>(
-    Reflect.ownKeys(properties).reduce((result, key) => {
-      const config = properties[key];
+    Reflect.ownKeys(properties).reduce(
+      (result, key) => {
+        const config = properties[key];
 
-      Object.assign(
-        config,
-        {
-          configurable: true,
-          enumerable: false,
-        },
-        config,
-      );
+        Object.assign(
+          config,
+          {
+            configurable: true,
+            enumerable: false,
+          },
+          config,
+        );
 
-      result[key] = config;
+        result[key] = config;
 
-      return result;
-    }, {} as PropertyDescriptorMap & ThisType<TargetType>),
+        return result;
+      },
+      {} as PropertyDescriptorMap & ThisType<TargetType>,
+    ),
   );
 }
 

@@ -20,7 +20,10 @@ export class DataType {
   static Xml = DataType.fromString('Xml');
   static Url = DataType.fromString('Url');
 
-  constructor(readonly type: string, readonly format: string | null = null) {}
+  constructor(
+    readonly type: string,
+    readonly format: string | null = null,
+  ) {}
 
   /**
    * Returns true if the given data type matches this one.

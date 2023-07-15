@@ -5,7 +5,10 @@ import { StringTransformer } from './string.transformer';
  * Transformer for joining or splitting strings.
  */
 export class JoinTransformer extends StringTransformer<any[]> {
-  constructor(readonly separator: string, baseFormat: string) {
+  constructor(
+    readonly separator: string,
+    baseFormat: string,
+  ) {
     super(DataType.Object, baseFormat);
   }
 
