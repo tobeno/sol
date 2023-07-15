@@ -7,3 +7,4 @@ import './modules/storage/setup';
 import './modules/transform/setup';
 import './modules/visualize/setup';
 import './mutations/global.mutation';
+import './mutations/promise.mutation';

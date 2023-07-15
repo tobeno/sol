@@ -1,7 +1,12 @@
+import generate from '@babel/generator';
+import { parse } from '@babel/parser';
+import traverse from '@babel/traverse';
+import * as t from '@babel/types';
 import chalk from 'chalk';
 import type { AsyncCompleter, CompleterResult } from 'readline';
-import type { ReplOptions, REPLServer } from 'repl';
+import type { REPLEval, ReplOptions, REPLServer } from 'repl';
 import repl from 'repl';
+import * as vm from 'vm';
 import { log } from '../utils/log.utils';
 import { getHelp } from '../utils/metadata.utils';
 import {
@@ -31,6 +36,68 @@ function solWriter(output: any): string {
 async function solCompleter(line: string): Promise<CompleterResult | void> {
   // ToDo: Add custom completion logic
 }
+
+function prepareSolCommand(cmd: string): string {
+  let preparedCmd = cmd.trim();
+
+  // Strip trailing semicolon
+  if (preparedCmd.endsWith(';')) {
+    preparedCmd = preparedCmd.slice(0, -1);
+  }
+
+  // Handle top-level await
+  if (preparedCmd.includes('await')) {
+    preparedCmd = `(async() => (${preparedCmd}))()`;
+  }
+
+  try {
+    // Parse command to AST
+    const cmdRootNode = parse(preparedCmd, {
+      plugins: ['typescript'],
+    });
+
+    // Replace something.await with await something
+    traverse(cmdRootNode, {
+      Identifier(path) {
+        if (
+          path.node.name === 'awaited' &&
+          path.parent &&
+          path.parent.type === 'MemberExpression'
+        ) {
+          const memberExpressionNode = path.parent;
+          const objectNode = memberExpressionNode.object;
+
+          path.parentPath.replaceWith(t.awaitExpression(objectNode));
+        }
+      },
+    });
+
+    // Regenerate command
+    preparedCmd = generate(cmdRootNode, {}).code;
+  } catch (e) {
+    // Ignore babel errors and let the VM handle it
+  }
+
+  // Strip trailing semicolon
+  if (preparedCmd.endsWith(';')) {
+    preparedCmd = preparedCmd.slice(0, -1);
+  }
+
+  return preparedCmd;
+}
+
+/**
+ * Default Sol REPL evaluation.
+ */
+const solEval: REPLEval = async (cmd, context, file, cb) => {
+  try {
+    const result = await vm.runInThisContext(prepareSolCommand(cmd), {});
+
+    cb(null, result);
+  } catch (err: any) {
+    cb(err, null);
+  }
+};
 
 /**
  * Enables the file based REPL history for the given server.
@@ -129,6 +196,7 @@ export async function startSolReplServer(
 ): Promise<REPLServer> {
   const server = repl.start({
     prompt: solReplColor.dim('> '),
+    eval: solEval,
     writer: solWriter,
     ignoreUndefined: true,
     useGlobal: true,

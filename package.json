@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^10.1.0",
+    "@babel/generator": "^7.22.9",
     "@babel/parser": "^7.22.0",
     "@babel/traverse": "^7.22.1",
     "@babel/types": "^7.22.0",

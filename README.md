@@ -37,7 +37,7 @@ Or this:
 
 ```
 // Get todos
-> const j = (await web.fetch('https://jsonplaceholder.typicode.com/todos')).content.json
+> const j = web.fetch('https://jsonplaceholder.typicode.com/todos').awaited.content.json
 
 // Get all open ToDos
 > const open = j.filter(todo => !todo.completed)
@@ -59,7 +59,7 @@ Or this:
 
 ```
 // Fetch Sol README.md file as markdown and save it as `readme` variable
-> (await web.get('https://raw.githubusercontent.com/tobeno/sol/main/README.md')).content.md.var('readme')
+> web.get('https://raw.githubusercontent.com/tobeno/sol/main/README.md').awaited.content.md.var('readme')
 
 // Render as HTML and open in browser
 > readme.html.saveAs('README.html').browse()
@@ -127,6 +127,8 @@ So you can use all of those:
 ```
 
 The **final result** of a command / pipeline is printed on the shell (e.g. `['a', 'b'].join(', ')` will show `a, b`).
+
+Inside the interactive Sol REPL, you can also use `something.awaited` instead of `await something` to avoid jumping back and forth.
 
 Sol is based on the [NodeJS REPL](https://nodejs.org/api/repl.html),
 so all REPL features are available.
