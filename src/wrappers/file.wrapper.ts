@@ -328,7 +328,7 @@ export class File extends StorageItem {
   /**
    * Watches the file for changes.
    */
-  watch(fn: (eventType: string, filename: string) => any): () => void {
+  watch(fn: fs.WatchListener<string>): () => void {
     const watcher = fs.watch(
       this.path,
       {

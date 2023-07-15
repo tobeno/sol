@@ -64,7 +64,12 @@ export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
   get answers(): Data<Text[]> {
     return Data.create(
       this.value
-        .filter((message) => message.role === 'assistant')
+        .filter(
+          (
+            message,
+          ): message is ChatCompletionRequestMessage & { content: string } =>
+            message.role === 'assistant' && !!message.content,
+        )
         .map((message) => Text.create(message.content)),
     );
   }
@@ -80,7 +85,12 @@ export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
   get questions(): Data<Text[]> {
     return Data.create(
       this.value
-        .filter((message) => message.role === 'user')
+        .filter(
+          (
+            message,
+          ): message is ChatCompletionRequestMessage & { content: string } =>
+            message.role === 'user' && !!message.content,
+        )
         .map((message) => Text.create(message.content)),
     );
   }

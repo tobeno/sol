@@ -12,6 +12,7 @@ import {
 import { execCommand, spawnCommand } from '../utils/shell.utils';
 import { unwrap } from '../utils/wrapper.utils';
 import { File } from './file.wrapper';
+import { Shell } from './shell.wrapper';
 import {
   DirectoryCollection,
   FileCollection,
@@ -19,7 +20,6 @@ import {
 } from './storage-item-collection.wrapper';
 import { StorageItem } from './storage-item.wrapper';
 import { Text } from './text.wrapper';
-import { Shell } from './shell.wrapper';
 
 /**
  * Wrapper for a directory.
@@ -208,7 +208,7 @@ export class Directory extends StorageItem {
   /**
    * Watches the directory for changes.
    */
-  watch(fn: (eventType: string, filename: string) => any): () => void {
+  watch(fn: fs.WatchListener<string>): () => void {
     const watcher = fs.watch(
       this.path,
       {
