@@ -415,6 +415,13 @@ export class Text extends Wrapper<string> {
   }
 
   /**
+   * Returns a new Text with the format set.
+   */
+  withFormat(format: string | null): Text {
+    return Text.create(this, format);
+  }
+
+  /**
    * Returns the number of matches of the given (RegExp) pattern.
    */
   count(pattern: RegExp | string): number {
