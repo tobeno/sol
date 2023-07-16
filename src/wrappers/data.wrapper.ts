@@ -159,6 +159,10 @@ export class Data<
     });
   }
 
+  get shuffled(): Data<ValueType extends Array<any> ? ValueType : any> {
+    return this.shuffle();
+  }
+
   /**
    * Returns the data sorted by its values.
    */
@@ -535,6 +539,21 @@ export class Data<
     });
 
     return Data.create(Object.fromEntries(entries)) as any;
+  }
+
+  /**
+   * Returns the data randomly shuffled.
+   */
+  shuffle(): Data<ValueType extends Array<any> ? ValueType : any> {
+    if (Array.isArray(this.value)) {
+      return Data.create(
+        [...this.value].sort(() => Math.random() - 0.5),
+      ) as any;
+    }
+
+    const entries = this.entries.shuffle();
+
+    return Data.create(Object.fromEntries(entries.value)) as any;
   }
 
   /**

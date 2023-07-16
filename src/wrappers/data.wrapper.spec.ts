@@ -1,4 +1,5 @@
 import { snakeCase } from 'change-case';
+import { equalsObjectDeep } from '../utils/object.utils';
 import { Data } from './data.wrapper';
 import { Text } from './text.wrapper';
 
@@ -174,6 +175,36 @@ describe('Data', () => {
       const data = Data.create({ a: 1, b: 1, c: 2, d: 3 });
 
       expect(data.unique.value).toEqual({ a: 1, c: 2, d: 3 });
+    });
+  });
+
+  describe('shuffled', () => {
+    it('should return the array shuffled', async () => {
+      const data = Data.create([1, 2, 3, 4, 5]);
+
+      let shuffled = false;
+      for (let i = 0; i < 100; i++) {
+        if (!equalsObjectDeep(data.shuffled.value, data.value)) {
+          shuffled = true;
+          break;
+        }
+      }
+
+      expect(shuffled).toBe(true);
+    });
+
+    it('should return the object shuffled', async () => {
+      const data = Data.create({ a: 1, b: 2, c: 3, d: 4, e: 5 });
+
+      let shuffled = false;
+      for (let i = 0; i < 100; i++) {
+        if (!equalsObjectDeep(data.shuffled.keys.value, data.keys.value)) {
+          shuffled = true;
+          break;
+        }
+      }
+
+      expect(shuffled).toBe(true);
     });
   });
 
@@ -763,6 +794,36 @@ describe('Data', () => {
       const data = Data.create({ a: 1, b: 2, c: { d: 3 } });
       const otherData = Data.create({ a: 1, b: 2, c: { e: 3 } });
       expect(data.equals(otherData)).toBe(false);
+    });
+  });
+
+  describe('shuffle', () => {
+    it('should return the array shuffled', async () => {
+      const data = Data.create([1, 2, 3, 4, 5]);
+
+      let shuffled = false;
+      for (let i = 0; i < 100; i++) {
+        if (!equalsObjectDeep(data.shuffle().value, data.value)) {
+          shuffled = true;
+          break;
+        }
+      }
+
+      expect(shuffled).toBe(true);
+    });
+
+    it('should return the object shuffled', async () => {
+      const data = Data.create({ a: 1, b: 2, c: 3, d: 4, e: 5 });
+
+      let shuffled = false;
+      for (let i = 0; i < 100; i++) {
+        if (!equalsObjectDeep(data.shuffle().keys.value, data.keys.value)) {
+          shuffled = true;
+          break;
+        }
+      }
+
+      expect(shuffled).toBe(true);
     });
   });
 
