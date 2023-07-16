@@ -36,8 +36,8 @@ export function updateSol(): void {
 export async function startSol(): Promise<void> {
   const server = await startSolReplServer();
 
-  server.defineCommand('update', {
-    help: 'Update Sol to latest version',
+  server.defineCommand('upgrade', {
+    help: 'Upgrade Sol to latest version',
     action(): void {
       updateSol();
       server.close();
