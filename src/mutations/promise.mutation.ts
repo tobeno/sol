@@ -5,14 +5,14 @@ declare global {
     /**
      * Awaits the promise synchronously.
      */
-    get awaited(): T;
+    get await(): T;
   }
 }
 
 mutateClass(
   Promise,
   definePropertiesMutation({
-    awaited: {
+    await: {
       get(): any {
         throw new Error('Only works in REPL.');
       },

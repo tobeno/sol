@@ -60,7 +60,7 @@ function prepareSolCommand(cmd: string): string {
     traverse(cmdRootNode, {
       Identifier(path) {
         if (
-          path.node.name === 'awaited' &&
+          path.node.name === 'await' &&
           path.parent &&
           path.parent.type === 'MemberExpression'
         ) {
