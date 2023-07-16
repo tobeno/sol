@@ -201,9 +201,26 @@ or `solUserExtension('your-extension').edit()` to create a new user level extens
 
 After the creation you still need to load the extension as described above.
 
-### Combinations
+### CLI
 
-Sol can also be used with other CLI tools.
+#### Play
+
+To directly execute a play script without the REPL, you can use `sol play <name>`.
+
+#### Pipe
+
+You can also use Sol to combine commands on the command line using pipes.
+
+Example:
+
+```sh
+cat package.json | sol pipe '.json.get("dependencies").keys.join(", ")'
+
+```
+
+#### Upgrade
+
+To upgrade Sol to the latest version, you can use `sol upgrade`.
 
 #### Use Command Output
 

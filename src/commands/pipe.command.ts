@@ -1,5 +1,9 @@
 import { Command } from 'commander';
 import * as vm from 'vm';
+import {
+  definePropertiesMutation,
+  mutateGlobals,
+} from '../utils/mutation.utils';
 import { readTextStream } from '../utils/stream.utils';
 import { Text } from '../wrappers/text.wrapper';
 
@@ -20,8 +24,16 @@ export function pipeCommand(): Command {
       // Build full command (by passing input)
       const fullCommand = `input${command}`;
 
+      mutateGlobals(
+        definePropertiesMutation({
+          input: {
+            value: input,
+          },
+        }),
+      );
+
       // Use VM to execute command in a sandbox
-      const output = vm.runInNewContext(fullCommand, { input });
+      const output = vm.runInThisContext(fullCommand);
 
       // Write output to stdout
       log(output);
