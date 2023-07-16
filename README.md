@@ -128,7 +128,8 @@ So you can use all of those:
 
 The **final result** of a command / pipeline is printed on the shell (e.g. `['a', 'b'].join(', ')` will show `a, b`).
 
-Inside the interactive Sol REPL, you can also use `something.await` instead of `await something` to avoid jumping back and forth.
+Inside the interactive Sol REPL, you can also use `something.await` instead of `await something` to avoid jumping back
+and forth.
 
 Sol is based on the [NodeJS REPL](https://nodejs.org/api/repl.html),
 so all REPL features are available.
@@ -203,9 +204,15 @@ After the creation you still need to load the extension as described above.
 
 ### CLI
 
-#### Play
+#### Exec
 
-To directly execute a play script without the REPL, you can use `sol play <name>`.
+You can use Sol to directly execute Sol commands on the command line using `sol exec <command>`.
+
+Example:
+
+```sh
+sol exec 'text("test").uppercased'
+```
 
 #### Pipe
 
@@ -215,8 +222,11 @@ Example:
 
 ```sh
 cat package.json | sol pipe '.json.get("dependencies").keys.join(", ")'
-
 ```
+
+#### Play
+
+To directly execute a play script without the REPL, you can use `sol play <name>`.
 
 #### Upgrade
 
