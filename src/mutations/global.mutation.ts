@@ -31,12 +31,12 @@ import { Directory } from '../wrappers/directory.wrapper';
 import { File } from '../wrappers/file.wrapper';
 import { Html } from '../wrappers/html.wrapper';
 import { Markdown } from '../wrappers/markdown.wrapper';
+import { Shell } from '../wrappers/shell.wrapper';
 import { Text } from '../wrappers/text.wrapper';
 import { TmpDirectory } from '../wrappers/tmp-directory.wrapper';
 import { TmpFile } from '../wrappers/tmp-file.wrapper';
 import { Url } from '../wrappers/url.wrapper';
 import { Xml } from '../wrappers/xml.wrapper';
-import { Shell } from '../wrappers/shell.wrapper';
 
 export const globals = {
   args: withHelp(
@@ -114,6 +114,18 @@ export const globals = {
       },
     },
     'Returns the environment variables',
+  ),
+  exec: withHelp(
+    {
+      get() {
+        const { Shell } =
+          require('../wrappers/shell.wrapper') as typeof import('../wrappers/shell.wrapper');
+        const shell = Shell.create();
+
+        return shell.exec.bind(shell);
+      },
+    },
+    'Executes the given command',
   ),
   fake: withHelp(
     {
@@ -375,6 +387,7 @@ declare global {
   const dir: Globals['dir'];
   const dirs: Globals['dirs'];
   const env: Globals['env'];
+  const exec: Globals['exec'];
   const file: Globals['file'];
   const files: Globals['files'];
   const fileCached: Globals['fileCached'];
