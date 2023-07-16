@@ -1,13 +1,14 @@
 #!/usr/bin/env tsx
 
-import { startSol } from '../src';
 import '../src/optimize';
 import '../src/setup';
 import { loadSol } from '../src/sol/sol-setup';
-import { getLoadedModules } from '../src/utils/debug.utils';
 
 (async () => {
   if (process.env.DEBUG_PERFORMANCE === 'true') {
+    const { getLoadedModules } =
+      require('../src/utils/debug.utils') as typeof import('../src/utils/debug.utils');
+
     console.log(
       getLoadedModules()
         .map((m) => `${m.file.relativePath} -- ${m.size}`)
