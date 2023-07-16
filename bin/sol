@@ -2,4 +2,4 @@
 
 SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
-$SCRIPTPATH/../node_modules/.bin/tsx --tsconfig $SCRIPTPATH/../tsconfig.json $SCRIPTPATH/sol.ts $@
+$SCRIPTPATH/../node_modules/.bin/tsx --tsconfig $SCRIPTPATH/../tsconfig.json $SCRIPTPATH/sol.ts "$@"
