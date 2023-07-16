@@ -1,10 +1,10 @@
-import { Wrapper } from './wrapper.wrapper';
+import { inspect } from 'util';
+import { isArray, isBoolean, isNotEmpty } from '../utils/core.utils';
+import { execCommand } from '../utils/shell.utils';
+import { Data } from './data.wrapper';
 import { Directory } from './directory.wrapper';
 import { Text } from './text.wrapper';
-import { Data } from './data.wrapper';
-import { isArray, isBoolean, isNotEmpty } from '../utils/core.utils';
-import { inspect } from 'util';
-import { execCommand } from '../utils/shell.utils';
+import { Wrapper } from './wrapper.wrapper';
 
 export interface ShellGrepOptions {
   /**
@@ -43,6 +43,11 @@ export interface ShellTailOptions {
 }
 
 export class Shell extends Wrapper<Directory> {
+  /**
+   * Flag indicating whether ripgrep is available on the system
+   */
+  private ripgrepAvailable: boolean | null = null;
+
   cat(files: string | string[]): Text {
     return this.exec(`cat ${this.createShellPaths(files)}`);
   }
@@ -127,15 +132,36 @@ export class Shell extends Wrapper<Directory> {
       pattern = pattern.source;
     }
 
-    const output = this.exec(
-      `rg ${this.createShellOptions({
-        l: options.list,
-        i: options.insensitive,
-        'sort-files': options.sort ?? true,
-      })} -e  '${pattern.replace(/'/g, "\\'").replace('\n', '\\n')}' ${
-        this.createShellPaths(paths) || '.'
-      }`,
-    );
+    // Check if rg is available
+    if (this.ripgrepAvailable === null) {
+      try {
+        this.ripgrepAvailable = !!this.exec('which rg').length;
+      } catch (e) {
+        this.ripgrepAvailable = false;
+      }
+    }
+
+    let output: Text;
+    if (this.ripgrepAvailable) {
+      output = this.exec(
+        `rg ${this.createShellOptions({
+          l: options.list,
+          i: options.insensitive,
+          'sort-files': options.sort ?? true,
+        })} -e '${pattern.replace(/'/g, "\\'").replace('\n', '\\n')}' ${
+          this.createShellPaths(paths) || '.'
+        }`,
+      );
+    } else {
+      output = this.exec(
+        `grep ${this.createShellOptions({
+          l: options.list,
+          i: options.insensitive,
+        })} -R -E '${pattern.replace(/'/g, "\\'").replace('\n', '\\n')}' ${
+          this.createShellPaths(paths) || '.'
+        } | sort`,
+      );
+    }
 
     return output.lines;
   }
