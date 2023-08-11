@@ -41,10 +41,11 @@ export class PlayFile {
 import './${workspace.contextFile.dir.relativePathFrom(file.dir)}/${
         workspace.contextFile.basenameWithoutExt
       }';
-    
-// ToDo: Add your logic
-
-export default null;
+   
+export async function main() { 
+  // ToDo: Add your logic
+  return null;
+}
 `.trimStart();
     }
   }
@@ -75,7 +76,7 @@ export default null;
       setTimeout(() => {
         let prevText: string | null = null;
 
-        this.unwatch = file.watch((event) => {
+        this.unwatch = file.watch(async (event) => {
           if (event === 'change') {
             let result = undefined;
             try {
@@ -93,7 +94,7 @@ export default null;
               log(`Running play ${playId}...`);
 
               running = true;
-              result = this.replay();
+              result = await this.replay();
             } finally {
               running = false;
             }
@@ -133,15 +134,16 @@ export default null;
   /**
    * Runs the playground file.
    */
-  replay<ResultType = any>(): ResultType {
+  async replay<ResultType = any>(): Promise<ResultType> {
     const file = this.file;
     if (!file.exists) {
       throw new Error(`No play found for '${file.path}'`);
     }
 
     let result = file.rerequire();
-
-    if (typeof result.default !== 'undefined') {
+    if (typeof result.main !== 'undefined') {
+      result = await result.main();
+    } else if (typeof result.default !== 'undefined') {
       result = result.default;
     }
 
@@ -231,9 +233,9 @@ export function unplay(pathOrFile: string | File | null = null): void {
 /**
  * Runs the given playground file.
  */
-export function replay<ResultType = any>(
+export async function replay<ResultType = any>(
   pathOrFile: string | File,
-): ResultType {
+): Promise<ResultType> {
   const f = playFile(pathOrFile);
 
   return f.replay();
