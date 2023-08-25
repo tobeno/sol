@@ -1,8 +1,14 @@
+import type { OpenAI } from 'openai';
 import type {
-  CreateChatCompletionRequest,
-  CreateChatCompletionResponse,
-  OpenAIApi,
-} from 'openai';
+  ChatCompletion,
+  CompletionCreateParamsNonStreaming,
+  CreateChatCompletionRequestMessage,
+} from 'openai/resources/chat/completions';
+
+export type OpenAiChatCompletionRequestMessage =
+  CreateChatCompletionRequestMessage;
+export type OpenAiChatCompletionRequest = CompletionCreateParamsNonStreaming;
+export type OpenAiChatCompletionResponse = ChatCompletion;
 
 function getOpenAi() {
   return require('openai') as typeof import('openai');
@@ -12,7 +18,7 @@ export function isOpenAiApiAvailable(): boolean {
   return !!process.env.OPENAI_API_KEY;
 }
 
-export function getOpenAiApi(): OpenAIApi {
+export function getOpenAiApi(): OpenAI {
   if (!isOpenAiApiAvailable()) {
     throw new Error(
       'To use the OpenAI API the OPENAI_API_KEY needs to be configured.',
@@ -21,20 +27,16 @@ export function getOpenAiApi(): OpenAIApi {
 
   const openai = getOpenAi();
 
-  return new openai.OpenAIApi(
-    new openai.Configuration({
-      apiKey: process.env.OPENAI_API_KEY,
-    }),
-  );
+  return new openai.OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
 }
 
 export async function createOpenAiChatCompletion(
-  request: Omit<CreateChatCompletionRequest, 'model'>,
-): Promise<CreateChatCompletionResponse> {
-  return (
-    await getOpenAiApi().createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      ...request,
-    })
-  ).data;
+  request: Omit<OpenAiChatCompletionRequest, 'model'>,
+): Promise<OpenAiChatCompletionResponse> {
+  return getOpenAiApi().chat.completions.create({
+    model: 'gpt-3.5-turbo',
+    ...request,
+  } as CompletionCreateParamsNonStreaming);
 }

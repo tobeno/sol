@@ -259,7 +259,7 @@ describe('File', () => {
     it('should return the Markdown of the file', async () => {
       const file = TmpFile.create();
       file.text = '# test';
-      expect(file.md.html.value).toEqual('<h1 id="test">test</h1>\n');
+      expect(file.md.html.value).toEqual('<h1>test</h1>\n');
     });
 
     it('should write the Markdown to the file', async () => {

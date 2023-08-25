@@ -482,7 +482,7 @@ describe('Text', () => {
     it('should convert from Markdown', async () => {
       const text = Text.create('# Hello');
       expect(text.md).toBeInstanceOf(Markdown);
-      expect(text.md.html.value).toEqual('<h1 id="hello">Hello</h1>\n');
+      expect(text.md.html.value).toEqual('<h1>Hello</h1>\n');
     });
   });
 

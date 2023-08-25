@@ -1,8 +1,4 @@
 import { createHash } from 'crypto';
-import {
-  ChatCompletionRequestMessage,
-  CreateChatCompletionResponse,
-} from 'openai';
 import { inspect } from 'util';
 import { open } from '../../../utils/open.utils';
 import { Data } from '../../../wrappers/data.wrapper';
@@ -11,9 +7,13 @@ import { Wrapper } from '../../../wrappers/wrapper.wrapper';
 import {
   createOpenAiChatCompletion,
   isOpenAiApiAvailable,
+  OpenAiChatCompletionRequestMessage,
+  OpenAiChatCompletionResponse,
 } from '../utils/open-ai.utils';
 
-export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
+export class AiConversation extends Wrapper<
+  OpenAiChatCompletionRequestMessage[]
+> {
   usage = Data.create({
     promptTokens: 0,
     completionTokens: 0,
@@ -22,7 +22,7 @@ export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
 
   constructor(
     private options: {
-      messages?: ChatCompletionRequestMessage[];
+      messages?: OpenAiChatCompletionRequestMessage[];
       dryRun?: boolean;
     } = {},
   ) {
@@ -57,7 +57,7 @@ export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
     this.value = JSON.parse(String(value));
   }
 
-  get messages(): Data<ChatCompletionRequestMessage[]> {
+  get messages(): Data<OpenAiChatCompletionRequestMessage[]> {
     return Data.create(this.value);
   }
 
@@ -67,8 +67,9 @@ export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
         .filter(
           (
             message,
-          ): message is ChatCompletionRequestMessage & { content: string } =>
-            message.role === 'assistant' && !!message.content,
+          ): message is OpenAiChatCompletionRequestMessage & {
+            content: string;
+          } => message.role === 'assistant' && !!message.content,
         )
         .map((message) => Text.create(message.content)),
     );
@@ -88,8 +89,9 @@ export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
         .filter(
           (
             message,
-          ): message is ChatCompletionRequestMessage & { content: string } =>
-            message.role === 'user' && !!message.content,
+          ): message is OpenAiChatCompletionRequestMessage & {
+            content: string;
+          } => message.role === 'user' && !!message.content,
         )
         .map((message) => Text.create(message.content)),
     );
@@ -135,7 +137,7 @@ export class AiConversation extends Wrapper<ChatCompletionRequestMessage[]> {
         `ai-conversation-response-${this.hash}.json`,
       );
 
-      let response: CreateChatCompletionResponse;
+      let response: OpenAiChatCompletionResponse;
       if (!cacheFile.exists) {
         response = await createOpenAiChatCompletion({
           messages: this.value,
