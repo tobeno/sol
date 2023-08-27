@@ -16,7 +16,7 @@ function wrap<FnType extends (...args: any) => Promise<AxiosResponse>>(
 }
 
 function getAxios() {
-  return require('axios') as typeof import('axios')['default'];
+  return require('axios') as (typeof import('axios'))['default'];
 }
 
 export const web = {
