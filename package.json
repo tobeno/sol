@@ -10,7 +10,7 @@
     "sol": "bin/sol.ts"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=18"
   },
   "scripts": {
     "prepare": "husky install",
