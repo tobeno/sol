@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { Xml } from './xml.wrapper';
 
 describe('Xml', () => {

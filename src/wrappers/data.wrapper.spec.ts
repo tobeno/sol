@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { snakeCase } from 'change-case';
 import { equalsObjectDeep } from '../utils/object.utils';
 import { Data } from './data.wrapper';

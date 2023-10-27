@@ -1,8 +1,9 @@
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { execCommand } from '../utils/shell.utils';
 import { Shell } from './shell.wrapper';
 
 describe('Shell', () => {
-  const testAssetsPath = `${__dirname}/../../test/assets`;
+  const testAssetsPath = `${__dirname}/../test/assets`;
   let shell: Shell;
 
   beforeEach(async () => {

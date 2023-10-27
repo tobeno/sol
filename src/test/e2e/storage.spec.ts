@@ -1,5 +1,6 @@
-import '../../src/setup';
-import { grepFiles } from '../../src/utils/search.utils';
+import { describe, expect, it } from '@jest/globals';
+import '../../setup';
+import { grepFiles } from '../../utils/search.utils';
 
 describe('storage module', () => {
   const testAssetsPath = `${__dirname}/../assets`;

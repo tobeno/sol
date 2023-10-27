@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { globals } from './global.mutation';
 
 describe('global mutation', () => {

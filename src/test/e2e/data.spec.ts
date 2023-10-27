@@ -1,9 +1,10 @@
+import { describe, expect, it } from '@jest/globals';
 import { readFileSync } from 'fs';
 import * as tmp from 'tmp';
-import '../../src/setup';
-import { Data } from '../../src/wrappers/data.wrapper';
-import { File } from '../../src/wrappers/file.wrapper';
-import { Text } from '../../src/wrappers/text.wrapper';
+import '../../setup';
+import { Data } from '../../wrappers/data.wrapper';
+import { File } from '../../wrappers/file.wrapper';
+import { Text } from '../../wrappers/text.wrapper';
 
 interface ProductVariant {
   id: string;

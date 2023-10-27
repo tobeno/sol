@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { getCwd, getEnv } from './env.utils';
 
 describe('env utils', () => {

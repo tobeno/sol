@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { getHelp, getSolMetadata, withSolMetadata } from './metadata.utils';
 
 describe('metadata utils', () => {

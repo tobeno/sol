@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { Wrapper } from '../wrappers/wrapper.wrapper';
 import { isEmpty, isNotEmpty } from './core.utils';
 

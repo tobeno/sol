@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import { codeToAst } from '../modules/transform';
@@ -8,7 +9,7 @@ import { TmpFile } from './tmp-file.wrapper';
 import { Xml } from './xml.wrapper';
 
 describe('File', () => {
-  const testAssetsPath = path.join(__dirname, '../../test/assets');
+  const testAssetsPath = path.join(__dirname, '../test/assets');
 
   describe('create', () => {
     it('should create a file', async () => {

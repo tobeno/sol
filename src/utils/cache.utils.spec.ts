@@ -1,3 +1,4 @@
+import { describe, expect, it, jest } from '@jest/globals';
 import { TmpFile } from '../wrappers/tmp-file.wrapper';
 import { fileCached, runtimeCached } from './cache.utils';
 

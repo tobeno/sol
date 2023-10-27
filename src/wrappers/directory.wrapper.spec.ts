@@ -1,9 +1,10 @@
+import { describe, expect, it } from '@jest/globals';
 import { rmSync } from 'fs';
 import path from 'path';
 import { Directory } from './directory.wrapper';
 
 describe('Directory', () => {
-  const testAssetsPath = path.join(__dirname, '../../test/assets');
+  const testAssetsPath = path.join(__dirname, '../test/assets');
 
   describe('cmd', () => {
     it('should return command for directory', async () => {

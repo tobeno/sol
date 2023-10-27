@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { Html } from './html.wrapper';
 
 describe('Html', () => {
