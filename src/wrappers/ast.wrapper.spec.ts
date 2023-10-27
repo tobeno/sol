@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import * as babelTypes from '@babel/types';
 import { codeToAst } from '../modules/transform';
 import { Ast } from './ast.wrapper';

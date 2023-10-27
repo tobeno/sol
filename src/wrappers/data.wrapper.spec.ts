@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { snakeCase } from 'change-case';
 import { equalsObjectDeep } from '../utils/object.utils';
 import { Data } from './data.wrapper';
@@ -614,7 +614,15 @@ describe('Data', () => {
       const data = Data.create({ a: 1, b: { e: 4 }, c: 3 });
 
       expect(data.get('c')?.value).toEqual(3);
-      expect(data.get('b.e')?.value).toEqual(4);
+    });
+  });
+
+  describe('select', () => {
+    it('should select an item of an object', async () => {
+      const data = Data.create({ a: 1, b: { e: 4 }, c: 3 });
+
+      expect((await data.select('c'))?.value).toEqual(3);
+      expect((await data.select('b.e'))?.value).toEqual(4);
     });
   });
 

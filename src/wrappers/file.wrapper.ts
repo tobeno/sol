@@ -3,12 +3,15 @@ import path from 'path';
 import type { Options as PrettierOptions } from 'prettier';
 import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
 import { log } from '../utils/log.utils';
-import { rerequire } from '../utils/module.utils';
+import { reimport } from '../utils/module.utils';
 import { unwrap } from '../utils/wrapper.utils';
 import { Directory } from './directory.wrapper';
 import { StorageItemCollection } from './storage-item-collection.wrapper';
 import { StorageItem } from './storage-item.wrapper';
 import { Text } from './text.wrapper';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 /**
  * Wrapper for a file.
@@ -252,15 +255,15 @@ export class File extends StorageItem {
   /**
    * Requires the file (cached if already required before).
    */
-  require<ModuleType = any>(): ModuleType {
-    return require(this.path);
+  async import<ModuleType = any>(): Promise<ModuleType> {
+    return import(this.path);
   }
 
   /**
    * Requires the file from the file system again.
    */
-  rerequire<ModuleType = any>(): ModuleType {
-    return rerequire(this.path);
+  async reimport<ModuleType = any>(): Promise<ModuleType> {
+    return reimport(this.path);
   }
 
   /**

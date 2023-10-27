@@ -140,7 +140,7 @@ export async function main() {
       throw new Error(`No play found for '${file.path}'`);
     }
 
-    let result = file.rerequire();
+    let result = await file.reimport();
     if (typeof result.main !== 'undefined') {
       result = await result.main();
     } else if (typeof result.default !== 'undefined') {

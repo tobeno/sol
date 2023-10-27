@@ -1,5 +1,8 @@
 import { Data } from '../wrappers/data.wrapper';
 import { File } from '../wrappers/file.wrapper';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 export interface LoadedModule {
   file: File;

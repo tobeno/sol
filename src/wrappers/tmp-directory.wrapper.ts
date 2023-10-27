@@ -1,4 +1,7 @@
 import { Directory } from './directory.wrapper';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 export class TmpDirectory {
   static create(): Directory {

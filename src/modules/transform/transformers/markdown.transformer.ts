@@ -3,6 +3,9 @@ import { DataType } from '../../../wrappers/data-type.wrapper';
 import { Markdown } from '../../../wrappers/markdown.wrapper';
 import { DataTransformation } from '../data-transformation';
 import { StringTransformer } from './string.transformer';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 /**
  * Transformer for converting Markdowns from and to strings.

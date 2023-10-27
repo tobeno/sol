@@ -37,6 +37,9 @@ import { TmpDirectory } from '../wrappers/tmp-directory.wrapper';
 import { TmpFile } from '../wrappers/tmp-file.wrapper';
 import { Url } from '../wrappers/url.wrapper';
 import { Xml } from '../wrappers/xml.wrapper';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 export const globals = {
   args: withHelp(
@@ -421,7 +424,6 @@ declare global {
 
   // DOM globals
   type BufferSource = any;
-  type FormData = any;
 }
 
 mutateGlobals(definePropertiesMutation(globals));

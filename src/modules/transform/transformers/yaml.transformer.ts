@@ -1,6 +1,9 @@
 import { DataFormat } from '../../../wrappers/data-format.wrapper';
 import { DataType } from '../../../wrappers/data-type.wrapper';
 import { StringTransformer } from './string.transformer';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 /**
  * Transformer for converting YAMLs from and to strings.

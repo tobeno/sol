@@ -3,6 +3,9 @@ import path from 'path';
 import type { Project, SourceFile } from 'ts-morph';
 import { File } from '../wrappers/file.wrapper';
 import { log } from './log.utils';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 export interface MorphOptions {
   dryRun?: boolean;

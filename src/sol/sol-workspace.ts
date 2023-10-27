@@ -7,6 +7,9 @@ import { Directory } from '../wrappers/directory.wrapper';
 import { File } from '../wrappers/file.wrapper';
 import { getLoadedSolExtensions } from './sol-extension';
 import { getSolPackage } from './sol-package';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 /**
  * Class for interacting with a Sol workspace directors.

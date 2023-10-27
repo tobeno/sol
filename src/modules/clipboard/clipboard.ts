@@ -1,5 +1,8 @@
 import type { MaybeWrapped } from '../../interfaces/wrapper.interfaces';
 import { Text } from '../../wrappers/text.wrapper';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 /**
  * Class for interacting with the OS clipboard.

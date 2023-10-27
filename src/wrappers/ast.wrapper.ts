@@ -3,6 +3,9 @@ import type babelTypes from '@babel/types';
 import { inspect } from 'util';
 import { Data } from './data.wrapper';
 import { Wrapper } from './wrapper.wrapper';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 /**
  * Wrapper for a JavaScript / TypeScript AST (Abstract Syntax Tree) node.

@@ -2,6 +2,9 @@ import type sharp from 'sharp';
 import { inspect } from 'util';
 import { File } from '../../../wrappers/file.wrapper';
 import { Wrapper } from '../../../wrappers/wrapper.wrapper';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 export class Image extends Wrapper<Buffer> {
   get buffer(): Buffer {

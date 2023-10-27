@@ -1,4 +1,7 @@
 import type $RefParser from '@apidevtools/json-schema-ref-parser';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 type $Refs = InstanceType<typeof $RefParser>['$refs'];
 

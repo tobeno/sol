@@ -1,7 +1,10 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { rmSync } from 'fs';
 import path from 'path';
 import { Directory } from './directory.wrapper';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 describe('Directory', () => {
   const testAssetsPath = path.join(__dirname, '../test/assets');

@@ -137,7 +137,7 @@ export function titlecaseText(str: string): string {
 }
 
 export function kebabcaseText(str: string): string {
-  return changeCase.paramCase(str);
+  return changeCase.kebabCase(str);
 }
 
 export function constantcaseText(str: string): string {

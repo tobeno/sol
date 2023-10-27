@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import { codeToAst } from '../modules/transform';
@@ -7,6 +7,9 @@ import { Html } from './html.wrapper';
 import { Markdown } from './markdown.wrapper';
 import { TmpFile } from './tmp-file.wrapper';
 import { Xml } from './xml.wrapper';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 describe('File', () => {
   const testAssetsPath = path.join(__dirname, '../test/assets');

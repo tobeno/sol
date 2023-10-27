@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { Ast } from './ast.wrapper';
 import { DataFormat } from './data-format.wrapper';
 import { DataType } from './data-type.wrapper';

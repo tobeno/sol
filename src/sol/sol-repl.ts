@@ -14,11 +14,14 @@ import {
   getAppliedMutations,
 } from '../utils/mutation.utils';
 import { getCurrentSolWorkspace } from './sol-workspace';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 export const solReplColor = {
-  primary: chalk.keyword('coral'),
+  primary: chalk.hex('ff7f50'),
   ok: chalk.hex('83da44'),
-  err: chalk.keyword('crimson'),
+  err: chalk.hex('dc143c'),
   warn: chalk.hex('ddd745'),
   dim: chalk.dim,
 };

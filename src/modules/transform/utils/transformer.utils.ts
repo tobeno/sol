@@ -1,37 +1,13 @@
 import type babelTypes from '@babel/types';
 import type { MaybeWrapped } from '../../../interfaces/wrapper.interfaces';
-import type { Ast } from '../../../wrappers/ast.wrapper';
+import { Ast } from '../../../wrappers/ast.wrapper';
 import { DataFormat } from '../../../wrappers/data-format.wrapper';
 import { DataType } from '../../../wrappers/data-type.wrapper';
-import type { Data } from '../../../wrappers/data.wrapper';
-import type { Markdown } from '../../../wrappers/markdown.wrapper';
-import type { Text } from '../../../wrappers/text.wrapper';
+import { Data } from '../../../wrappers/data.wrapper';
+import { Markdown } from '../../../wrappers/markdown.wrapper';
+import { Text } from '../../../wrappers/text.wrapper';
 import { DataTransformation } from '../data-transformation';
-import type { DataTransformer } from '../transformers/data.transformer';
-
-// Helper functions with dynamic imports to avoid circular dependencies
-function getDataClass(): typeof Data {
-  return require('../../../wrappers/data.wrapper').Data;
-}
-
-function getAstClass(): typeof Ast {
-  return require('../../../wrappers/ast.wrapper').Ast;
-}
-
-function getTextClass(): typeof Text {
-  return require('../../../wrappers/text.wrapper').Text;
-}
-
-function getMarkdownClass(): typeof Markdown {
-  return require('../../../wrappers/markdown.wrapper').Markdown;
-}
-
-function getRootTransformer(): DataTransformer<any, any> {
-  // Import dynamically to avoid circular imports
-  const { getRootTransformer } = require('../transformers/root.transformer');
-
-  return getRootTransformer();
-}
+import { getRootTransformer } from '../transformers/root.transformer';
 
 export function transform<InputType = any, OutputType = any>(
   input: InputType,
@@ -47,10 +23,7 @@ export function transform<InputType = any, OutputType = any>(
 export function jsonToData<ValueType = any>(
   value: MaybeWrapped<string> | any,
 ): Data<ValueType> {
-  const Text = getTextClass();
   if (value && typeof value === 'object' && !(value instanceof Text)) {
-    const Data = getDataClass();
-
     return Data.create(value) as any;
   }
 
@@ -66,7 +39,6 @@ export function jsonToData<ValueType = any>(
 }
 
 export function dataToJson(value: Data | any): Text {
-  const Data = getDataClass();
   value = Data.create(value);
 
   return transform(
@@ -81,7 +53,6 @@ export function dataToJson(value: Data | any): Text {
 export function yamlToData<ValueType = any>(
   value: MaybeWrapped<string>,
 ): Data<ValueType> {
-  const Text = getTextClass();
   value = Text.create(value, DataFormat.Yaml);
 
   return transform(
@@ -94,7 +65,6 @@ export function yamlToData<ValueType = any>(
 }
 
 export function dataToYaml(value: Data | any): Text {
-  const Data = getDataClass();
   value = Data.create(value);
 
   return transform(
@@ -109,7 +79,6 @@ export function dataToYaml(value: Data | any): Text {
 export function csvToData<ValueType = any>(
   value: MaybeWrapped<string>,
 ): Data<ValueType> {
-  const Text = getTextClass();
   value = Text.create(value, DataFormat.Csv);
 
   return transform(
@@ -122,7 +91,6 @@ export function csvToData<ValueType = any>(
 }
 
 export function dataToCsv(value: Data | any): Text {
-  const Data = getDataClass();
   value = Data.create(value);
 
   return transform(
@@ -137,7 +105,6 @@ export function dataToCsv(value: Data | any): Text {
 export function codeToAst(
   value: MaybeWrapped<string> | Ast | babelTypes.Node,
 ): Ast {
-  const Ast = getAstClass();
   if (value instanceof Ast) {
     return value;
   }
@@ -146,21 +113,18 @@ export function codeToAst(
     return new Ast(value);
   }
 
-  const Text = getTextClass();
   value = Text.create(value, null);
 
   return transform(value, new DataTransformation(DataType.Text, DataType.Ast));
 }
 
 export function astToCode(value: Ast | any): Text {
-  const Ast = getAstClass();
   value = Ast.create(value);
 
   return transform(value, new DataTransformation(DataType.Ast, DataType.Text));
 }
 
 export function markdownToHtml(value: Markdown | MaybeWrapped<string>): Text {
-  const Markdown = getMarkdownClass();
   value = Markdown.create(value);
 
   return transform(

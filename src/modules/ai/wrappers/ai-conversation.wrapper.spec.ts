@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { unwrapDeep } from '../../../utils/wrapper.utils';
 import { AiConversation } from './ai-conversation.wrapper';
 

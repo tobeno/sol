@@ -21,6 +21,9 @@ import {
 import { StorageItem } from './storage-item.wrapper';
 import { Text } from './text.wrapper';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 /**
  * Wrapper for a directory.
  */

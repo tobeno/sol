@@ -4,6 +4,9 @@ import { Directory } from '../wrappers/directory.wrapper';
 import { File } from '../wrappers/file.wrapper';
 import { getSolPackage } from './sol-package';
 import { getCurrentSolWorkspace, getSolUserWorkspace } from './sol-workspace';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 /**
  * Class for loading a Sol extension.

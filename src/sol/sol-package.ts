@@ -1,6 +1,9 @@
 import path from 'path';
 import { Directory } from '../wrappers/directory.wrapper';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 /**
  * Class for working with the Sol package / library.
  */

@@ -1,11 +1,11 @@
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it, vi } from 'vitest';
 import { TmpFile } from '../wrappers/tmp-file.wrapper';
 import { fileCached, runtimeCached } from './cache.utils';
 
 describe('cache', () => {
   describe('runtimeCached', () => {
     it('should cache the value', async () => {
-      const fn = jest.fn().mockReturnValue('value');
+      const fn = vi.fn().mockReturnValue('value');
 
       expect(runtimeCached('test', fn)).toBe('value');
       expect(fn).toHaveBeenCalledTimes(1);
@@ -16,7 +16,7 @@ describe('cache', () => {
 
   describe('fileCached', () => {
     it('should cache the value', async () => {
-      const fn = jest.fn().mockReturnValue('value');
+      const fn = vi.fn().mockReturnValue('value');
 
       const tmpFile = TmpFile.create();
 

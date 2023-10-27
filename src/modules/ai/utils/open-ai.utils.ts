@@ -4,6 +4,9 @@ import type {
   CompletionCreateParamsNonStreaming,
   CreateChatCompletionRequestMessage,
 } from 'openai/resources/chat/completions';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 export type OpenAiChatCompletionRequestMessage =
   CreateChatCompletionRequestMessage;

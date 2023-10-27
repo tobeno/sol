@@ -392,25 +392,39 @@ export class Data<
     throw new Error('Not an array.');
   }
 
-  /**
-   * Returns the data at the given path, index or jsonata expression.
-   */
-  get(path: string | number | jsonata.Expression): Data | Text | null {
-    let result: any;
-    if (typeof path === 'string') {
-      const jsonata = require('jsonata') as typeof import('jsonata');
+  async select(path: string): Promise<Data | Text | null> {
+    const jsonata = (await import('jsonata')).default;
 
+    let result: any;
+    if (path && typeof path === 'object') {
+      result = await (path as jsonata.Expression).evaluate(this.value);
+    } else {
       const expression = jsonata(path);
 
-      result = expression.evaluate(this.value);
-    } else if (path && typeof path === 'object') {
-      result = path.evaluate(this.value);
+      result = await expression.evaluate(this.value);
+    }
+
+    if (result === null || result === undefined) {
+      return null;
+    }
+
+    if (typeof result === 'string' || result instanceof Text) {
+      return Text.create(result);
+    }
+
+    return Data.create(result);
+  }
+
+  /**
+   * Returns the data at the given key or index
+   */
+  get(path: string | number): Data | Text | null {
+    let result: any;
+
+    if (this.value && typeof this.value === 'object' && 'at' in this.value) {
+      result = (this.value as any).at(path) || null;
     } else {
-      if (this.value && typeof this.value === 'object' && 'at' in this.value) {
-        result = (this.value as any).at(path) || null;
-      } else {
-        result = (this.value as any)[path] || null;
-      }
+      result = (this.value as any)[path] || null;
     }
 
     if (result === null || result === undefined) {

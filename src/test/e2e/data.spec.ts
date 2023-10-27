@@ -1,10 +1,14 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'fs';
 import * as tmp from 'tmp';
 import '../../setup';
 import { Data } from '../../wrappers/data.wrapper';
 import { File } from '../../wrappers/file.wrapper';
 import { Text } from '../../wrappers/text.wrapper';
+import path from 'path';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 interface ProductVariant {
   id: string;

@@ -2,6 +2,9 @@ import fastDeepEqual from 'fast-deep-equal/es6';
 import type { DeepPartial } from '../interfaces/helper.interfaces';
 import { isObject } from './core.utils';
 import { unwrapDeep } from './wrapper.utils';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 export function intersectObjectKeys<
   T extends Record<string, any>,

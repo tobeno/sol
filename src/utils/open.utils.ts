@@ -1,4 +1,4 @@
-import openInternal from 'open';
+import * as openInternal from 'open';
 import { catchAsyncErrors } from './async.utils';
 import { unwrap } from './wrapper.utils';
 
@@ -47,7 +47,7 @@ export function open(
   value = unwrap(value);
 
   catchAsyncErrors(
-    openInternal(value, {
+    openInternal.default(value, {
       ...options,
       ...(app
         ? {

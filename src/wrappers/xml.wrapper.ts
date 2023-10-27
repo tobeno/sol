@@ -8,6 +8,9 @@ import { DataFormat } from './data-format.wrapper';
 import { Data } from './data.wrapper';
 import { Text } from './text.wrapper';
 import { Wrapper } from './wrapper.wrapper';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 /**
  * Wrapper for XML documents or snippets.

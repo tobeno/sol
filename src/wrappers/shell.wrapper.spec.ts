@@ -1,7 +1,10 @@
-import { describe, expect, it, beforeEach } from '@jest/globals';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { execCommand } from '../utils/shell.utils';
 import { Shell } from './shell.wrapper';
+import path from 'path';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 describe('Shell', () => {
   const testAssetsPath = `${__dirname}/../test/assets`;
   let shell: Shell;

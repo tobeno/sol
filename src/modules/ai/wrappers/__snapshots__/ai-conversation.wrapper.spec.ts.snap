@@ -1,41 +1,12 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AiConversation ask should ask a question with custom system message: answers 1`] = `
+exports[`AiConversation > ask > should ask a question > answers 1`] = `
 [
   "This is a dry run",
 ]
 `;
 
-exports[`AiConversation ask should ask a question with custom system message: messages 1`] = `
-[
-  {
-    "content": "You are a test assistant.",
-    "role": "system",
-  },
-  {
-    "content": "Hello",
-    "role": "user",
-  },
-  {
-    "content": "This is a dry run",
-    "role": "assistant",
-  },
-]
-`;
-
-exports[`AiConversation ask should ask a question with custom system message: questions 1`] = `
-[
-  "Hello",
-]
-`;
-
-exports[`AiConversation ask should ask a question: answers 1`] = `
-[
-  "This is a dry run",
-]
-`;
-
-exports[`AiConversation ask should ask a question: messages 1`] = `
+exports[`AiConversation > ask > should ask a question > messages 1`] = `
 [
   {
     "content": "You are a helpful assistant.",
@@ -52,22 +23,51 @@ exports[`AiConversation ask should ask a question: messages 1`] = `
 ]
 `;
 
-exports[`AiConversation ask should ask a question: questions 1`] = `
+exports[`AiConversation > ask > should ask a question > questions 1`] = `
 [
   "Hello",
 ]
 `;
 
-exports[`AiConversation askCode should ask a question with custom system message: answers 1`] = `
+exports[`AiConversation > ask > should ask a question with custom system message > answers 1`] = `
 [
   "This is a dry run",
 ]
 `;
 
-exports[`AiConversation askCode should ask a question with custom system message: messages 1`] = `
+exports[`AiConversation > ask > should ask a question with custom system message > messages 1`] = `
 [
   {
     "content": "You are a test assistant.",
+    "role": "system",
+  },
+  {
+    "content": "Hello",
+    "role": "user",
+  },
+  {
+    "content": "This is a dry run",
+    "role": "assistant",
+  },
+]
+`;
+
+exports[`AiConversation > ask > should ask a question with custom system message > questions 1`] = `
+[
+  "Hello",
+]
+`;
+
+exports[`AiConversation > askCode > should ask a question > answers 1`] = `
+[
+  "This is a dry run",
+]
+`;
+
+exports[`AiConversation > askCode > should ask a question > messages 1`] = `
+[
+  {
+    "content": "You are a helpful assistant.",
     "role": "system",
   },
   {
@@ -82,23 +82,23 @@ ONLY CODE, NOTHING ELSE",
 ]
 `;
 
-exports[`AiConversation askCode should ask a question with custom system message: questions 1`] = `
+exports[`AiConversation > askCode > should ask a question > questions 1`] = `
 [
   "Hello
 ONLY CODE, NOTHING ELSE",
 ]
 `;
 
-exports[`AiConversation askCode should ask a question: answers 1`] = `
+exports[`AiConversation > askCode > should ask a question with custom system message > answers 1`] = `
 [
   "This is a dry run",
 ]
 `;
 
-exports[`AiConversation askCode should ask a question: messages 1`] = `
+exports[`AiConversation > askCode > should ask a question with custom system message > messages 1`] = `
 [
   {
-    "content": "You are a helpful assistant.",
+    "content": "You are a test assistant.",
     "role": "system",
   },
   {
@@ -113,7 +113,7 @@ ONLY CODE, NOTHING ELSE",
 ]
 `;
 
-exports[`AiConversation askCode should ask a question: questions 1`] = `
+exports[`AiConversation > askCode > should ask a question with custom system message > questions 1`] = `
 [
   "Hello
 ONLY CODE, NOTHING ELSE",

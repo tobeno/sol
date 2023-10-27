@@ -8,6 +8,9 @@ import {
 } from '../wrappers/storage-item-collection.wrapper';
 import { isNotEmpty } from './core.utils';
 import { Shell } from '../wrappers/shell.wrapper';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 /**
  * Returns all files matching the given (RegExp) pattern.

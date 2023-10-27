@@ -1,5 +1,8 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Response } from '../wrappers/response.wrapper';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 function wrap<FnType extends (...args: any) => Promise<AxiosResponse>>(
   makeFn: () => FnType,

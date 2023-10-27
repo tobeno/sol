@@ -2,6 +2,9 @@ import { parse as recastParse, print as recastPrint } from 'recast';
 import { Ast } from '../../../wrappers/ast.wrapper';
 import { DataType } from '../../../wrappers/data-type.wrapper';
 import { StringTransformer } from './string.transformer';
+import module from 'node:module';
+
+const require = module.createRequire(import.meta.url);
 
 /**
  * Transformer for converting ASTs from and to strings.

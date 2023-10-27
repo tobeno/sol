@@ -1,6 +1,10 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import '../../setup';
 import { grepFiles } from '../../utils/search.utils';
+import path from 'path';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 describe('storage module', () => {
   const testAssetsPath = `${__dirname}/../assets`;
