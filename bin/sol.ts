@@ -1,6 +1,5 @@
 #!/usr/bin/env tsx
 
-import '../src/optimize';
 import '../src/setup';
 import { loadSol } from '../src/sol/sol-setup';
 
