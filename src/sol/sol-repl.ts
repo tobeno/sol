@@ -59,8 +59,18 @@ function prepareSolCommand(cmd: string): string {
       plugins: ['typescript'],
     });
 
+    let traverseFn: (typeof import('@babel/traverse'))['default'] = traverse;
+    if ('default' in traverseFn) {
+      traverseFn = traverseFn.default as any;
+    }
+
+    let generateFn: (typeof import('@babel/generator'))['default'] = generate;
+    if ('default' in generateFn) {
+      generateFn = generateFn.default as any;
+    }
+
     // Replace something.await with await something
-    traverse(cmdRootNode, {
+    traverseFn(cmdRootNode, {
       Identifier(path) {
         if (
           path.node.name === 'await' &&
@@ -76,8 +86,9 @@ function prepareSolCommand(cmd: string): string {
     });
 
     // Regenerate command
-    preparedCmd = generate(cmdRootNode, {}).code;
+    preparedCmd = generateFn(cmdRootNode, {}).code;
   } catch (e) {
+    console.log(e);
     // Ignore babel errors and let the VM handle it
   }
 
