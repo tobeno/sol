@@ -4,14 +4,14 @@ import { getCurrentSolWorkspace, getSolUserWorkspace } from './sol-workspace';
 /**
  * Initializes Sol globals and extensions.
  */
-export function loadSol(): void {
+export async function loadSol(): Promise<void> {
   logDebug('Loading Sol...');
 
   const workspace = getCurrentSolWorkspace();
   const userWorkspace = getSolUserWorkspace();
 
-  userWorkspace.load();
-  workspace.load();
+  await userWorkspace.load();
+  await workspace.load();
 
   // Update context files again
   userWorkspace.updateContextFile();

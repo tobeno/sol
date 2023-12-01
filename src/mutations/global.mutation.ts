@@ -36,8 +36,11 @@ import { Text } from '../wrappers/text.wrapper';
 import { TmpDirectory } from '../wrappers/tmp-directory.wrapper';
 import { TmpFile } from '../wrappers/tmp-file.wrapper';
 import { Url } from '../wrappers/url.wrapper';
+import * as day from '../utils/day.utils';
+import { morphProject } from '../utils/morph.utils';
 import { Xml } from '../wrappers/xml.wrapper';
 import module from 'node:module';
+import { jwt } from '../utils/jwt.utils';
 
 const require = module.createRequire(import.meta.url);
 
@@ -83,20 +86,10 @@ export const globals = {
   day: withHelp(
     {
       get() {
-        return require('../utils/day.utils').day;
+        return day;
       },
     },
     'See https://day.js.org/docs/en/installation/installation',
-  ),
-  debug: withHelp(
-    {
-      get() {
-        return {
-          ...require('../utils/debug.utils'),
-        };
-      },
-    },
-    'Debug utils',
   ),
   dir: withHelp(
     {
@@ -121,8 +114,6 @@ export const globals = {
   exec: withHelp(
     {
       get() {
-        const { Shell } =
-          require('../wrappers/shell.wrapper') as typeof import('../wrappers/shell.wrapper');
         const shell = Shell.create();
 
         return shell.exec.bind(shell);
@@ -191,7 +182,7 @@ export const globals = {
   jwt: withHelp(
     {
       get() {
-        return require('../utils/jwt.utils').jwt;
+        return jwt;
       },
     },
     'See https://github.com/auth0/node-jsonwebtoken#readme',
@@ -219,7 +210,7 @@ export const globals = {
   morphProject: withHelp(
     {
       get() {
-        return require('../utils/morph.utils').morphProject;
+        return morphProject;
       },
     },
     'Returns ts-morph project for the current working directory',
@@ -281,7 +272,7 @@ export const globals = {
   sol: withHelp(
     {
       get() {
-        return require('../index');
+        return import('../index');
       },
     },
     'Returns the extension for the given name or path',
@@ -386,7 +377,6 @@ declare global {
   const cwd: Globals['cwd'];
   const data: Globals['data'];
   const day: Globals['day'];
-  const debug: Globals['debug'];
   const dir: Globals['dir'];
   const dirs: Globals['dirs'];
   const env: Globals['env'];

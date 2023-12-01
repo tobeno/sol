@@ -14,7 +14,7 @@ import { loadSol } from '../src/sol/sol-setup';
     );
   }
 
-  loadSol();
+  await loadSol();
 
   const args = process.argv.slice(2);
   if (args.length > 0 && args[0] !== '--') {

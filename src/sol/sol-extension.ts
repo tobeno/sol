@@ -4,9 +4,6 @@ import { Directory } from '../wrappers/directory.wrapper';
 import { File } from '../wrappers/file.wrapper';
 import { getSolPackage } from './sol-package';
 import { getCurrentSolWorkspace, getSolUserWorkspace } from './sol-workspace';
-import module from 'node:module';
-
-const require = module.createRequire(import.meta.url);
 
 /**
  * Class for loading a Sol extension.
@@ -104,7 +101,7 @@ mutateGlobals(definePropertiesMutation(globals));
   /**
    * Loads the Sol extension using its setup file.
    */
-  load(): void {
+  async load(): Promise<void> {
     if (this.loaded) {
       return;
     }
@@ -116,7 +113,7 @@ mutateGlobals(definePropertiesMutation(globals));
     this.prepare();
 
     try {
-      require(this.setupFile.path);
+      await import(this.setupFile.path);
       logDebug(`Loaded setup file at ${this.setupFile.path}`);
     } catch (e) {
       this.setupFile.delete();

@@ -7,9 +7,6 @@ import { Directory } from '../wrappers/directory.wrapper';
 import { File } from '../wrappers/file.wrapper';
 import { getLoadedSolExtensions } from './sol-extension';
 import { getSolPackage } from './sol-package';
-import module from 'node:module';
-
-const require = module.createRequire(import.meta.url);
 
 /**
  * Class for interacting with a Sol workspace directors.
@@ -48,6 +45,13 @@ export class SolWorkspace {
    */
   get setupFile(): File {
     return this.dir.file('setup.ts');
+  }
+
+  /**
+   * Setup file of the workspace.
+   */
+  get packageFile(): File {
+    return this.dir.file('package.json');
   }
 
   /**
@@ -119,12 +123,23 @@ import { solExtension } from '${solPackage.dir.relativePathFrom(
 // solExtension('your-extension', __dirname).load();
 `.trimStart();
     }
+
+    const packageFile = this.packageFile;
+
+    if (!packageFile.exists || force) {
+      packageFile.create();
+      packageFile.text = `
+{
+  "type": "module"
+}
+`.trimStart();
+    }
   }
 
   /**
    * Loads the workspace as well as its setup.ts and .env file.
    */
-  load(): void {
+  async load(): Promise<void> {
     if (this.loaded) {
       return;
     }
@@ -136,7 +151,7 @@ import { solExtension } from '${solPackage.dir.relativePathFrom(
     this.prepare();
 
     try {
-      require(this.setupFile.pathWithoutExt);
+      await import(this.setupFile.pathWithoutExt);
       logDebug(`Loaded setup file at ${this.setupFile.path}`);
     } catch (e) {
       this.setupFile.delete();
