@@ -8,9 +8,9 @@ exports[`Data > csv > should return CSV 1`] = `
 
 exports[`Data > json > should return JSON 1`] = `
 "{
-  \\"a\\": 1,
-  \\"b\\": 2,
-  \\"c\\": 3
+  "a": 1,
+  "b": 2,
+  "c": 3
 }"
 `;
 
