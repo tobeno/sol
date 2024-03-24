@@ -6,26 +6,20 @@ export type Constructor<T extends object = {}> = new (...args: any[]) => T;
 
 export type ArrayItem<T extends Array<any>> = T extends (infer U)[] ? U : never;
 
-export type ObjectItem<T extends Record<string, any>> = T extends Record<
-  string,
-  infer U
->
-  ? U
-  : never;
+export type ObjectItem<T extends Record<string, any>> =
+  T extends Record<string, infer U> ? U : never;
 
-export type AnyItem<T> = T extends Array<any>
-  ? ArrayItem<T>
-  : T extends Record<string, any>
-  ? ObjectItem<T>
-  : any;
+export type AnyItem<T> =
+  T extends Array<any>
+    ? ArrayItem<T>
+    : T extends Record<string, any>
+      ? ObjectItem<T>
+      : any;
 
 export type AnyKeyType<T> = T extends Array<any> ? number : string;
 
-export type AnyPartial<T> = T extends Array<any>
-  ? T
-  : T extends Record<string, any>
-  ? T
-  : Partial<T>;
+export type AnyPartial<T> =
+  T extends Array<any> ? T : T extends Record<string, any> ? T : Partial<T>;
 
 /**
  * Returns a new version of T where the keys included in K are optional.

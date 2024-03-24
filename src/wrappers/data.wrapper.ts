@@ -844,8 +844,8 @@ export class Data<
     ValueType extends Array<any>
       ? MappedItemType[]
       : ValueType extends Record<string, any>
-      ? { [key: string]: MappedItemType }
-      : any
+        ? { [key: string]: MappedItemType }
+        : any
   > {
     if (Array.isArray(this.value)) {
       return Data.create((this.value as any).map(cb as any) as any) as any;
