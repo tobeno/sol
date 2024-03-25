@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import * as vm from 'vm';
+import { prepareSolCommand } from '../sol/sol-command';
 import {
   definePropertiesMutation,
   mutateGlobals,
@@ -24,6 +25,8 @@ export function pipeCommand(): Command {
       // Build full command (by passing input)
       const fullCommand = `input${command}`;
 
+      const preparedCommand = prepareSolCommand(command);
+
       mutateGlobals(
         definePropertiesMutation({
           input: {
@@ -33,7 +36,7 @@ export function pipeCommand(): Command {
       );
 
       // Use VM to execute command in a sandbox
-      const output = vm.runInThisContext(fullCommand);
+      const output = await vm.runInThisContext(preparedCommand);
 
       // Write output to stdout
       log(output);
