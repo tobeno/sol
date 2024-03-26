@@ -25,7 +25,7 @@ export function pipeCommand(): Command {
       // Build full command (by passing input)
       const fullCommand = `input${command}`;
 
-      const preparedCommand = prepareSolCommand(command);
+      const preparedCommand = prepareSolCommand(fullCommand);
 
       mutateGlobals(
         definePropertiesMutation({
