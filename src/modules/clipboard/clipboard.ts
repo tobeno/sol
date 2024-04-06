@@ -12,14 +12,16 @@ export class Clipboard {
    * Returns the clipboard contents as a string.
    */
   get value(): string {
-    return require('clipboardy').readSync();
+    const clipboardy = require('clipboardy').default;
+    return clipboardy.readSync();
   }
 
   /**
    * Sets the clipboard contents.
    */
   set value(value: MaybeWrapped<string>) {
-    require('clipboardy').writeSync(String(value));
+    const clipboardy = require('clipboardy').default;
+    clipboardy.writeSync(String(value));
   }
 
   /**
