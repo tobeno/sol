@@ -61,7 +61,7 @@
     "sharp": "^0.33.4",
     "strip-json-comments": "^5.0.1",
     "tmp": "^0.2.3",
-    "ts-morph": "^22.0.0",
+    "ts-morph": "^23.0.0",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3",
     "yaml": "^2.4.5"
@@ -85,7 +85,7 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
     "prettier": "^3.3.2",
-    "rimraf": "^5.0.9",
+    "rimraf": "^6.0.1",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^2.0.2"
   },
