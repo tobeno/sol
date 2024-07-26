@@ -286,6 +286,34 @@ describe('Text', () => {
     });
   });
 
+  describe('appendLine', () => {
+    it('should append a line', async () => {
+      const text = Text.create('Hello');
+      expect(text.appendLine('World').value).toEqual('Hello\nWorld');
+    });
+  });
+
+  describe('prependLine', () => {
+    it('should prepend a line', async () => {
+      const text = Text.create('World');
+      expect(text.prependLine('Hello').value).toEqual('Hello\nWorld');
+    });
+  });
+
+  describe('append', () => {
+    it('should append', async () => {
+      const text = Text.create('Hello');
+      expect(text.append(' World').value).toEqual('Hello World');
+    });
+  });
+
+  describe('prepend', () => {
+    it('should prepend', async () => {
+      const text = Text.create('World');
+      expect(text.prepend('Hello ').value).toEqual('Hello World');
+    });
+  });
+
   describe('replace', () => {
     it('should replace', async () => {
       const text = Text.create('Hello\nHello');

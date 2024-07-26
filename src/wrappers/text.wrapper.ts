@@ -256,6 +256,34 @@ export class Text extends Wrapper<string> {
   }
 
   /**
+   * Appends the line at the end of this string.
+   */
+  appendLine(line: string): Text {
+    return this.append(`\n${line}`);
+  }
+
+  /**
+   * Prepends the line at the start of this string.
+   */
+  prependLine(line: string): Text {
+    return this.prepend(`${line}\n`);
+  }
+
+  /**
+   * Appends the text at the end of this string.
+   */
+  append(text: string): Text {
+    return Text.create(this.value + text, this.format);
+  }
+
+  /**
+   * Prepends the text at the start of this string.
+   */
+  prepend(text: string): Text {
+    return Text.create(text + this.value, this.format);
+  }
+
+  /**
    * Returns the text with the pattern replaced by the replacement.
    */
   replace(pattern: string | RegExp, replacement: string): Text;
