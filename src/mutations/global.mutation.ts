@@ -272,10 +272,10 @@ export const globals = {
   sol: withHelp(
     {
       get() {
-        return import('../index');
+        return require('../index') as typeof import('../index');
       },
     },
-    'Returns the extension for the given name or path',
+    'Returns all sol globals',
   ),
   solExtension: withHelp(
     {
@@ -345,12 +345,6 @@ export const globals = {
     },
     'Temporary file',
   ),
-  url: withHelp(
-    {
-      value: Url.create,
-    },
-    'Wraps a text URL as a Url',
-  ),
   web: withHelp(
     {
       value: web,
@@ -360,12 +354,6 @@ export const globals = {
   withHelp: {
     value: withHelp,
   },
-  xml: withHelp(
-    {
-      value: Xml.create,
-    },
-    'Wraps the given string as Xml',
-  ),
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;

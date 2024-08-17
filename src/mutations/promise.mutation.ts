@@ -9,13 +9,17 @@ declare global {
   }
 }
 
-mutateClass(
-  Promise,
-  definePropertiesMutation({
-    await: {
-      get(): any {
-        throw new Error('Only works in REPL.');
+try {
+  mutateClass(
+    Promise,
+    definePropertiesMutation({
+      await: {
+        get(): any {
+          throw new Error('Only works in REPL.');
+        },
       },
-    },
-  }),
-);
+    }),
+  );
+} catch {
+  // Ignore if not modifiable
+}
