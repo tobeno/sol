@@ -73,11 +73,11 @@ Or this:
 
 ## ⚙️ Install
 
-To use Sol, you need to have NodeJS >= 14 installed globally.
+### Using NodeJS
 
 To setup:
 
-1. Install NodeJS >= 16
+1. Install NodeJS >= 18
 2. Setup the project
    ```sh
    git clone git@github.com:tobeno/sol.git
@@ -88,6 +88,24 @@ To setup:
    ```sh
    # On MacOS, Linux and WSL from inside the sol folder
    ln -s $(pwd)/bin/sol /usr/local/bin/sol
+   ```
+4. Optional: Define environment variables for Sol (like `SOL_EDITOR`) in a `~/.sol/.env` file
+
+### Using Bun
+
+To setup:
+
+1. Install Bun >= 1.1.12 and NodeJS >= 18 (required for REPL)
+2. Setup the project
+   ```sh
+   git clone git@github.com:tobeno/sol.git
+   cd sol
+   npm i
+   ```
+3. Symlink or alias the _bin/sol_ file to allow you to run it from anywhere
+   ```sh
+   # On MacOS, Linux and WSL from inside the sol folder
+   ln -s $(pwd)/bin/sol-bun /usr/local/bin/sol
    ```
 4. Optional: Define environment variables for Sol (like `SOL_EDITOR`) in a `~/.sol/.env` file
 
