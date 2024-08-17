@@ -63,7 +63,7 @@ mutateClass(
     ${this.text}
   </body>
 </html>
-;`;
+`;
         }
 
         tmpFile.text = content;
