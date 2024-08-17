@@ -4,7 +4,7 @@ import { Text } from '../../../wrappers/text.wrapper';
 
 export interface ChartOptions extends ApexOptions {
   name?: string;
-  type?: NonNullable<ApexOptions['chart']>['type'];
+  type?: NonNullable<ApexOptions['chart']>['type'] | 'barx' | 'bary';
   /**
    * Data for the chart (shortcut for specifying series)
    *
@@ -39,19 +39,45 @@ export class Chart {
   constructor(options: ChartOptions) {
     const { data, type, name, ...otherOptions } = options;
 
-    const preparedOptions: ApexOptions = {
+    const preparedOptions: ApexOptions & {
+      chart: NonNullable<ApexOptions['chart']>;
+      plotOptions: NonNullable<ApexOptions['plotOptions']>;
+    } = {
       ...otherOptions,
-      chart: {
-        type: type || 'bar',
-        ...(otherOptions.chart || {}),
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true,
-        },
-        ...(otherOptions.plotOptions || {}),
-      },
+      chart: {},
+      plotOptions: {},
     };
+
+    if (type === 'bar' || type === 'bary' || !type) {
+      preparedOptions.chart.type = 'bar';
+      preparedOptions.plotOptions.bar = {
+        horizontal: true,
+      };
+    } else if (type === 'barx') {
+      preparedOptions.chart.type = 'bar';
+      preparedOptions.plotOptions.bar = {
+        horizontal: false,
+      };
+    }
+
+    preparedOptions.chart = {
+      ...preparedOptions.chart,
+      ...(otherOptions.chart || {}),
+    };
+
+    if (otherOptions.plotOptions) {
+      (
+        Object.entries(otherOptions.plotOptions) as [
+          key: keyof ApexPlotOptions,
+          value: any,
+        ][]
+      ).forEach(([key, value]) => {
+        preparedOptions.plotOptions[key] = {
+          ...(preparedOptions.plotOptions[key] || {}),
+          ...value,
+        };
+      });
+    }
 
     if (data) {
       let series: ApexAxisChartSeries;
