@@ -3,9 +3,9 @@
 SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 
-# Use bun when arguments are passed
-if [ "$#" -gt 0 ]; then
-  bun run --tsconfig-override $SCRIPTPATH/../tsconfig.json $SCRIPTPATH/sol.ts "$@"
+# Use bun when arguments are passed and the first one is not --
+if [ "$#" -gt 0 ] && [ "$1" != "--" ]; then
+  bun run --tsconfig-override $SCRIPTPATH/../tsconfig.json $SCRIPTPATH/sol.ts -- "$@"
 else
   $SCRIPTPATH/../node_modules/.bin/tsx --tsconfig $SCRIPTPATH/../tsconfig.json $SCRIPTPATH/sol.ts "$@"
 fi
