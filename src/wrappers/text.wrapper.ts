@@ -29,7 +29,7 @@ import { Wrapper } from './wrapper.wrapper';
 /**
  * Wrapper for strings.
  */
-export class Text extends Wrapper<string> {
+class Text extends Wrapper<string> {
   constructor(
     value: string,
     public format: string | null = null,
@@ -484,6 +484,15 @@ export class Text extends Wrapper<string> {
       value = String(value);
     }
 
-    return new Text(value, format);
+    return withHelp(
+      new Text(value, format),
+      `
+Text wrapper
+
+Usage:
+text('test').uppercased;
+text('test').lines.map(l => l.uppercased)
+`,
+    );
   }
 }

@@ -2,6 +2,7 @@ import generate from '@babel/generator';
 import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';
 import * as t from '@babel/types';
+import { getHelp } from '../utils/metadata.utils';
 
 export function prepareSolCommand(cmd: string): string {
   let preparedCmd = cmd.trim();
@@ -44,6 +45,17 @@ export function prepareSolCommand(cmd: string): string {
           const objectNode = memberExpressionNode.object;
 
           path.parentPath.replaceWith(t.awaitExpression(objectNode));
+        } else if (
+          path.node.name === 'help' &&
+          path.parent &&
+          path.parent.type === 'MemberExpression'
+        ) {
+          const memberExpressionNode = path.parent;
+          const objectNode = memberExpressionNode.object;
+
+          path.parentPath.replaceWith(
+            t.callExpression(t.identifier('printHelp'), [objectNode]),
+          );
         }
       },
     });

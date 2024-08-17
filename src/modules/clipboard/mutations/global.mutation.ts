@@ -11,14 +11,11 @@ import {
 import { getClipboard } from '../../clipboard/clipboard';
 
 export const globals = {
-  clipboard: withHelp(
-    {
-      get() {
-        return getClipboard();
-      },
+  clipboard: {
+    get() {
+      return withHelp(getClipboard(), 'Exposes the system clipboard');
     },
-    'Exposes the system clipboard',
-  ),
+  },
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;

@@ -11,32 +11,23 @@ import {
 import { getPlays, play, playFile, replay } from '../utils/play.utils';
 
 export const globals = {
-  play: withHelp(
-    {
-      value: play,
+  play: {
+    value: withHelp(play, 'Opens a given play file for interactive editing'),
+  },
+  playFile: {
+    value: withHelp(
+      playFile,
+      'Returns a PlayFile instance for the given path or file',
+    ),
+  },
+  plays: {
+    get() {
+      return withHelp(getPlays(), 'Returns available play files');
     },
-    'Opens a given play file for interactive editing',
-  ),
-  playFile: withHelp(
-    {
-      value: playFile,
-    },
-    'Returns a PlayFile instance for the given path or file',
-  ),
-  plays: withHelp(
-    {
-      get() {
-        return getPlays();
-      },
-    },
-    'Returns available play files',
-  ),
-  replay: withHelp(
-    {
-      value: replay,
-    },
-    'Replays the given play file',
-  ),
+  },
+  replay: {
+    value: withHelp(replay, 'Replays the given play file'),
+  },
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;

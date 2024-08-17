@@ -24,12 +24,21 @@ export function withSolMetadata<T>(target: T, meta: SolMetadata): T {
 
 export function withHelp<T>(target: T, help: string): T {
   return withSolMetadata(target, {
-    help,
+    help: help.trim(),
   });
 }
 
 export function getHelp(target: any): string | null {
   return getSolMetadata(target)?.help || null;
+}
+
+export function printHelp<T>(target: T): T {
+  const help = getHelp(target);
+  if (help) {
+    log(help);
+  }
+
+  return target;
 }
 
 export function getSolMetadata(target: any): SolMetadata {

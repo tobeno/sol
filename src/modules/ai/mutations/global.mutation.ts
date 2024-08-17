@@ -11,18 +11,12 @@ import {
 import { askAi, askAiCode } from '../utils/ai.utils';
 
 export const globals = {
-  ask: withHelp(
-    {
-      value: askAi,
-    },
-    'Ask AI a question',
-  ),
-  askCode: withHelp(
-    {
-      value: askAiCode,
-    },
-    'Ask AI about code',
-  ),
+  ask: {
+    value: withHelp(askAi, 'Ask AI a question'),
+  },
+  askCode: {
+    value: withHelp(askAiCode, 'Ask AI about code'),
+  },
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;

@@ -18,7 +18,7 @@ import {
 import { fileCached, runtimeCached } from '../utils/cache.utils';
 import { getCwd, getEnv } from '../utils/env.utils';
 import { log } from '../utils/log.utils';
-import { withHelp } from '../utils/metadata.utils';
+import { printHelp, withHelp } from '../utils/metadata.utils';
 import {
   definePropertiesMutation,
   mutateGlobals,
@@ -36,7 +36,7 @@ import { Text } from '../wrappers/text.wrapper';
 import { TmpDirectory } from '../wrappers/tmp-directory.wrapper';
 import { TmpFile } from '../wrappers/tmp-file.wrapper';
 import { Url } from '../wrappers/url.wrapper';
-import * as day from '../utils/day.utils';
+import { day } from '../utils/day.utils';
 import { morphProject } from '../utils/morph.utils';
 import { Xml } from '../wrappers/xml.wrapper';
 import module from 'node:module';
@@ -45,314 +45,259 @@ import { jwt } from '../utils/jwt.utils';
 const require = module.createRequire(import.meta.url);
 
 export const globals = {
-  args: withHelp(
-    {
-      get() {
-        return Data.create(
+  args: {
+    get() {
+      return withHelp(
+        Data.create(
           process.argv.slice(2).filter((arg) => !arg.startsWith('-')),
-        );
-      },
+        ),
+        'Returns the arguments passed to Sol',
+      );
     },
-    'Returns the arguments passed to Sol',
-  ),
-  astTypes: withHelp(
-    {
-      get() {
-        return require('@babel/types');
-      },
+  },
+  astTypes: {
+    get() {
+      return withHelp(
+        require('@babel/types'),
+        'See https://babeljs.io/docs/en/babel-types',
+      );
     },
-    'See https://babeljs.io/docs/en/babel-types',
-  ),
-  chalk: withHelp(
-    {
-      value: chalk,
+  },
+  chalk: {
+    value: withHelp(chalk, 'See https://github.com/chalk/chalk#readme'),
+  },
+  cwd: {
+    get() {
+      return withHelp(
+        Directory.create(getCwd()),
+        'Returns the current working directory',
+      );
     },
-    'See https://github.com/chalk/chalk#readme',
-  ),
-  cwd: withHelp(
-    {
-      get() {
-        return Directory.create(getCwd());
-      },
+  },
+  data: {
+    value: withHelp(Data.create, 'Wraps the given object as Data'),
+  },
+  day: {
+    get() {
+      return withHelp(
+        { ...day },
+        'See https://day.js.org/docs/en/installation/installation',
+      );
     },
-    'Returns the current working directory',
-  ),
-  data: withHelp(
-    {
-      value: Data.create,
+  },
+  dir: {
+    value: withHelp(Directory.create, 'Wrapper for directories'),
+  },
+  dirs: {
+    value: withHelp(dirs, 'Glob search for directories'),
+  },
+  env: {
+    get() {
+      return withHelp(
+        {
+          ...getEnv(),
+        },
+        'Returns the environment variables',
+      );
     },
-    'Wraps the given object as Data',
-  ),
-  day: withHelp(
-    {
-      get() {
-        return day;
-      },
-    },
-    'See https://day.js.org/docs/en/installation/installation',
-  ),
-  dir: withHelp(
-    {
-      value: Directory.create,
-    },
-    'Wrapper for directories',
-  ),
-  dirs: withHelp(
-    {
-      value: dirs,
-    },
-    'Glob search for directories',
-  ),
-  env: withHelp(
-    {
-      get() {
-        return getEnv();
-      },
-    },
-    'Returns the environment variables',
-  ),
-  exec: withHelp(
-    {
-      get() {
-        const shell = Shell.create();
+  },
+  exec: {
+    get() {
+      const shell = Shell.create();
 
-        return shell.exec.bind(shell);
-      },
+      return withHelp(shell.exec.bind(shell), 'Executes the given command');
     },
-    'Executes the given command',
-  ),
-  fake: withHelp(
-    {
-      get() {
-        return require('@ngneat/falso') as typeof import('@ngneat/falso');
-      },
+  },
+  fake: {
+    get() {
+      return withHelp(
+        require('@ngneat/falso') as typeof import('@ngneat/falso'),
+        'See https://ngneat.github.io/falso/docs/getting-started',
+      );
     },
-    'See https://ngneat.github.io/falso/docs/getting-started',
-  ),
-  fetch: withHelp(
-    {
-      value: web.fetch,
-    },
-    'HTTP fetch compatible to node-fetch',
-  ),
+  },
+  fetch: {
+    value: withHelp(web.fetch, 'HTTP fetch compatible to node-fetch'),
+  },
+
   file: withHelp(
     {
       value: File.create,
     },
     'Wrapper for files',
   ),
-  fileCached: withHelp(
-    {
-      value: fileCached,
+  fileCached: {
+    value: withHelp(
+      fileCached,
+      'Cache the return value of the given function in a file',
+    ),
+  },
+  files: {
+    value: withHelp(files, 'Glob search for files'),
+  },
+  glob: {
+    value: withHelp(glob, 'Glob search for files or directories'),
+  },
+  grep: {
+    value: withHelp(grepFiles, 'Finds files using the given RegExp pattern'),
+  },
+  html: {
+    value: withHelp(Html.create, 'Wraps the given string as Html'),
+  },
+  jsonata: {
+    get() {
+      return withHelp(
+        require('jsonata') as typeof import('jsonata'),
+        'See https://jsonata.org/',
+      );
     },
-    'Cache the return value of the given function in a file',
-  ),
-  files: withHelp(
-    {
-      value: files,
+  },
+  jwt: {
+    get() {
+      return withHelp(
+        {
+          ...jwt,
+        },
+        'See https://github.com/auth0/node-jsonwebtoken#readme',
+      );
     },
-    'Glob search for files',
-  ),
-  glob: withHelp(
-    {
-      value: glob,
+  },
+  log: {
+    value: withHelp(log, 'Logs to the console'),
+  },
+  markdown: {
+    value: withHelp(Markdown.create, 'Wraps the given string as Markdown'),
+  },
+  morph: {
+    get() {
+      return withHelp(
+        require('ts-morph') as typeof import('ts-morph'),
+        'See: https://ts-morph.com',
+      );
     },
-    'Glob search for files or directories',
-  ),
-  grep: withHelp(
-    {
-      value: grepFiles,
+  },
+  morphProject: {
+    get() {
+      return withHelp(
+        morphProject,
+        'Returns ts-morph project for the current working directory',
+      );
     },
-    'Finds files using the given RegExp pattern',
-  ),
-  html: withHelp(
-    {
-      value: Html.create,
+  },
+  omit: {
+    get() {
+      return withHelp(
+        require('lodash/omit'),
+        'See: https://lodash.com/docs/latest#omit',
+      );
     },
-    'Wraps the given string as Html',
-  ),
-  jsonata: withHelp(
-    {
-      get() {
-        return require('jsonata') as typeof import('jsonata');
-      },
+  },
+  open: {
+    value: withHelp(open, 'Opens the given file or URL'),
+  },
+  openApp: {
+    value: withHelp(openApp, 'Opens the given app'),
+  },
+  pick: {
+    get() {
+      return withHelp(
+        require('lodash/pick'),
+        'See: https://lodash.com/docs/latest#pick',
+      );
     },
-    'See https://jsonata.org/',
-  ),
-  jwt: withHelp(
-    {
-      get() {
-        return jwt;
-      },
+  },
+  printHelp: {
+    value: withHelp(printHelp, 'Prints the help text for the given argument'),
+  },
+  prompts: {
+    get() {
+      return withHelp(
+        require('@inquirer/prompts') as typeof import('@inquirer/prompts'),
+        'See: https://github.com/SBoudrias/Inquirer.js',
+      );
     },
-    'See https://github.com/auth0/node-jsonwebtoken#readme',
-  ),
-  log: withHelp(
-    {
-      value: log,
+  },
+  runtimeCached: {
+    value: withHelp(
+      runtimeCached,
+      'Cache the return value of the given function in a runtime variable',
+    ),
+  },
+  shared: {
+    value: withHelp({}, 'Variables shared between play scripts and the shell'),
+  },
+  shell: {
+    value: withHelp(
+      Shell.create,
+      'Creates a new Shell wrapper for the given directory',
+    ),
+  },
+  sol: {
+    get() {
+      return withHelp(
+        require('../index') as typeof import('../index'),
+        'Returns all sol globals',
+      );
     },
-    'Logs to the console',
-  ),
-  markdown: withHelp(
-    {
-      value: Markdown.create,
+  },
+  solExtension: {
+    value: withHelp(
+      solExtension,
+      'Returns the extension for the given name or path',
+    ),
+  },
+  solExtensions: {
+    get() {
+      return withHelp(getSolExtensions(), 'Returns known sol extensions');
     },
-    'Wraps the given string as Markdown',
-  ),
-  morph: withHelp(
-    {
-      get() {
-        return require('ts-morph') as typeof import('ts-morph');
-      },
+  },
+  solPackage: {
+    get() {
+      return withHelp(getSolPackage(), 'Returns the Sol package');
     },
-    'See: https://ts-morph.com',
-  ),
-  morphProject: withHelp(
-    {
-      get() {
-        return morphProject;
-      },
+  },
+  solUserExtension: {
+    value: withHelp(
+      solUserExtension,
+      'Returns the user extension for the given name',
+    ),
+  },
+  solUserWorkspace: {
+    get() {
+      return withHelp(getSolUserWorkspace(), 'User Sol workspace');
     },
-    'Returns ts-morph project for the current working directory',
-  ),
-  omit: withHelp(
-    {
-      get() {
-        return require('lodash/omit');
-      },
+  },
+  solWorkspace: {
+    get() {
+      return withHelp(getCurrentSolWorkspace(), 'Current Sol workspace');
     },
-    'See: https://lodash.com/docs/latest#omit',
-  ),
-  open: withHelp(
-    {
-      value: open,
-    },
-    'Opens the given file or URL',
-  ),
-  openApp: withHelp(
-    {
-      value: openApp,
-    },
-    'Opens the given app',
-  ),
-  pick: withHelp(
-    {
-      get() {
-        return require('lodash/pick');
-      },
-    },
-    'See: https://lodash.com/docs/latest#pick',
-  ),
-  prompts: withHelp(
-    {
-      get() {
-        return require('@inquirer/prompts') as typeof import('@inquirer/prompts');
-      },
-    },
-    'See: https://github.com/SBoudrias/Inquirer.js',
-  ),
-  runtimeCached: withHelp(
-    {
-      value: runtimeCached,
-    },
-    'Cache the return value of the given function in a runtime variable',
-  ),
-  shared: withHelp(
-    {
-      value: {},
-    },
-    'Variables shared between play scripts and the shell',
-  ),
-  shell: withHelp(
-    {
-      value: Shell.create,
-    },
-    'Creates a new Shell wrapper for the given directory',
-  ),
-  sol: withHelp(
-    {
-      get() {
-        return require('../index') as typeof import('../index');
-      },
-    },
-    'Returns all sol globals',
-  ),
-  solExtension: withHelp(
-    {
-      value: solExtension,
-    },
-    'Returns the extension for the given name or path',
-  ),
-  solExtensions: withHelp(
-    {
-      get() {
-        return getSolExtensions();
-      },
-    },
-    'Returns known sol extensions',
-  ),
-  solPackage: withHelp(
-    {
-      get() {
-        return getSolPackage();
-      },
-    },
-    'Returns the Sol package',
-  ),
-  solUserExtension: withHelp(
-    {
-      value: solUserExtension,
-    },
-    'Returns the user extension for the given name',
-  ),
-  solUserWorkspace: withHelp(
-    {
-      get() {
-        return getSolUserWorkspace();
-      },
-    },
-    'User Sol workspace',
-  ),
-  solWorkspace: withHelp(
-    {
-      get() {
-        return getCurrentSolWorkspace();
-      },
-    },
-    'Current Sol workspace',
-  ),
-  solWorkspaceExtension: withHelp(
-    {
-      value: solWorkspaceExtension,
-    },
-    'Returns the workspace extension for the given name',
-  ),
-  text: withHelp(
-    {
-      value: Text.create,
-    },
-    'Wraps a string as Text',
-  ),
-  tmpDir: withHelp(
-    {
-      value: TmpDirectory.create,
-    },
-    'Temporary directory',
-  ),
-  tmpFile: withHelp(
-    {
-      value: TmpFile.create,
-    },
-    'Temporary file',
-  ),
-  web: withHelp(
-    {
-      value: web,
-    },
-    'Utilities for internet access',
-  ),
+  },
+  solWorkspaceExtension: {
+    value: withHelp(
+      solWorkspaceExtension,
+      'Returns the workspace extension for the given name',
+    ),
+  },
+  text: {
+    value: withHelp(Text.create, 'Wraps a string as Text'),
+  },
+  tmpDir: {
+    value: withHelp(TmpDirectory.create, 'Temporary directory'),
+  },
+  tmpFile: {
+    value: withHelp(TmpFile.create, 'Temporary file'),
+  },
+  url: {
+    value: withHelp(Url.create, 'Wraps a string as Url'),
+  },
+  web: {
+    value: withHelp(web, 'Utilities for internet access'),
+  },
   withHelp: {
     value: withHelp,
+  },
+  xml: {
+    value: withHelp(Xml.create, 'Wraps a string as Xml'),
   },
 };
 
@@ -382,6 +327,7 @@ declare global {
   const open: Globals['open'];
   const openApp: Globals['openApp'];
   const pick: Globals['pick'];
+  const printHelp: Globals['printHelp'];
   const prompts: Globals['prompts'];
   const runtimeCached: Globals['runtimeCached'];
   const shared: Globals['shared'];

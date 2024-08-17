@@ -12,18 +12,15 @@ import { browse } from '../utils/browser.utils';
 import { edit } from '../utils/editor.utils';
 
 export const globals = {
-  browse: withHelp(
-    {
-      value: browse,
-    },
-    'Opens the given URL in the browser',
-  ),
-  edit: withHelp(
-    {
-      value: edit,
-    },
-    'Opens a file for editing (defaults to code as editor)',
-  ),
+  browse: {
+    value: withHelp(browse, 'Opens the given URL in the browser'),
+  },
+  edit: {
+    value: withHelp(
+      edit,
+      'Opens a file for editing (defaults to code as editor)',
+    ),
+  },
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;

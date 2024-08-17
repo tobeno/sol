@@ -11,18 +11,18 @@ import { File } from '../../../wrappers/file.wrapper';
 import { Image } from '../wrappers/image.wrapper';
 
 export const globals = {
-  image: withHelp(
-    {
-      value(imageOrFile: Image | Buffer | File | string): Image {
-        if (imageOrFile instanceof Buffer || imageOrFile instanceof Image) {
-          return Image.create(imageOrFile);
-        }
+  image: {
+    value(imageOrFile: Image | Buffer | File | string): Image {
+      let result: Image;
+      if (imageOrFile instanceof Buffer || imageOrFile instanceof Image) {
+        result = Image.create(imageOrFile);
+      } else {
+        result = File.create(imageOrFile).image;
+      }
 
-        return File.create(imageOrFile).image;
-      },
+      return withHelp(result, 'Wraps the given image file as Image');
     },
-    'Wraps the given image file as Image',
-  ),
+  },
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;

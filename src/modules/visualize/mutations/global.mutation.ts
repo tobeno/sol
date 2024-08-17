@@ -12,18 +12,18 @@ import { Chart } from '../wrappers/chart.wrapper';
 import { Graph } from '../wrappers/graph.wrapper';
 
 export const globals = {
-  chart: withHelp(
-    {
-      value: Chart.create,
-    },
-    'See https://apexcharts.com/docs/series/',
-  ),
-  graph: withHelp(
-    {
-      value: Graph.create,
-    },
-    'Wrapper for Mermaid graphs',
-  ),
+  chart: {
+    value: withHelp(
+      Chart.create,
+      `Wrapper for charts
+
+Usage:
+chart('')`,
+    ),
+  },
+  graph: {
+    value: withHelp(Graph.create, 'Wrapper for Mermaid graphs'),
+  },
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;

@@ -17,36 +17,24 @@ import {
 } from '../utils/transformer.utils';
 
 export const globals = {
-  ast: withHelp(
-    {
-      value: codeToAst,
-    },
-    'Converts code to its AST to Data',
-  ),
-  csv: withHelp(
-    {
-      value: csvToData,
-    },
-    'Converts CSV to Data',
-  ),
-  json: withHelp(
-    {
-      value: jsonToData,
-    },
-    'Converts JSON to Data',
-  ),
-  transform: withHelp(
-    {
-      value: transform,
-    },
-    'Transforms data between data types using transformations',
-  ),
-  yaml: withHelp(
-    {
-      value: yamlToData,
-    },
-    'Converts YAML to Data',
-  ),
+  ast: {
+    value: withHelp(codeToAst, 'Converts code to its AST to Data'),
+  },
+  csv: {
+    value: withHelp(csvToData, 'Converts CSV to Data'),
+  },
+  json: {
+    value: withHelp(jsonToData, 'Converts JSON to Data'),
+  },
+  transform: {
+    value: withHelp(
+      transform,
+      'Transforms data between data types using transformations',
+    ),
+  },
+  yaml: {
+    value: withHelp(yamlToData, 'Converts YAML to Data'),
+  },
 };
 
 export type Globals = FromPropertyDescriptorMap<typeof globals>;
