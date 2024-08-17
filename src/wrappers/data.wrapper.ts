@@ -75,31 +75,47 @@ export class Data<
   /**
    * Returns the first item.
    */
-  get first(): Data<ItemType> | null {
+  get first(): Data<ItemType> | Text | null {
+    let result: any;
     if (Array.isArray(this.value)) {
-      return this.value.length ? (Data.create(this.value[0]) as any) : null;
+      result = this.value.length ? this.value[0] : null;
+    } else {
+      const values = Object.values(this.value as any);
+      result = values.length ? values[0] : null;
     }
 
-    const values = Object.values(this.value as any);
+    if (!result) {
+      return null;
+    }
 
-    return values.length ? (Data.create(values[0]) as any) : null;
+    if (typeof result === 'string' || result instanceof Text) {
+      return Text.create(result as any);
+    }
+
+    return Data.create(result) as any;
   }
 
   /**
    * Returns the last item.
    */
-  get last(): Data<ItemType> | null {
+  get last(): Data<ItemType> | Text | null {
+    let result: any;
     if (Array.isArray(this.value)) {
-      return this.value.length
-        ? (Data.create(this.value[this.value.length - 1]) as any)
-        : null;
+      result = this.value.length ? this.value[this.value.length - 1] : null;
+    } else {
+      const values = Object.values(this.value as any);
+      result = values.length ? values[values.length - 1] : null;
     }
 
-    const values = Object.values(this.value as any);
+    if (!result) {
+      return null;
+    }
 
-    return values.length
-      ? (Data.create(values[values.length - 1]) as any)
-      : null;
+    if (typeof result === 'string' || result instanceof Text) {
+      return Text.create(result);
+    }
+
+    return Data.create(result) as any;
   }
 
   /**
@@ -418,7 +434,7 @@ export class Data<
   /**
    * Returns the data at the given key or index
    */
-  get(path: string | number): Data | Text | null {
+  get(path: string | number): Data<ItemType> | Text | null {
     let result: any;
 
     if (this.value && typeof this.value === 'object' && 'at' in this.value) {
@@ -435,7 +451,7 @@ export class Data<
       return Text.create(result);
     }
 
-    return Data.create(result);
+    return Data.create(result) as any;
   }
 
   /**
