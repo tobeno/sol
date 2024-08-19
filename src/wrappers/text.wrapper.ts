@@ -29,7 +29,7 @@ import { Wrapper } from './wrapper.wrapper';
 /**
  * Wrapper for strings.
  */
-class Text extends Wrapper<string> {
+export class Text extends Wrapper<string> {
   constructor(
     value: string,
     public format: string | null = null,
