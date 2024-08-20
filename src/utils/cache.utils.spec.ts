@@ -7,9 +7,9 @@ describe('cache', () => {
     it('should cache the value', async () => {
       const fn = vi.fn().mockReturnValue('value');
 
-      expect(runtimeCached('test', fn)).toBe('value');
+      await expect(runtimeCached('test', fn)).resolves.toBe('value');
       expect(fn).toHaveBeenCalledTimes(1);
-      expect(runtimeCached('test', fn)).toBe('value');
+      await expect(runtimeCached('test', fn)).resolves.toBe('value');
       expect(fn).toHaveBeenCalledTimes(1);
     });
   });
@@ -20,9 +20,9 @@ describe('cache', () => {
 
       const tmpFile = TmpFile.create();
 
-      expect(fileCached(tmpFile, fn)).toBe('value');
+      await expect(fileCached(tmpFile, fn)).resolves.toBe('value');
       expect(fn).toHaveBeenCalledTimes(1);
-      expect(fileCached(tmpFile, fn)).toBe('value');
+      await expect(fileCached(tmpFile, fn)).resolves.toBe('value');
       expect(fn).toHaveBeenCalledTimes(1);
     });
   });

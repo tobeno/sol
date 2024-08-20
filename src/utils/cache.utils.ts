@@ -34,7 +34,7 @@ export async function fileCached<ResultType = any>(
   const file = File.create(pathOrFile);
   file.dir.create();
 
-  if (!file.exists) {
+  if (!file.exists || !file.length) {
     const result = await fn();
     if (result instanceof Wrapper) {
       throw new Error('Cannot cache a wrapper instance.');
