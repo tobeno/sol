@@ -111,9 +111,16 @@ ${
   globalEntries.length
     ? globalEntries
         .map(([key, value]) => {
-          const help = getHelp(value);
+          let help: string | null = getHelp(value);
 
-          return `- ${solReplColor.primary(key)}${help ? `: ${help}` : ''}`;
+          if (!help) {
+            const obj: { tmp: any } = {} as any;
+            Object.defineProperty(obj, 'tmp', value);
+
+            help = getHelp(obj.tmp);
+          }
+
+          return `- ${solReplColor.primary(key)}${help ? `: ${help.split('\n')[0]}` : ''}`;
         })
         .join('\n')
     : 'No matches found'

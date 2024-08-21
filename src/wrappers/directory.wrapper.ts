@@ -28,6 +28,12 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
  * Wrapper for a directory.
  */
 export class Directory extends StorageItem {
+  static readonly usageHelp = `
+> dir('.').files('*.md')
+> dir('.').grep('dayjs')
+> dir('.').open()
+  `.trim();
+
   /**
    * Returns the command to wrap this directory.
    */
@@ -233,10 +239,21 @@ export class Directory extends StorageItem {
   }
 
   static create(pathOrDirectory: MaybeWrapped<string> | Directory): Directory {
+    let result: Directory;
     if (pathOrDirectory instanceof Directory) {
-      return pathOrDirectory;
+      result = pathOrDirectory;
+    } else {
+      result = new Directory(String(pathOrDirectory));
     }
 
-    return new Directory(String(pathOrDirectory));
+    return withHelp(
+      result,
+      `
+Directory wrapper around a directory path.
+
+Usage:
+${Directory.usageHelp}
+    `,
+    );
   }
 }

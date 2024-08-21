@@ -13,12 +13,25 @@ import { edit } from '../utils/editor.utils';
 
 export const globals = {
   browse: {
-    value: withHelp(browse, 'Opens the given URL in the browser'),
+    value: withHelp(
+      browse,
+      `
+Opens the given URL in the browser.
+
+Usage:
+> browse('https://google.com')
+    `,
+    ),
   },
   edit: {
     value: withHelp(
       edit,
-      'Opens a file for editing (defaults to code as editor)',
+      `
+Opens a file for editing (defaults to code as editor).
+
+Usage:
+> edit('README.md')
+      `,
     ),
   },
 };

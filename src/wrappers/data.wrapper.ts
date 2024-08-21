@@ -44,6 +44,12 @@ export class Data<
   ItemType = AnyItem<ValueType>,
   KeyType = AnyKeyType<ValueType>,
 > extends Wrapper<ValueType> {
+  static readonly usageHelp = `
+> data([1, 2, 3]).first
+> data({ a: 1, b: 2 }).reversed.keys
+> data({ a: [1, 2], b: [3, 4] }).select('b[0]')
+  `.trim();
+
   constructor(value: ValueType) {
     super(value);
   }
@@ -929,10 +935,21 @@ export class Data<
   }
 
   static create<ValueType = any>(value: ValueType): Data<ValueType> {
+    let result: Data<ValueType>;
     if (value instanceof Data) {
-      return value as any;
+      result = value as any;
+    } else {
+      result = new Data(value);
     }
 
-    return new Data(value);
+    return withHelp(
+      result,
+      `
+Wrapper around the given object or array.
+
+Usage:
+${Data.usageHelp}
+    `,
+    );
   }
 }

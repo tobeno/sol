@@ -8,12 +8,20 @@ import {
   definePropertiesMutation,
   mutateGlobals,
 } from '../../../utils/mutation.utils';
-import { getClipboard } from '../../clipboard/clipboard';
+import { Clipboard, getClipboard } from '../../clipboard/clipboard';
 
 export const globals = {
   clipboard: {
     get() {
-      return withHelp(getClipboard(), 'Exposes the system clipboard');
+      return withHelp(
+        getClipboard(),
+        `
+Exposes the system clipboard.
+
+Usage:
+${Clipboard.usageHelp}
+`,
+      );
     },
   },
 };

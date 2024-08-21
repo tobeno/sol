@@ -30,6 +30,13 @@ import { Wrapper } from './wrapper.wrapper';
  * Wrapper for strings.
  */
 export class Text extends Wrapper<string> {
+  static readonly usageHelp = `
+> text('test').uppercased
+> text('test').selectAll(/[ts]/g).joined
+> text('test').count(/[ts]/g)
+> text('test').appendLine('test2')
+  `.trim();
+
   constructor(
     value: string,
     public format: string | null = null,
@@ -487,11 +494,10 @@ export class Text extends Wrapper<string> {
     return withHelp(
       new Text(value, format),
       `
-Text wrapper
+Text wrapper around the given string.
 
 Usage:
-text('test').uppercased;
-text('test').lines.map(l => l.uppercased)
+${Text.usageHelp}
 `,
     );
   }

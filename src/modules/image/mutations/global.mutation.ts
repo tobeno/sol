@@ -20,7 +20,15 @@ export const globals = {
         result = File.create(imageOrFile).image;
       }
 
-      return withHelp(result, 'Wraps the given image file as Image');
+      return withHelp(
+        result,
+        `
+Creates an Image wrapper for the given image path, buffer or file.
+
+Usage:
+${Image.usageHelp}
+        `,
+      );
     },
   },
 };

@@ -1,3 +1,5 @@
+import chalk from 'chalk';
+
 export interface SolMetadata {
   help?: string;
 }
@@ -32,10 +34,27 @@ export function getHelp(target: any): string | null {
   return getSolMetadata(target)?.help || null;
 }
 
-export function printHelp<T>(target: T): T {
-  const help = getHelp(target);
+export function colorizeHelp(help: string): string {
+  return chalk.magenta(
+    help
+      .replaceAll('Usage:', (match) => chalk.bold(match))
+      .replaceAll(/\n> /g, (match) => chalk.dim(match)),
+  );
+}
+
+export function printHelp<T>(
+  target: T,
+  options: {
+    short?: boolean;
+  } = {},
+): T {
+  let help = getHelp(target);
   if (help) {
-    log(help);
+    if (options.short) {
+      help = help.split('\n')[0];
+    }
+
+    log(colorizeHelp(help));
   }
 
   return target;

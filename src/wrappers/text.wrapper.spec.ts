@@ -542,7 +542,7 @@ describe('Text', () => {
     it('should convert string URL to an Url', async () => {
       const text = Text.create('https://example.com');
       expect(text.url).toBeInstanceOf(Url);
-      expect(text.url.hostname).toEqual('example.com');
+      expect(text.url.hostname.value).toEqual('example.com');
     });
   });
 

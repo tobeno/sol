@@ -18,6 +18,10 @@ const require = module.createRequire(import.meta.url);
 export class Html<
   NodeType extends AnyNode = AnyNode,
 > extends Wrapper<NodeType> {
+  static readonly usageHelp = `
+> html('<html><title>Test</title></html>').select('title').content
+  `.trim();
+
   /**
    * Returns the node of the current HTML.
    */
@@ -146,18 +150,34 @@ export class Html<
   }
 
   static create(value: AnyNode | MaybeWrapped<string> | any): Html {
+    let result: Html | null = null;
     if (value instanceof Html) {
-      return value;
+      result = value;
     }
 
-    value = unwrap(value);
+    if (!result) {
+      value = unwrap(value);
 
-    if (value && typeof value === 'object') {
-      return new Html(value);
+      if (value && typeof value === 'object') {
+        result = new Html(value);
+      }
     }
 
-    const htmlparser2 = require('htmlparser2') as typeof import('htmlparser2');
+    if (!result) {
+      const htmlparser2 =
+        require('htmlparser2') as typeof import('htmlparser2');
 
-    return new Html(htmlparser2.parseDocument(value));
+      result = new Html(htmlparser2.parseDocument(value));
+    }
+
+    return withHelp(
+      result,
+      `
+HTML wrapper around the given value.
+
+Usage:
+${Html.usageHelp}
+    `,
+    );
   }
 }

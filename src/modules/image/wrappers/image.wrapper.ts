@@ -7,6 +7,11 @@ import module from 'node:module';
 const require = module.createRequire(import.meta.url);
 
 export class Image extends Wrapper<Buffer> {
+  static readonly usageHelp = `
+> image('path/to/image.jpg').resize(200, 200, { fit: 'contain' }).png().saveAs('path/to/image.png')
+> file('path/to/image.jpg').image.rotate(180).saveAs('path/to/image.jpg')
+  `.trim();
+
   get buffer(): Buffer {
     return this.value;
   }
@@ -122,10 +127,21 @@ export class Image extends Wrapper<Buffer> {
   }
 
   static create(value: Image | Buffer): Image {
+    let result: Image;
     if (value instanceof Image) {
-      return value;
+      result = value;
+    } else {
+      result = new Image(value);
     }
 
-    return new Image(value);
+    return withHelp(
+      result,
+      `
+Image wrapper for the given image buffer.
+
+Usage:
+${Image.usageHelp}
+    `,
+    );
   }
 }

@@ -8,6 +8,7 @@ import {
   definePropertiesMutation,
   mutateGlobals,
 } from '../../../utils/mutation.utils';
+import { Ast } from '../../../wrappers/ast.wrapper';
 import {
   codeToAst,
   csvToData,
@@ -18,22 +19,52 @@ import {
 
 export const globals = {
   ast: {
-    value: withHelp(codeToAst, 'Converts code to its AST to Data'),
+    value: withHelp(
+      codeToAst,
+      `
+Converts code to its AST to Data.
+
+Usage:
+${Ast.usageHelp} 
+   `,
+    ),
   },
   csv: {
-    value: withHelp(csvToData, 'Converts CSV to Data'),
+    value: withHelp(
+      csvToData,
+      `
+Converts CSV to Data.
+
+Usage:
+> csv('a,b,c\n1,2,3\n4,5,6').map(row => row.a)).joined
+    `,
+    ),
   },
   json: {
-    value: withHelp(jsonToData, 'Converts JSON to Data'),
+    value: withHelp(
+      jsonToData,
+      `
+Converts JSON to Data.
+
+Usage:
+> json('{ a: 1, b: 2 }').get('a')
+    `,
+    ),
   },
   transform: {
     value: withHelp(
       transform,
-      'Transforms data between data types using transformations',
+      `
+Transforms data between data types using transformations.
+
+Usage:
+> transform('{"a": 1}', 'string<application/json>:Data').get('a')
+> transform({ a: 1 }, 'object:Text<application/json>').uppercased.json.get('A')
+      `,
     ),
   },
   yaml: {
-    value: withHelp(yamlToData, 'Converts YAML to Data'),
+    value: withHelp(yamlToData, 'Converts YAML to Data.'),
   },
 };
 

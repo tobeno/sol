@@ -34,6 +34,12 @@ export interface ChartOptions extends ApexOptions {
  * Class for generating charts.
  */
 export class Chart {
+  static readonly usageHelp = `
+> chart({ data: [1, 20, 5] }).html.browse()
+> chart({ data: [['2019', 1], ['2020', 2], ['2021', 1]], type: 'barx' }).html.browse()
+> chart({ data: [{ x: '2019', y: 1 }, { x: '2020', y: 3 }, { x: '2021', y: 2 }], type: 'line' }).html.browse()
+  `.trim();
+
   private readonly options: ApexOptions;
 
   constructor(options: ChartOptions) {
@@ -203,6 +209,16 @@ export class Chart {
   }
 
   static create(options: ChartOptions): Chart {
-    return new Chart(options);
+    const result = new Chart(options);
+
+    return withHelp(
+      result,
+      `
+Chart visualization.
+
+Usage:
+${Chart.usageHelp}
+    `,
+    );
   }
 }

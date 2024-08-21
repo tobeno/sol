@@ -8,25 +8,60 @@ import {
   definePropertiesMutation,
   mutateGlobals,
 } from '../../../utils/mutation.utils';
-import { getPlays, play, playFile, replay } from '../utils/play.utils';
+import {
+  getPlays,
+  play,
+  PlayFile,
+  playFile,
+  replay,
+} from '../utils/play.utils';
 
 export const globals = {
   play: {
-    value: withHelp(play, 'Opens a given play file for interactive editing'),
+    value: withHelp(
+      play,
+      `
+Opens a given play file for interactive editing.
+
+Usage:
+> play('my-play')
+    `,
+    ),
   },
   playFile: {
     value: withHelp(
       playFile,
-      'Returns a PlayFile instance for the given path or file',
+      `
+Returns a PlayFile instance for the given path or file.
+
+Usage:
+${PlayFile.usageHelp}
+      `,
     ),
   },
   plays: {
     get() {
-      return withHelp(getPlays(), 'Returns available play files');
+      return withHelp(
+        getPlays(),
+        `
+Returns available play files.
+
+Usage:
+> plays.map(p => p.file).filter(f => f.path.includes('play-')).forEach(f => f.delete())
+      `,
+      );
     },
   },
   replay: {
-    value: withHelp(replay, 'Replays the given play file'),
+    value: withHelp(
+      replay,
+      `
+Replays the given play file.
+
+Usage:
+> replay('my-play')    
+`,
+    ),
   },
 };
 

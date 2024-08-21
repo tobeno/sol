@@ -15,14 +15,24 @@ export const globals = {
   chart: {
     value: withHelp(
       Chart.create,
-      `Wrapper for charts
+      `
+Creates a new Chart to visualize data as chart.
 
 Usage:
-chart('')`,
+${Chart.usageHelp}
+`,
     ),
   },
   graph: {
-    value: withHelp(Graph.create, 'Wrapper for Mermaid graphs'),
+    value: withHelp(
+      Graph.create,
+      `
+Wrapper for Mermaid graphs.
+
+Usage:
+${Graph.usageHelp}
+`,
+    ),
   },
 };
 

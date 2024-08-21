@@ -40,7 +40,7 @@ export const filterLines = withHelp(
 
     return result;
   },
-  'Removes lines using a filter function',
+  'Removes lines using a filter function.',
 );
 
 export function rfilterLines(

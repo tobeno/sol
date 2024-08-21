@@ -200,6 +200,11 @@ export class GenericStorageItemCollection<
  * Wrapper for a collection of files.
  */
 export class FileCollection extends GenericStorageItemCollection<File> {
+  // Todo
+  static readonly usageHelp = `
+
+  `.trim();
+
   delete(): StorageItemCollection {
     this.forEach((f) => f.delete());
 
@@ -207,7 +212,17 @@ export class FileCollection extends GenericStorageItemCollection<File> {
   }
 
   static create(items: MaybeWrapped<File[]>): FileCollection {
-    return new FileCollection(unwrap(items));
+    const result = new FileCollection(unwrap(items));
+
+    return withHelp(
+      result,
+      `
+FileCollection wrapper around a collection of files.
+
+Usage:
+${FileCollection.usageHelp}
+    `,
+    );
   }
 }
 
@@ -215,8 +230,23 @@ export class FileCollection extends GenericStorageItemCollection<File> {
  * Wrapper for a collection of directories.
  */
 export class DirectoryCollection extends GenericStorageItemCollection<Directory> {
+  // Todo
+  static readonly usageHelp = `
+
+  `.trim();
+
   static create(items: MaybeWrapped<Directory[]>): DirectoryCollection {
-    return new DirectoryCollection(unwrap(items));
+    const result = new DirectoryCollection(unwrap(items));
+
+    return withHelp(
+      result,
+      `
+DirectoryCollection wrapper around a collection of directories.
+
+Usage:
+${DirectoryCollection.usageHelp}
+    `,
+    );
   }
 }
 
@@ -226,10 +256,25 @@ export class DirectoryCollection extends GenericStorageItemCollection<Directory>
 export class StorageItemCollection extends GenericStorageItemCollection<
   File | Directory
 > {
+  // Todo
+  static readonly usageHelp = `
+
+  `.trim();
+
   static create(
     items: MaybeWrapped<(File | Directory)[]>,
   ): StorageItemCollection {
-    return new StorageItemCollection(unwrap(items));
+    const result = new StorageItemCollection(unwrap(items));
+
+    return withHelp(
+      result,
+      `
+StorageItemCollection wrapper around a collection of mixed storage items.
+
+Usage:
+${StorageItemCollection.usageHelp}
+    `,
+    );
   }
 }
 

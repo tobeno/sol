@@ -52,7 +52,7 @@ mutateClass(
           throw new Error('Cannot create a conversation from this data.');
         }
 
-        return new AiConversation({
+        return AiConversation.create({
           messages: this.value as any,
         });
       },

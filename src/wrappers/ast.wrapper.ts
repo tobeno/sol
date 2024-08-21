@@ -13,6 +13,10 @@ const require = module.createRequire(import.meta.url);
 export class Ast<
   NodeType extends babelTypes.Node = babelTypes.Node,
 > extends Wrapper<NodeType> {
+  static readonly usageHelp = `
+> ast('console.log("Hello, World!")').find(astTypes.isIdentifier).node.name
+  `.trim();
+
   constructor(
     public value: NodeType,
     public scope: Scope | null = null,

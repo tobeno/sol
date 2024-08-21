@@ -5,7 +5,7 @@ import { AiConversation } from './ai-conversation.wrapper';
 describe('AiConversation', () => {
   describe('ask', () => {
     it('should ask a question', async () => {
-      const conversation = await new AiConversation({
+      const conversation = await AiConversation.create({
         dryRun: true,
       }).ask('Hello');
       expect(conversation).toBeInstanceOf(AiConversation);
@@ -15,7 +15,7 @@ describe('AiConversation', () => {
     });
 
     it('should ask a question with custom system message', async () => {
-      const conversation = await new AiConversation({
+      const conversation = await AiConversation.create({
         messages: [
           {
             role: 'system',
@@ -33,7 +33,7 @@ describe('AiConversation', () => {
 
   describe('askCode', () => {
     it('should ask a question', async () => {
-      const conversation = await new AiConversation({
+      const conversation = await AiConversation.create({
         dryRun: true,
       }).askCode('Hello');
       expect(conversation).toBeInstanceOf(AiConversation);
@@ -43,7 +43,7 @@ describe('AiConversation', () => {
     });
 
     it('should ask a question with custom system message', async () => {
-      const conversation = await new AiConversation({
+      const conversation = await AiConversation.create({
         messages: [
           {
             role: 'system',

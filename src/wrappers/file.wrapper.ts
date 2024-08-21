@@ -17,6 +17,12 @@ const require = module.createRequire(import.meta.url);
  * Wrapper for a file.
  */
 export class File extends StorageItem {
+  static readonly usageHelp = `
+> file('README.md').edit()
+> file('README.md').md.html.browse()
+> file('./package.json').json.get('dependencies').keys.sorted.joined
+  `.trim();
+
   constructor(path: string) {
     super(path);
   }
@@ -369,10 +375,21 @@ export class File extends StorageItem {
   }
 
   static create(pathOrFile: MaybeWrapped<string> | File): File {
+    let result: File;
     if (pathOrFile instanceof File) {
-      return pathOrFile;
+      result = pathOrFile;
+    } else {
+      result = new File(String(pathOrFile));
     }
 
-    return new File(String(pathOrFile));
+    return withHelp(
+      result,
+      `
+File wrapper around the given path.
+
+Usage:
+${File.usageHelp}
+    `,
+    );
   }
 }

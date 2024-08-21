@@ -49,7 +49,7 @@ async function ask(
   }
 
   question = (question || '') + (question ? '\n' : '') + text;
-  const conversation = new AiConversation();
+  const conversation = AiConversation.create();
   await conversation[method](question);
 
   return conversation;

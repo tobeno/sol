@@ -83,7 +83,7 @@ const globals = {
         }
       },
     },
-    'Limehome utilities'
+    'Limehome utilities.'
   ),
 };
 

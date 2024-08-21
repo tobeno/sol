@@ -11,6 +11,11 @@ import { File } from '../../../wrappers/file.wrapper';
  */
 export class PlayFile {
   static instances: Record<string, PlayFile> = {};
+  static usageHelp = `
+> playFile('test').play()
+> playFile('test').replay()
+> playFile('test').edit()
+  `.trim();
 
   private unwatch: (() => void) | null = null;
 
@@ -178,7 +183,15 @@ export async function main() {
     }
 
     if (!this.instances[path]) {
-      this.instances[path] = new PlayFile(path);
+      this.instances[path] = withHelp(
+        new PlayFile(path),
+        `
+A play file.
+
+Usage:
+${PlayFile.usageHelp}
+      `,
+      );
     }
 
     return this.instances[path];
@@ -210,8 +223,10 @@ export function play(pathOrFile: string | File | null = null): PlayFile {
 /**
  * Returns available playground files.
  */
-export function getPlays(): PlayFile[] {
-  return [...getPlayDir().files()].map((file) => playFile(file.path));
+export function getPlays(): Data<PlayFile[]> {
+  return Data.create(
+    [...getPlayDir().files()].map((file) => playFile(file.path)),
+  );
 }
 
 /**

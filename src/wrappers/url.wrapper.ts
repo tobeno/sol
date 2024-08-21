@@ -63,14 +63,14 @@ export class Url extends Wrapper<string> {
   /**
    * Returns the host of the URL.
    */
-  get hostname(): string {
-    return this.parsed.hostname;
+  get hostname(): Text {
+    return Text.create(this.parsed.hostname);
   }
 
   /**
    * Sets the hostname of the URL.
    */
-  set hostname(host: string) {
+  set hostname(host: Text | string) {
     const parsed = this.parsed;
     parsed.hostname = String(host);
     this.parsed = parsed;
@@ -79,14 +79,14 @@ export class Url extends Wrapper<string> {
   /**
    * Returns the path of the URL.
    */
-  get pathname(): string {
-    return this.parsed.pathname;
+  get pathname(): Text {
+    return Text.create(this.parsed.pathname);
   }
 
   /**
    * Sets the path of the URL.
    */
-  set pathname(pathname: string) {
+  set pathname(pathname: Text | string) {
     const parsed = this.parsed;
     parsed.pathname = String(pathname);
     this.parsed = parsed;
@@ -95,14 +95,14 @@ export class Url extends Wrapper<string> {
   /**
    * Returns the port of the URL.
    */
-  get port(): string {
-    return this.parsed.port;
+  get port(): Text {
+    return Text.create(this.parsed.port);
   }
 
   /**
    * Sets the port of the URL.
    */
-  set port(port: string | number | null) {
+  set port(port: string | Text | number | null) {
     const parsed = this.parsed;
     parsed.port = String(port || '');
     this.parsed = parsed;
@@ -131,16 +131,16 @@ export class Url extends Wrapper<string> {
   /**
    * Returns the hash of the URL.
    */
-  get hash(): string {
-    return this.parsed.hash;
+  get hash(): Text {
+    return Text.create(this.parsed.hash);
   }
 
   /**
    * Sets the hash of the URL.
    */
-  set hash(hash: string) {
+  set hash(hash: string | Text) {
     const parsed = this.parsed;
-    parsed.hash = hash;
+    parsed.hash = String(hash);
     this.parsed = parsed;
   }
 

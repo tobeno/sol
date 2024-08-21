@@ -11,21 +11,27 @@ import {
   OpenAiChatCompletionResponse,
 } from '../utils/open-ai.utils';
 
+export interface AiConversationOptions {
+  messages?: OpenAiChatCompletionRequestMessage[];
+  dryRun?: boolean;
+}
+
 export class AiConversation extends Wrapper<
   OpenAiChatCompletionRequestMessage[]
 > {
+  static readonly usageHelp = `
+> aiConversation().ask('What is the meaning of life?').await.answer
+> aiConversation().ask('What is the meaning of life?').await.ask('Summarize this in a few words.').await.answer
+> aiConversation().askCode('Log "test" to console in JavaScript').await.answer
+  `.trim();
+
   usage = Data.create({
     promptTokens: 0,
     completionTokens: 0,
     totalTokens: 0,
   });
 
-  constructor(
-    private options: {
-      messages?: OpenAiChatCompletionRequestMessage[];
-      dryRun?: boolean;
-    } = {},
-  ) {
+  constructor(private options: AiConversationOptions = {}) {
     let { messages = [] } = options;
     if (!messages.some((message) => message.role === 'system')) {
       messages = [
@@ -195,5 +201,19 @@ Response: ${JSON.stringify(response, null, 2)}`);
         return `${role}: ${message.content}`;
       })
       .join('\n---\n');
+  }
+
+  static create(options: AiConversationOptions = {}) {
+    const result = new AiConversation(options);
+
+    return withHelp(
+      result,
+      `
+Wrapper for an AI conversation.
+
+Usage:
+${AiConversation.usageHelp}
+    `,
+    );
   }
 }

@@ -51,7 +51,12 @@ export const globals = {
         Data.create(
           process.argv.slice(2).filter((arg) => !arg.startsWith('-')),
         ),
-        'Returns the arguments passed to Sol',
+        `
+CLI arguments passed to Sol passed after --.
+
+Usage:
+> args.first // e.g. for 'sol -- arg1 arg2'
+`,
       );
     },
   },
@@ -59,45 +64,96 @@ export const globals = {
     get() {
       return withHelp(
         require('@babel/types'),
-        'See https://babeljs.io/docs/en/babel-types',
+        `
+AST type utilities from Babel to create or check AST nodes.
+
+See: https://babeljs.io/docs/en/babel-types`,
       );
     },
   },
   chalk: {
-    value: withHelp(chalk, 'See https://github.com/chalk/chalk#readme'),
+    value: withHelp(
+      chalk,
+      `
+Chalk CLI coloring.
+
+See: https://github.com/chalk/chalk#readme
+`,
+    ),
   },
   cwd: {
     get() {
       return withHelp(
         Directory.create(getCwd()),
-        'Returns the current working directory',
+        `
+Current working directory.
+
+Usage:
+> cwd.open()
+> cwd.files('*.md')
+`,
       );
     },
   },
   data: {
-    value: withHelp(Data.create, 'Wraps the given object as Data'),
+    value: withHelp(
+      Data.create,
+      `
+Wraps the given value as Data.
+   
+Usage:
+${Data.usageHelp}
+`,
+    ),
   },
   day: {
     get() {
       return withHelp(
-        { ...day },
-        'See https://day.js.org/docs/en/installation/installation',
+        day,
+        `
+  DayJS date manipulation library.
+  
+  Usage:
+  > day().format('YYYY-MM-DD')
+  > day('2021-01-01').add(1, 'day')
+  > day(1318781876406).toDate()
+  
+  See https://day.js.org/docs/en/installation/installation`,
       );
     },
   },
   dir: {
-    value: withHelp(Directory.create, 'Wrapper for directories'),
+    value: withHelp(
+      Directory.create,
+      `
+Creates a Directory wrapper for the given path.
+
+Usage:
+${Directory.usageHelp}
+`,
+    ),
   },
   dirs: {
-    value: withHelp(dirs, 'Glob search for directories'),
+    value: withHelp(
+      dirs,
+      `
+Directories matching the given glob pattern.
+
+Usage:
+> dirs('**/mutations')
+`,
+    ),
   },
   env: {
     get() {
       return withHelp(
-        {
-          ...getEnv(),
-        },
-        'Returns the environment variables',
+        Data.create(getEnv()),
+        `
+Environment variables.
+
+Usage:
+> env.keys.sorted
+`,
       );
     },
   },
@@ -105,50 +161,111 @@ export const globals = {
     get() {
       const shell = Shell.create();
 
-      return withHelp(shell.exec.bind(shell), 'Executes the given command');
+      return withHelp(
+        shell.exec.bind(shell),
+        `
+Executes the given command.
+
+Usage:
+> exec('ls -la').lines.first
+`,
+      );
     },
   },
   fake: {
     get() {
       return withHelp(
         require('@ngneat/falso') as typeof import('@ngneat/falso'),
-        'See https://ngneat.github.io/falso/docs/getting-started',
+        `
+Helper functions to quickly generate fake data using falso.
+
+Usage:
+> fake.randBook().author
+
+See: https://ngneat.github.io/falso/docs/getting-started`,
       );
     },
-  },
-  fetch: {
-    value: withHelp(web.fetch, 'HTTP fetch compatible to node-fetch'),
   },
 
   file: withHelp(
     {
       value: File.create,
     },
-    'Wrapper for files',
+    `
+Creates a File wrapper for the given path.
+
+Usage:
+${File.usageHelp}
+`,
   ),
   fileCached: {
     value: withHelp(
       fileCached,
-      'Cache the return value of the given function in a file',
+      `
+Cache the return value of the given function in a file.
+
+Usage:
+> fileCached('number.json', () => Math.random()).await
+> fileCached('html.json', async () => web.get('https://www.google.com').await.content.value).await.text.html.select('title').content
+`,
     ),
   },
   files: {
-    value: withHelp(files, 'Glob search for files'),
+    value: withHelp(
+      files,
+      `
+Files matching the given glob pattern.
+
+Usage:
+> files('*.md')
+`,
+    ),
   },
   glob: {
-    value: withHelp(glob, 'Glob search for files or directories'),
+    value: withHelp(
+      glob,
+      `
+Files or directories matching the given glob pattern.
+
+Usage:
+> glob('.*')
+`,
+    ),
   },
   grep: {
-    value: withHelp(grepFiles, 'Finds files using the given RegExp pattern'),
+    value: withHelp(
+      grepFiles,
+      `
+Finds files using the given RegExp pattern.
+
+Usage:
+> grep('dayjs').files('*.json')
+> grep(/day[j]/).files('*.ts')
+`,
+    ),
   },
   html: {
-    value: withHelp(Html.create, 'Wraps the given string as Html'),
+    value: withHelp(
+      Html.create,
+      `
+Creates a Html wrapper for the given text.
+
+Usage:
+${Html.usageHelp}
+      `,
+    ),
   },
   jsonata: {
     get() {
       return withHelp(
         require('jsonata') as typeof import('jsonata'),
-        'See https://jsonata.org/',
+        `
+jsonata selector engine.
+
+Usage:
+> jsonata('a[0]').evaluate({ a: [1, 2], b: [3, 4] })
+
+See: https://jsonata.org`,
       );
     },
   },
@@ -158,21 +275,41 @@ export const globals = {
         {
           ...jwt,
         },
-        'See https://github.com/auth0/node-jsonwebtoken#readme',
+        'See https://github.com/auth0/node-jsonwebtoken#readme.',
       );
     },
   },
   log: {
-    value: withHelp(log, 'Logs to the console'),
+    value: withHelp(
+      log,
+      `
+Logs to the console.
+
+Usage:
+> log('Hello!')
+`,
+    ),
   },
   markdown: {
-    value: withHelp(Markdown.create, 'Wraps the given string as Markdown'),
+    value: withHelp(
+      Markdown.create,
+      `
+Creates a Markdown wrapper around the given markdown string.
+
+Usage:
+> markdown('# Title').html.browse()
+`,
+    ),
   },
   morph: {
     get() {
       return withHelp(
         require('ts-morph') as typeof import('ts-morph'),
-        'See: https://ts-morph.com',
+        `
+ts-morph transformation library.
+        
+See: https://ts-morph.com
+`,
       );
     },
   },
@@ -180,7 +317,14 @@ export const globals = {
     get() {
       return withHelp(
         morphProject,
-        'Returns ts-morph project for the current working directory',
+        `
+Runs ts-morph for the current working directory using the given callback function.
+
+Usage:
+> morphProject((p) => { log(p.getSourceFiles("src/**/*.ts").map(f => f.getClasses()).flat().map(c => c.getName()).sort()) })
+        
+See: https://ts-morph.com
+`,
       );
     },
   },
@@ -188,116 +332,243 @@ export const globals = {
     get() {
       return withHelp(
         require('lodash/omit'),
-        'See: https://lodash.com/docs/latest#omit',
+        `
+Omit helper function from lodash.js.
+        
+See: https://lodash.com/docs/latest#omit
+`,
       );
     },
   },
   open: {
-    value: withHelp(open, 'Opens the given file or URL'),
+    value: withHelp(
+      open,
+      `
+Opens the given file or URL.
+
+Usage:
+> open('https://www.google.com')
+> open('README.md', 'code')
+`,
+    ),
   },
   openApp: {
-    value: withHelp(openApp, 'Opens the given app'),
+    value: withHelp(
+      openApp,
+      `
+Opens the given app.
+
+Usage:
+> open('Visual Studio Code')
+`,
+    ),
   },
   pick: {
     get() {
       return withHelp(
         require('lodash/pick'),
-        'See: https://lodash.com/docs/latest#pick',
+        `
+Omit helper function from lodash.js.
+        
+See: https://lodash.com/docs/latest#pick
+`,
       );
     },
   },
   printHelp: {
-    value: withHelp(printHelp, 'Prints the help text for the given argument'),
+    value: withHelp(printHelp, 'Prints the help text for the given argument.'),
   },
   prompts: {
     get() {
       return withHelp(
         require('@inquirer/prompts') as typeof import('@inquirer/prompts'),
-        'See: https://github.com/SBoudrias/Inquirer.js',
+        `
+Multiple prompts to use to gather user input.
+
+Usage:
+> prompts.input({ message: 'Enter text' })
+> prompts.select({ message: 'Select country', choices: [{ value: 'de', name: 'Germany' }, { value: 'at', name: 'Austria' }] })
+
+See: https://github.com/SBoudrias/Inquirer.js.
+`,
       );
     },
   },
   runtimeCached: {
     value: withHelp(
       runtimeCached,
-      'Cache the return value of the given function in a runtime variable',
+      `
+Cache the return value of the given function in a runtime variable.
+
+Usage:
+> runtimeCached('number.json', () => Math.random()).await
+> runtimeCached('html.json', async () => web.get('https://www.google.com').await.content.value).await.text.html.select('title').content
+`,
     ),
   },
   shared: {
-    value: withHelp({}, 'Variables shared between play scripts and the shell'),
+    value: withHelp(
+      {},
+      `
+Variables shared between play scripts and the shell.
+
+Usage:
+> shared.someVariable = 'test'
+`,
+    ),
   },
   shell: {
     value: withHelp(
       Shell.create,
-      'Creates a new Shell wrapper for the given directory',
+      `
+Creates a Shell wrapper for the given directory.
+
+Usage:
+> shell().exec('ls -la').lines.first
+> shell('./src').ls()
+`,
     ),
   },
   sol: {
     get() {
       return withHelp(
         require('../index') as typeof import('../index'),
-        'Returns all sol globals',
+        `
+Sol globals (to access e.g. classes for wrappers).
+
+Usage:
+> sol.Text.create('test').uppercased
+ `,
       );
     },
   },
   solExtension: {
     value: withHelp(
       solExtension,
-      'Returns the extension for the given name or path',
+      `
+Returns the Sol extension for the given name or path.
+`,
     ),
   },
   solExtensions: {
     get() {
-      return withHelp(getSolExtensions(), 'Returns known sol extensions');
+      return withHelp(
+        getSolExtensions(),
+        `
+Returns known sol extensions.
+`,
+      );
     },
   },
   solPackage: {
     get() {
-      return withHelp(getSolPackage(), 'Returns the Sol package');
+      return withHelp(
+        getSolPackage(),
+        `
+Returns the Sol package.
+
+Usage:
+> solPackage.edit()
+`,
+      );
     },
   },
   solUserExtension: {
     value: withHelp(
       solUserExtension,
-      'Returns the user extension for the given name',
+      `
+Returns the user extension for the given name.
+`,
     ),
   },
   solUserWorkspace: {
     get() {
-      return withHelp(getSolUserWorkspace(), 'User Sol workspace');
+      return withHelp(
+        getSolUserWorkspace(),
+        `
+User Sol workspace (~/.sol).
+
+Usage:
+> solUserWorkspace.envFile.edit()
+`,
+      );
     },
   },
   solWorkspace: {
     get() {
-      return withHelp(getCurrentSolWorkspace(), 'Current Sol workspace');
+      return withHelp(
+        getCurrentSolWorkspace(),
+        `
+Current Sol workspace (./.sol).
+
+Usage:
+> solUserWorkspace.envFile.edit()
+`,
+      );
     },
   },
   solWorkspaceExtension: {
     value: withHelp(
       solWorkspaceExtension,
-      'Returns the workspace extension for the given name',
+      `
+Returns the workspace extension for the given name.
+`,
     ),
   },
   text: {
-    value: withHelp(Text.create, 'Wraps a string as Text'),
+    value: withHelp(
+      Text.create,
+      `
+Creates a Text wrapper around the given string.
+
+Usage:
+${Text.usageHelp}
+`,
+    ),
   },
   tmpDir: {
-    value: withHelp(TmpDirectory.create, 'Temporary directory'),
+    value: withHelp(
+      TmpDirectory.create,
+      `
+Creates a temporary directory.
+
+Usage:
+> tmpDir().file('test.md').md = '# Title'
+`,
+    ),
   },
   tmpFile: {
-    value: withHelp(TmpFile.create, 'Temporary file'),
+    value: withHelp(
+      TmpFile.create,
+      `
+Creates a temporary file.
+
+Usage:
+${TmpFile.usageHelp}
+`,
+    ),
   },
   url: {
-    value: withHelp(Url.create, 'Wraps a string as Url'),
+    value: withHelp(
+      Url.create,
+      `
+Creates an Url wrapper around the given URL string.
+
+Usage:
+> url('https://www.google.com').get().await.content
+> url('https://www.google.com').hostname.uppercased
+> url('https://www.google.com').hostname = 'www.bing.com'
+    `,
+    ),
   },
   web: {
-    value: withHelp(web, 'Utilities for internet access'),
+    value: withHelp(web, 'Utilities for internet access.'),
   },
   withHelp: {
     value: withHelp,
   },
   xml: {
-    value: withHelp(Xml.create, 'Wraps a string as Xml'),
+    value: withHelp(Xml.create, 'Wraps a string as Xml.'),
   },
 };
 
