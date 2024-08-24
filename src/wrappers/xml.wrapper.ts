@@ -16,6 +16,11 @@ const require = module.createRequire(import.meta.url);
  * Wrapper for XML documents or snippets.
  */
 export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
+  static readonly usageHelp = `
+> xml('<root><title>Test</title></root>').select('title').content
+> xml('<root><product quantity="2">Test</product><product quantity="1">Test 2</product></root>').selectAll('product').map(p => Number(p.attributes.get('quantity'))).sum
+  `.trim();
+
   /**
    * Returns the node of the current HTML.
    */
@@ -147,22 +152,38 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
   }
 
   static create(value: AnyNode | MaybeWrapped<string> | any): Xml {
+    let result: Xml | null = null;
     if (value instanceof Xml) {
-      return value;
+      result = value;
     }
 
-    value = unwrap(value);
+    if (!result) {
+      value = unwrap(value);
 
-    if (value && typeof value === 'object') {
-      return new Xml(value);
+      if (value && typeof value === 'object') {
+        result = new Xml(value);
+      }
     }
 
-    const htmlparser2 = require('htmlparser2') as typeof import('htmlparser2');
+    if (!result) {
+      const htmlparser2 =
+        require('htmlparser2') as typeof import('htmlparser2');
 
-    return new Xml(
-      htmlparser2.parseDocument(value, {
-        xmlMode: true,
-      }),
+      result = new Xml(
+        htmlparser2.parseDocument(value, {
+          xmlMode: true,
+        }),
+      );
+    }
+
+    return withHelp(
+      result,
+      `
+Xml wrapper around a XML string.
+
+Usage:
+${Xml.usageHelp}
+    `,
     );
   }
 }

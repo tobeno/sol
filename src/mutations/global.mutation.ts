@@ -111,14 +111,15 @@ ${Data.usageHelp}
       return withHelp(
         day,
         `
-  DayJS date manipulation library.
-  
-  Usage:
-  > day().format('YYYY-MM-DD')
-  > day('2021-01-01').add(1, 'day')
-  > day(1318781876406).toDate()
-  
-  See https://day.js.org/docs/en/installation/installation`,
+DayJS date manipulation library.
+
+Usage:
+> day().format('YYYY-MM-DD')
+> day('2021-01-01').add(1, 'day')
+> day(1318781876406).toDate()
+
+See https://day.js.org/docs/en/installation/installation
+      `,
       );
     },
   },
@@ -297,7 +298,7 @@ Usage:
 Creates a Markdown wrapper around the given markdown string.
 
 Usage:
-> markdown('# Title').html.browse()
+${Markdown.usageHelp}
 `,
     ),
   },
@@ -562,13 +563,30 @@ Usage:
     ),
   },
   web: {
-    value: withHelp(web, 'Utilities for internet access.'),
+    value: withHelp(
+      web,
+      `
+Utilities for internet access.
+
+Usage:
+> web.get('https://www.google.com').await.content
+> web.get('https://www.google.com').await.headers.get('etag')
+`,
+    ),
   },
   withHelp: {
     value: withHelp,
   },
   xml: {
-    value: withHelp(Xml.create, 'Wraps a string as Xml.'),
+    value: withHelp(
+      Xml.create,
+      `
+Creates a Xml wrapper for the given text.
+
+Usage:
+${Xml.usageHelp}
+    .`,
+    ),
   },
 };
 

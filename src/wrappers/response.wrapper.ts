@@ -14,6 +14,11 @@ import { Wrapper } from './wrapper.wrapper';
  * Wrapper for a HTTP response.
  */
 export class Response extends Wrapper<AxiosResponse> {
+  static readonly usageHelp = `
+> web.request({ url: 'https://example.com' }).await.headers.get('etag')
+> web.get('https://jsonplaceholder.typicode.com/todos/1').await.content.json.get('userId')
+  `.trim();
+
   /**
    * Returns the request that was used to create this response.
    */
@@ -45,8 +50,8 @@ export class Response extends Wrapper<AxiosResponse> {
   /**
    * Returns the headers of the response.
    */
-  get headers(): RawAxiosResponseHeaders | AxiosResponseHeaders {
-    return this.value.headers;
+  get headers(): Data<RawAxiosResponseHeaders | AxiosResponseHeaders> {
+    return Data.create(this.value.headers);
   }
 
   /**

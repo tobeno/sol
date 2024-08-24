@@ -43,6 +43,11 @@ export interface ShellTailOptions {
 }
 
 export class Shell extends Wrapper<Directory> {
+  static readonly usageHelp = `
+> shell().cat('README.md').md.html.browse()
+> shell().ls().join(',')
+  `.trim();
+
   /**
    * Flag indicating whether ripgrep is available on the system
    */
@@ -259,6 +264,16 @@ export class Shell extends Wrapper<Directory> {
   static create(directory: Directory | string | null = null) {
     directory = directory || process.cwd();
 
-    return new Shell(Directory.create(directory));
+    const result = new Shell(Directory.create(directory));
+
+    return withHelp(
+      result,
+      `
+Shell wrapper for the given working directory (defaults to the current directory).
+
+Usage:
+${Shell.usageHelp}
+    `,
+    );
   }
 }

@@ -8,6 +8,12 @@ import { URL } from 'url';
  * Wrapper for an URL.
  */
 export class Url extends Wrapper<string> {
+  static readonly usageHelp = `
+> url('https://www.google.com').get().await.content
+> url('https://www.google.com').hostname.uppercased
+> url('https://www.google.com').hostname = 'www.bing.com'
+  `.trim();
+
   constructor(value: string | URL) {
     if (value instanceof URL) {
       value = value.toJSON();

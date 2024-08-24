@@ -64,7 +64,15 @@ Usage:
     ),
   },
   yaml: {
-    value: withHelp(yamlToData, 'Converts YAML to Data.'),
+    value: withHelp(
+      yamlToData,
+      `
+Converts YAML to Data.
+
+Usage:
+> yaml('a: 1\nb: 2').get('a')
+    `,
+    ),
   },
 };
 

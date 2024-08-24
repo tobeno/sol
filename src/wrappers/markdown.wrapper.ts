@@ -7,6 +7,11 @@ import { Wrapper } from './wrapper.wrapper';
  * Wrapper for Markdown documents.
  */
 export class Markdown extends Wrapper<string> {
+  static readonly usageHelp = `
+> markdown('# Title').text
+> markdown('# Title').html.browse()
+  `.trim();
+
   /**
    * Returns the text of the Markdown document.
    */
@@ -19,6 +24,16 @@ export class Markdown extends Wrapper<string> {
       return value;
     }
 
-    return new Markdown(String(value));
+    const result = new Markdown(String(value));
+
+    return withHelp(
+      result,
+      `
+Markdown wrapper around a Markdown document.
+
+Usage:
+${Markdown.usageHelp}
+    `,
+    );
   }
 }
