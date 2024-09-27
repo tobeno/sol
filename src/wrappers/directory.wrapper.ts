@@ -197,8 +197,8 @@ export class Directory extends StorageItem {
    */
   serve(): this {
     spawnCommand(
-      `${path.resolve(__dirname, '../../../node_modules/.bin/serve')}`,
-      [this.path],
+      `${path.resolve(__dirname, '../../node_modules/.bin/http-server')}`,
+      [this.path, '--port', '0'],
       {
         stdio: 'inherit',
       },
