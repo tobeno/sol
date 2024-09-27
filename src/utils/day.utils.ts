@@ -14,7 +14,7 @@ dayjs.extend((_, Dayjs) => {
     definePropertiesMutation({
       var: {
         value(name: string): any {
-          (global as any)[name] = this;
+          (global as any).vars[name] = this;
 
           return this;
         },

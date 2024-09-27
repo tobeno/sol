@@ -407,17 +407,6 @@ Usage:
 `,
     ),
   },
-  shared: {
-    value: withHelp(
-      {},
-      `
-Variables shared between play scripts and the shell.
-
-Usage:
-> shared.someVariable = 'test'
-`,
-    ),
-  },
   shell: {
     value: withHelp(
       Shell.create,
@@ -562,6 +551,17 @@ Usage:
     `,
     ),
   },
+  vars: {
+    value: withHelp(
+      {},
+      `
+Variables shared between play scripts and the shell.
+
+Usage:
+> vars.someVariable = 'test'
+`,
+    ),
+  },
   web: {
     value: withHelp(
       web,
@@ -619,7 +619,6 @@ declare global {
   const printHelp: Globals['printHelp'];
   const prompts: Globals['prompts'];
   const runtimeCached: Globals['runtimeCached'];
-  const shared: Globals['shared'];
   const shell: Globals['shell'];
   const solExtension: Globals['solExtension'];
   const solExtensions: Globals['solExtensions'];
@@ -632,6 +631,7 @@ declare global {
   const tmpDir: Globals['tmpDir'];
   const tmpFile: Globals['tmpFile'];
   const url: Globals['url'];
+  const vars: Globals['vars'];
   const web: Globals['web'];
   const withHelp: Globals['withHelp'];
 

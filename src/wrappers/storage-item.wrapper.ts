@@ -100,7 +100,7 @@ export abstract class StorageItem {
    * Stores the item in a variable with the given name.
    */
   var(name: string): this {
-    (global as any)[name] = this;
+    (global as any).vars[name] = this;
 
     return this;
   }

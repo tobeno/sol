@@ -10,7 +10,11 @@ export class Wrapper<ValueType = any> {
    * Stores this in a variable with the given name.
    */
   var(name: string): this {
-    (global as any)[name] = this;
+    if (!(global as any).vars) {
+      (global as any).vars = {};
+    }
+
+    (global as any).vars[name] = this;
 
     return this;
   }

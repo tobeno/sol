@@ -6,7 +6,7 @@ describe('Wrapper', () => {
     it('should assign the wrapper to a variable', async () => {
       const wrapper = new Wrapper('Hello World');
       wrapper.var('someVariable');
-      expect((global as any).someVariable).toBe(wrapper);
+      expect((global as any).vars.someVariable).toBe(wrapper);
     });
   });
 

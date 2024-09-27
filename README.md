@@ -21,10 +21,10 @@ You can do:
 > files('src/**/*.ts')
 
 // Gather all import statements
-> let imports = _.map(f => f.text.match(/(?<=^|\n)import[^;]+;/g) || []).flattened
+> _.map(f => f.text.match(/(?<=^|\n)import[^;]+;/g) || []).flattened.var('imports')
 
 // Open import list in editor
-> imports.map(i => i.replace(/\r?\n/g, ' ')).join('\n').edit()
+> vars.imports.map(i => i.replace(/\r?\n/g, ' ')).join('\n').edit()
 
 // Get updated imports (_ is the file opened in editor)
 > _.text.trimmed.split('\n')
@@ -37,19 +37,19 @@ Or this:
 
 ```
 // Get todos
-> const j = web.fetch('https://jsonplaceholder.typicode.com/todos').await.content.json
+> web.fetch('https://jsonplaceholder.typicode.com/todos').await.content.json.var('j')
 
 // Get all open ToDos
-> const open = j.filter(todo => !todo.completed)
+> vars.j.filter(todo => !todo.completed).var('open')
 
 // Show all IDs of users with open ToDos using jsonata expression
-> open.get('userId').sort().unique
+> vars.open.get('userId').sort().unique
 
 // Show the number of open ToDos per user as chart in the browser
-> open.group(todo => todo.userId).map(group => group.length).chart().html.browse()
+> vars.open.group(todo => todo.userId).map(group => group.length).chart().html.browse()
 
 // Save open ToDos in CSV
-> open.csv.saveAs('todos.csv')
+> vars.open.csv.saveAs('todos.csv')
 
 // Open CSV file in editor
 > _.edit()
@@ -62,10 +62,10 @@ Or this:
 > web.get('https://raw.githubusercontent.com/tobeno/sol/main/README.md').await.content.md.var('readme')
 
 // Render as HTML and open in browser
-> readme.html.saveAs('README.html').browse()
+> vars.readme.html.saveAs('README.html').browse()
 
 // Ask ChatGPT about how to install Sol
-> readme.text.ask('How do I install this?\n---')
+> vars.readme.text.ask('How do I install this?\n---')
 
 // Render answer as HTML and open in browser
 > _.answer.md.html.browse()
@@ -137,7 +137,7 @@ So you can use all of those:
 
 // Assign after writing the pipeline (most wrappers support .var() out of the box)
 > text('abc').var('someVariable')
-> someVariable.value
+> vars.someVariable.value
 
 // Interrupt pipeline without assignment
 > text('abc')
