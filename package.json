@@ -28,7 +28,7 @@
     "@apidevtools/json-schema-ref-parser": "11.7.0",
     "@babel/generator": "7.25.6",
     "@babel/parser": "7.25.6",
-    "@babel/traverse": "7.25.6",
+    "@babel/traverse": "7.25.7",
     "@babel/types": "7.25.6",
     "@inquirer/prompts": "6.0.1",
     "@ngneat/falso": "7.2.0",
