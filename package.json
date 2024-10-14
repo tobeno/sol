@@ -32,7 +32,7 @@
     "@babel/types": "7.25.6",
     "@inquirer/prompts": "6.0.1",
     "@ngneat/falso": "7.2.0",
-    "apexcharts": "3.53.0",
+    "apexcharts": "3.54.1",
     "axios": "1.7.7",
     "chalk": "5.3.0",
     "change-case": "5.4.4",
