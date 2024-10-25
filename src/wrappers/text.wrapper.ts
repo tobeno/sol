@@ -168,6 +168,12 @@ export class Text extends Wrapper<string> {
     );
   }
 
+  get sha1hashed(): Text {
+    return Text.create(
+      createHash('sha1').update(this.value).digest('hex').toString(),
+    );
+  }
+
   get sha256hashed(): Text {
     return Text.create(
       createHash('sha256').update(this.value).digest('hex').toString(),
