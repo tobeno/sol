@@ -25,6 +25,7 @@ import {
 import { DataFormat } from './data-format.wrapper';
 import { Data } from './data.wrapper';
 import { Wrapper } from './wrapper.wrapper';
+import { createHash } from 'crypto';
 
 /**
  * Wrapper for strings.
@@ -159,6 +160,24 @@ export class Text extends Wrapper<string> {
 
   get decompressed(): Text {
     return Text.create(decompressString(this.value));
+  }
+
+  get md5hashed(): Text {
+    return Text.create(
+      createHash('md5').update(this.value).digest('hex').toString(),
+    );
+  }
+
+  get sha256hashed(): Text {
+    return Text.create(
+      createHash('sha256').update(this.value).digest('hex').toString(),
+    );
+  }
+
+  get sha512hashed(): Text {
+    return Text.create(
+      createHash('sha512').update(this.value).digest('hex').toString(),
+    );
   }
 
   /**
