@@ -27,7 +27,7 @@
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "11.7.2",
     "@babel/generator": "7.25.7",
-    "@babel/parser": "7.25.8",
+    "@babel/parser": "7.26.1",
     "@babel/traverse": "7.25.7",
     "@babel/types": "7.25.8",
     "@inquirer/prompts": "7.0.0",
