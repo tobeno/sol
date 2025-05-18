@@ -9,6 +9,7 @@ import {
 } from '../../../utils/mutation.utils';
 import { File } from '../../../wrappers/file.wrapper';
 import { Image } from '../wrappers/image.wrapper';
+import { Buffer } from 'node:buffer';
 
 export const globals = {
   image: {
@@ -17,7 +18,7 @@ export const globals = {
       if (imageOrFile instanceof Buffer || imageOrFile instanceof Image) {
         result = Image.create(imageOrFile);
       } else {
-        result = File.create(imageOrFile).image;
+        result = File.create(imageOrFile as string).image;
       }
 
       return withHelp(
