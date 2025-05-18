@@ -77,7 +77,7 @@ Or this:
 
 To setup:
 
-1. Install NodeJS >= 18
+1. Install NodeJS >= 22
 2. Setup the project
    ```sh
    git clone git@github.com:tobeno/sol.git
