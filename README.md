@@ -95,7 +95,7 @@ To setup:
 
 To setup:
 
-1. Install Bun >= 1.1.12 and NodeJS >= 18 (required for REPL)
+1. Install Bun >= 1.2.13 and NodeJS >= 22 (required for REPL)
 2. Setup the project
    ```sh
    git clone git@github.com:tobeno/sol.git
