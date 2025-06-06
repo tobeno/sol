@@ -1,5 +1,6 @@
 import { inspect } from 'util';
 import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
+import { ensureNonEmpty } from '../utils/core.utils';
 import { log } from '../utils/log.utils';
 import { grepFiles } from '../utils/search.utils';
 import { unwrap } from '../utils/wrapper.utils';
@@ -113,7 +114,7 @@ export class GenericStorageItemCollection<
    * Returns the item at the specified index.
    */
   get(index: number): StorageItem {
-    return this.value[index];
+    return ensureNonEmpty(this.value[index]);
   }
 
   forEach(cb: (item: ItemType) => void): void {
@@ -175,7 +176,7 @@ export class GenericStorageItemCollection<
     return this;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.map((file) => file.toString()).join('\n').value;
   }
 

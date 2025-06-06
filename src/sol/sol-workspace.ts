@@ -76,7 +76,7 @@ export class SolWorkspace {
     
 import '${solPackage.dir.relativePathFrom(this.generatedDir)}/src/setup';
 ${extensions
-  .map((extension, index) =>
+  .map((extension, _index) =>
     `
 import '${extension.setupFile.dir.relativePathFrom(this.generatedDir)}/${
       extension.setupFile.basenameWithoutExt

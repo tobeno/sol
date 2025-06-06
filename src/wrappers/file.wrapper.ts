@@ -2,6 +2,7 @@ import fs, { mkdirSync } from 'fs';
 import path from 'path';
 import type { Options as PrettierOptions } from 'prettier';
 import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
+import { ensureNonEmpty } from '../utils/core.utils';
 import { log } from '../utils/log.utils';
 import { reimport } from '../utils/module.utils';
 import { unwrap } from '../utils/wrapper.utils';
@@ -97,7 +98,7 @@ export class File extends StorageItem {
       return '';
     }
 
-    return exts[exts.length - 1];
+    return ensureNonEmpty(exts.at(-1));
   }
 
   /**

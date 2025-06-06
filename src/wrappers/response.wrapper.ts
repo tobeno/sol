@@ -3,7 +3,7 @@ import type {
   AxiosResponse,
   AxiosResponseHeaders,
 } from 'axios';
-import { RawAxiosResponseHeaders } from 'axios';
+import type { RawAxiosResponseHeaders } from 'axios';
 import { inspect } from 'util';
 import { web } from '../utils/web.utils';
 import { Data } from './data.wrapper';
@@ -107,7 +107,7 @@ export class Response extends Wrapper<AxiosResponse> {
     return `Response ${inspect(this.serializable.value)}`;
   }
 
-  toString(): string {
+  override toString(): string {
     return `Response ${inspect(this.value.data)}`;
   }
 }

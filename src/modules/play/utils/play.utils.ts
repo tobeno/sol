@@ -194,7 +194,7 @@ ${PlayFile.usageHelp}
       );
     }
 
-    return this.instances[path];
+    return this.instances[path]!;
   }
 }
 

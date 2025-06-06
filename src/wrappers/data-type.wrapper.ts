@@ -74,6 +74,6 @@ export class DataType {
 
     const [, type, , format = null] = match;
 
-    return new DataType(type, format);
+    return new DataType(type!, format);
   }
 }

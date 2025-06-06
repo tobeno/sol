@@ -332,9 +332,9 @@ export class Data<
 
           return firstItem ? Reflect.ownKeys(firstItem) : [];
         },
-        get: (target: any, key: string): any => {
+        get: (_target: any, key: string): any => {
           return new Proxy(() => {}, {
-            apply: (_: any, thisArg: any, args: any[]): any => {
+            apply: (_: any, _thisArg: any, args: any[]): any => {
               return this.map((item) => (item as any)[key](...args));
             },
           });
@@ -926,7 +926,7 @@ export class Data<
     ) as any;
   }
 
-  valueOf(): ValueType {
+  override valueOf(): ValueType {
     return this.value;
   }
 

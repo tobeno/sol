@@ -1,5 +1,5 @@
 import { DataTransformation } from '../data-transformation';
-import { DataTransformer } from './data.transformer';
+import type { DataTransformer } from './data.transformer';
 
 /**
  * Transformer using nested transformers for transformation.

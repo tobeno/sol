@@ -33,14 +33,14 @@ function solWriter(output: any): string {
 /**
  * Default Sol REPL completion handling.
  */
-async function solCompleter(line: string): Promise<CompleterResult | void> {
+async function solCompleter(_line: string): Promise<CompleterResult | void> {
   // ToDo: Add custom completion logic
 }
 
 /**
  * Default Sol REPL evaluation.
  */
-const solEval: REPLEval = async (cmd, context, file, cb) => {
+const solEval: REPLEval = async (cmd, _context, _file, cb) => {
   try {
     const result = await vm.runInThisContext(prepareSolCommand(cmd), {});
 

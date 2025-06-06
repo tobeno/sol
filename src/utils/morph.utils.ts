@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import type { Project, SourceFile } from 'ts-morph';
 import { File } from '../wrappers/file.wrapper';
+import { ensureNonEmpty } from './core.utils';
 import { log } from './log.utils';
 import module from 'node:module';
 
@@ -83,7 +84,9 @@ function getModuleAliasMapForProject(
   if (
     !tsConfigPathsEntries.every(
       ([key, value]) =>
-        key.endsWith('*') && value.length === 1 && value[0].endsWith('*'),
+        key.endsWith('*') &&
+        value.length === 1 &&
+        ensureNonEmpty(value[0]).endsWith('*'),
     )
   ) {
     throw new Error(
@@ -100,7 +103,7 @@ function getModuleAliasMapForProject(
       path.resolve(
         projectPath,
         tsConfig.baseUrl || '.',
-        value[0].slice(0, -1),
+        ensureNonEmpty(value[0]).slice(0, -1),
       ) + path.sep,
     ],
   );
@@ -173,9 +176,9 @@ function mapProjectModuleSpecifiers(
         return;
       }
 
-      const moduleLiteral = parent
-        .getArguments()[0]
-        .asKind(ts.SyntaxKind.StringLiteral);
+      const moduleLiteral = ensureNonEmpty(parent.getArguments()[0]).asKind(
+        ts.SyntaxKind.StringLiteral,
+      );
       if (!moduleLiteral) {
         return;
       }
@@ -197,9 +200,9 @@ function mapProjectModuleSpecifiers(
           return;
         }
 
-        const moduleLiteral = parent
-          .getArguments()[0]
-          .asKind(ts.SyntaxKind.StringLiteral);
+        const moduleLiteral = ensureNonEmpty(parent.getArguments()[0]).asKind(
+          ts.SyntaxKind.StringLiteral,
+        );
         if (!moduleLiteral) {
           return;
         }
@@ -223,7 +226,7 @@ function unaliasProject(
     const newModule = resolveModuleSpecifier(module, file, moduleAliasMap);
     const filePath = file.getFilePath();
     let importSpecifierMap: Record<string, string> =
-      importSpecifierMapByFiles[filePath];
+      importSpecifierMapByFiles[filePath] || {};
     if (!importSpecifierMap) {
       importSpecifierMap = {};
       importSpecifierMapByFiles[filePath] = importSpecifierMap;

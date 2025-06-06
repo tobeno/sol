@@ -1,4 +1,5 @@
 import type { ApexOptions } from 'apexcharts';
+import { ensureNonEmpty } from '../../../utils/core.utils';
 import { DataFormat } from '../../../wrappers/data-format.wrapper';
 import { Text } from '../../../wrappers/text.wrapper';
 
@@ -104,7 +105,7 @@ export class Chart {
 
         series = [
           {
-            name,
+            name: ensureNonEmpty(name),
             data: data.map((value, index): any => {
               if (Array.isArray(value)) {
                 value = {
@@ -126,45 +127,47 @@ export class Chart {
         series = [];
 
         const dataEntries = Object.entries(data);
-        const objectValues =
-          dataEntries[0][1] && typeof dataEntries[0][1] === 'object';
-        if (!objectValues) {
-          series.push({
-            name,
-            data: [],
+        if (dataEntries.length > 0) {
+          const objectValues =
+            dataEntries[0]![1] && typeof dataEntries[0]![1] === 'object';
+          if (!objectValues) {
+            series.push({
+              name: ensureNonEmpty(name),
+              data: [],
+            });
+          }
+
+          Object.entries(data).forEach(([category, value]) => {
+            if (objectValues) {
+              // data: { category1: { series1: 1, series2: 2 }, category2: { series1: 4, series2: 9 }
+
+              Object.entries(value).forEach(([currentName, currentValue]) => {
+                let currentSerie = series.find(
+                  (serie) => serie.name === currentName,
+                );
+                if (!currentSerie) {
+                  currentSerie = {
+                    name: currentName,
+                    data: [],
+                  };
+                  series.push(currentSerie);
+                }
+
+                currentSerie.data.push({
+                  x: category,
+                  y: currentValue,
+                } as any);
+              });
+            } else {
+              // data: { category1: 1, category2: 4 }
+
+              ensureNonEmpty(series[0]).data.push({
+                x: category,
+                y: value,
+              } as any);
+            }
           });
         }
-
-        Object.entries(data).forEach(([category, value]) => {
-          if (objectValues) {
-            // data: { category1: { series1: 1, series2: 2 }, category2: { series1: 4, series2: 9 }
-
-            Object.entries(value).forEach(([currentName, currentValue]) => {
-              let currentSerie = series.find(
-                (serie) => serie.name === currentName,
-              );
-              if (!currentSerie) {
-                currentSerie = {
-                  name: currentName,
-                  data: [],
-                };
-                series.push(currentSerie);
-              }
-
-              currentSerie.data.push({
-                x: category,
-                y: currentValue,
-              } as any);
-            });
-          } else {
-            // data: { category1: 1, category2: 4 }
-
-            series[0].data.push({
-              x: category,
-              y: value,
-            } as any);
-          }
-        });
       }
 
       preparedOptions.series = series;

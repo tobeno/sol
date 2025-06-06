@@ -145,7 +145,7 @@ export class Html<
     return `Html { ${this.text} }`;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.text.value;
   }
 

@@ -18,7 +18,7 @@ export class Ast<
   `.trim();
 
   constructor(
-    public value: NodeType,
+    public override value: NodeType,
     public scope: Scope | null = null,
     public parentPath: NodePath | null = null,
   ) {
@@ -150,7 +150,7 @@ export class Ast<
     return `Ast { ${this.code} }`;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.code.value;
   }
 

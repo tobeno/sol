@@ -496,7 +496,7 @@ export class Text extends Wrapper<string> {
     return this.toString();
   }
 
-  toString(): string {
+  override toString(): string {
     return this.value;
   }
 

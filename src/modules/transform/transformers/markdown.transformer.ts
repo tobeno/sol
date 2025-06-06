@@ -25,7 +25,7 @@ export class MarkdownTransformer extends StringTransformer<any> {
     return input;
   }
 
-  parse(input: string, transformation: DataTransformation): Markdown {
+  parse(_input: string, _transformation: DataTransformation): Markdown {
     throw new Error('Cannot convert HTML back to Markdown.');
   }
 }

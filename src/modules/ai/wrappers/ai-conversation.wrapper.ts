@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
 import { inspect } from 'util';
+import { ensureNonEmpty } from '../../../utils/core.utils';
 import { open } from '../../../utils/open.utils';
 import { Data } from '../../../wrappers/data.wrapper';
 import { Text } from '../../../wrappers/text.wrapper';
@@ -7,8 +8,10 @@ import { Wrapper } from '../../../wrappers/wrapper.wrapper';
 import {
   createOpenAiChatCompletion,
   isOpenAiApiAvailable,
-  OpenAiChatCompletionRequestMessage,
+} from '../utils/open-ai.utils';
+import type {
   OpenAiChatCompletionResponse,
+  OpenAiChatCompletionRequestMessage,
 } from '../utils/open-ai.utils';
 
 export interface AiConversationOptions {
@@ -154,7 +157,7 @@ export class AiConversation extends Wrapper<
         response = cacheFile.json.value;
       }
 
-      answer = response.choices[0].message?.content || null;
+      answer = ensureNonEmpty(response.choices[0]).message?.content || null;
       if (!answer) {
         throw new Error(`No answer received.
 
@@ -185,7 +188,7 @@ Response: ${JSON.stringify(response, null, 2)}`);
     return this.toString();
   }
 
-  toString(): string {
+  override toString(): string {
     return this.value
       .filter((message) => message.role !== 'system')
       .map((message) => {

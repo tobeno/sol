@@ -3,7 +3,8 @@ import {
   mutateClass,
 } from '../../../utils/mutation.utils';
 import { Data } from '../../../wrappers/data.wrapper';
-import { Chart, ChartOptions } from '../wrappers/chart.wrapper';
+import { Chart } from '../wrappers/chart.wrapper';
+import type { ChartOptions } from '../wrappers/chart.wrapper';
 
 declare module '../../../wrappers/data.wrapper' {
   interface Data {
