@@ -1,6 +1,6 @@
 import { DataType } from '../../../wrappers/data-type.wrapper';
 import { DataTransformation } from '../data-transformation';
-import { DataTransformer } from './data.transformer';
+import type { DataTransformer } from './data.transformer';
 
 /**
  * Base class for transformers for converting from and to strings.
@@ -42,7 +42,7 @@ export abstract class StringTransformer<TargetType>
     return this.parseTransformation.matches(transformation);
   }
 
-  supports(input: any, transformation: DataTransformation): boolean {
+  supports(_input: any, transformation: DataTransformation): boolean {
     return (
       this.matchesStringifyTransformation(transformation) ||
       this.matchesParseTransformation(transformation)

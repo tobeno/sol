@@ -22,13 +22,16 @@ export function rsortLines(str: string): string {
 
 export const filterLines = withHelp(
   (str: string, cb: (line: string) => boolean = isNotEmpty): string => {
-    let result = str.replace(/(.*)(\r?\n|$)/g, (...matches: string[]) => {
-      if (!cb(matches[1])) {
-        return '';
-      }
+    let result = str.replace(
+      /(.*)(\r?\n|$)/g,
+      (...matches: string[]): string => {
+        if (!cb(matches[1]!)) {
+          return '';
+        }
 
-      return matches[0];
-    });
+        return matches[0]!;
+      },
+    );
 
     if (!str.endsWith('\n') && result.endsWith('\n')) {
       result = result.slice(0, -1);

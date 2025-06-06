@@ -30,7 +30,7 @@ mutateClass(
   definePropertiesMutation({
     edit: {
       value(): any {
-        open(this.uri, process.env.SOL_EDITOR || 'code');
+        open(this.uri, process.env['SOL_EDITOR'] || 'code');
 
         return this;
       },

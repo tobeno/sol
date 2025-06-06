@@ -6,7 +6,7 @@ import {
 import { Text } from '../../../wrappers/text.wrapper';
 import { Wrapper } from '../../../wrappers/wrapper.wrapper';
 import { DataTransformation } from '../data-transformation';
-import { DataTransformer } from './data.transformer';
+import type { DataTransformer } from './data.transformer';
 
 /**
  * A transformer, which adds / removes a wrapper class, before passing the transformation on to another mapper.

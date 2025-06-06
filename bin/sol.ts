@@ -4,7 +4,7 @@ import '../src/setup';
 import { loadSol } from '../src/sol/sol-setup';
 
 (async () => {
-  if (process.env.DEBUG_PERFORMANCE === 'true') {
+  if (process.env['DEBUG_PERFORMANCE'] === 'true') {
     const { getLoadedModules } = await import('../src/utils/debug.utils');
 
     console.log(

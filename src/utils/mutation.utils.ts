@@ -1,7 +1,5 @@
-import {
-  AbstractConstructor,
-  Constructor,
-} from '../interfaces/helper.interfaces';
+import type { Constructor } from '../interfaces/helper.interfaces';
+import type { AbstractConstructor } from '../interfaces/helper.interfaces';
 
 export abstract class Mutation<TargetType> {
   abstract mutate(target: TargetType): void;
@@ -33,7 +31,7 @@ export function definePropertiesMutation<TargetType>(
   return new DefinePropertiesMutation<TargetType>(
     Reflect.ownKeys(properties).reduce(
       (result, key) => {
-        const config = properties[key];
+        const config = properties[key]!;
 
         Object.assign(
           config,

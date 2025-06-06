@@ -18,7 +18,7 @@ function getOpenAi() {
 }
 
 export function isOpenAiApiAvailable(): boolean {
-  return !!process.env.OPENAI_API_KEY;
+  return !!process.env['OPENAI_API_KEY'];
 }
 
 export function getOpenAiApi(): OpenAI {
@@ -31,7 +31,7 @@ export function getOpenAiApi(): OpenAI {
   const openai = getOpenAi();
 
   return new openai.OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: process.env['OPENAI_API_KEY'],
   });
 }
 

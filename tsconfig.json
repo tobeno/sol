@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     /* Basic Options */
-    // "incremental": true/* Enable incremental compilation */,
-    "target": "ES2024",
+    "incremental": true,
+    /* Enable incremental compilation */
+    "target": "ES2022",
     /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */
     "module": "ES2022",
     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
-    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022"],
     /* Specify library files to be included in the compilation. */
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
@@ -33,17 +34,25 @@
     /* Enable all strict type-checking options. */
     "noImplicitAny": true,
     /* Raise error on expressions and declarations with an implied 'any' type. */
-    // "strictNullChecks": true,              /* Enable strict null checks. */
-    // "strictFunctionTypes": true,           /* Enable strict checking of function types. */
-    // "strictBindCallApply": true,           /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
-    // "strictPropertyInitialization": true,  /* Enable strict checking of property initialization in classes. */
-    // "noImplicitThis": true,                /* Raise error on 'this' expressions with an implied 'any' type. */
-    // "alwaysStrict": true,                  /* Parse in strict mode and emit "use strict" for each source file. */
+    "strictNullChecks": true,
+    /* Enable strict null checks. */
+    "strictFunctionTypes": true,
+    /* Enable strict checking of function types. */
+    "strictBindCallApply": true,
+    /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
+    "strictPropertyInitialization": true,
+    /* Enable strict checking of property initialization in classes. */
+    "noImplicitThis": true,
+    /* Raise error on 'this' expressions with an implied 'any' type. */
+    "alwaysStrict": true,
+    /* Parse in strict mode and emit "use strict" for each source file. */
+    "exactOptionalPropertyTypes": true,
+    /* Enable exact optional property types. */
+    "useUnknownInCatchVariables": true,
+    /* Use 'unknown' type for catch variables instead of 'any'. */
 
     /* Modern Type Safety Options */
     "noUncheckedIndexedAccess": true,
-    /* Add 'undefined' to a type when accessed using an index. */
-    "exactOptionalPropertyTypes": true,
     /* Interpret optional property types as written, rather than adding 'undefined'. */
     "noImplicitOverride": true,
     /* Ensure overriding members in derived classes are marked with an override modifier. */
@@ -59,6 +68,14 @@
     /* Report error when not all code paths in function return a value. */
     "noFallthroughCasesInSwitch": true,
     /* Report errors for fallthrough cases in switch statement. */
+    "allowUnreachableCode": false,
+    /* Disallow unreachable code. */
+    "allowUnusedLabels": false,
+    /* Disallow unused labels. */
+    "verbatimModuleSyntax": true,
+    /* Emit ECMAScript-style imports and exports in the output. */
+    "moduleDetection": "force",
+    /* Specify how TypeScript detects modules. Can be 'auto', 'legacy', or 'force'. */
 
     /* Module Resolution Options */
     "moduleResolution": "bundler",

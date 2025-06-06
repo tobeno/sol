@@ -7,7 +7,7 @@ import { Wrapper } from '../../../wrappers/wrapper.wrapper';
 import { AnyTransformer } from './any.transformer';
 import { AstTransformer } from './ast.transformer';
 import { CsvTransformer } from './csv.transformer';
-import { DataTransformer } from './data.transformer';
+import type { DataTransformer } from './data.transformer';
 import { GraphTransformer } from './graph.transformer';
 import { HtmlTransformer } from './html.transformer';
 import { JoinTransformer } from './join.transformer';

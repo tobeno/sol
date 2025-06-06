@@ -65,6 +65,9 @@ export class DataTransformation {
    */
   static fromString(transformation: string): DataTransformation {
     const [baseType, targetType] = transformation.split(':');
+    if (!baseType || !targetType) {
+      throw new Error(`Invalid transformation string: ${transformation}`);
+    }
 
     return new DataTransformation(
       DataType.fromString(baseType),

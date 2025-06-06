@@ -35,7 +35,8 @@ export const web = {
   ) => {
     return web.request({
       url,
-      ...init,
+      method: init.method || 'get',
+      headers: init.headers || {},
     });
   },
   get: wrap(() => getAxios().get),

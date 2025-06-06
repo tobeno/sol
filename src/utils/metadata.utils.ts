@@ -51,7 +51,7 @@ export function printHelp<T>(
   let help = getHelp(target);
   if (help) {
     if (options.short) {
-      help = help.split('\n')[0];
+      help = help.split('\n')[0]!;
     }
 
     log(colorizeHelp(help));

@@ -147,7 +147,7 @@ export class Xml<NodeType extends AnyNode = AnyNode> extends Wrapper<NodeType> {
     return `Xml { ${this.text} }`;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.text.value;
   }
 

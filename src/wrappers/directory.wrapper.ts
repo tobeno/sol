@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import type { Options as PrettierOptions } from 'prettier';
 import type { MaybeWrapped } from '../interfaces/wrapper.interfaces';
+import { ensureNonEmpty } from '../utils/core.utils';
 import {
   dirs,
   files,
@@ -65,7 +66,7 @@ export class Directory extends StorageItem {
   get size(): number {
     const output = unwrap(execCommand(`du -sL '${this.path}'`));
 
-    return parseInt(output.split(' ')[0], 10);
+    return parseInt(ensureNonEmpty(output.split(' ')[0]), 10);
   }
 
   /**
