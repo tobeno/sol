@@ -8,6 +8,7 @@ This repository is based on TypeScript and Node.js. It is a CLI tool that also p
 
 ## Key Guidelines
 
+- The project is executed directly via tsx or bun and not compiled.
 - Stay consistent with the existing code style.
 - All files are accompanied by \*.spec.ts files at the same location with unit tests.
   - All unit tests are wrapped with a global describe block named after the component under test (class name or the file name if not a class).
