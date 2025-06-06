@@ -1,16 +1,16 @@
 import type { OpenAI } from 'openai';
 import type {
   ChatCompletion,
-  CompletionCreateParamsNonStreaming,
-  CreateChatCompletionRequestMessage,
+  ChatCompletionCreateParamsNonStreaming,
+  ChatCompletionMessageParam,
 } from 'openai/resources/chat/completions';
 import module from 'node:module';
 
 const require = module.createRequire(import.meta.url);
 
-export type OpenAiChatCompletionRequestMessage =
-  CreateChatCompletionRequestMessage;
-export type OpenAiChatCompletionRequest = CompletionCreateParamsNonStreaming;
+export type OpenAiChatCompletionRequestMessage = ChatCompletionMessageParam;
+export type OpenAiChatCompletionRequest =
+  ChatCompletionCreateParamsNonStreaming;
 export type OpenAiChatCompletionResponse = ChatCompletion;
 
 function getOpenAi() {
@@ -41,5 +41,5 @@ export async function createOpenAiChatCompletion(
   return getOpenAiApi().chat.completions.create({
     model: 'gpt-3.5-turbo',
     ...request,
-  } as CompletionCreateParamsNonStreaming);
+  } as ChatCompletionCreateParamsNonStreaming);
 }
