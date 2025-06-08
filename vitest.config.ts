@@ -6,5 +6,9 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     setupFiles: ['./src/test/setup.ts'],
+    restoreMocks: true,
+    unstubEnvs: true,
+    unstubGlobals: true,
+    isolate: false,
   },
 });
