@@ -115,9 +115,13 @@ import '${extension.setupFile.dir.relativePathFrom(this.generatedDir)}/${
 /* eslint-disable */
 // @ts-nocheck
 
+import path from 'path';
 import { solExtension } from '${solPackage.dir.relativePathFrom(
         this.dir,
       )}/src/sol/sol-extension';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
       
 // ToDo: Register your first extension
 // solExtension('your-extension', __dirname).load();
