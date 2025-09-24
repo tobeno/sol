@@ -74,7 +74,7 @@
     "@types/babel__traverse": "7.20.7",
     "@types/bun": "1.2.15",
     "@types/jsonwebtoken": "9.0.9",
-    "@types/lodash": "4.17.17",
+    "@types/lodash": "4.17.20",
     "@types/node": "22.15.30",
     "@types/pako": "2.0.3",
     "@types/papaparse": "5.3.16",
