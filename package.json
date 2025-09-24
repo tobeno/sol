@@ -37,7 +37,7 @@
     "chalk": "5.4.1",
     "change-case": "5.4.4",
     "clipboardy": "4.0.0",
-    "commander": "14.0.0",
+    "commander": "14.0.1",
     "css-select": "5.1.0",
     "dayjs": "1.11.13",
     "dom-serializer": "2.0.0",
