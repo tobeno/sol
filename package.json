@@ -33,7 +33,7 @@
     "@inquirer/prompts": "7.5.3",
     "@ngneat/falso": "7.4.0",
     "apexcharts": "4.7.0",
-    "axios": "1.9.0",
+    "axios": "1.12.0",
     "chalk": "5.4.1",
     "change-case": "5.4.4",
     "clipboardy": "4.0.0",
