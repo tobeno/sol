@@ -51,7 +51,7 @@
     "jsonata": "2.0.6",
     "jsonwebtoken": "9.0.2",
     "lodash": "4.17.21",
-    "marked": "15.0.12",
+    "marked": "16.3.0",
     "node-fetch": "3.3.2",
     "open": "10.1.2",
     "openai": "5.1.1",
