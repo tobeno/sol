@@ -52,10 +52,13 @@ mutateClass(
     <title></title>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-  
+
     <style>
      body {
        margin: 5px
+     }
+     td, th {
+       padding: 6px 12px;
      }
     </style>
   </head>
