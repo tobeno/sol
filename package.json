@@ -39,7 +39,7 @@
     "clipboardy": "4.0.0",
     "commander": "14.0.1",
     "css-select": "5.1.0",
-    "dayjs": "1.11.13",
+    "dayjs": "1.11.18",
     "dom-serializer": "2.0.0",
     "dotenv": "16.5.0",
     "esbuild": "0.25.5",
